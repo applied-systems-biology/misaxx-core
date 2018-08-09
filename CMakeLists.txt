@@ -11,9 +11,8 @@ find_package(OpenMP)
 add_library(misaxx
         misaxx/test.cpp
         misaxx/filesystem/importers/json_importer.h
-        misaxx/filesystem/misa_stack.h
         misaxx/filesystem/misa_filesystem.h
-        misaxx/filesystem/misa_folder.h misaxx/filesystem/misa_entry.h misaxx/filesystem/importers/default_importer.h)
+        misaxx/filesystem/misa_folder.h misaxx/filesystem/misa_entry.h misaxx/filesystem/importers/default_importer.h misaxx/filesystem/misa_file.h)
 
 if(NOT TARGET cxx-helpers)
     add_subdirectory(libs/cxx-helpers)

@@ -7,8 +7,8 @@
 
 #include <unordered_map>
 #include <memory>
-#include "misa_stack.h"
 #include "misa_entry.h"
+#include "misa_file.h"
 
 namespace misaxx::filesystem {
     struct misa_folder : public misa_entry {
@@ -16,14 +16,16 @@ namespace misaxx::filesystem {
         using misa_entry::misa_entry;
 
         template<class Entry> Entry& create(std::string t_name) {
-            std::unique_ptr<Entry> ptr = std::make_unique<Entry>(std::move(t_name));
+            std::shared_ptr<Entry> ptr = std::make_shared<Entry>(std::move(t_name));
             auto &ref = *ptr;
+            ref.parent = this;
             children.insert({ ptr->name,  std::move(ptr)});
             return ref;
         }
 
-        template<class Entry> Entry& insert(std::unique_ptr<Entry> ptr) {
+        template<class Entry> Entry& insert(std::shared_ptr<Entry> ptr) {
             auto &ref = *ptr;
+            ref.parent = this;
             children.insert({ ptr->name,  std::move(ptr)});
             return ref;
         }
@@ -42,6 +44,6 @@ namespace misaxx::filesystem {
 
     private:
 
-        std::unordered_map<std::string, std::unique_ptr<misa_entry>> children;
+        std::unordered_map<std::string, std::shared_ptr<misa_entry>> children;
     };
 }

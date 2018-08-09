@@ -15,12 +15,11 @@ namespace misaxx::filesystem::importers {
      */
     struct default_importer {
         boost::filesystem::path input_path;
+        boost::filesystem::path output_path;
 
         void import_into(boost::filesystem::path &subdir, misa_folder &folder) {
 
             using namespace boost::filesystem;
-
-            misa_stack local_stack(subdir.filename().string());
 
             directory_iterator it { subdir };
             while(it != directory_iterator()) {
@@ -40,9 +39,10 @@ namespace misaxx::filesystem::importers {
             }
         }
 
-        misa_filesystem import() {
-            misa_filesystem result;
-            import_into(input_path, result);
+        std::shared_ptr<misa_filesystem> import() {
+            std::shared_ptr<misa_filesystem> result = std::make_shared<misa_filesystem>("");
+            import_into(input_path, *result);
+
             return result;
         }
     };
