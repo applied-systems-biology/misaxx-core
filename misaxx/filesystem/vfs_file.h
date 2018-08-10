@@ -5,16 +5,16 @@
 
 #pragma once
 
-#include "misa_entry.h"
+#include "vfs_entry.h"
 
 namespace misaxx::filesystem {
 
     /**
-     * File in the MISA++ filesystem
+     * File in the MISA++ virtual file system
      */
-    class misa_file : public misa_entry {
+    class vfs_file : public vfs_entry {
     public:
-        using misa_entry::misa_entry;
+        using vfs_entry::vfs_entry;
 
         bool empty() const override {
             return false;

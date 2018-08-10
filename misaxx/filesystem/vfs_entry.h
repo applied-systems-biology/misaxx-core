@@ -11,12 +11,17 @@
 
 namespace misaxx::filesystem {
 
-    struct misa_entry {
+    /**
+     * An entry in the MISA++ virtual filesystem
+     */
+    struct vfs_entry {
+
+        using path = boost::filesystem::path;
 
         /**
          * Parent node of the current misa_entry
          */
-        misa_entry *parent = nullptr;
+        vfs_entry *parent = nullptr;
 
         /**
          * Internal name of the filesystem entry
@@ -27,20 +32,20 @@ namespace misaxx::filesystem {
          * Custom external path of this entry.
          * If not set, the path will be loaded from the parent.
          */
-        boost::filesystem::path custom_external;
+        path custom_external;
 
-        explicit misa_entry(std::string t_name = "") : name(std::move(t_name)){
+        explicit vfs_entry(std::string t_name = "", path t_custom_external = path()) : name(std::move(t_name)), custom_external(std::move(t_custom_external)){
         }
 
-        misa_entry(const misa_entry &value) = delete;
+        vfs_entry(const vfs_entry &value) = delete;
 
-        misa_entry(misa_entry &&value) = delete;
+        vfs_entry(vfs_entry &&value) = default;
 
         /**
          * Returns the internal path inside this filesystem
          * @return
          */
-        boost::filesystem::path internal_path() const {
+        path internal_path() const {
             if(parent == nullptr) {
                 return name;
             }
@@ -50,10 +55,18 @@ namespace misaxx::filesystem {
         }
 
         /**
+         * Returns true if this entry is associated to an external path
+         * @return
+         */
+        bool has_external_path() const {
+            return !external_path().empty();
+        }
+
+        /**
          * Returns the external path of this node.
          * @return
          */
-        boost::filesystem::path external_path() const {
+        path external_path() const {
             if(!custom_external.empty())
                 return custom_external;
             else if(parent != nullptr)
@@ -62,11 +75,19 @@ namespace misaxx::filesystem {
                 throw std::runtime_error("Path " + internal_path().string() + " has no external path!");
         }
 
-        virtual const misa_entry& operator /(const std::string &t_segment) const {
+        virtual const vfs_entry &operator [](const path &t_path) const {
             throw std::runtime_error("This filesystem node cannot be navigated!");
         }
 
-        virtual misa_entry& operator /(const std::string &t_segment) {
+        virtual vfs_entry &operator [](const path &t_path) {
+            throw std::runtime_error("This filesystem node cannot be navigated!");
+        }
+
+        virtual const vfs_entry& operator /(const std::string &t_segment) const {
+            throw std::runtime_error("This filesystem node cannot be navigated!");
+        }
+
+        virtual vfs_entry& operator /(const std::string &t_segment) {
             throw std::runtime_error("This filesystem node cannot be navigated!");
         }
 

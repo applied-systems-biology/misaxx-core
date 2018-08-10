@@ -9,14 +9,20 @@ find_package(Boost 1.63 COMPONENTS REQUIRED filesystem regex program_options)
 find_package(OpenMP)
 
 add_library(misaxx
-        misaxx/test.cpp
         misaxx/filesystem/importers/json_importer.h
-        misaxx/filesystem/misa_filesystem.h
-        misaxx/filesystem/misa_folder.h misaxx/filesystem/misa_entry.h misaxx/filesystem/importers/default_importer.h misaxx/filesystem/misa_file.h)
+        misaxx/filesystem/virtual_filesystem.h
+        misaxx/filesystem/vfs_folder.h misaxx/filesystem/vfs_entry.h misaxx/filesystem/importers/folder_importer.h misaxx/filesystem/vfs_file.h misaxx/misa_module.h misaxx/misa_file_stack.h misaxx/misa_module_definition.h misaxx/misa_task.h misaxx/misa_worker.h misaxx/misa_runtime.h misaxx/misa_module_base.h)
 
 if(NOT TARGET cxx-helpers)
     add_subdirectory(libs/cxx-helpers)
 endif()
+if(NOT TARGET pattxx)
+    add_subdirectory(libs/pattxx)
+endif()
+if(NOT TARGET coixx)
+    add_subdirectory(libs/coixx)
+endif()
+
 
 target_include_directories(misaxx SYSTEM BEFORE PUBLIC ${Boost_INCLUDE_DIRS})
 target_include_directories(misaxx BEFORE PUBLIC ${Boost_INCLUDE_DIRS})
@@ -25,7 +31,9 @@ target_include_directories(misaxx INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(misaxx PUBLIC
         ${Boost_LIBRARIES}
         ${OpenMP_CXX_LIBRARIES}
-        cxx-helpers)
+        cxx-helpers
+        pattxx
+        coixx)
 
 target_compile_options(misaxx PUBLIC ${OpenMP_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -pedantic-errors)
 
