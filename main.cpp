@@ -24,6 +24,8 @@ struct my_module_definition : public misa_module_definition {
 struct my_task1 : public misa_task<my_module_definition> {
     using misa_task::misa_task;
 
+    misa_file_stack data = module().my_stack;
+
     void work() {
     }
 };
