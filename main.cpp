@@ -37,9 +37,8 @@ struct my_module_definition : public misa_module_definition {
 struct my_task1 : public misa_task<my_module_definition> {
     using misa_task::misa_task;
 
-    misa_file_stack data = module().my_stack;
-
     void work() {
+        std::cout << "test" << std::endl;
     }
 };
 
@@ -50,7 +49,7 @@ struct my_module : public misa_module<my_module_definition> {
     void init() {
         // Dispatcher part
         misa_dispatch<my_task1>("abc");
-        misa_dispatch(other);
+//        misa_dispatch(other);
     }
 };
 

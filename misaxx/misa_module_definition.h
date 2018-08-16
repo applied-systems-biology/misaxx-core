@@ -45,7 +45,7 @@ namespace misaxx {
          * @return
          */
         template<class Module> submodule<Module> imported(std::string t_name, metadata t_metadata) {
-
+            return submodule<Module>(*this, std::move(t_name), std::move(t_metadata));
         }
 
         const filesystem::folder& get_filesystem() const {

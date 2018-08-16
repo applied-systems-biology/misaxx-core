@@ -10,6 +10,8 @@
 
 namespace misaxx {
 
+    struct misa_module_definition;
+
     struct misa_submodule_base {
     };
 
@@ -17,7 +19,8 @@ namespace misaxx {
      * Wraps around a module that can be dispatched later.
      * @tparam Module
      */
-    template<class Module, class ModuleDefinition = typename Module::module_type> class misa_submodule : public misa_submodule_base {
+    template<class Module, class ModuleDefinition = typename Module::module_type>
+    class misa_submodule : public misa_submodule_base {
     public:
 
         Module *m_module = nullptr;
@@ -25,9 +28,11 @@ namespace misaxx {
         using module_type = Module;
         using module_definition_type = ModuleDefinition;
 
-        explicit misa_submodule(ModuleDefinition& t_parent, std::string t_name, pattxx::metadata t_metadata) :
-        m_name(std::move(t_name)),
-        m_metadata(std::move(t_metadata)) {
+        explicit misa_submodule(misa_module_definition &t_parent, std::string t_name, pattxx::metadata t_metadata) :
+                m_name(std::move(t_name)),
+                m_metadata(std::move(t_metadata)) {
+            if (m_name.empty())
+                throw std::runtime_error("The name of the submodule is empty!");
         }
 
         /**
@@ -44,7 +49,7 @@ namespace misaxx {
          * @return
          */
         module_definition_type &definition() {
-            if(m_module != nullptr)
+            if (m_module != nullptr)
                 return *m_module;
             else
                 return m_module_definition;
@@ -56,6 +61,10 @@ namespace misaxx {
 
         const pattxx::metadata &get_metadata() const {
             return m_metadata;
+        }
+
+        bool has_instance() const {
+            return m_module != nullptr;
         }
 
     private:

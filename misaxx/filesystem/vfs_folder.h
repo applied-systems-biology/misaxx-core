@@ -22,7 +22,7 @@ namespace misaxx::filesystem {
      */
     template<class TargetPtrType> struct as {
         using type = typename TargetPtrType::element_type;
-        explicit as(std::string t_segment) : segment(t_segment) {
+        explicit as(std::string t_segment) : segment(std::move(t_segment)) {
 
         }
         std::string segment;
@@ -52,20 +52,26 @@ namespace misaxx::filesystem {
             return ptr;
         }
 
+        template<class As> typename As::type& operator /(const As &t_segment) {
+            auto it = children.find(t_segment.segment);
+            if(it == children.end()) {
+                return *create<typename As::type>(t_segment.segment);
+            }
+            else {
+                return *dynamic_cast<typename As::type*>(it->second.get());
+            }
+        }
+
+        template<class As> const typename As::type& operator /(const As &t_segment) const {
+            return *dynamic_cast<typename As::type*>(children.at(t_segment.segment).get());
+        }
+
         vfs_folder& operator /(const std::string &t_segment) {
-            return *dynamic_cast<vfs_folder*>(children.at(t_segment).get());
+            return *this / as<folder>(t_segment);
         }
 
         const vfs_folder& operator /(const std::string &t_segment) const {
-            return *dynamic_cast<vfs_folder*>(children.at(t_segment).get());
-        }
-
-        template<class As> vfs_folder& operator /(const As &t_segment) {
-            return *dynamic_cast<typename As::type*>(children.at(t_segment.segment).get());
-        }
-
-        template<class As> const vfs_folder& operator /(const As &t_segment) const {
-            return *dynamic_cast<typename As::type*>(children.at(t_segment.segment).get());
+            return *this / as<folder>(t_segment);
         }
 
         bool empty() const override {

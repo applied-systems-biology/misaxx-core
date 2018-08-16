@@ -16,8 +16,12 @@ namespace misaxx {
 
         pattxx::metadata metadata;
 
+        misa_module_data() = delete;
+
         explicit misa_module_data(misa_module_definition &definition, pattxx::metadata t_metadata) : metadata(std::move(t_metadata)) {
 
         }
+
+        misa_module_data(const misa_module_data &other) = delete;
     };
 }

@@ -14,7 +14,7 @@ namespace misaxx {
     template<class ModuleDefinition> struct misa_dispatcher : private pattxx::dispatcher, public misa_worker<ModuleDefinition> {
         static_assert(std::is_base_of<misa_module_definition, ModuleDefinition>::value, "Template argument must be a module definition!");
 
-        explicit misa_dispatcher(pattxx::nodes::node *t_node, ModuleDefinition *t_module) : pattxx::dispatcher(t_node) {
+        explicit misa_dispatcher(pattxx::nodes::node *t_node, ModuleDefinition *t_module) : pattxx::dispatcher(t_node), m_module(t_module) {
 
         }
 

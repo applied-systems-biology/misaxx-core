@@ -77,8 +77,11 @@ namespace misaxx {
          * @return
          */
         template<class Submodule, class Module = typename Submodule::module_type>
-        Module &misa_dispatch(Submodule &m_submodule) {
-            return dispatch<Module>(m_submodule.get_name(), this->get_filesystem(), m_submodule.definition()); // TODO: Put module data in ./modules/<module name>
+        Module &misa_dispatch(Submodule &t_submodule) {
+            if(t_submodule.has_instance())
+                throw std::runtime_error("The submodule already has been instantiated!");
+            filesystem::folder folder = *this->get_filesystem() / "modules" / t_submodule.get_name();
+            return dispatch<Module>(t_submodule.get_name(), folder, t_submodule.definition());
         }
 
         const ModuleDefinition &module() const override {

@@ -19,7 +19,7 @@ namespace misaxx {
         using node_type = pattxx::nodes::dispatcher_node<RootModule, pattxx::dispatcher>;
 
         explicit misa_runtime_root_instantiator(std::string t_root_name) : m_root_name(std::move(t_root_name)) {
-
+            m_filesystem = std::make_shared<filesystem::virtual_filesystem>();
         }
 
         /**
