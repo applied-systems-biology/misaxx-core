@@ -39,15 +39,13 @@ namespace misaxx::filesystem {
 
         template<class Entry> std::shared_ptr<Entry> create(std::string t_name, path t_custom_external = path()) {
             std::shared_ptr<Entry> ptr = std::make_shared<Entry>(std::move(t_name), std::move(t_custom_external));
-            ptr->parent = self;
-            ptr->self = ptr;
+            ptr->parent = self();
             children.insert({ ptr->name,  ptr});
             return ptr;
         }
 
         template<class Entry> std::shared_ptr<Entry> insert(std::shared_ptr<Entry> ptr) {
-            ptr->parent = self;
-            ptr->self = ptr;
+            ptr->parent = self();
             children.insert({ ptr->name,  ptr});
             return ptr;
         }
@@ -103,7 +101,7 @@ namespace misaxx::filesystem {
         }
 
         operator folder() {
-            return std::dynamic_pointer_cast<vfs_folder>(self.lock());
+            return std::dynamic_pointer_cast<vfs_folder>(self().lock());
         }
 
     private:

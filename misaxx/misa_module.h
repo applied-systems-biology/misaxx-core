@@ -20,7 +20,7 @@ namespace misaxx {
      * @tparam ModuleDefinition
      */
     template<class ModuleDefinition>
-    struct misa_module : public misa_module_base, public misa_worker<ModuleDefinition>, private pattxx::dispatcher, public ModuleDefinition {
+    struct misa_module : public misa_module_base, public misa_worker<ModuleDefinition>, public pattxx::dispatcher, public ModuleDefinition {
 
     public:
 
@@ -42,17 +42,6 @@ namespace misaxx {
         }
 
     protected:
-
-        using pattxx::dispatcher::run_function;
-        using pattxx::worker::path;
-        using pattxx::worker::get_node;
-        using pattxx::worker::parameters_exist;
-        using pattxx::worker::input;
-        using pattxx::worker::output;
-        using pattxx::worker::reject_work;
-        using pattxx::worker::from_json_or;
-        using pattxx::worker::from_json;
-        using pattxx::worker::define;
 
         /**
          * pattxx::dispatcher::dispatch with the additional function of setting the module accordingly.

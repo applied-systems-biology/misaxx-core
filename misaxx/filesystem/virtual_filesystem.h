@@ -17,12 +17,6 @@ namespace misaxx::filesystem {
         folder root;
 
         virtual_filesystem() : root(std::make_shared<vfs_folder>("")) {
-            update_root();
-        }
-
-        void update_root() {
-            root->parent = std::weak_ptr<vfs_entry>();
-            root->self = root;
         }
     };
 }

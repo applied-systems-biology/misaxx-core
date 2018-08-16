@@ -47,7 +47,6 @@ namespace misaxx::filesystem {
 
     void from_json(const json &j, virtual_filesystem &p) {
         p.root = std::make_shared<vfs_folder>(j.get<vfs_folder>());
-        p.update_root();
     }
 }
 

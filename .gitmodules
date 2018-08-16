@@ -1,9 +1,0 @@
-[submodule "libs/cxx-helpers"]
-	path = libs/cxx-helpers
-	url = https://asb-git.hki-jena.de/RGerst/cxx-helpers.git
-[submodule "libs/coixx"]
-	path = libs/coixx
-	url = https://asb-git.hki-jena.de/RGerst/coixx.git
-[submodule "libs/pattxx"]
-	path = libs/pattxx
-	url = https://asb-git.hki-jena.de/RGerst/pattxx.git

@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <libs/pattxx/pattxx/metadata.h>
+#include <pattxx/metadata.h>
 #include "misa_module_definition.h"
 
 namespace misaxx {

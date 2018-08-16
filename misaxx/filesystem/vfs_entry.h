@@ -14,7 +14,7 @@ namespace misaxx::filesystem {
     /**
      * An entry in the MISA++ virtual filesystem
      */
-    struct vfs_entry {
+    struct vfs_entry : std::enable_shared_from_this<vfs_entry> {
 
         using path = boost::filesystem::path;
 
@@ -22,11 +22,6 @@ namespace misaxx::filesystem {
          * Parent node of the current VFS entry
          */
         std::weak_ptr<vfs_entry> parent;
-
-        /**
-         * Weak_ptr of this entry. Used to create shared_ptr of this node
-         */
-        std::weak_ptr<vfs_entry> self;
 
         /**
          * Internal name of the filesystem entry
@@ -78,6 +73,14 @@ namespace misaxx::filesystem {
                 return parent.lock()->external_path() / name;
             else
                 throw std::runtime_error("Path " + internal_path().string() + " has no external path!");
+        }
+
+        /**
+         * Returns a managed pointer to this entry
+         * @return
+         */
+        std::weak_ptr<vfs_entry> self() {
+            return shared_from_this();
         }
 
         virtual bool empty() const = 0;
