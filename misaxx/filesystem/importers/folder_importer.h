@@ -17,7 +17,7 @@ namespace misaxx::filesystem::importers {
         boost::filesystem::path input_path;
         boost::filesystem::path output_path;
 
-        void import_into(boost::filesystem::path &subdir, vfs_folder &folder) {
+        void import_into(boost::filesystem::path &subdir, folder t_folder) {
 
             using namespace boost::filesystem;
 
@@ -25,20 +25,20 @@ namespace misaxx::filesystem::importers {
             while(it != directory_iterator()) {
                 path external_path = *it++;
                 if(is_regular_file(external_path)) {
-                    folder.create<vfs_file>(external_path.filename().string(), external_path);
+                    t_folder->create<vfs_file>(external_path.filename().string(), external_path);
                 }
                 else if(is_directory(external_path)) {
-                    auto &subfolder = folder.create<vfs_folder>(external_path.filename().string(), external_path);
+                    auto subfolder = t_folder->create<vfs_folder>(external_path.filename().string(), external_path);
                     import_into(external_path, subfolder);
                 }
             }
         }
 
-        std::shared_ptr<virtual_filesystem> import() {
-            std::shared_ptr<virtual_filesystem> result = std::make_shared<virtual_filesystem>("");
-            import_into(input_path, *result);
+        virtual_filesystem import() {
+            virtual_filesystem vfs;
+            import_into(input_path, vfs.root);
 
-            return result;
+            return vfs;
         }
     };
 }

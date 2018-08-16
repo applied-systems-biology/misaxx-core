@@ -11,7 +11,7 @@ find_package(OpenMP)
 add_library(misaxx
         misaxx/filesystem/importers/json_importer.h
         misaxx/filesystem/virtual_filesystem.h
-        misaxx/filesystem/vfs_folder.h misaxx/filesystem/vfs_entry.h misaxx/filesystem/importers/folder_importer.h misaxx/filesystem/vfs_file.h misaxx/misa_module.h misaxx/misa_file_stack.h misaxx/misa_module_definition.h misaxx/misa_task.h misaxx/misa_worker.h misaxx/misa_runtime.h misaxx/misa_module_base.h misaxx/misa_dispatcher.h)
+        misaxx/filesystem/vfs_folder.h misaxx/filesystem/vfs_entry.h misaxx/filesystem/importers/folder_importer.h misaxx/filesystem/vfs_file.h misaxx/misa_module.h misaxx/misa_file_stack.h misaxx/misa_module_definition.h misaxx/misa_task.h misaxx/misa_worker.h misaxx/misa_module_base.h misaxx/misa_dispatcher.h misaxx/misa_module_data.h misaxx/misa_submodule.h misaxx/misa_runtime.h)
 
 if(NOT TARGET cxx-helpers)
     add_subdirectory(libs/cxx-helpers)

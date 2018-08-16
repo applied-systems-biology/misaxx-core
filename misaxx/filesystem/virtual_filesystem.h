@@ -11,8 +11,18 @@ namespace misaxx::filesystem {
 
     /**
      * A virtual file system (VFS) that allows flexible interaction between modules and between other pipelines.
+     * This is the root of the filesystem that contains
      */
-    struct virtual_filesystem : public vfs_folder {
-        using vfs_folder::vfs_folder;
+    struct virtual_filesystem {
+        folder root;
+
+        virtual_filesystem() : root(std::make_shared<vfs_folder>("")) {
+            update_root();
+        }
+
+        void update_root() {
+            root->parent = std::weak_ptr<vfs_entry>();
+            root->self = root;
+        }
     };
 }

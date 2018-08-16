@@ -17,8 +17,21 @@
 using namespace misaxx;
 using namespace pattxx;
 
+struct other_module_def : public misa_module_definition {
+
+};
+
+struct other_module : public misa_module<other_module_def> {
+    using misa_module::misa_module;
+
+    void init() {
+    }
+};
+
+
 struct my_module_definition : public misa_module_definition {
-    misa_file_stack my_stack = declare_data<misa_file_stack>();
+    misa_file_stack my_stack = data<misa_file_stack>(metadata("my stack"));
+    submodule <other_module> other = imported<other_module>("other", metadata("Other module"));
 };
 
 struct my_task1 : public misa_task<my_module_definition> {
@@ -37,6 +50,7 @@ struct my_module : public misa_module<my_module_definition> {
     void init() {
         // Dispatcher part
         misa_dispatch<my_task1>("abc");
+        misa_dispatch(other);
     }
 };
 

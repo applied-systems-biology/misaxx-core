@@ -40,6 +40,15 @@ namespace misaxx::filesystem {
             }
         }
     }
+
+    void to_json(json &j, const virtual_filesystem &p) {
+        j = *p.root;
+    }
+
+    void from_json(const json &j, virtual_filesystem &p) {
+        p.root = std::make_shared<vfs_folder>(j.get<vfs_folder>());
+        p.update_root();
+    }
 }
 
 namespace misaxx::filesystem::importers {

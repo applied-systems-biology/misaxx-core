@@ -12,6 +12,22 @@
 
 namespace misaxx::filesystem {
 
+    struct vfs_folder;
+
+    using folder = std::shared_ptr<vfs_folder>;
+
+    /**
+     * Used to navigate to non-folders
+     * @tparam TargetPtrType
+     */
+    template<class TargetPtrType> struct as {
+        using type = typename TargetPtrType::element_type;
+        explicit as(std::string t_segment) : segment(t_segment) {
+
+        }
+        std::string segment;
+    };
+
     /**
      * A folder in the MISA++ virtual file system
      */
@@ -21,43 +37,35 @@ namespace misaxx::filesystem {
         using iterator = std::unordered_map<std::string, std::shared_ptr<vfs_entry>>::iterator;
         using const_iterator = std::unordered_map<std::string, std::shared_ptr<vfs_entry>>::const_iterator;
 
-        template<class Entry> Entry& create(std::string t_name, path t_custom_external = path()) {
+        template<class Entry> std::shared_ptr<Entry> create(std::string t_name, path t_custom_external = path()) {
             std::shared_ptr<Entry> ptr = std::make_shared<Entry>(std::move(t_name), std::move(t_custom_external));
-            auto &ref = *ptr;
-            ref.parent = this;
-            children.insert({ ptr->name,  std::move(ptr)});
-            return ref;
+            ptr->parent = self;
+            ptr->self = ptr;
+            children.insert({ ptr->name,  ptr});
+            return ptr;
         }
 
-        template<class Entry> Entry& insert(std::shared_ptr<Entry> ptr) {
-            auto &ref = *ptr;
-            ref.parent = this;
-            children.insert({ ptr->name,  std::move(ptr)});
-            return ref;
+        template<class Entry> std::shared_ptr<Entry> insert(std::shared_ptr<Entry> ptr) {
+            ptr->parent = self;
+            ptr->self = ptr;
+            children.insert({ ptr->name,  ptr});
+            return ptr;
         }
 
-        vfs_entry &operator [](const path &t_path) override {
-            vfs_entry *ptr = this;
-            for(const path &seg : t_path) {
-                ptr = &(*ptr / seg.string());
-            }
-            return *ptr;
+        vfs_folder& operator /(const std::string &t_segment) {
+            return *dynamic_cast<vfs_folder*>(children.at(t_segment).get());
         }
 
-        const vfs_entry &operator [](const path &t_path) const override {
-            const vfs_entry *ptr = this;
-            for(const path &seg : t_path) {
-                ptr = &(*ptr / seg.string());
-            }
-            return *ptr;
+        const vfs_folder& operator /(const std::string &t_segment) const {
+            return *dynamic_cast<vfs_folder*>(children.at(t_segment).get());
         }
 
-        vfs_entry& operator /(const std::string &t_segment) override {
-            return *children.at(t_segment);
+        template<class As> vfs_folder& operator /(const As &t_segment) {
+            return *dynamic_cast<typename As::type*>(children.at(t_segment.segment).get());
         }
 
-        const vfs_entry& operator /(const std::string &t_segment) const override {
-            return *children.at(t_segment);
+        template<class As> const vfs_folder& operator /(const As &t_segment) const {
+            return *dynamic_cast<typename As::type*>(children.at(t_segment.segment).get());
         }
 
         bool empty() const override {
@@ -78,6 +86,18 @@ namespace misaxx::filesystem {
 
         const_iterator end() const {
             return children.end();
+        }
+
+        iterator find(const std::string &t_name) {
+            return children.find(t_name);
+        }
+
+        const_iterator find(const std::string &t_name) const {
+            return children.find(t_name);
+        }
+
+        operator folder() {
+            return std::dynamic_pointer_cast<vfs_folder>(self.lock());
         }
 
     private:

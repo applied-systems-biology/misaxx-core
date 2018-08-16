@@ -20,4 +20,6 @@ namespace misaxx::filesystem {
             return false;
         }
     };
+
+    using file = std::shared_ptr<vfs_file>;
 }

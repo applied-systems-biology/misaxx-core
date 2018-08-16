@@ -19,9 +19,14 @@ namespace misaxx::filesystem {
         using path = boost::filesystem::path;
 
         /**
-         * Parent node of the current misa_entry
+         * Parent node of the current VFS entry
          */
-        vfs_entry *parent = nullptr;
+        std::weak_ptr<vfs_entry> parent;
+
+        /**
+         * Weak_ptr of this entry. Used to create shared_ptr of this node
+         */
+        std::weak_ptr<vfs_entry> self;
 
         /**
          * Internal name of the filesystem entry
@@ -46,11 +51,11 @@ namespace misaxx::filesystem {
          * @return
          */
         path internal_path() const {
-            if(parent == nullptr) {
+            if(parent.expired()) {
                 return name;
             }
             else {
-                return parent->internal_path() / name;
+                return parent.lock()->internal_path() / name;
             }
         }
 
@@ -69,28 +74,14 @@ namespace misaxx::filesystem {
         path external_path() const {
             if(!custom_external.empty())
                 return custom_external;
-            else if(parent != nullptr)
-                return parent->external_path() / name;
+            else if(!parent.expired())
+                return parent.lock()->external_path() / name;
             else
                 throw std::runtime_error("Path " + internal_path().string() + " has no external path!");
         }
 
-        virtual const vfs_entry &operator [](const path &t_path) const {
-            throw std::runtime_error("This filesystem node cannot be navigated!");
-        }
-
-        virtual vfs_entry &operator [](const path &t_path) {
-            throw std::runtime_error("This filesystem node cannot be navigated!");
-        }
-
-        virtual const vfs_entry& operator /(const std::string &t_segment) const {
-            throw std::runtime_error("This filesystem node cannot be navigated!");
-        }
-
-        virtual vfs_entry& operator /(const std::string &t_segment) {
-            throw std::runtime_error("This filesystem node cannot be navigated!");
-        }
-
         virtual bool empty() const = 0;
     };
+
+    using entry = std::shared_ptr<vfs_entry>;
 }
