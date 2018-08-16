@@ -32,9 +32,9 @@ namespace misaxx {
          * @param args
          * @return
          */
-        template<class T, typename... Args> T data(metadata t_metadata, Args&&... args) {
+        template<class T, typename... Args> T data(std::string t_name, metadata t_metadata, Args&&... args) {
             static_assert(std::is_base_of<misa_module_data, T>::value, "Only module data is supported!");
-            return T(*this, std::move(t_metadata), std::forward<Args>(args)...);
+            return T(*this, std::move(t_name), std::move(t_metadata), std::forward<Args>(args)...);
         }
 
         /**
@@ -48,12 +48,26 @@ namespace misaxx {
             return submodule<Module>(*this, std::move(t_name), std::move(t_metadata));
         }
 
+    public:
+
         const filesystem::folder& get_filesystem() const {
             return m_filesystem;
         }
 
         filesystem::folder& get_filesystem() {
             return m_filesystem;
+        }
+
+        filesystem::folder vfs_import() {
+            return *m_filesystem / "import";
+        }
+
+        filesystem::folder vfs_export() {
+            return *m_filesystem / "export";
+        }
+
+        filesystem::folder vfs_modules() {
+            return *m_filesystem / "modules";
         }
 
     private:

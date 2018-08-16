@@ -69,26 +69,13 @@ namespace misaxx {
         Module &misa_dispatch(Submodule &t_submodule) {
             if(t_submodule.has_instance())
                 throw std::runtime_error("The submodule already has been instantiated!");
-            filesystem::folder folder = *this->get_filesystem() / "modules" / t_submodule.get_name();
+            filesystem::folder folder = *this->vfs_modules() / t_submodule.get_name();
             return dispatch<Module>(t_submodule.get_name(), folder, t_submodule.definition());
         }
 
         const ModuleDefinition &module() const override {
             return *this;
         }
-//
-//        filesystem::vfs_folder &vfs_import() {
-//
-//        }
-//
-//        filesystem::vfs_folder &vfs_export() {
-//
-//        }
-//
-//        filesystem::vfs_folder &vfs_modules() {
-//
-//        }
-
 
     };
 }

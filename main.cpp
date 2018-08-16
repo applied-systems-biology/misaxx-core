@@ -39,7 +39,7 @@ struct other_module : public misa_module<other_module_def> {
 
 
 struct my_module_definition : public misa_module_definition {
-    misa_file_stack my_stack = data<misa_file_stack>(metadata("my stack"));
+    misa_file_stack my_stack = data<misa_file_stack>("my_stack", metadata("my stack"));
     submodule <other_module> other = imported<other_module>("other", metadata("Other module"));
 };
 
@@ -56,6 +56,8 @@ struct my_module : public misa_module<my_module_definition> {
     using misa_module::misa_module;
 
     void init() {
+        // Data part
+
         // Dispatcher part
         chain c;
         c >> misa_dispatch<my_task1>("abc") >> misa_dispatch(other);

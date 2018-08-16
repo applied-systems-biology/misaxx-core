@@ -36,7 +36,9 @@ namespace misaxx::filesystem::importers {
 
         virtual_filesystem import() {
             virtual_filesystem vfs;
-            import_into(input_path, vfs.root);
+            import_into(input_path, *vfs.root / "input");
+
+
 
             return vfs;
         }
