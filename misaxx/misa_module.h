@@ -66,7 +66,7 @@ namespace misaxx {
             return dispatch<Module>(t_submodule.get_name(), std::move(t_submodule.definition()));
         }
 
-        const ModuleDefinition &module() const override {
+        ModuleDefinition &module() override {
             return *this;
         }
 

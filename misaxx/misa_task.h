@@ -18,7 +18,7 @@ namespace misaxx {
 
         }
 
-        const ModuleDefinition &module() const override {
+        ModuleDefinition &module() override {
             return *m_module;
         }
 

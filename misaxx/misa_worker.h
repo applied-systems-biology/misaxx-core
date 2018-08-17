@@ -8,6 +8,6 @@
 namespace misaxx {
     template<class ModuleDefinition> struct misa_worker {
         using module_type = ModuleDefinition;
-        virtual const ModuleDefinition &module() const = 0;
+        virtual ModuleDefinition &module() = 0;
     };
 }
