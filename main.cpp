@@ -12,6 +12,7 @@
 #include <pattxx/default_runtime.h>
 #include <misaxx/misa_runtime.h>
 #include <misaxx/filesystem/importers/path_importer.h>
+#include <misaxx/misa_cli.h>
 
 using namespace misaxx;
 using namespace pattxx;
@@ -59,7 +60,7 @@ struct my_module : public misa_module<my_module_definition> {
         // Data part
         other.init(*this);
         my_stack.init(*this, *filesystem.imported / "object1");
-        processed.init(*this, my_stack);     
+        processed.init(*this, my_stack);
 
         // Dispatcher part
         chain c;
@@ -68,13 +69,6 @@ struct my_module : public misa_module<my_module_definition> {
 };
 
 int main(int argc, const char** argv) {
-
-    misa_runtime<my_module> rt("my_module");
-    filesystem::importers::path_importer importer;
-    importer.input_path = "/home/rgerst/tmp/misa_folder_import/";
-    importer.output_path = "/home/rgerst/tmp/misa_folder_export/";
-    rt.get_filesystem() = importer.import();
-    rt.run();
-
-    return 0;
+    misa_cli<my_module> cli("my_module");
+    return cli.prepare_and_run(argc, argv);
 }
