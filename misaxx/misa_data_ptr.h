@@ -12,6 +12,9 @@ namespace misaxx {
      */
     template<class Data> class misa_data_ptr {
     public:
+
+        misa_data_ptr() = default;
+
         misa_data_ptr(Data &src) : m_data(&src) {
 
         }
