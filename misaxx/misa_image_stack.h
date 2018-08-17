@@ -14,6 +14,6 @@ namespace misaxx {
 
         using image_type = Image;
 
-        using misa_file_stack::misa_file_stack;
+        using misa_file_stack<misa_image_file<Image>>::misa_file_stack;
     };
 }
