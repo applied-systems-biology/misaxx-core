@@ -6,14 +6,14 @@
 #pragma once
 
 #include <boost/filesystem.hpp>
-#include "misaxx/filesystem/virtual_filesystem.h"
+#include "misaxx/misa_filesystem.h"
 
 namespace misaxx::filesystem::importers {
 
     /**
      * Imports a filesystem from an input folder.
      */
-    struct folder_importer {
+    struct path_importer {
         boost::filesystem::path input_path;
         boost::filesystem::path output_path;
 
@@ -34,12 +34,11 @@ namespace misaxx::filesystem::importers {
             }
         }
 
-        virtual_filesystem import() {
-            virtual_filesystem vfs;
-            import_into(input_path, *vfs.root / "input");
-
-
-
+        misa_filesystem import() {
+            misa_filesystem vfs;
+            vfs.imported = std::make_shared<filesystem::vfs_folder>("imported", input_path);
+            vfs.exported = std::make_shared<filesystem::vfs_folder>("exported", output_path);
+            import_into(input_path, vfs.imported);
             return vfs;
         }
     };

@@ -8,26 +8,24 @@ find_package(Boost 1.63 COMPONENTS REQUIRED filesystem regex program_options)
 find_package(OpenMP)
 
 add_library(misaxx
-        misaxx/filesystem/importers/json_importer.h
-        misaxx/filesystem/virtual_filesystem.h
         misaxx/filesystem/vfs_folder.h
         misaxx/filesystem/vfs_entry.h
-        misaxx/filesystem/importers/folder_importer.h
+        misaxx/filesystem/importers/path_importer.h
         misaxx/filesystem/vfs_file.h
         misaxx/misa_module.h
         misaxx/misa_file_stack.h
-        misaxx/misa_module_definition.h
+        misaxx/misa_module_definition_base.h
         misaxx/misa_task.h
         misaxx/misa_worker.h
         misaxx/misa_module_base.h
         misaxx/misa_dispatcher.h
         misaxx/misa_module_data.h
         misaxx/misa_submodule.h
-        misaxx/misa_runtime.h)
+        misaxx/misa_runtime.h misaxx/misa_filesystem.h misaxx/misa_module_definition.h)
 
-include(cmake/find_cxxh.cmake)
-include(cmake/find_pattxx.cmake)
-include(cmake/find_coixx.cmake)
+include(cmake_modules/find_cxxh.cmake)
+include(cmake_modules/find_pattxx.cmake)
+include(cmake_modules/find_coixx.cmake)
 
 target_include_directories(misaxx SYSTEM BEFORE PUBLIC ${Boost_INCLUDE_DIRS})
 target_include_directories(misaxx BEFORE PUBLIC ${Boost_INCLUDE_DIRS})

@@ -6,18 +6,13 @@
 #pragma once
 
 #include <pattxx/metadata.h>
-#include "misa_module_definition.h"
+#include "misa_module_definition_base.h"
 
 namespace misaxx {
     /**
      * Base class for data contained in a MISA++ module definition
      */
     struct misa_module_data {
-
-        /**
-         * Module that created this data
-         */
-        misa_module_definition *module;
 
         /**
          * Name of this data
@@ -36,12 +31,13 @@ namespace misaxx {
 
         misa_module_data() = delete;
 
-        explicit misa_module_data(misa_module_definition &t_module, std::string t_name, pattxx::metadata t_metadata) :
-        module(&t_module),
+        explicit misa_module_data(misa_module_definition_base &t_module, std::string t_name, pattxx::metadata t_metadata) :
         name(std::move(t_name)),
         metadata(std::move(t_metadata)) {
 
         }
+
+        misa_module_data(misa_module_data &&other) = default;
 
         misa_module_data(const misa_module_data &other) = delete;
     };

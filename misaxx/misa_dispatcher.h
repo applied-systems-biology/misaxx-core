@@ -6,13 +6,13 @@
 #pragma once
 
 #include <pattxx/dispatcher.h>
-#include "misa_module_definition.h"
+#include "misa_module_definition_base.h"
 #include "misa_worker.h"
 #include "misa_module_base.h"
 
 namespace misaxx {
     template<class ModuleDefinition> struct misa_dispatcher : public pattxx::dispatcher, public misa_worker<ModuleDefinition> {
-        static_assert(std::is_base_of<misa_module_definition, ModuleDefinition>::value, "Template argument must be a module definition!");
+        static_assert(std::is_base_of<misa_module_definition_base, ModuleDefinition>::value, "Template argument must be a module definition!");
 
         explicit misa_dispatcher(pattxx::nodes::node *t_node, ModuleDefinition *t_module) : pattxx::dispatcher(t_node), m_module(t_module) {
 

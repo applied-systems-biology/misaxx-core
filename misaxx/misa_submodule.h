@@ -6,11 +6,12 @@
 #pragma once
 
 #include <pattxx/dispatcher.h>
-#include "filesystem/vfs_folder.h"
+#include "misa_filesystem.h"
+#include "misa_module_definition_base.h"
 
 namespace misaxx {
 
-    struct misa_module_definition;
+    struct misa_module_definition_base;
 
     struct misa_submodule_base {
     };
@@ -28,7 +29,7 @@ namespace misaxx {
         using module_type = Module;
         using module_definition_type = ModuleDefinition;
 
-        explicit misa_submodule(misa_module_definition &t_parent, std::string t_name, pattxx::metadata t_metadata) :
+        explicit misa_submodule(misa_module_definition_base &t_parent, std::string t_name, pattxx::metadata t_metadata) :
                 m_name(std::move(t_name)),
                 m_metadata(std::move(t_metadata)) {
             if (m_name.empty())
@@ -55,6 +56,10 @@ namespace misaxx {
                 return m_module_definition;
         }
 
+        misa_filesystem &get_filesystem() {
+            return m_module_definition.filesystem;
+        }
+
         const std::string &get_name() const {
             return m_name;
         }
@@ -65,6 +70,15 @@ namespace misaxx {
 
         bool has_instance() const {
             return m_module != nullptr;
+        }
+
+        /**
+         * Initializes this submodule definition
+         * Call this method inside misa_module::init()
+         * @param module
+         */
+        void init(misa_module_definition_base &module) {
+            get_filesystem() = module.filesystem.create_subsystem(m_name);
         }
 
     private:

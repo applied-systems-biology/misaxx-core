@@ -7,7 +7,7 @@
 
 #include "misaxx/filesystem/vfs_folder.h"
 #include "misa_module_data.h"
-#include "misa_module_definition.h"
+#include "misa_module_definition_base.h"
 
 namespace misaxx {
 
@@ -22,11 +22,12 @@ namespace misaxx {
         using misa_module_data::misa_module_data;
 
         /**
-         * Creates an imported file stack based on the files located in the virtual filesystem folder
+         * Initializes this file stack from the virtual filesystem.
+         * @param t_module
          * @param t_folder
-         * @return
+         * @param force
          */
-        void imported_data(const filesystem::folder &t_folder, bool force = false) {
+        void init(misa_module_definition_base &t_module, const filesystem::folder &t_folder, bool force = false) {
             if(has_value && !force)
                 return;
             for(const auto &kv : *t_folder) {
@@ -38,22 +39,19 @@ namespace misaxx {
             has_value = true;
         }
 
-        /**
-         * Creates an exported file stack based on the files in a reference stack.
-         * @param t_reference_stack
-         * @param t_root_folder
-         * @param t_name
-         * @return
-         */
-        void exported_data(const misa_file_stack &t_reference_stack, bool force = false) {
+       /**
+        * Initializes this file stack from another file stack.
+        * The files will be placed into /exported/<name>
+        * @param t_module
+        * @param t_reference_stack
+        * @param force
+        */
+        void init(misa_module_definition_base &t_module, const misa_file_stack &t_reference_stack, bool force = false) {
             if(has_value && !force)
                 return;
 
-            auto &target_folder = *module->vfs_export() / name;
-
-            if(!target_folder.has_external_path()) {
-                throw std::runtime_error("Cannot export file stack into " + target_folder.internal_path().string() + ", as it has no external path!");
-            }
+            auto &target_folder = *t_module.filesystem.exported / name;
+            target_folder.ensure_external_path_exists();
 
             path external = target_folder.external_path();
 

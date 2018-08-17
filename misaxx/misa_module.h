@@ -7,7 +7,7 @@
 
 #include <pattxx/dispatcher.h>
 #include "misa_worker.h"
-#include "misa_module_definition.h"
+#include "misa_module_definition_base.h"
 #include "misa_module_base.h"
 
 namespace misaxx {
@@ -24,21 +24,13 @@ namespace misaxx {
 
     public:
 
-        using module_type = ModuleDefinition;
+        using module_definition_type = ModuleDefinition;
 
-        static_assert(std::is_base_of<misa_module_definition, ModuleDefinition>::value, "misa_module only accepts module definitions as template parameter!");
+        static_assert(std::is_base_of<misa_module_definition_base, ModuleDefinition>::value, "misa_module only accepts module definitions as template parameter!");
 
-        explicit misa_module(pattxx::nodes::node *t_node, filesystem::folder t_filesystem) :
-                pattxx::dispatcher(t_node) {
-            if (t_node->get_parent() != nullptr)
-                throw std::runtime_error("MISA++ module is initialized without a module definition. This is only valid for the root module.");
-            this->get_filesystem() = std::move(t_filesystem);
-        }
-
-        explicit misa_module(pattxx::nodes::node *t_node, filesystem::folder t_filesystem, ModuleDefinition definition) :
+        explicit misa_module(pattxx::nodes::node *t_node, ModuleDefinition definition) :
                 pattxx::dispatcher(t_node),
                 ModuleDefinition(std::move(definition)) {
-            this->get_filesystem() = std::move(t_filesystem);
         }
 
     protected:
@@ -69,8 +61,9 @@ namespace misaxx {
         Module &misa_dispatch(Submodule &t_submodule) {
             if(t_submodule.has_instance())
                 throw std::runtime_error("The submodule already has been instantiated!");
-            filesystem::folder folder = *this->vfs_modules() / t_submodule.get_name();
-            return dispatch<Module>(t_submodule.get_name(), folder, t_submodule.definition());
+            if(!t_submodule.definition().filesystem.is_valid())
+                throw std::runtime_error("The submodule's filesystem is invalid! Please initialize it, first!");
+            return dispatch<Module>(t_submodule.get_name(), std::move(t_submodule.definition()));
         }
 
         const ModuleDefinition &module() const override {

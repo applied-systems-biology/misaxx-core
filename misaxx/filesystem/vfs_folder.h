@@ -104,6 +104,17 @@ namespace misaxx::filesystem {
             return std::dynamic_pointer_cast<vfs_folder>(self().lock());
         }
 
+        /**
+         * Ensures that the external folder path exists if it is set.
+         * Throws an exception if there is no external path.
+         */
+        void ensure_external_path_exists() const {
+            if(!has_external_path())
+                throw std::runtime_error("This VFS folder has no external path!");
+            if(!boost::filesystem::exists(external_path()))
+                boost::filesystem::create_directories(external_path());
+        }
+
     private:
 
         std::unordered_map<std::string, std::shared_ptr<vfs_entry>> children;
