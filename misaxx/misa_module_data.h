@@ -31,7 +31,7 @@ namespace misaxx {
 
         misa_module_data() = delete;
 
-        explicit misa_module_data(misa_module_definition_base &t_module, std::string t_name, pattxx::metadata t_metadata) :
+        explicit misa_module_data(misa_module_definition_base &t_module, std::string t_name, pattxx::metadata t_metadata = pattxx::metadata()) :
         name(std::move(t_name)),
         metadata(std::move(t_metadata)) {
 

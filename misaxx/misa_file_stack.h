@@ -8,16 +8,20 @@
 #include "misaxx/filesystem/vfs_folder.h"
 #include "misa_module_data.h"
 #include "misa_module_definition_base.h"
+#include "misa_file.h"
 
 namespace misaxx {
 
     /**
      * Stack of files with any type.
      */
-    struct misa_file_stack : public misa_module_data {
+    template<class File> struct misa_file_stack : public misa_module_data {
 
-        using path = boost::filesystem::path;
-        std::unordered_map<std::string, path> files;
+        using files_t = std::unordered_map<std::string, File>;
+        using iterator = typename files_t::iterator;
+        using const_iterator = typename files_t::const_iterator;
+
+        files_t files;
 
         using misa_module_data::misa_module_data;
 
@@ -31,9 +35,11 @@ namespace misaxx {
             if(has_value && !force)
                 return;
             for(const auto &kv : *t_folder) {
-                const auto *ptr = dynamic_cast<const filesystem::vfs_file*>(kv.second.get());
-                if(ptr != nullptr && ptr->has_external_path()) {
-                    files.insert({ ptr->name, ptr->external_path() });
+                filesystem::file file = std::dynamic_pointer_cast<filesystem::vfs_file>(kv.second);
+                if(file && file->has_external_path()) {
+                    File f(t_module, kv.first);
+                    f.init(t_module, file);
+                    files.insert({ file->name, std::move(f) });
                 }
             }
             has_value = true;
@@ -46,19 +52,37 @@ namespace misaxx {
         * @param t_reference_stack
         * @param force
         */
-        void init(misa_module_definition_base &t_module, const misa_file_stack &t_reference_stack, bool force = false) {
+        void init(misa_module_definition_base &t_module, const misa_file_stack<File> &t_reference_stack, bool force = false) {
             if(has_value && !force)
                 return;
 
             auto &target_folder = *t_module.filesystem.exported / name;
             target_folder.ensure_external_path_exists();
 
-            path external = target_folder.external_path();
+            auto external = target_folder.external_path();
 
             for(const auto &kv : t_reference_stack.files) {
-                files.insert({ kv.first, external / kv.second.filename() });
-                target_folder.create<filesystem::vfs_file>(kv.second.filename().string());
+                filesystem::file file = target_folder.template create<filesystem::vfs_file>(kv.second.name);
+                File f(t_module, kv.first);
+                f.init(t_module, file);
+                files.insert({ kv.first, std::move(f) });
             }
+        }
+
+        iterator begin() {
+            return files.begin();
+        }
+
+        const_iterator begin() const {
+            return files.begin();
+        }
+
+        iterator end() {
+            return files.end();
+        }
+
+        const_iterator end() const {
+            return files.end();
         }
 
     };

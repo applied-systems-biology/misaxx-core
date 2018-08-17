@@ -13,6 +13,7 @@
 #include <misaxx/misa_runtime.h>
 #include <misaxx/filesystem/importers/path_importer.h>
 #include <misaxx/misa_cli.h>
+#include <misaxx/misa_generic_file_stack.h>
 
 using namespace misaxx;
 using namespace pattxx;
@@ -39,8 +40,8 @@ struct other_module : public misa_module<other_module_def> {
 
 
 struct my_module_definition : public misa_module_definition {
-    misa_file_stack my_stack = data<misa_file_stack>("my_stack", metadata("my stack"));
-    misa_file_stack processed = data<misa_file_stack>("processed");
+    misa_generic_file_stack my_stack = data<misa_generic_file_stack>("my_stack", metadata("my stack"));
+    misa_generic_file_stack processed = data<misa_generic_file_stack>("processed");
     submodule <other_module> other = imported<other_module>("other", metadata("Other module"));
 };
 
