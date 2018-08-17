@@ -21,7 +21,7 @@ add_library(misaxx
         misaxx/misa_dispatcher.h
         misaxx/misa_module_data.h
         misaxx/misa_submodule.h
-        misaxx/misa_runtime.h misaxx/misa_filesystem.h misaxx/misa_module_definition.h misaxx/misa_cli.h misaxx/misa_image_stack.h misaxx/misa_file.h misaxx/misa_generic_file_stack.h misaxx/misa_image_file.h)
+        misaxx/misa_runtime.h misaxx/misa_filesystem.h misaxx/misa_module_definition.h misaxx/misa_cli.h misaxx/misa_image_stack.h misaxx/misa_file.h misaxx/misa_generic_file_stack.h misaxx/misa_image_file.h misaxx/misa_data_ptr.h)
 
 include(cmake_modules/find_cxxh.cmake)
 include(cmake_modules/find_pattxx.cmake)
