@@ -6,13 +6,14 @@
 #pragma once
 
 #include <pattxx/metadata.h>
+#include <cmake-build-debug/_deps/cxxh-src/cxxh/containers/singleton_map.h>
 #include "misa_module_definition_base.h"
 
 namespace misaxx {
     /**
      * Base class for data contained in a MISA++ module definition
      */
-    struct misa_module_data {
+struct misa_module_data {
 
         /**
          * Name of this data
@@ -23,6 +24,11 @@ namespace misaxx {
          * Additional metadata
          */
         pattxx::metadata metadata;
+
+        /**
+         * Additional metadata attached by algorithms
+         */
+        cxxh::containers::singleton_map user_metadata;
 
         /**
          * If true, this data object already contains valid data

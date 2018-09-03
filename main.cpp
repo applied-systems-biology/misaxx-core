@@ -63,6 +63,8 @@ struct my_module : public misa_module<my_module_definition> {
         my_stack.init(*this, *filesystem.imported);
         processed.init(*this, my_stack);
 
+        my_stack.user_metadata.access<int>() = 5;
+
         // Dispatcher part
         chain c;
         c >> misa_dispatch<my_task1>("abc") >> misa_dispatch(other);
