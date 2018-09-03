@@ -7,6 +7,7 @@
 
 #include <boost/filesystem.hpp>
 #include "misa_module_definition_base.h"
+#include "misa_module_data.h"
 #include "filesystem/vfs_file.h"
 
 namespace misaxx {
