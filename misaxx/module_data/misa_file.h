@@ -6,9 +6,9 @@
 #pragma once
 
 #include <boost/filesystem.hpp>
-#include "misa_module_definition_base.h"
-#include "misa_module_data.h"
-#include "filesystem/vfs_file.h"
+#include "../misa_module_definition_base.h"
+#include "../misa_module_data.h"
+#include "../filesystem/vfs_file.h"
 
 namespace misaxx {
     struct misa_file : public misa_module_data {

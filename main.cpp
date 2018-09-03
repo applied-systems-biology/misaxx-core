@@ -5,7 +5,7 @@
 
 #include <iostream>
 #include <fstream>
-#include <misaxx/misa_file_stack.h>
+#include <misaxx/module_data/misa_file_stack.h>
 #include <misaxx/misa_module.h>
 #include <misaxx/misa_module_definition.h>
 #include <misaxx/misa_task.h>
@@ -13,7 +13,7 @@
 #include <misaxx/misa_runtime.h>
 #include <misaxx/filesystem/importers/directories_importer.h>
 #include <misaxx/misa_cli.h>
-#include <misaxx/misa_generic_file_stack.h>
+#include <misaxx/module_data/misa_generic_file_stack.h>
 
 using namespace misaxx;
 using namespace pattxx;
@@ -60,7 +60,7 @@ struct my_module : public misa_module<my_module_definition> {
     void init() {
         // Data part
         other.init(*this);
-        my_stack.init(*this, *filesystem.imported / "object1");
+        my_stack.init(*this, *filesystem.imported);
         processed.init(*this, my_stack);
 
         // Dispatcher part

@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include "misaxx/filesystem/vfs_folder.h"
-#include "misa_module_data.h"
-#include "misa_module_definition_base.h"
+#include "../filesystem/vfs_folder.h"
+#include "../misa_module_data.h"
+#include "../misa_module_definition_base.h"
 #include "misa_file.h"
 
 namespace misaxx {

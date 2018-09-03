@@ -38,8 +38,8 @@ namespace misaxx {
             if(!is_valid())
                 throw std::runtime_error("Cannot create sub-filesystem from invalid filesystem!");
             misa_filesystem result;
-            result.imported = imported->create<filesystem::vfs_folder>(t_name);
-            result.exported = exported->create<filesystem::vfs_folder>(t_name);
+            result.imported = *imported / t_name;
+            result.exported = *exported / t_name;
             return result;
         }
     };
