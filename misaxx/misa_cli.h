@@ -10,7 +10,8 @@
 #include <iostream>
 #include <fstream>
 #include <boost/filesystem.hpp>
-#include <misaxx/filesystem/importers/path_importer.h>
+#include "filesystem/importers/directories_importer.h"
+#include "filesystem/importers/json_importer.h"
 #include "misa_runtime.h"
 
 namespace misaxx {
@@ -138,9 +139,14 @@ namespace misaxx {
         void load_filesystem() {
             nlohmann::json &params = m_runtime.parameters["runtime::filesystem"];
             if(params["source"] == "directories") {
-                filesystem::importers::path_importer importer;
+                filesystem::importers::directories_importer importer;
                 importer.input_path = params["input-directory"].get<std::string>();
                 importer.output_path = params["output-directory"].get<std::string>();
+                get_runtime().get_filesystem() = importer.import();
+            }
+            else if(params["source"] == "json") {
+                filesystem::importers::json_importer importer;
+                importer.json_path = params["json-path"].get<std::string>();
                 get_runtime().get_filesystem() = importer.import();
             }
             else {

@@ -11,7 +11,7 @@
 #include <misaxx/misa_task.h>
 #include <pattxx/default_runtime.h>
 #include <misaxx/misa_runtime.h>
-#include <misaxx/filesystem/importers/path_importer.h>
+#include <misaxx/filesystem/importers/directories_importer.h>
 #include <misaxx/misa_cli.h>
 #include <misaxx/misa_generic_file_stack.h>
 

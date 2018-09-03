@@ -12,11 +12,18 @@ namespace misaxx::filesystem::importers {
 
     /**
      * Imports a filesystem from an input folder.
+     * The "imported" directory maps to the input path.
+     * The "exported" directory maps to the output path.
      */
-    struct path_importer {
+    struct directories_importer {
         boost::filesystem::path input_path;
         boost::filesystem::path output_path;
 
+        /**
+         * Internal function that imports a OS filesystem path into a MISA filesystem path
+         * @param subdir
+         * @param t_folder
+         */
         void import_into(boost::filesystem::path &subdir, folder t_folder) {
 
             using namespace boost::filesystem;
@@ -34,6 +41,10 @@ namespace misaxx::filesystem::importers {
             }
         }
 
+        /**
+         * Imports the filesystem
+         * @return
+         */
         misa_filesystem import() {
             misa_filesystem vfs;
             vfs.imported = std::make_shared<filesystem::vfs_folder>("imported", input_path);
