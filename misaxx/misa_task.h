@@ -11,6 +11,11 @@
 #include "misa_data_ptr.h"
 
 namespace misaxx {
+
+    /**
+     * Base class for a MISA++ task
+     * @tparam ModuleDefinition
+     */
     template<class ModuleDefinition> struct misa_task : public pattxx::task, public misa_worker<ModuleDefinition> {
 
         static_assert(std::is_base_of<misa_module_definition_base, ModuleDefinition>::value, "Template argument must be a module definition!");
@@ -21,6 +26,10 @@ namespace misaxx {
 
         }
 
+        /**
+         * Returns the module definition
+         * @return
+         */
         ModuleDefinition &module() override {
             return *m_module;
         }
