@@ -70,6 +70,6 @@ struct my_module : public misa_module<my_module_definition> {
 };
 
 int main(int argc, const char** argv) {
-    misa_cli<my_module> cli("my_module");
+    misa_cli<misa_multiobject_root<my_module>> cli("my_module");
     return cli.prepare_and_run(argc, argv);
 }

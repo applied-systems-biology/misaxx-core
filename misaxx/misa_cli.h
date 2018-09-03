@@ -13,17 +13,16 @@
 #include "filesystem/importers/directories_importer.h"
 #include "filesystem/importers/json_importer.h"
 #include "misa_runtime.h"
-#include "root_modules/misa_default_root_module.h"
+#include "misaxx/root_modules/misa_multiobject_root.h"
 
 namespace misaxx {
 
     /**
      * MISA++ CLI
-     * @tparam MainModule The module that should be executed
-     * @tparam Module The actual module the is executed. By default misa_default_root_module<MainModule>
+     * @tparam Module The module that should be executed
      * @tparam Runtime
      */
-    template<class MainModule, class Module = misa_default_root_module<MainModule>, class Runtime = misa_runtime<Module>> class misa_cli {
+    template<class Module, class Runtime = misa_runtime<Module>> class misa_cli {
 
     public:
 

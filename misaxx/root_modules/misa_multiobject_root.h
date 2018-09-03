@@ -10,15 +10,18 @@
 
 namespace misaxx {
 
-    struct misa_default_root_module_definition : public misa_module_definition {
+    /**
+     * Empty module definition for misa_multiobject_root
+     */
+    struct misa_multiobject_root_definition : public misa_module_definition {
     };
 
     /**
-     * The default root module used by the MISA++ runtime.
-     * Distributes all folders in the filesystem to the SubModule.
-     * Files are ignored.
+     * Wrap the root module around this module to interpret subfolders inside the import filesystem
+     * as objects. The SubModule is called on each of this objects.
+     * @tparam SubModule
      */
-    template<class SubModule> struct misa_default_root_module : public misa_module<misa_default_root_module_definition> {
+    template<class SubModule> struct misa_multiobject_root : public misa_module<misa_multiobject_root_definition> {
         using misa_module::misa_module;
 
         void init() {
