@@ -18,20 +18,20 @@ namespace misaxx {
      * setting up the data and submodules.
      *
      * A MISA module must be always instantiated with a module definition (the root module is instantiated with a default definition)
-     * @tparam ModuleDefinition
+     * @tparam ModuleDeclaration
      */
-    template<class ModuleDefinition>
-    struct misa_module : public misa_module_base, public misa_worker<ModuleDefinition>, public pattxx::dispatcher, public ModuleDefinition {
+    template<class ModuleDeclaration>
+    struct misa_module : public misa_module_base, public misa_worker<ModuleDeclaration>, public pattxx::dispatcher, public ModuleDeclaration {
 
     public:
 
-        using module_definition_type = ModuleDefinition;
+        using module_definition_type = ModuleDeclaration;
 
-        static_assert(std::is_base_of<misa_module_declaration_base, ModuleDefinition>::value, "misa_module only accepts module definitions as template parameter!");
+        static_assert(std::is_base_of<misa_module_declaration_base, ModuleDeclaration>::value, "misa_module only accepts module definitions as template parameter!");
 
-        explicit misa_module(pattxx::nodes::node *t_node, ModuleDefinition definition) :
+        explicit misa_module(pattxx::nodes::node *t_node, ModuleDeclaration definition) :
                 pattxx::dispatcher(t_node),
-                ModuleDefinition(std::move(definition)) {
+                ModuleDeclaration(std::move(definition)) {
         }
 
     protected:
@@ -55,7 +55,7 @@ namespace misaxx {
          */
         template<class Instance, typename... Args>
         Instance &misa_dispatch(const std::string &t_name, Args &&... args) {
-            auto &inst = dispatch<Instance>(t_name, static_cast<ModuleDefinition *>(this), std::forward<Args>(args)...);
+            auto &inst = dispatch<Instance>(t_name, static_cast<ModuleDeclaration *>(this), std::forward<Args>(args)...);
             return inst;
         }
 
@@ -79,7 +79,7 @@ namespace misaxx {
          * Returns the module definition
          * @return
          */
-        ModuleDefinition &module() override {
+        ModuleDeclaration &module() override {
             return *this;
         }
 

@@ -7,6 +7,7 @@
 
 #include "misaxx/misa_module_declaration.h"
 #include "misaxx/misa_module.h"
+#include "misa_root_module_base.h"
 
 namespace misaxx {
 
@@ -21,7 +22,7 @@ namespace misaxx {
      * as objects. The SubModule is called on each of this objects.
      * @tparam SubModule
      */
-    template<class SubModule> struct misa_multiobject_root : public misa_module<misa_multiobject_root_definition> {
+    template<class SubModule> struct misa_multiobject_root : public misa_module<misa_multiobject_root_definition>, public misa_root_module_base {
         using misa_module::misa_module;
 
         void init() {

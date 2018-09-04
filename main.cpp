@@ -14,6 +14,7 @@
 #include <misaxx/filesystem/importers/directories_importer.h>
 #include <misaxx/misa_cli.h>
 #include <misaxx/module_data/misa_generic_file_stack.h>
+#include <misaxx/object_node_path.h>
 
 using namespace misaxx;
 using namespace pattxx;
@@ -64,6 +65,8 @@ struct my_module : public misa_module<my_module_definition> {
         init_data(processed) << my_stack;
 
         my_stack.user_metadata.access<int>() = 5;
+
+        auto x = get_node().get_custom_path<object_node_path>();
 
         // Dispatcher part
         chain c;
