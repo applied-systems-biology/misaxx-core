@@ -60,8 +60,8 @@ struct my_module : public misa_module<my_module_definition> {
     void init() {
         // Data part
         other.init(*this);
-        my_stack.init(*this, *filesystem.imported);
-        processed.init(*this, my_stack);
+        init_data(my_stack) << filesystem.imported;
+        init_data(processed) << my_stack;
 
         my_stack.user_metadata.access<int>() = 5;
 

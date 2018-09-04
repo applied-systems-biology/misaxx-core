@@ -16,29 +16,22 @@ namespace misaxx {
 
         using misa_module_data::misa_module_data;
 
-        /**
-         * Initializes this MISA++ file from a VFS file
-         * @param t_module
-         * @param t_file
-         * @param force
-         */
-        void init(misa_module_definition_base &t_module, const filesystem::file &t_file, bool force = false) {
-            if(has_value && !force)
+        void clear() override {
+            misa_module_data::clear();
+            path = boost::filesystem::path();
+        }
+
+        void operator <<(const filesystem::file &t_file) {
+            if(has_value)
                 return;
             path = t_file->external_path();
             has_value = true;
         }
 
-        /**
-         * Initializes this MISA++ file from an existing file. Creates a file /exported/<name>
-         * @param t_module
-         * @param t_reference_file
-         * @param force
-         */
-        void init(misa_module_definition_base &t_module, const misa_file &t_reference_file, bool force = false) {
-            if(has_value && !force)
+        void operator <<(const misa_file &t_reference_file) {
+            if(has_value)
                 return;
-            filesystem::file f = t_module.filesystem.exported->create<filesystem::vfs_file>(t_reference_file.path.filename().string());
+            auto f = m_module->filesystem.exported->create<filesystem::file>(t_reference_file.path.filename().string());
             path = f->external_path();
             has_value = true;
         }

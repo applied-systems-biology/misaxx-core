@@ -32,10 +32,10 @@ namespace misaxx::filesystem::importers {
             while(it != directory_iterator()) {
                 path external_path = *it++;
                 if(is_regular_file(external_path)) {
-                    t_folder->create<vfs_file>(external_path.filename().string(), external_path);
+                    t_folder->create<filesystem::file>(external_path.filename().string(), external_path);
                 }
                 else if(is_directory(external_path)) {
-                    auto subfolder = t_folder->create<vfs_folder>(external_path.filename().string(), external_path);
+                    auto subfolder = t_folder->create<filesystem::folder>(external_path.filename().string(), external_path);
                     import_into(external_path, subfolder);
                 }
             }

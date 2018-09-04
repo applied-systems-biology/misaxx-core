@@ -36,6 +36,17 @@ namespace misaxx {
     protected:
 
         /**
+         * Initializes a module data member
+         * @tparam Data
+         * @param t_data
+         * @return
+         */
+        template<class Data> Data& init_data(Data &t_data) {
+            t_data.m_module = this;
+            return t_data;
+        }
+
+        /**
          * pattxx::dispatcher::dispatch with the additional function of setting the module accordingly.
          * @tparam Instance
          * @param t_name

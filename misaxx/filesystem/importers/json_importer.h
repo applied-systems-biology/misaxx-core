@@ -52,19 +52,19 @@ namespace misaxx::filesystem::importers {
                 for(nlohmann::json::const_iterator kv = children.begin(); kv != children.end(); ++kv) {
                     const nlohmann::json &json_entry = kv.value();
                     if(json_entry["type"] == "file") {
-                        file f = t_folder->create<vfs_file>(kv.key());
+                        file f = t_folder->create<filesystem::file>(kv.key());
                         if(json_entry.find("external-path") != json_entry.end()) {
                             f->custom_external = json_entry["external-path"].get<std::string>();
                         }
                     }
                     else if(json_entry["type"] == "directory") {
-                        folder f = t_folder->create<vfs_folder>(kv.key());
+                        folder f = t_folder->create<folder>(kv.key());
                         import_folder(json_entry, f);
                     }
                     else {
                         throw std::runtime_error("Unsupported filesystem entry type " + json_entry["type"].get<std::string>());
                     }
-                    folder subfolder = t_folder->create<vfs_folder>(kv.key());
+                    folder subfolder = t_folder->create<folder>(kv.key());
 
                 }
             }
