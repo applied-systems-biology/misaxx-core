@@ -12,6 +12,8 @@ namespace misaxx {
     template<class Image> struct misa_image_file : public misa_file {
         using image_type = Image;
 
+        using misa_file::misa_file;
+
         /**
          * Loads the image described in this file.
          * If the loaded image does not have the right type, an exception will be thrown
