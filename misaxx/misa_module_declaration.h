@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "misa_module_definition_base.h"
+#include "misa_module_declaration_base.h"
 #include "misa_submodule.h"
 
 namespace misaxx {
@@ -16,14 +16,14 @@ namespace misaxx {
      * The module definition is combined with the module dispatcher (misaxx::misa_module) to build the
      * final module.
      */
-    class misa_module_definition : public misa_module_definition_base {
+    class misa_module_declaration : public misa_module_declaration_base {
     public:
         using metadata = pattxx::metadata;
         template<class Module> using submodule = misa_submodule<Module>;
     protected:
 
         /**
-         * Creates data for the module definition
+         * Declares data for the module definition
          * @tparam T
          * @tparam Args
          * @param args
@@ -35,7 +35,7 @@ namespace misaxx {
         }
 
         /**
-         * Imports a module as submodule
+         * Declares a module as submodule
          * @tparam Module
          * @param t_name
          * @param t_metadata

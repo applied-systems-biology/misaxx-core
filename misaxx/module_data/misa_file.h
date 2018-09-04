@@ -6,7 +6,7 @@
 #pragma once
 
 #include <boost/filesystem.hpp>
-#include "../misa_module_definition_base.h"
+#include "misaxx/misa_module_declaration_base.h"
 #include "../misa_module_data.h"
 #include "../filesystem/vfs_file.h"
 
@@ -31,7 +31,9 @@ namespace misaxx {
         void operator <<(const misa_file &t_reference_file) {
             if(has_value)
                 return;
-            auto f = m_module->filesystem.exported->create<filesystem::file>(t_reference_file.path.filename().string());
+            if(!t_reference_file.has_value)
+                throw std::runtime_error("Reference file does not contain any value!");
+            auto f = parent_module->filesystem.exported->create<filesystem::file>(t_reference_file.path.filename().string());
             path = f->external_path();
             has_value = true;
         }

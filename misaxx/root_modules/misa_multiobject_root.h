@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "misaxx/misa_module_definition.h"
+#include "misaxx/misa_module_declaration.h"
 #include "misaxx/misa_module.h"
 
 namespace misaxx {
@@ -13,7 +13,7 @@ namespace misaxx {
     /**
      * Empty module definition for misa_multiobject_root
      */
-    struct misa_multiobject_root_definition : public misa_module_definition {
+    struct misa_multiobject_root_definition : public misa_module_declaration {
     };
 
     /**

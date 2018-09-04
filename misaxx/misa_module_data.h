@@ -7,7 +7,7 @@
 
 #include <pattxx/metadata.h>
 #include <cmake-build-debug/_deps/cxxh-src/cxxh/containers/singleton_map.h>
-#include "misa_module_definition_base.h"
+#include "misa_module_declaration_base.h"
 
 namespace misaxx {
 
@@ -44,13 +44,13 @@ namespace misaxx {
         bool has_value = false;
 
         /**
-         * Pointer to the module. Set by the init method
+         * The module that owns this data
          */
-        misa_module_definition_base *m_module = nullptr;
+        misa_module_declaration_base *parent_module = nullptr;
 
         misa_module_data() = delete;
 
-        explicit misa_module_data(misa_module_definition_base &t_module, std::string t_name, pattxx::metadata t_metadata = pattxx::metadata()) :
+        explicit misa_module_data(misa_module_declaration_base &t_module, std::string t_name, pattxx::metadata t_metadata = pattxx::metadata()) :
                 name(std::move(t_name)),
                 metadata(std::move(t_metadata)) {
 
@@ -64,8 +64,13 @@ namespace misaxx {
             has_value = false;
         }
 
+        virtual void init(misa_module_declaration_base &module) {
+            parent_module = &module;
+        }
+
         virtual void operator <<(const misa_clear_data &t_data) {
             clear();
         }
+
     };
 }

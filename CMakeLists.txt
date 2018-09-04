@@ -14,14 +14,14 @@ add_library(misaxx
         misaxx/filesystem/vfs_file.h
         misaxx/misa_module.h
         misaxx/module_data/misa_file_stack.h
-        misaxx/misa_module_definition_base.h
+        misaxx/misa_module_declaration_base.h
         misaxx/misa_task.h
         misaxx/misa_worker.h
         misaxx/misa_module_base.h
         misaxx/misa_dispatcher.h
         misaxx/misa_module_data.h
         misaxx/misa_submodule.h
-        misaxx/misa_runtime.h misaxx/misa_filesystem.h misaxx/misa_module_definition.h misaxx/misa_cli.h misaxx/module_data/misa_image_stack.h misaxx/module_data/misa_file.h misaxx/module_data/misa_generic_file_stack.h misaxx/module_data/misa_image_file.h misaxx/misa_data_ptr.h misaxx/filesystem/importers/json_importer.h misaxx/root_modules/misa_multiobject_root.h)
+        misaxx/misa_runtime.h misaxx/misa_filesystem.h misaxx/misa_module_declaration.h misaxx/misa_cli.h misaxx/module_data/misa_image_stack.h misaxx/module_data/misa_file.h misaxx/module_data/misa_generic_file_stack.h misaxx/module_data/misa_image_file.h misaxx/misa_data_ptr.h misaxx/filesystem/importers/json_importer.h misaxx/root_modules/misa_multiobject_root.h)
 
 include(cmake_modules/find_cxxh.cmake)
 include(cmake_modules/find_pattxx.cmake)

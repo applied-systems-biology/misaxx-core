@@ -7,13 +7,15 @@
 
 #include <pattxx/dispatcher.h>
 #include "misa_filesystem.h"
-#include "misa_module_definition_base.h"
+#include "misa_module_declaration_base.h"
+#include "misa_module_data.h"
 
 namespace misaxx {
 
-    struct misa_module_definition_base;
+    struct misa_module_declaration_base;
 
-    struct misa_submodule_base {
+    struct misa_submodule_base : public misa_module_data {
+        using misa_module_data::misa_module_data;
     };
 
     /**
@@ -29,11 +31,8 @@ namespace misaxx {
         using module_type = Module;
         using module_definition_type = ModuleDefinition;
 
-        explicit misa_submodule(misa_module_definition_base &t_parent, std::string t_name, pattxx::metadata t_metadata) :
-                m_name(std::move(t_name)),
-                m_metadata(std::move(t_metadata)) {
-            if (m_name.empty())
-                throw std::runtime_error("The name of the submodule is empty!");
+        explicit misa_submodule(misa_module_declaration_base &t_parent, std::string t_name, pattxx::metadata t_metadata) :
+                misa_submodule_base(t_parent, std::move(t_name), std::move(t_metadata)) {
         }
 
         /**
@@ -60,16 +59,15 @@ namespace misaxx {
             return m_module_definition.filesystem;
         }
 
-        const std::string &get_name() const {
-            return m_name;
-        }
-
-        const pattxx::metadata &get_metadata() const {
-            return m_metadata;
-        }
-
         bool has_instance() const {
             return m_module != nullptr;
+        }
+
+        /**
+         * A submodule cannot be cleared
+         */
+        void clear() override {
+            throw std::runtime_error("A submodule cannot be cleared!");
         }
 
         /**
@@ -77,13 +75,12 @@ namespace misaxx {
          * Call this method inside misa_module::init()
          * @param module
          */
-        void init(misa_module_definition_base &module) {
-            get_filesystem() = module.filesystem.create_subsystem(m_name);
+        void init(misa_module_declaration_base &module) override {
+            misa_submodule_base::init(module);
+            get_filesystem() = module.filesystem.create_subsystem(name);
         }
 
     private:
-        std::string m_name;
-        pattxx::metadata m_metadata;
         module_definition_type m_module_definition;
     };
 }

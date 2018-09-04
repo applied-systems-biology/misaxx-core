@@ -7,8 +7,9 @@
 
 #include <pattxx/dispatcher.h>
 #include "misa_worker.h"
-#include "misa_module_definition_base.h"
+#include "misa_module_declaration_base.h"
 #include "misa_module_base.h"
+#include "misa_submodule.h"
 
 namespace misaxx {
 
@@ -26,7 +27,7 @@ namespace misaxx {
 
         using module_definition_type = ModuleDefinition;
 
-        static_assert(std::is_base_of<misa_module_definition_base, ModuleDefinition>::value, "misa_module only accepts module definitions as template parameter!");
+        static_assert(std::is_base_of<misa_module_declaration_base, ModuleDefinition>::value, "misa_module only accepts module definitions as template parameter!");
 
         explicit misa_module(pattxx::nodes::node *t_node, ModuleDefinition definition) :
                 pattxx::dispatcher(t_node),
@@ -37,12 +38,12 @@ namespace misaxx {
 
         /**
          * Initializes a module data member
-         * @tparam Data
+         * @tparam Data misa_module_data or misa_submodule instance
          * @param t_data
          * @return
          */
         template<class Data> Data& init_data(Data &t_data) {
-            t_data.m_module = this;
+            t_data.init(*this);
             return t_data;
         }
 
@@ -71,7 +72,7 @@ namespace misaxx {
                 throw std::runtime_error("The submodule already has been instantiated!");
             if(!t_submodule.definition().filesystem.is_valid())
                 throw std::runtime_error("The submodule's filesystem is invalid! Please initialize it, first!");
-            return dispatch<Module>(t_submodule.get_name(), std::move(t_submodule.definition()));
+            return dispatch<Module>(t_submodule.name, std::move(t_submodule.definition()));
         }
 
         /**

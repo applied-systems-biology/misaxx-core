@@ -7,7 +7,7 @@
 #include <fstream>
 #include <misaxx/module_data/misa_file_stack.h>
 #include <misaxx/misa_module.h>
-#include <misaxx/misa_module_definition.h>
+#include <misaxx/misa_module_declaration.h>
 #include <misaxx/misa_task.h>
 #include <pattxx/default_runtime.h>
 #include <misaxx/misa_runtime.h>
@@ -18,7 +18,7 @@
 using namespace misaxx;
 using namespace pattxx;
 
-struct other_module_def : public misa_module_definition {
+struct other_module_def : public misa_module_declaration {
 
 };
 
@@ -39,7 +39,7 @@ struct other_module : public misa_module<other_module_def> {
 };
 
 
-struct my_module_definition : public misa_module_definition {
+struct my_module_definition : public misa_module_declaration {
     misa_generic_file_stack my_stack = data<misa_generic_file_stack>("my_stack", metadata("my stack"));
     misa_generic_file_stack processed = data<misa_generic_file_stack>("processed");
     submodule <other_module> other = imported<other_module>("other", metadata("Other module"));
@@ -59,7 +59,7 @@ struct my_module : public misa_module<my_module_definition> {
 
     void init() {
         // Data part
-        other.init(*this);
+        init_data(other);
         init_data(my_stack) << filesystem.imported;
         init_data(processed) << my_stack;
 
