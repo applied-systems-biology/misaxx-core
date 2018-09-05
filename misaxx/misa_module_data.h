@@ -6,7 +6,7 @@
 #pragma once
 
 #include <pattxx/metadata.h>
-#include <cmake-build-debug/_deps/cxxh-src/cxxh/containers/singleton_map.h>
+#include <cxxh/containers/singleton_map.h>
 #include "misa_module_declaration_base.h"
 
 namespace misaxx {
