@@ -22,6 +22,12 @@ namespace misaxx {
         double x;
         double y;
         double z;
+
+        double xy() {
+            if(x != y)
+                throw std::runtime_error("x and y must be the same!");
+            return x;
+        }
     };
 }
 
