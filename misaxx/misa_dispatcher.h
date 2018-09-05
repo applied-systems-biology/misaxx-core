@@ -115,6 +115,24 @@ namespace misaxx {
             return from_json_or<T, algorithm_node_path, InputCheckTag>(t_name, std::move(t_default), t_metadata);
         }
 
+        /**
+         * Loads a parameter from an auto-parameter
+         * @tparam Parameter
+         * @return
+         */
+        template<class Parameter, class InputCheckTag = pattxx::parameters::default_check> auto from_parameter() {
+            return from_json<Parameter, typename Parameter::configuration_namespace_type, InputCheckTag> (Parameter::name, Parameter::metadata);
+        }
+
+        /**
+         * Loads a parameter from an auto-parameter
+         * @tparam Parameter
+         * @return
+         */
+        template<class Parameter, class InputCheckTag = pattxx::parameters::default_check> auto from_parameter_or(Parameter t_default = Parameter()) {
+            return from_json_or<Parameter, typename Parameter::configuration_namespace_type, InputCheckTag> (Parameter::name, std::move(t_default), Parameter::metadata);
+        }
+
     private:
 
         ModuleDefinition *m_module;

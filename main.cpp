@@ -16,6 +16,7 @@
 #include <misaxx/module_data/misa_generic_file_stack.h>
 #include <misaxx/algorithm_node_path.h>
 #include <misaxx/object_node_path.h>
+#include <misaxx/parameters/voxel_size.h>
 
 using namespace misaxx;
 using namespace pattxx;
@@ -26,6 +27,8 @@ struct other_module_def : public misa_module_declaration {
 
 struct other_task1 : public misa_task<other_module_def> {
     using misa_task::misa_task;
+
+    int abcde = from_object_json<int>("abcde");
 
     void work() {
         auto x = get_node().get_custom_path<algorithm_node_path>();
@@ -62,6 +65,8 @@ struct my_task1 : public misa_task<my_module_definition> {
 struct my_module : public misa_module<my_module_definition> {
 
     using misa_module::misa_module;
+
+    voxel_size vs = from_parameter<voxel_size>();
 
     void init() {
         // Data part
