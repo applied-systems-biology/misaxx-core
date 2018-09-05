@@ -55,7 +55,7 @@ namespace misaxx {
             has_value = true;
         }
 
-        void operator <<(const misa_file_stack<File> &t_reference_stack) {
+        template<class SourceFile> void operator <<(const misa_file_stack<SourceFile> &t_reference_stack) {
             if(has_value)
                 return;
             if(!t_reference_stack.has_value)
