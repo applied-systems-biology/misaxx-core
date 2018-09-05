@@ -14,6 +14,7 @@
 #include <misaxx/filesystem/importers/directories_importer.h>
 #include <misaxx/misa_cli.h>
 #include <misaxx/module_data/misa_generic_file_stack.h>
+#include <misaxx/algorithm_node_path.h>
 #include <misaxx/object_node_path.h>
 
 using namespace misaxx;
@@ -27,6 +28,8 @@ struct other_task1 : public misa_task<other_module_def> {
     using misa_task::misa_task;
 
     void work() {
+        auto x = get_node().get_custom_path<algorithm_node_path>();
+        auto y = get_node().get_custom_path<object_node_path>();
         std::cout << "test2" << std::endl;
     }
 };
@@ -35,6 +38,8 @@ struct other_module : public misa_module<other_module_def> {
     using misa_module::misa_module;
 
     void init() {
+        auto x = get_node().get_custom_path<algorithm_node_path>();
+        auto y = get_node().get_custom_path<object_node_path>();
         misa_dispatch<other_task1>("other task 1");
     }
 };
@@ -66,7 +71,8 @@ struct my_module : public misa_module<my_module_definition> {
 
         my_stack.user_metadata.access<int>() = 5;
 
-        auto x = get_node().get_custom_path<object_node_path>();
+        auto x = get_node().get_custom_path<algorithm_node_path>();
+        auto y = get_node().get_custom_path<object_node_path>();
 
         // Dispatcher part
         chain c;
