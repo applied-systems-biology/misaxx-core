@@ -17,6 +17,7 @@
 #include <misaxx/algorithm_node_path.h>
 #include <misaxx/object_node_path.h>
 #include <misaxx/parameters/voxel_size.h>
+#include <misaxx/parameters/object_metadata.h>
 
 using namespace misaxx;
 using namespace pattxx;
@@ -66,6 +67,7 @@ struct my_module : public misa_module<my_module_definition> {
 
     using misa_module::misa_module;
 
+    object_metadata md = from_parameter<object_metadata>();
     voxel_size vs = from_parameter<voxel_size>();
 
     void init() {
