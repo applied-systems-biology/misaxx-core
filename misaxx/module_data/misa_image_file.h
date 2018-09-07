@@ -30,7 +30,7 @@ namespace misaxx {
         * @return
         */
         Image auto_load() {
-            return coixx::toolbox::load<Image>(path);
+            return coixx::toolbox::auto_load<Image>(path);
         }
 
         /**
