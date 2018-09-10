@@ -72,7 +72,7 @@ namespace misaxx {
             auto external = target_folder->external_path();
 
             for(const auto &kv : t_reference_stack.files) {
-                if(!supports_file(kv.second.path));
+                if(!supports_file(kv.second.path))
                     return;
                 filesystem::file file = target_folder->template create<filesystem::file>(kv.second.name);
                 File f(*parent_module, kv.first);
