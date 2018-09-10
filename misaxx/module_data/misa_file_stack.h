@@ -30,6 +30,10 @@ namespace misaxx {
             files.clear();
         }
 
+        virtual bool supports_file(const boost::filesystem::path &t_path) const {
+            return true;
+        }
+
         void operator <<(const filesystem::folder &t_folder) {
             if(has_value)
                 return;
@@ -50,6 +54,8 @@ namespace misaxx {
                 return;
             if(!t_reference_file.has_value)
                 throw std::runtime_error("Reference file does not contain any value!");
+            if(!supports_file(t_reference_file.path))
+                return;
             auto f = parent_module->filesystem.exported->create<filesystem::file>(t_reference_file.path.filename().string());
             files.insert({ f->name, std::move(f) });
             has_value = true;
@@ -66,6 +72,8 @@ namespace misaxx {
             auto external = target_folder->external_path();
 
             for(const auto &kv : t_reference_stack.files) {
+                if(!supports_file(kv.second.path));
+                    return;
                 filesystem::file file = target_folder->template create<filesystem::file>(kv.second.name);
                 File f(*parent_module, kv.first);
                 f.init(*parent_module);

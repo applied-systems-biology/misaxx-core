@@ -15,5 +15,9 @@ namespace misaxx {
         using image_type = Image;
 
         using misa_file_stack<misa_image_file<Image>>::misa_file_stack;
+
+        bool supports_file(const boost::filesystem::path &t_path) const override {
+            return t_path.extension() == ".tif";
+        }
     };
 }
