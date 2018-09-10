@@ -39,7 +39,7 @@ namespace misaxx {
                 return;
             for(const auto &kv : *t_folder) {
                 filesystem::file file = std::dynamic_pointer_cast<filesystem::vfs_file>(kv.second);
-                if(file && file->has_external_path()) {
+                if(file && file->has_external_path() && supports_file(file->external_path())) {
                     File f(*parent_module, kv.first);
                     f.init(*parent_module);
                     f << file;
@@ -73,7 +73,7 @@ namespace misaxx {
 
             for(const auto &kv : t_reference_stack.files) {
                 if(!supports_file(kv.second.path))
-                    return;
+                    continue;
                 filesystem::file file = target_folder->template create<filesystem::file>(kv.second.name);
                 File f(*parent_module, kv.first);
                 f.init(*parent_module);
