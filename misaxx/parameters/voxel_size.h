@@ -23,10 +23,14 @@ namespace misaxx {
         double y;
         double z;
 
-        double xz() {
+        double xz() const {
             if(x != z)
                 throw std::runtime_error("x and z must be the same!");
             return x;
+        }
+
+        double volume() const {
+            return x * y * z;
         }
     };
 }
