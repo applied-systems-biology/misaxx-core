@@ -68,13 +68,8 @@ namespace misaxx {
         void save() {
             nlohmann::json json;
             for(const auto &kv : user_metadata) {
-                const std::any &v = kv.second;
-
-                const auto *md = std::any_cast<const misa_metadata *>(v);
-                if(md) {
-                    md->write_to_json_dict(json);
-                }
-
+                const misa_metadata *md = kv.second.get();
+                md->write_to_json_dict(json);
             }
 
             std::ofstream sw;

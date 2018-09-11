@@ -6,8 +6,9 @@
 #pragma once
 
 #include <pattxx/metadata.h>
-#include <cxxh/containers/singleton_map.h>
+#include <cxxh/containers/dynamic_singleton_map.h>
 #include "misa_module_declaration_base.h"
+#include "metadata/misa_metadata.h"
 
 namespace misaxx {
 
@@ -36,7 +37,7 @@ namespace misaxx {
         /**
          * Additional metadata attached by algorithms
          */
-        cxxh::containers::singleton_map user_metadata;
+        cxxh::containers::dynamic_singleton_map<misa_metadata> user_metadata;
 
         /**
          * If true, this data object already contains valid data
