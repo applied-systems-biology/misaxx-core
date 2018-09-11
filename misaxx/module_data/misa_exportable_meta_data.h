@@ -74,7 +74,7 @@ namespace misaxx {
 
             std::ofstream sw;
             sw.open(path.string());
-            sw << json;
+            sw << std::setw(4) << json;
         }
     };
 }
