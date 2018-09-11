@@ -21,7 +21,7 @@ add_library(misaxx
         misaxx/misa_dispatcher.h
         misaxx/misa_module_data.h
         misaxx/misa_submodule.h
-        misaxx/misa_runtime.h misaxx/misa_filesystem.h misaxx/misa_module_declaration.h misaxx/misa_cli.h misaxx/module_data/misa_image_stack.h misaxx/module_data/misa_file.h misaxx/module_data/misa_generic_file_stack.h misaxx/module_data/misa_image_file.h misaxx/misa_data_ptr.h misaxx/filesystem/importers/json_importer.h misaxx/root_modules/misa_multiobject_root.h misaxx/algorithm_node_path.h misaxx/root_modules/misa_root_module_base.h misaxx/object_node_path.h misaxx/parameters/voxel_size.h misaxx/parameters/object_metadata.h misaxx/metadata/object2d_pixels.h misaxx/metadata/object3d_pixels.h misaxx/module_data/misa_json_file.h misaxx/metadata/object3d_volume.h)
+        misaxx/misa_runtime.h misaxx/misa_filesystem.h misaxx/misa_module_declaration.h misaxx/misa_cli.h misaxx/module_data/misa_image_stack.h misaxx/module_data/misa_file.h misaxx/module_data/misa_generic_file_stack.h misaxx/module_data/misa_image_file.h misaxx/misa_data_ptr.h misaxx/filesystem/importers/json_importer.h misaxx/root_modules/misa_multiobject_root.h misaxx/algorithm_node_path.h misaxx/root_modules/misa_root_module_base.h misaxx/object_node_path.h misaxx/parameters/voxel_size.h misaxx/parameters/object_metadata.h misaxx/metadata/object2d_pixels.h misaxx/metadata/object3d_pixels.h misaxx/module_data/misa_json_file.h misaxx/metadata/object3d_volume.h misaxx/module_data/misa_meta_data.h)
 
 include(cmake_modules/find_cxxh.cmake)
 include(cmake_modules/find_pattxx.cmake)
