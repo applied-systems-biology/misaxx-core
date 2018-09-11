@@ -40,7 +40,7 @@ namespace misaxx {
         void save(const Image &t_img) {
             using namespace coixx;
             using namespace coixx::toolbox;
-            t_img << save(path);
+            t_img << coixx::toolbox::save(path);
         }
     };
 }
