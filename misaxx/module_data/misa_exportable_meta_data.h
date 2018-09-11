@@ -15,7 +15,7 @@ namespace misaxx {
      * Module data class that only stores metadata.
      */
     struct misa_exportable_meta_data : public misa_file {
-        using misa_json_file::misa_json_file;
+        using misa_file::misa_file;
 
         template<class Type>
         const Type &at() const {
