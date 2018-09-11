@@ -57,9 +57,9 @@ namespace misaxx {
 
         }
 
-        misa_module_data(misa_module_data &&other) = default;
-
-        misa_module_data(const misa_module_data &other) = delete;
+//        misa_module_data(misa_module_data &&other) = default;
+//
+//        misa_module_data(const misa_module_data &other) = delete;
 
         virtual void clear() {
             has_value = false;
