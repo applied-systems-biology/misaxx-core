@@ -16,13 +16,13 @@ namespace misaxx {
     struct misa_json_file : public misa_file {
         using misa_file::misa_file;
 
-        void operator << (const nlohmann::json &json) {
+        void load (const nlohmann::json &json) {
             std::ofstream sw;
             sw.open(path.string());
             sw << json;
         }
 
-        void operator >> (nlohmann::json &json) {
+        void save (nlohmann::json &json) {
             std::ifstream sr;
             sr.open(path.string());
             sr >> json;

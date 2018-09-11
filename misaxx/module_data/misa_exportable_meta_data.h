@@ -14,7 +14,7 @@ namespace misaxx {
     /**
      * Module data class that only stores metadata.
      */
-    struct misa_exportable_meta_data : public misa_json_file {
+    struct misa_exportable_meta_data : public misa_file {
         using misa_json_file::misa_json_file;
 
         template<class Type>
@@ -76,7 +76,10 @@ namespace misaxx {
                 }
 
             }
-            *this << json;
+
+            std::ofstream sw;
+            sw.open(path.string());
+            sw << json;
         }
     };
 }
