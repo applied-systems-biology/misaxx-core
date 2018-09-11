@@ -14,7 +14,7 @@ namespace misaxx::metadata {
         double volume = 0;
 
         object3d_volume() = default;
-        explicit object3d_volume(const object3d_pixels &t_pixels, const voxel_size &t_voxel_size) : volume(t_pixels * t_voxel_size.volume()) {
+        explicit object3d_volume(const object3d_pixels &t_pixels, const voxel_size &t_voxel_size) : volume(t_pixels.pixels * t_voxel_size.volume()) {
 
         }
     };
