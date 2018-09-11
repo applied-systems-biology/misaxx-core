@@ -18,5 +18,9 @@ namespace misaxx::metadata {
         void to_json(nlohmann::json &j) const override {
             j["pixels"] = pixels;
         }
+
+        std::string get_name() const override {
+            return "object3d-pixels";
+        }
     };
 }
