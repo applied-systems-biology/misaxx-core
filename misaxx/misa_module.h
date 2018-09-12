@@ -79,7 +79,9 @@ namespace misaxx {
                 throw std::runtime_error("The submodule already has been instantiated!");
             if(!t_submodule.definition().filesystem.is_valid())
                 throw std::runtime_error("The submodule's filesystem is invalid! Please initialize it, first!");
-            return dispatch<Module>(t_submodule.name, std::move(t_submodule.definition()));
+            auto &instance = dispatch<Module>(t_submodule.name, std::move(t_submodule.definition()));
+            t_submodule.m_module = &instance;
+            return instance;
         }
 
         /**
