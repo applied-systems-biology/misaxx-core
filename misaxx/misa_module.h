@@ -39,22 +39,6 @@ namespace misaxx {
     protected:
 
         /**
-         * Initializes a module data member
-         * @tparam Data misa_module_data or misa_submodule instance
-         * @param t_data
-         * @return
-         */
-        template<class DataPtr, class Data = typename DataPtr::element_type> Data& init_data(DataPtr &t_data) {
-            t_data->init(*this);
-            return *t_data;
-        }
-
-        template<class Submodule> Submodule &init_submodule(Submodule &t_submodule) {
-            t_submodule.init(*this);
-            return t_submodule;
-        }
-
-        /**
          * pattxx::dispatcher::dispatch with the additional function of setting the module accordingly.
          * @tparam Instance
          * @param t_name
@@ -77,8 +61,9 @@ namespace misaxx {
         Module &misa_dispatch(Submodule &t_submodule) {
             if(t_submodule.has_instance())
                 throw std::runtime_error("The submodule already has been instantiated!");
-            if(!t_submodule.definition().filesystem.is_valid())
-                throw std::runtime_error("The submodule's filesystem is invalid! Please initialize it, first!");
+            // Initialize filesystem and more
+            t_submodule.init(module());
+            // Dispatch the module and tell the submodule holder
             auto &instance = dispatch<Module>(t_submodule.name, std::move(t_submodule.definition()));
             t_submodule.m_module = &instance;
             return instance;

@@ -14,7 +14,9 @@ namespace misaxx {
     /**
      * Empty module definition for misa_multiobject_root
      */
-    struct misa_multiobject_root_definition : public misa_module_declaration {
+    struct misa_multiobject_root_declaration : public misa_module_declaration {
+        void init_data() override {
+        }
     };
 
     /**
@@ -22,7 +24,7 @@ namespace misaxx {
      * as objects. The SubModule is called on each of this objects.
      * @tparam SubModule
      */
-    template<class SubModule> struct misa_multiobject_root : public misa_module<misa_multiobject_root_definition>, public misa_root_module_base {
+    template<class SubModule> struct misa_multiobject_root : public misa_module<misa_multiobject_root_declaration>, public misa_root_module_base {
         using misa_module::misa_module;
 
         void init() {
@@ -30,7 +32,6 @@ namespace misaxx {
                 filesystem::folder as_folder = std::dynamic_pointer_cast<filesystem::vfs_folder>(ptr.second);
                 if(as_folder) {
                     misa_submodule<SubModule> module(*this, ptr.first, metadata());
-                    module.init(*this);
                     misa_dispatch(module);
                 }
             }

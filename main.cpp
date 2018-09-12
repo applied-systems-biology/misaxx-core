@@ -23,7 +23,9 @@ using namespace misaxx;
 using namespace pattxx;
 
 struct other_module_def : public misa_module_declaration {
+    void init_data() override {
 
+    }
 };
 
 struct other_task1 : public misa_task<other_module_def> {
@@ -53,6 +55,12 @@ struct my_module_definition : public misa_module_declaration {
     data<misa_generic_file_stack> my_stack = declare_data<misa_generic_file_stack>("my_stack", metadata("my stack"));
     data<misa_generic_file_stack> processed = declare_data<misa_generic_file_stack>("processed");
     submodule <other_module> other = declare_submodule<other_module>("other", metadata("Other module"));
+
+    void init_data() override {
+        my_stack->from_filesystem(filesystem.imported);
+        processed->from_reference_stack(my_stack);
+        other.definition().init_data();
+    }
 };
 
 struct my_task1 : public misa_task<my_module_definition> {
@@ -71,11 +79,6 @@ struct my_module : public misa_module<my_module_definition> {
     voxel_size vs = from_parameter<voxel_size>();
 
     void init() {
-        // Data part
-        init_submodule(other);
-        init_data(my_stack).from_filesystem(filesystem.imported);
-        init_data(processed).from_reference_stack(my_stack);
-
         auto x = get_node().get_custom_path<algorithm_node_path>();
         auto y = get_node().get_custom_path<object_node_path>();
 

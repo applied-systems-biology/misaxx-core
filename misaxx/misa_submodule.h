@@ -78,6 +78,7 @@ namespace misaxx {
         void init(misa_module_declaration_base &module) override {
             misa_submodule_base::init(module);
             get_filesystem() = module.filesystem.create_subsystem(name);
+            definition().init_data();
         }
 
     private:

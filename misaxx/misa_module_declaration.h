@@ -32,7 +32,9 @@ namespace misaxx {
          */
         template<class T, typename... Args> data<T> declare_data(std::string t_name, metadata t_metadata = metadata(), Args&&... args) {
             static_assert(std::is_base_of<misa_module_data, T>::value, "Only module data is supported!");
-            return std::shared_ptr<T>(new T(*this, std::move(t_name), std::move(t_metadata), std::forward<Args>(args)...));
+            auto ptr = std::shared_ptr<T>(new T(*this, std::move(t_name), std::move(t_metadata), std::forward<Args>(args)...));
+            m_data.push_back(ptr);
+            return ptr;
         }
 
         /**
@@ -45,5 +47,10 @@ namespace misaxx {
         template<class Module> submodule<Module> declare_submodule(std::string t_name, metadata t_metadata = metadata()) {
             return submodule<Module>(*this, std::move(t_name), std::move(t_metadata));
         }
+
+    private:
+
+        std::vector<std::shared_ptr<misa_module_data>> m_data;
+
     };
 }

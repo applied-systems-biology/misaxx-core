@@ -25,6 +25,11 @@ namespace misaxx {
     struct misa_module_data {
 
         /**
+         * The module that owns this data
+         */
+        misa_module_declaration_base *parent_module = nullptr;
+
+        /**
          * Name of this data
          */
         std::string name;
@@ -44,14 +49,10 @@ namespace misaxx {
          */
         bool has_value = false;
 
-        /**
-         * The module that owns this data
-         */
-        misa_module_declaration_base *parent_module = nullptr;
-
         misa_module_data() = delete;
 
         explicit misa_module_data(misa_module_declaration_base &t_module, std::string t_name, pattxx::metadata t_metadata = pattxx::metadata()) :
+                parent_module(&t_module),
                 name(std::move(t_name)),
                 metadata(std::move(t_metadata)) {
 

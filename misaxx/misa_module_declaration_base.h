@@ -18,5 +18,10 @@ namespace misaxx {
          * Filesystem of this module
          */
         misa_filesystem filesystem;
+
+        /**
+         * Initializes the data and sets them into relation with each other
+         */
+        virtual void init_data() = 0;
     };
 }
