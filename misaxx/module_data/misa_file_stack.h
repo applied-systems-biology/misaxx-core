@@ -115,5 +115,9 @@ namespace misaxx {
             return files.find(t_key);
         }
 
+        size_t size() const {
+            return files.size();
+        }
+
     };
 }
