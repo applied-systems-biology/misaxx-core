@@ -99,5 +99,21 @@ namespace misaxx {
             return files.end();
         }
 
+        std::shared_ptr<File> &at(const std::string &t_key) {
+            return files.at(t_key);
+        }
+
+        const std::shared_ptr<File> &at(const std::string &t_key) const {
+            return files.at(t_key);
+        }
+
+        auto find(const std::string &t_key) {
+            return files.find(t_key);
+        }
+
+        auto find(const std::string &t_key) const {
+            return files.find(t_key);
+        }
+
     };
 }
