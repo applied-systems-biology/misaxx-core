@@ -21,14 +21,14 @@ namespace misaxx {
             path = boost::filesystem::path();
         }
 
-        void operator <<(const filesystem::file &t_file) {
+        void from_filesystem(const filesystem::file &t_file) {
             if(has_value)
                 return;
             path = t_file->external_path();
             has_value = true;
         }
 
-        void operator <<(const misa_file &t_reference_file) {
+        void from_reference_file(const misa_file &t_reference_file) {
             if(has_value)
                 return;
             if(!t_reference_file.has_value)

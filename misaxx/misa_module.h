@@ -44,9 +44,14 @@ namespace misaxx {
          * @param t_data
          * @return
          */
-        template<class Data> Data& init_data(Data &t_data) {
-            t_data.init(*this);
-            return t_data;
+        template<class DataPtr, class Data = typename DataPtr::element_type> Data& init_data(DataPtr &t_data) {
+            t_data->init(*this);
+            return *t_data;
+        }
+
+        template<class Submodule> Submodule &init_submodule(Submodule &t_submodule) {
+            t_submodule.init(*this);
+            return t_submodule;
         }
 
         /**

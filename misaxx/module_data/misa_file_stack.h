@@ -34,7 +34,7 @@ namespace misaxx {
             return true;
         }
 
-        void operator <<(const filesystem::folder &t_folder) {
+        void from_filesystem(const filesystem::folder &t_folder) {
             if(has_value)
                 return;
             for(const auto &kv : *t_folder) {
@@ -42,42 +42,42 @@ namespace misaxx {
                 if(file && file->has_external_path() && supports_file(file->external_path())) {
                     File f(*parent_module, kv.first);
                     f.init(*parent_module);
-                    f << file;
+                    f.from_filesystem(file);
                     files.insert({ file->name, std::move(f) });
                 }
             }
             has_value = true;
         }
 
-        void operator <<(const misa_file &t_reference_file) {
+        void from_reference_file(const std::shared_ptr<misa_file> &t_reference_file) {
             if(has_value)
                 return;
-            if(!t_reference_file.has_value)
+            if(!t_reference_file->has_value)
                 throw std::runtime_error("Reference file does not contain any value!");
-            if(!supports_file(t_reference_file.path))
+            if(!supports_file(t_reference_file->path))
                 return;
-            auto f = parent_module->filesystem.exported->create<filesystem::file>(t_reference_file.path.filename().string());
+            auto f = parent_module->filesystem.exported->create<filesystem::file>(t_reference_file->path.filename().string());
             files.insert({ f->name, std::move(f) });
             has_value = true;
         }
 
-        template<class SourceFile> void operator <<(const misa_file_stack<SourceFile> &t_reference_stack) {
+        template<class SourceFile> void from_reference_stack(const std::shared_ptr<misa_file_stack<SourceFile>> &t_reference_stack) {
             if(has_value)
                 return;
-            if(!t_reference_stack.has_value)
+            if(!t_reference_stack->has_value)
                 throw std::runtime_error("Reference stack does not contain any value!");
             filesystem::folder target_folder = parent_module->filesystem.exported / name;
             target_folder->ensure_external_path_exists();
 
             auto external = target_folder->external_path();
 
-            for(const auto &kv : t_reference_stack.files) {
+            for(const auto &kv : t_reference_stack->files) {
                 if(!supports_file(kv.second.path))
                     continue;
                 filesystem::file file = target_folder->template create<filesystem::file>(kv.second.name);
                 File f(*parent_module, kv.first);
                 f.init(*parent_module);
-                f << file;
+                f.from_filesystem(file);
                 files.insert({ kv.first, std::move(f) });
             }
             has_value = true;

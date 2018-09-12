@@ -20,6 +20,7 @@ namespace misaxx {
     public:
         using metadata = pattxx::metadata;
         template<class Module> using submodule = misa_submodule<Module>;
+        template<typename T> using data = std::shared_ptr<T>;
     protected:
 
         /**
@@ -29,9 +30,9 @@ namespace misaxx {
          * @param args
          * @return
          */
-        template<class T, typename... Args> T data(std::string t_name, metadata t_metadata = metadata(), Args&&... args) {
+        template<class T, typename... Args> data<T> declare_data(std::string t_name, metadata t_metadata = metadata(), Args&&... args) {
             static_assert(std::is_base_of<misa_module_data, T>::value, "Only module data is supported!");
-            return T(*this, std::move(t_name), std::move(t_metadata), std::forward<Args>(args)...);
+            return std::shared_ptr<T>(new T(*this, std::move(t_name), std::move(t_metadata), std::forward<Args>(args)...));
         }
 
         /**
@@ -41,7 +42,7 @@ namespace misaxx {
          * @param t_metadata
          * @return
          */
-        template<class Module> submodule<Module> imported(std::string t_name, metadata t_metadata = metadata()) {
+        template<class Module> submodule<Module> declare_submodule(std::string t_name, metadata t_metadata = metadata()) {
             return submodule<Module>(*this, std::move(t_name), std::move(t_metadata));
         }
     };

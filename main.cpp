@@ -50,9 +50,9 @@ struct other_module : public misa_module<other_module_def> {
 
 
 struct my_module_definition : public misa_module_declaration {
-    misa_generic_file_stack my_stack = data<misa_generic_file_stack>("my_stack", metadata("my stack"));
-    misa_generic_file_stack processed = data<misa_generic_file_stack>("processed");
-    submodule <other_module> other = imported<other_module>("other", metadata("Other module"));
+    data<misa_generic_file_stack> my_stack = declare_data<misa_generic_file_stack>("my_stack", metadata("my stack"));
+    data<misa_generic_file_stack> processed = declare_data<misa_generic_file_stack>("processed");
+    submodule <other_module> other = declare_submodule<other_module>("other", metadata("Other module"));
 };
 
 struct my_task1 : public misa_task<my_module_definition> {
@@ -72,11 +72,9 @@ struct my_module : public misa_module<my_module_definition> {
 
     void init() {
         // Data part
-        init_data(other);
-        init_data(my_stack) << filesystem.imported;
-        init_data(processed) << my_stack;
-
-        my_stack.user_metadata.access<int>() = 5;
+        init_submodule(other);
+        init_data(my_stack).from_filesystem(filesystem.imported);
+        init_data(processed).from_reference_stack(my_stack);
 
         auto x = get_node().get_custom_path<algorithm_node_path>();
         auto y = get_node().get_custom_path<object_node_path>();
