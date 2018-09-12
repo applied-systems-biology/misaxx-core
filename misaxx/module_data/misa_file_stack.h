@@ -49,7 +49,7 @@ namespace misaxx {
             has_value = true;
         }
 
-        void from_reference_file(const std::shared_ptr<misa_file> &t_reference_file) {
+        template<class DataPtr> void from_reference_file(const DataPtr &t_reference_file) {
             if(has_value)
                 return;
             if(!t_reference_file->has_value)
@@ -61,7 +61,7 @@ namespace misaxx {
             has_value = true;
         }
 
-        template<class SourceFile> void from_reference_stack(const std::shared_ptr<misa_file_stack<SourceFile>> &t_reference_stack) {
+        template<class DataPtr> void from_reference_stack(const DataPtr &t_reference_stack) {
             if(has_value)
                 return;
             if(!t_reference_stack->has_value)
