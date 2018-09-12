@@ -17,7 +17,7 @@ namespace misaxx {
      */
     template<class File> struct misa_file_stack : public misa_module_data {
 
-        using files_t = std::unordered_map<std::string, File>;
+        using files_t = std::unordered_map<std::string, std::shared_ptr<File>>;
         using iterator = typename files_t::iterator;
         using const_iterator = typename files_t::const_iterator;
 
@@ -43,7 +43,7 @@ namespace misaxx {
                     File f(*parent_module, kv.first);
                     f.init(*parent_module);
                     f.from_filesystem(file);
-                    files.insert({ file->name, std::move(f) });
+                    files.insert({ file->name, std::make_shared<File>(std::move(f)) });
                 }
             }
             has_value = true;
@@ -72,13 +72,13 @@ namespace misaxx {
             auto external = target_folder->external_path();
 
             for(const auto &kv : t_reference_stack->files) {
-                if(!supports_file(kv.second.path))
+                if(!supports_file(kv.second->path))
                     continue;
-                filesystem::file file = target_folder->template create<filesystem::file>(kv.second.name);
+                filesystem::file file = target_folder->template create<filesystem::file>(kv.second->name);
                 File f(*parent_module, kv.first);
                 f.init(*parent_module);
                 f.from_filesystem(file);
-                files.insert({ kv.first, std::move(f) });
+                files.insert({ kv.first, std::make_shared<File>(std::move(f)) });
             }
             has_value = true;
         }
