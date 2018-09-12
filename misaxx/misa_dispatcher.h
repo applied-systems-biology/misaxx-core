@@ -9,7 +9,6 @@
 #include "misa_module_declaration_base.h"
 #include "misa_worker.h"
 #include "misa_module_base.h"
-#include "misa_data_ptr.h"
 #include "algorithm_node_path.h"
 #include "object_node_path.h"
 
@@ -22,7 +21,7 @@ namespace misaxx {
     template<class ModuleDefinition> struct misa_dispatcher : public pattxx::dispatcher, public misa_worker<ModuleDefinition> {
         static_assert(std::is_base_of<misa_module_declaration_base, ModuleDefinition>::value, "Template argument must be a module definition!");
 
-        template<class Data> using misa_data = misa_data_ptr<Data>;
+        template<class Data> using misa_data = std::shared_ptr<Data>;
 
         explicit misa_dispatcher(pattxx::nodes::node *t_node, ModuleDefinition *t_module) : pattxx::dispatcher(t_node), m_module(t_module) {
 

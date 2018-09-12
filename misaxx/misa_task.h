@@ -8,7 +8,6 @@
 #include <pattxx/task.h>
 #include "misa_worker.h"
 #include "misa_module_declaration_base.h"
-#include "misa_data_ptr.h"
 #include "object_node_path.h"
 #include "algorithm_node_path.h"
 
@@ -22,7 +21,7 @@ namespace misaxx {
 
         static_assert(std::is_base_of<misa_module_declaration_base, ModuleDefinition>::value, "Template argument must be a module definition!");
 
-        template<class Data> using misa_data = misa_data_ptr<Data>;
+        template<class Data> using misa_data = std::shared_ptr<Data>;
 
         explicit misa_task(pattxx::nodes::node *t_node, ModuleDefinition *t_module) : pattxx::task(t_node), m_module(t_module) {
 
