@@ -12,12 +12,12 @@
 namespace misaxx::metadata {
     struct object3d_voxel_bounds : public misa_metadata {
 
-        int min_x = 0;
-        int min_z = 0;
-        int min_y = 0;
-        int max_x = 0;
-        int max_z = 0;
-        int max_y = 0;
+        int min_x = std::numeric_limits<int>::max();
+        int min_z = std::numeric_limits<int>::max();
+        int min_y = std::numeric_limits<int>::max();
+        int max_x = std::numeric_limits<int>::min();
+        int max_z = std::numeric_limits<int>::min();
+        int max_y = std::numeric_limits<int>::min();
 
         nlohmann::json to_json() const override {
             nlohmann::json j;
