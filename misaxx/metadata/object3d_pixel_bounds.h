@@ -9,7 +9,7 @@
 #include "misa_metadata.h"
 
 namespace misaxx::metadata {
-    class object3d_pixel_bounds : public misa_metadata {
+    struct object3d_pixel_bounds : public misa_metadata {
 
         int min_x = 0;
         int min_z = 0;
