@@ -18,8 +18,10 @@ namespace misaxx::metadata {
 
         }
 
-        void to_json(nlohmann::json &j) const override {
+        nlohmann::json to_json() const override {
+            nlohmann::json j;
             j["volume"] = volume;
+            return j;
         }
 
         std::string get_name() const override {

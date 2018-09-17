@@ -69,7 +69,7 @@ namespace misaxx {
             nlohmann::json json;
             for(const auto &kv : user_metadata) {
                 const misa_metadata *md = kv.second.get();
-                md->write_to_json_dict(json);
+                json[md->get_name()] = md->to_json();
             }
 
             std::ofstream sw;

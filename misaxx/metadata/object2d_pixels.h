@@ -15,8 +15,10 @@ namespace misaxx::metadata {
     struct object2d_pixels : public misa_metadata {
         int pixels = 0;
 
-        void to_json(nlohmann::json &j) const override {
+        nlohmann::json to_json() const override {
+            nlohmann::json j;
             j["pixels"] = pixels;
+            return j;
         }
 
         std::string get_name() const override {
