@@ -79,7 +79,7 @@ namespace misaxx::filesystem {
          * Returns a managed pointer to this entry
          * @return
          */
-        std::weak_ptr<vfs_entry> self() {
+        std::shared_ptr<vfs_entry> self() {
             return shared_from_this();
         }
 

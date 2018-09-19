@@ -112,7 +112,7 @@ namespace misaxx::filesystem {
         }
 
         operator folder() {
-            return std::dynamic_pointer_cast<vfs_folder>(self().lock());
+            return std::dynamic_pointer_cast<vfs_folder>(self());
         }
 
         /**
