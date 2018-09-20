@@ -61,8 +61,6 @@ namespace misaxx {
         Module &misa_dispatch(Submodule &t_submodule) {
             if(t_submodule.has_instance())
                 throw std::runtime_error("The submodule already has been instantiated!");
-            // Initialize filesystem and more
-            t_submodule.init(module());
             // Dispatch the module and tell the submodule holder
             auto &instance = dispatch<Module>(t_submodule.name, std::move(t_submodule.definition()));
             t_submodule.m_module = &instance;

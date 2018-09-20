@@ -16,6 +16,7 @@ namespace misaxx::filesystem {
     struct vfs_folder;
 
     using folder = std::shared_ptr<vfs_folder>;
+    using const_folder = std::shared_ptr<const vfs_folder>;
 
     /**
      * Used to navigate to non-folders
@@ -24,10 +25,10 @@ namespace misaxx::filesystem {
     template<class TargetPtrType> struct as {
         using type = TargetPtrType;
         using element_type = typename type::element_type;
-        explicit as(std::string t_segment) : segment(std::move(t_segment)) {
+        explicit as(boost::filesystem::path t_segment) : segment(std::move(t_segment)) {
 
         }
-        std::string segment;
+        boost::filesystem::path segment;
     };
 
     /**
@@ -48,40 +49,11 @@ namespace misaxx::filesystem {
             return ptr;
         }
 
-//        template<class Entry> std::shared_ptr<Entry> create(std::string t_name, path t_custom_external = path()) {
-//            std::shared_ptr<Entry> ptr = std::make_shared<Entry>(std::move(t_name), std::move(t_custom_external));
-//            ptr->parent = self();
-//            children.insert({ ptr->name,  ptr});
-//            return ptr;
-//        }
-
         template<class Entry> std::shared_ptr<Entry> insert(std::shared_ptr<Entry> ptr) {
             ptr->parent = self();
             children.insert({ ptr->name,  ptr});
             return ptr;
         }
-
-//        template<class As> typename As::type& operator /(const As &t_segment) {
-//            auto it = children.find(t_segment.segment);
-//            if(it == children.end()) {
-//                return *create<typename As::type>(t_segment.segment);
-//            }
-//            else {
-//                return *dynamic_cast<typename As::type*>(it->second.get());
-//            }
-//        }
-//
-//        template<class As> const typename As::type& operator /(const As &t_segment) const {
-//            return *dynamic_cast<typename As::type*>(children.at(t_segment.segment).get());
-//        }
-//
-//        vfs_folder& operator /(const std::string &t_segment) {
-//            return *this / as<folder>(t_segment);
-//        }
-//
-//        const vfs_folder& operator /(const std::string &t_segment) const {
-//            return *this / as<folder>(t_segment);
-//        }
 
         bool empty() const override {
             return children.empty();
@@ -111,10 +83,6 @@ namespace misaxx::filesystem {
             return children.find(t_name);
         }
 
-        operator folder() {
-            return std::dynamic_pointer_cast<vfs_folder>(self());
-        }
-
         /**
          * Ensures that the external folder path exists if it is set.
          * Throws an exception if there is no external path.
@@ -126,6 +94,75 @@ namespace misaxx::filesystem {
                 boost::filesystem::create_directories(external_path());
         }
 
+        /**
+         * Accesses (which includes creating an entry if necessary)
+         * @tparam As
+         * @param t_segment
+         * @return
+         */
+        template<class TargetPtrType> TargetPtrType access(boost::filesystem::path t_segment) {
+            t_segment.remove_trailing_separator();
+            if(t_segment.empty())
+                return std::dynamic_pointer_cast<typename TargetPtrType::element_type>(self());
+
+            vfs_folder *current = this;
+
+            // Navigate to subfolders if needed
+            for(const auto &seg : t_segment.parent_path()) {
+                auto it = current->find(seg.string());
+                if(it == end()) {
+                    current = create<folder>(seg.string()).get();
+                }
+                else {
+                    current = std::dynamic_pointer_cast<vfs_folder>(it->second).get();
+                }
+            }
+
+            // Create / access the target element
+            auto it = current->find(t_segment.filename().string());
+            if(it == end()) {
+                return create<TargetPtrType>(t_segment.filename().string());
+            }
+            else {
+                return std::dynamic_pointer_cast<typename TargetPtrType::element_type>(it->second);
+            }
+        }
+
+        /**
+         * Accesses (which includes creating an entry if necessary)
+         * @tparam As
+         * @param t_segment
+         * @return
+         */
+        template<class TargetPtrType> TargetPtrType at(boost::filesystem::path t_segment) const {
+            t_segment.remove_trailing_separator();
+            if(t_segment.empty())
+                return std::dynamic_pointer_cast<typename TargetPtrType::element_type>(self());
+
+            const vfs_folder *current = this;
+            auto current_segment_it = t_segment.begin();
+
+            // Navigate to subfolders if needed
+            for(const auto &seg : t_segment.parent_path()) {
+                auto it = current->find(seg.string());
+                if(it == end()) {
+                    throw std::runtime_error("Cannot access path " + (internal_path() / t_segment).string());
+                }
+                else {
+                    current = std::dynamic_pointer_cast<vfs_folder>(it->second).get();
+                }
+            }
+
+            // Create / access the target element
+            auto it = current->find(t_segment.filename().string());
+            if(it == end()) {
+                throw std::runtime_error("Cannot access path " + (internal_path() / t_segment).string());
+            }
+            else {
+                return std::dynamic_pointer_cast<typename TargetPtrType::element_type>(it->second);
+            }
+        }
+
     private:
 
         std::unordered_map<std::string, std::shared_ptr<vfs_entry>> children;
@@ -133,13 +170,7 @@ namespace misaxx::filesystem {
 }
 
 template<class As> typename As::type operator /(misaxx::filesystem::folder &parent, const As &t_segment) {
-    auto it = parent->find(t_segment.segment);
-    if(it == parent->end()) {
-        return parent->create<typename As::type>(t_segment.segment);
-    }
-    else {
-        return std::dynamic_pointer_cast<typename As::element_type>(it->second);
-    }
+    return parent->access<typename As::type>(t_segment.segment);
 }
 
 misaxx::filesystem::folder operator /(misaxx::filesystem::folder &parent, const std::string &subfolder) {

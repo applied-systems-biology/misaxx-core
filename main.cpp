@@ -52,14 +52,14 @@ struct other_module : public misa_module<other_module_def> {
 
 
 struct my_module_definition : public misa_module_declaration {
-    data<misa_generic_file_stack> my_stack = declare_data<misa_generic_file_stack>("my_stack", metadata("my stack"));
-    data<misa_generic_file_stack> processed = declare_data<misa_generic_file_stack>("processed");
-    submodule <other_module> other = declare_submodule<other_module>("other", metadata("Other module"));
+    data<misa_generic_file_stack> my_stack;
+    data<misa_generic_file_stack> processed;
+    submodule <other_module> other;
 
     void init_data() override {
-        my_stack->from_filesystem(filesystem.imported);
-        processed->from_reference_stack(my_stack);
-        other.definition().init_data();
+        import_from_filesystem(my_stack, "/");
+        export_to_filesystem(processed, my_stack, "processed");
+        init_submodule(other, "other");
     }
 };
 

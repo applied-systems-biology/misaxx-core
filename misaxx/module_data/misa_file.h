@@ -12,30 +12,18 @@
 
 namespace misaxx {
     struct misa_file : public misa_module_data {
+
+        std::string name;
         boost::filesystem::path path;
 
         using misa_module_data::misa_module_data;
 
-        void clear() override {
-            misa_module_data::clear();
-            path = boost::filesystem::path();
+        void import_from_filesystem(const misa_filesystem &t_filesystem, const boost::filesystem::path &t_path) {
+            path = t_filesystem.imported->at<filesystem::const_file >(t_path)->external_path();
         }
 
-        void from_filesystem(const filesystem::file &t_file) {
-            if(has_value)
-                return;
-            path = t_file->external_path();
-            has_value = true;
-        }
-
-        void from_reference_file(const misa_file &t_reference_file) {
-            if(has_value)
-                return;
-            if(!t_reference_file.has_value)
-                throw std::runtime_error("Reference file does not contain any value!");
-            auto f = parent_module->filesystem.exported->create<filesystem::file>(t_reference_file.path.filename().string());
-            path = f->external_path();
-            has_value = true;
+        void export_to_filesystem(misa_filesystem &t_filesystem, const boost::filesystem::path &t_path) {
+            path = t_filesystem.exported->access<filesystem::file >(t_path)->external_path();
         }
     };
 }

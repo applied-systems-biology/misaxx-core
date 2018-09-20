@@ -35,7 +35,7 @@ add_library(misaxx
         misaxx/root_modules/misa_root_module_base.h
         misaxx/object_node_path.h
         misaxx/parameters/voxel_size.h
-        misaxx/parameters/object_metadata.h 
+        misaxx/parameters/object_metadata.h
         misaxx/metadata/object2d_pixels.h
         misaxx/metadata/object3d_pixels.h
         misaxx/module_data/misa_json_file.h

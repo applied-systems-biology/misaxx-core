@@ -83,6 +83,10 @@ namespace misaxx::filesystem {
             return shared_from_this();
         }
 
+        std::shared_ptr<const vfs_entry> self() const {
+            return shared_from_this();
+        }
+
         virtual bool empty() const = 0;
     };
 

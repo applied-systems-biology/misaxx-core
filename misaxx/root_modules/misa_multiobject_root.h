@@ -31,7 +31,8 @@ namespace misaxx {
             for(const auto &ptr : *filesystem.imported) {
                 filesystem::folder as_folder = std::dynamic_pointer_cast<filesystem::vfs_folder>(ptr.second);
                 if(as_folder) {
-                    misa_submodule<SubModule> module(*this, ptr.first, metadata());
+                    misa_submodule<SubModule> module;
+                    init_submodule(module, ptr.first);
                     misa_dispatch(module);
                 }
             }

@@ -22,4 +22,5 @@ namespace misaxx::filesystem {
     };
 
     using file = std::shared_ptr<vfs_file>;
+    using const_file = std::shared_ptr<const vfs_file>;
 }

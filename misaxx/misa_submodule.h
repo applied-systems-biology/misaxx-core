@@ -27,13 +27,10 @@ namespace misaxx {
     public:
 
         Module *m_module = nullptr;
+        std::string name;
 
         using module_type = Module;
         using module_definition_type = ModuleDefinition;
-
-        explicit misa_submodule(misa_module_declaration_base &t_parent, std::string t_name, pattxx::metadata t_metadata) :
-                misa_submodule_base(t_parent, std::move(t_name), std::move(t_metadata)) {
-        }
 
         /**
          * The module instance if available.
@@ -61,24 +58,6 @@ namespace misaxx {
 
         bool has_instance() const {
             return m_module != nullptr;
-        }
-
-        /**
-         * A submodule cannot be cleared
-         */
-        void clear() override {
-            throw std::runtime_error("A submodule cannot be cleared!");
-        }
-
-        /**
-         * Initializes this submodule definition
-         * Call this method inside misa_module::init()
-         * @param module
-         */
-        void init(misa_module_declaration_base &module) override {
-            misa_submodule_base::init(module);
-            get_filesystem() = module.filesystem.create_subsystem(name);
-            definition().init_data();
         }
 
     private:
