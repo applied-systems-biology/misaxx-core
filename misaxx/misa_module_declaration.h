@@ -56,14 +56,14 @@ namespace misaxx {
          * @param t_data
          * @param t_source
          */
-        template<class Data, class SourceData> void export_to_filesystem(data<Data> &t_data, const data<SourceData> &t_source, const boost::filesystem::path &t_path) {
+        template<class Data, class SourceData> void import_from_reference(data<Data> &t_data, const data<SourceData> &t_source, const boost::filesystem::path &t_path) {
             if(!t_data) {
                 t_data = std::make_shared<Data>();
             }
             if(!t_source) {
                 throw std::runtime_error("Source data is not initialized!");
             }
-            t_data->export_to_filesystem(filesystem, t_source, t_path);
+            t_data->import_from_reference(filesystem, t_source, t_path);
         }
 
         /**
