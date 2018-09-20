@@ -47,7 +47,7 @@ namespace misaxx {
             }
         }
 
-        template<class Source> void import_from_reference(misa_filesystem &t_filesystem, const Source &t_source, const boost::filesystem::path &t_path) {
+        template<class Source> void process(misa_filesystem &t_filesystem, const Source &t_source, const boost::filesystem::path &t_path) {
             auto t_folder = t_filesystem.exported->access<filesystem::folder>(t_path);
             t_folder->ensure_external_path_exists();
 

@@ -58,7 +58,7 @@ struct my_module_definition : public misa_module_declaration {
 
     void init_data() override {
         import_from_filesystem(my_stack, "/");
-        import_from_reference(processed, my_stack, "processed");
+        process(processed, my_stack, "processed");
         init_submodule(other, "other");
     }
 };
