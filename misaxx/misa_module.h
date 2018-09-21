@@ -38,18 +38,6 @@ namespace misaxx {
                 ModuleDeclaration(std::move(definition)) {
         }
 
-    protected:
-
-        /**
-         * Declares a future dispatch.
-         * @tparam Instance
-         * @param t_name
-         * @return
-         */
-        template<class Instance> misa_future_dispatch<Instance> future_dispatch(std::string t_name) {
-            return misa_future_dispatch<Instance>(std::move(t_name));
-        }
-
         /**
          * pattxx::dispatcher::dispatch with the additional function of setting the module accordingly.
          * @tparam Instance
@@ -60,6 +48,18 @@ namespace misaxx {
         Instance &misa_dispatch(FutureDispatch &t_dispatch, Args &&... args) {
             auto &inst = dispatch<Instance>(t_dispatch.name, static_cast<ModuleDeclaration *>(this), std::forward<Args>(args)...);
             return inst;
+        }
+
+    protected:
+
+        /**
+         * Declares a future dispatch.
+         * @tparam Instance
+         * @param t_name
+         * @return
+         */
+        template<class Instance> misa_future_dispatch<Instance> future_dispatch(std::string t_name) {
+            return misa_future_dispatch<Instance>(std::move(t_name));
         }
 
         /**

@@ -43,7 +43,7 @@ add_library(misaxx
         misaxx/module_data/misa_exportable_meta_data.h
         misaxx/metadata/misa_metadata.h
         misaxx/metadata/object3d_voxel_bounds.h
-        misaxx/metadata/object3d_voxel_size.h misaxx/misa_future_dispatch.h)
+        misaxx/metadata/object3d_voxel_size.h misaxx/misa_future_dispatch.h misaxx/misa_future_dispatch_enum.h)
 
 include(cmake_modules/find_cxxh.cmake)
 include(cmake_modules/find_pattxx.cmake)
