@@ -15,15 +15,15 @@ namespace misaxx {
 
     /**
      * Base class for a MISA++ task
-     * @tparam ModuleDefinition
+     * @tparam ModuleDeclaration
      */
-    template<class ModuleDefinition> struct misa_task : public pattxx::task, public misa_worker<ModuleDefinition> {
+    template<class ModuleDeclaration> struct misa_task : public pattxx::task, public misa_worker<ModuleDeclaration> {
 
-        static_assert(std::is_base_of<misa_module_declaration_base, ModuleDefinition>::value, "Template argument must be a module definition!");
+        static_assert(std::is_base_of<misa_module_declaration_base, ModuleDeclaration>::value, "Template argument must be a module definition!");
 
         template<class Data> using misa_data = std::shared_ptr<Data>;
 
-        explicit misa_task(pattxx::nodes::node *t_node, ModuleDefinition *t_module) : pattxx::task(t_node), m_module(t_module) {
+        explicit misa_task(pattxx::nodes::node *t_node, ModuleDeclaration *t_module) : pattxx::task(t_node), m_module(t_module) {
 
         }
 
@@ -31,7 +31,7 @@ namespace misaxx {
          * Returns the module definition
          * @return
          */
-        ModuleDefinition &module() override {
+        ModuleDeclaration &module() override {
             return *m_module;
         }
 
@@ -105,7 +105,7 @@ namespace misaxx {
 
     private:
 
-        ModuleDefinition *m_module;
+        ModuleDeclaration *m_module;
 
     };
 }

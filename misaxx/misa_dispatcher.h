@@ -11,19 +11,21 @@
 #include "misa_module_base.h"
 #include "algorithm_node_path.h"
 #include "object_node_path.h"
+#include "misa_future_dispatch.h"
 
 namespace misaxx {
 
     /**
      * MISA++ dispatcher base class.
-     * @tparam ModuleDefinition
+     * @tparam ModuleDeclaration
      */
-    template<class ModuleDefinition> struct misa_dispatcher : public pattxx::dispatcher, public misa_worker<ModuleDefinition> {
-        static_assert(std::is_base_of<misa_module_declaration_base, ModuleDefinition>::value, "Template argument must be a module definition!");
+    template<class ModuleDeclaration> struct misa_dispatcher : public pattxx::dispatcher, public misa_worker<ModuleDeclaration> {
+        static_assert(std::is_base_of<misa_module_declaration_base, ModuleDeclaration>::value, "Template argument must be a module definition!");
 
         template<class Data> using misa_data = std::shared_ptr<Data>;
+        template<class Instance> using dispatched = misa_future_dispatch<Instance>;
 
-        explicit misa_dispatcher(pattxx::nodes::node *t_node, ModuleDefinition *t_module) : pattxx::dispatcher(t_node), m_module(t_module) {
+        explicit misa_dispatcher(pattxx::nodes::node *t_node, ModuleDeclaration *t_module) : pattxx::dispatcher(t_node), m_module(t_module) {
 
         }
 
@@ -31,40 +33,32 @@ namespace misaxx {
          * Returns the module definition
          * @return
          */
-        const ModuleDefinition &module() const override {
+        const ModuleDeclaration &module() const override {
             return *m_module;
         }
 
     protected:
 
         /**
-         * pattxx::dispatcher::dispatch with the additional function of setting the module accordingly.
+         * Declares a future dispatch.
          * @tparam Instance
          * @param t_name
          * @return
          */
-        template<class Instance, typename... Args> Instance &misa_dispatch(const std::string &t_name, Args&&... args) {
-            auto &inst = dispatch<Instance>(t_name, static_cast<ModuleDefinition*>(this), std::forward<Args>(args)...);
-            return inst;
+        template<class Instance> misa_future_dispatch<Instance> future_dispatch(std::string t_name) {
+            return misa_future_dispatch<Instance>(std::move(t_name));
         }
 
         /**
-         * Dispatches a submodule as described in the module definition
-         * @tparam Submodule
-         * @tparam Module
-         * @param m_submodule
-         * @return
-         */
-        template<class Submodule, class Module = typename Submodule::module_type>
-        Module &misa_dispatch(Submodule &t_submodule) {
-            if(t_submodule.has_instance())
-                throw std::runtime_error("The submodule already has been instantiated!");
-            // Initialize filesystem and more
-            t_submodule.init(module());
-            // Dispatch the module and tell the submodule holder
-            auto &instance = dispatch<Module>(t_submodule.name, std::move(t_submodule.definition()));
-            t_submodule.m_module = &instance;
-            return instance;
+        * pattxx::dispatcher::dispatch with the additional function of setting the module accordingly.
+        * @tparam Instance
+        * @param t_name
+        * @return
+        */
+        template<class FutureDispatch, class Instance = typename FutureDispatch::instance_type, typename... Args>
+        Instance &misa_dispatch(FutureDispatch &t_dispatch, Args &&... args) {
+            auto &inst = dispatch<Instance>(t_dispatch.name, static_cast<ModuleDeclaration *>(this), std::forward<Args>(args)...);
+            return inst;
         }
 
         /**
@@ -137,6 +131,6 @@ namespace misaxx {
 
     private:
 
-        ModuleDefinition *m_module;
+        ModuleDeclaration *m_module;
     };
 }

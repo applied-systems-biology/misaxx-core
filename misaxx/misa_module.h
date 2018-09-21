@@ -12,6 +12,7 @@
 #include "misa_submodule.h"
 #include "algorithm_node_path.h"
 #include "object_node_path.h"
+#include "misa_future_dispatch.h"
 
 namespace misaxx {
 
@@ -27,7 +28,8 @@ namespace misaxx {
 
     public:
 
-        using module_definition_type = ModuleDeclaration;
+        using module_declaration_type = ModuleDeclaration;
+        template<class Instance> using dispatched = misa_future_dispatch<Instance>;
 
         static_assert(std::is_base_of<misa_module_declaration_base, ModuleDeclaration>::value, "misa_module only accepts module definitions as template parameter!");
 
@@ -39,14 +41,24 @@ namespace misaxx {
     protected:
 
         /**
+         * Declares a future dispatch.
+         * @tparam Instance
+         * @param t_name
+         * @return
+         */
+        template<class Instance> misa_future_dispatch<Instance> future_dispatch(std::string t_name) {
+            return misa_future_dispatch<Instance>(std::move(t_name));
+        }
+
+        /**
          * pattxx::dispatcher::dispatch with the additional function of setting the module accordingly.
          * @tparam Instance
          * @param t_name
          * @return
          */
-        template<class Instance, typename... Args>
-        Instance &misa_dispatch(const std::string &t_name, Args &&... args) {
-            auto &inst = dispatch<Instance>(t_name, static_cast<ModuleDeclaration *>(this), std::forward<Args>(args)...);
+        template<class FutureDispatch, class Instance = typename FutureDispatch::instance_type, typename... Args>
+        Instance &misa_dispatch(FutureDispatch &t_dispatch, Args &&... args) {
+            auto &inst = dispatch<Instance>(t_dispatch.name, static_cast<ModuleDeclaration *>(this), std::forward<Args>(args)...);
             return inst;
         }
 

@@ -17,7 +17,7 @@ namespace misaxx {
     template <class RootModule> class misa_runtime_root_instantiator {
     protected:
         using node_type = pattxx::nodes::dispatcher_node<RootModule, pattxx::dispatcher>;
-        using module_definition_type = typename RootModule::module_definition_type;
+        using module_declaration_type = typename RootModule::module_declaration_type;
 
         explicit misa_runtime_root_instantiator(std::string t_root_name) : m_root_name(std::move(t_root_name)) {
         }
@@ -28,7 +28,7 @@ namespace misaxx {
          * @return
          */
         std::unique_ptr<node_type> instantiate_root(pattxx::runtime &rt) {
-            module_definition_type definition;
+            module_declaration_type definition;
             definition.filesystem = m_filesystem;
             return std::make_unique<node_type >(m_root_name, &rt, std::move(definition));
         }

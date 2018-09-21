@@ -43,15 +43,17 @@ struct other_task1 : public misa_task<other_module_def> {
 struct other_module : public misa_module<other_module_def> {
     using misa_module::misa_module;
 
+    dispatched <other_task1> dispatch_other_task1 = future_dispatch<other_task1>("other task 1");
+
     void init() {
         auto x = get_node().get_custom_path<algorithm_node_path>();
         auto y = get_node().get_custom_path<object_node_path>();
-        misa_dispatch<other_task1>("other task 1");
+        misa_dispatch(dispatch_other_task1);
     }
 };
 
 
-struct my_module_definition : public misa_module_declaration {
+struct my_module_declaration : public misa_module_declaration {
     data<misa_generic_file_stack> my_stack;
     data<misa_generic_file_stack> processed;
     submodule <other_module> other;
@@ -63,7 +65,7 @@ struct my_module_definition : public misa_module_declaration {
     }
 };
 
-struct my_task1 : public misa_task<my_module_definition> {
+struct my_task1 : public misa_task<my_module_declaration> {
     using misa_task::misa_task;
 
     void work() {
@@ -71,12 +73,14 @@ struct my_task1 : public misa_task<my_module_definition> {
     }
 };
 
-struct my_module : public misa_module<my_module_definition> {
+struct my_module : public misa_module<my_module_declaration> {
 
     using misa_module::misa_module;
 
     object_metadata md = from_parameter<object_metadata>();
     voxel_size vs = from_parameter<voxel_size>();
+
+    dispatched <my_task1> dispatch_my_task1 = future_dispatch<my_task1>("abc");
 
     void init() {
         auto x = get_node().get_custom_path<algorithm_node_path>();
@@ -84,7 +88,7 @@ struct my_module : public misa_module<my_module_definition> {
 
         // Dispatcher part
         chain c;
-        c >> misa_dispatch<my_task1>("abc") >> misa_dispatch(other);
+        c >> misa_dispatch(dispatch_my_task1) >> misa_dispatch(other);
     }
 };
 

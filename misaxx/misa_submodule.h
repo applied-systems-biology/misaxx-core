@@ -22,7 +22,7 @@ namespace misaxx {
      * Wraps around a module that can be dispatched later.
      * @tparam Module
      */
-    template<class Module, class ModuleDefinition = typename Module::module_type>
+    template<class Module, class ModuleDeclaration = typename Module::module_type>
     class misa_submodule : public misa_submodule_base {
     public:
 
@@ -30,7 +30,7 @@ namespace misaxx {
         std::string name;
 
         using module_type = Module;
-        using module_definition_type = ModuleDefinition;
+        using module_declaration_type = ModuleDeclaration;
 
         /**
          * The module instance if available.
@@ -45,15 +45,15 @@ namespace misaxx {
          * or the module instance if already dispatched).
          * @return
          */
-        module_definition_type &definition() {
+        module_declaration_type &definition() {
             if (m_module != nullptr)
                 return *m_module;
             else
-                return m_module_definition;
+                return m_module_declaration;
         }
 
         misa_filesystem &get_filesystem() {
-            return m_module_definition.filesystem;
+            return m_module_declaration.filesystem;
         }
 
         bool has_instance() const {
@@ -61,6 +61,6 @@ namespace misaxx {
         }
 
     private:
-        module_definition_type m_module_definition;
+        module_declaration_type m_module_declaration;
     };
 }
