@@ -27,7 +27,7 @@ namespace misaxx {
 
         explicit misa_future_dispatch_enum(FutureDispatchers&& ...dispatchers) :
         m_future_dispatchers(std::make_tuple(std::forward<FutureDispatchers>(dispatchers)...)){
-            check_dispatchers();
+            check_dispatchers<FutureDispatchers...>();
         }
 
         template<class Worker, int Index> InstanceBase &dispatch_(Worker &t_worker, const std::string &t_name) {
