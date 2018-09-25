@@ -6,9 +6,11 @@
 #pragma once
 
 #include <tuple>
+#include <functional>
 
 namespace misaxx {
-    template<class InstanceBase, class... FutureDispatchers> struct misa_future_dispatch_enum {
+
+    template<class InstanceBase> struct misa_future_dispatch_enum {
         using instance_base_type = InstanceBase;
 
         /**
@@ -17,37 +19,30 @@ namespace misaxx {
          * @tparam Args
          * @return
          */
-        template<class Disp, class... Args> constexpr void check_dispatchers() {
+        template<class Worker, class Disp, class... Args> void add_dispatchers(Worker &worker, const Disp &dispatcher, const Args& ...args) {
             static_assert(std::is_base_of<InstanceBase, typename Disp::instance_type>::value,
                     "Future dispatchers must dispatch into base type!");
+            // Create a new dispatcher with updated name
+            Disp modified_dispatcher = dispatcher;
+            modified_dispatcher.name = name + "-" + dispatcher.name;
+            m_future_dispatchers[dispatcher.name] = [&worker, modified_dispatcher]() -> InstanceBase& {
+               return worker.misa_dispatch(modified_dispatcher);
+            };
             if constexpr (sizeof...(Args) > 0) {
-                check_dispatchers<Args...>();
+                add_dispatchers(worker, args...);
             }
         }
 
-        explicit misa_future_dispatch_enum(FutureDispatchers&& ...dispatchers) :
-        m_future_dispatchers(std::make_tuple(std::forward<FutureDispatchers>(dispatchers)...)){
-            check_dispatchers<FutureDispatchers...>();
+        InstanceBase &dispatch(const std::string &t_name) {
+            return m_future_dispatchers.at(t_name)();
         }
 
-        template<class Worker, int Index> InstanceBase &dispatch_(Worker &t_worker, const std::string &t_name) {
-            if constexpr (Index == sizeof...(FutureDispatchers) - 1) {
-                throw std::runtime_error("Cannot dispatch future_dispatcher with name " + t_name);
-            }
-            else {
-                if(m_future_dispatchers.template get<Index>().name == t_name) {
-                    return t_worker.misa_dispatch(m_future_dispatchers.template get<Index>());
-                }
-                else {
-                    return dispatch_<Worker, Index + 1>(t_worker, t_name);
-                }
-            }
-        }
+        std::string name;
+        std::unordered_map<std::string, std::function<InstanceBase& ()>> m_future_dispatchers;
 
-        template<class Worker> InstanceBase &dispatch(Worker &t_worker, const std::string &t_name) {
-            return dispatch_<0>(t_name);
-        }
+        explicit misa_future_dispatch_enum(std::string t_name) : name(std::move(t_name)) {
 
-        std::tuple<FutureDispatchers...> m_future_dispatchers;
+        }
     };
+
 }

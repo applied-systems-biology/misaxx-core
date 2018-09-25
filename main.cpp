@@ -18,6 +18,7 @@
 #include <misaxx/object_node_path.h>
 #include <misaxx/parameters/voxel_size.h>
 #include <misaxx/parameters/object_metadata.h>
+#include <misaxx/misa_future_dispatch_enum.h>
 
 using namespace misaxx;
 using namespace pattxx;
@@ -69,7 +70,15 @@ struct my_task1 : public misa_task<my_module_declaration> {
     using misa_task::misa_task;
 
     void work() {
-        std::cout << "test" << std::endl;
+        std::cout << "test###abc" << std::endl;
+    }
+};
+
+struct my_task2 : public misa_task<my_module_declaration> {
+    using misa_task::misa_task;
+
+    void work() {
+        std::cout << "test###def" << std::endl;
     }
 };
 
@@ -82,6 +91,8 @@ struct my_module : public misa_module<my_module_declaration> {
 
     dispatched <my_task1> dispatch_my_task1 = future_dispatch<my_task1>("abc");
 
+    dispatched_enum < misa_task<my_module_declaration>> test = future_dispatch_enum< misa_task<my_module_declaration>>("test", future_dispatch<my_task1>("abc"), future_dispatch<my_task2>("def"));
+
     void init() {
         auto x = get_node().get_custom_path<algorithm_node_path>();
         auto y = get_node().get_custom_path<object_node_path>();
@@ -89,6 +100,7 @@ struct my_module : public misa_module<my_module_declaration> {
         // Dispatcher part
         chain c;
         c >> misa_dispatch(dispatch_my_task1) >> misa_dispatch(other);
+        c >> test.dispatch("def");
     }
 };
 

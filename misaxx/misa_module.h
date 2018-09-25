@@ -13,6 +13,7 @@
 #include "algorithm_node_path.h"
 #include "object_node_path.h"
 #include "misa_future_dispatch.h"
+#include "misa_future_dispatch_enum.h"
 
 namespace misaxx {
 
@@ -29,7 +30,16 @@ namespace misaxx {
     public:
 
         using module_declaration_type = ModuleDeclaration;
+
+        /**
+         * A future dispatch instance
+         */
         template<class Instance> using dispatched = misa_future_dispatch<Instance>;
+
+        /**
+         * An enumeration of future dispatch instances
+         */
+        template<class InstanceBase> using dispatched_enum = misa_future_dispatch_enum<InstanceBase>;
 
         static_assert(std::is_base_of<misa_module_declaration_base, ModuleDeclaration>::value, "misa_module only accepts module definitions as template parameter!");
 
@@ -153,6 +163,20 @@ namespace misaxx {
          */
         template<class Parameter, class InputCheckTag = pattxx::parameters::default_check> auto from_parameter_or(Parameter t_default = Parameter()) {
             return from_json_or<Parameter, typename Parameter::configuration_namespace_type, InputCheckTag> (Parameter::name, std::move(t_default), Parameter::metadata);
+        }
+
+        /**
+         * Creates an enumeration of future dispatchers.
+         * @tparam InstanceBase
+         * @tparam FutureDispatchers
+         * @param name Base name of the dispatchers
+         * @param dispatchers future_dispatch instances
+         * @return
+         */
+        template<class InstanceBase, class... FutureDispatchers> misa_future_dispatch_enum<InstanceBase> future_dispatch_enum(std::string name, const FutureDispatchers&... dispatchers) {
+            misa_future_dispatch_enum<InstanceBase> result(std::move(name));
+            result.add_dispatchers(*this, dispatchers...);
+            return result;
         }
     };
 }
