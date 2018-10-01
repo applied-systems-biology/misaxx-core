@@ -5,7 +5,6 @@
 
 #pragma once
 #include <memory>
-#include <pattxx/metadata.h>
 #include "misa_filesystem.h"
 
 namespace misaxx {

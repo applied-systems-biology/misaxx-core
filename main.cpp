@@ -16,9 +16,8 @@
 #include <misaxx/module_data/misa_generic_file_stack.h>
 #include <misaxx/algorithm_node_path.h>
 #include <misaxx/object_node_path.h>
-#include <misaxx/parameters/voxel_size.h>
-#include <misaxx/parameters/object_metadata.h>
-#include <misaxx/misa_future_dispatch_enum.h>
+#include <misaxx/metadata/object3d_voxel_size.h>
+#include <misaxx/metadata/object_name.h>
 
 using namespace misaxx;
 using namespace pattxx;
@@ -86,12 +85,13 @@ struct my_module : public misa_module<my_module_declaration> {
 
     using misa_module::misa_module;
 
-    object_metadata md = from_parameter<object_metadata>();
-    voxel_size vs = from_parameter<voxel_size>();
+    object_name md = from_parameter<object_name>();
+    object3d_voxel_size vs = from_parameter<object3d_voxel_size>();
 
     dispatched <my_task1> dispatch_my_task1 = future_dispatch<my_task1>("abc");
+    dispatched<other_module> dispatcher_other = future_dispatch(other);
 
-    dispatched_enum < misa_task<my_module_declaration>> test = future_dispatch_enum< misa_task<my_module_declaration>>("test", future_dispatch<my_task1>("abc"), future_dispatch<my_task2>("def"));
+    dispatched < misa_task<my_module_declaration>> test = future_dispatch_any_from_name< misa_task<my_module_declaration>>("def", option<my_task1>("abc"), option<my_task2>("def"));
 
     void init() {
         auto x = get_node().get_custom_path<algorithm_node_path>();
@@ -99,8 +99,8 @@ struct my_module : public misa_module<my_module_declaration> {
 
         // Dispatcher part
         chain c;
-        c >> misa_dispatch(dispatch_my_task1) >> misa_dispatch(other);
-        c >> test.dispatch("def");
+        c >> misa_dispatch(dispatch_my_task1) >> misa_dispatch(dispatcher_other);
+        c >> misa_dispatch(test);
     }
 };
 

@@ -9,7 +9,7 @@
 #include "misa_metadata.h"
 #include "object3d_voxel_size.h"
 
-namespace misaxx::metadata {
+namespace misaxx {
     struct object3d_voxel_bounds : public misa_metadata {
 
         int min_x = std::numeric_limits<int>::max();
@@ -48,4 +48,17 @@ namespace misaxx::metadata {
             return v;
         }
     };
+
+    void to_json(nlohmann::json& j, const object3d_voxel_bounds& p) {
+        j = p.to_json();
+    }
+
+    void from_json(const nlohmann::json& j, object3d_voxel_bounds& p) {
+        p.min_x = j["min-x"];
+        p.min_y = j["min-y"];
+        p.min_z = j["min-z"];
+        p.max_x = j["max-x"];
+        p.max_y = j["max-y"];
+        p.max_z = j["max-z"];
+    }
 }

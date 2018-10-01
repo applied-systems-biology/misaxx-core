@@ -8,7 +8,7 @@
 #include <nlohmann/json.hpp>
 #include "misa_metadata.h"
 
-namespace misaxx::metadata {
+namespace misaxx {
     /**
      * Attachable metadata containing the number of pixels of a 2D object
      */
@@ -25,4 +25,12 @@ namespace misaxx::metadata {
             return "object2d-pixels";
         }
     };
+
+    void to_json(nlohmann::json& j, const object_name& p) {
+        j = p.to_json();
+    }
+
+    void from_json(const nlohmann::json& j, object_name& p) {
+        p.name = j;
+    }
 }

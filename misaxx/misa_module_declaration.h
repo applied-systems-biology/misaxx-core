@@ -18,7 +18,6 @@ namespace misaxx {
      */
     class misa_module_declaration : public misa_module_declaration_base {
     public:
-        using metadata = pattxx::metadata;
         template<class Module> using submodule = misa_submodule<Module>;
         template<typename T> using data = std::shared_ptr<T>;
     protected:

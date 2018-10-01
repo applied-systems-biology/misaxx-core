@@ -33,7 +33,7 @@ namespace misaxx {
                 if(as_folder) {
                     misa_submodule<SubModule> module;
                     init_submodule(module, ptr.first);
-                    misa_dispatch(module);
+                    misa_dispatch(future_dispatch(module));
                 }
             }
         }

@@ -8,9 +8,13 @@
 #include <stdexcept>
 #include <nlohmann/json.hpp>
 #include "misa_metadata.h"
+#include "../object_node_path.h"
 
-namespace misaxx::metadata {
+namespace misaxx {
     struct object3d_voxel_size : public misa_metadata {
+
+        using configuration_namespace_type = object_node_path;
+
         double x = 0;
         double y = 0;
         double z = 0;
@@ -37,4 +41,14 @@ namespace misaxx::metadata {
             return "object3d-voxel-size";
         }
     };
+
+    void to_json(nlohmann::json& j, const object3d_voxel_size& p) {
+        j = p.to_json();
+    }
+
+    void from_json(const nlohmann::json& j, object3d_voxel_size& p) {
+        p.x = j["x"];
+        p.y = j["y"];
+        p.z = j["z"];
+    }
 }

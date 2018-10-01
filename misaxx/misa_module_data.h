@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include <pattxx/metadata.h>
 #include <cxxh/containers/dynamic_singleton_map.h>
 #include "misa_module_declaration_base.h"
 #include "metadata/misa_metadata.h"

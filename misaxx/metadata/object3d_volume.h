@@ -6,15 +6,15 @@
 #pragma once
 
 #include <nlohmann/json.hpp>
-#include <misaxx/parameters/voxel_size.h>
+#include "object3d_voxel_size.h"
 #include "object3d_pixels.h"
 
-namespace misaxx::metadata {
+namespace misaxx {
     struct object3d_volume : public misa_metadata {
         double volume = 0;
 
         object3d_volume() = default;
-        explicit object3d_volume(const object3d_pixels &t_pixels, const voxel_size &t_voxel_size) : volume(t_pixels.pixels * t_voxel_size.volume()) {
+        explicit object3d_volume(const object3d_pixels &t_pixels, const object3d_voxel_size &t_voxel_size) : volume(t_pixels.pixels * t_voxel_size.volume()) {
 
         }
 
@@ -28,4 +28,12 @@ namespace misaxx::metadata {
             return "object3d-volume";
         }
     };
+
+    void to_json(nlohmann::json& j, const object_name& p) {
+        j = p.to_json();
+    }
+
+    void from_json(const nlohmann::json& j, object_name& p) {
+        p.name = j;
+    }
 }

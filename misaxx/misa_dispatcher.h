@@ -11,8 +11,6 @@
 #include "misa_module_base.h"
 #include "algorithm_node_path.h"
 #include "object_node_path.h"
-#include "misa_future_dispatch.h"
-#include "misa_future_dispatch_enum.h"
 
 namespace misaxx {
 
@@ -28,12 +26,7 @@ namespace misaxx {
         /**
          * A future dispatch instance
          */
-        template<class Instance> using dispatched = misa_future_dispatch<Instance>;
-
-        /**
-         * An enumeration of future dispatch instances
-         */
-        template<class InstanceBase> using dispatched_enum = misa_future_dispatch_enum<InstanceBase>;
+        template<class Instance> using dispatched = std::function<Instance &(misa_dispatcher<ModuleDeclaration> &)>;
 
         explicit misa_dispatcher(pattxx::nodes::node *t_node, ModuleDeclaration *t_module) : pattxx::dispatcher(t_node), m_module(t_module) {
 
@@ -53,10 +46,9 @@ namespace misaxx {
         * @param t_name
         * @return
         */
-        template<class FutureDispatch, class Instance = typename FutureDispatch::instance_type, typename... Args>
-        Instance &misa_dispatch(FutureDispatch &t_dispatch, Args &&... args) {
-            auto &inst = dispatch<Instance>(t_dispatch.name, static_cast<ModuleDeclaration *>(this), std::forward<Args>(args)...);
-            return inst;
+        template<class FutureDispatch, class Instance = typename FutureDispatch::result_type>
+        Instance &misa_dispatch(FutureDispatch &t_dispatch) {
+            return t_dispatch(*this);
         }
 
     protected:
@@ -67,8 +59,10 @@ namespace misaxx {
          * @param t_name
          * @return
          */
-        template<class Instance> misa_future_dispatch<Instance> future_dispatch(std::string t_name) {
-            return misa_future_dispatch<Instance>(std::move(t_name));
+        template<class Instance> dispatched <Instance> future_dispatch(const std::string &t_name) {
+            return [t_name](misa_dispatcher<ModuleDeclaration> &t_worker) -> Instance& {
+                return t_worker.template dispatch<Instance>(t_name, &t_worker);
+            };
         }
 
         /**
