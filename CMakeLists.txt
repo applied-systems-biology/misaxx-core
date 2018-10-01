@@ -34,8 +34,6 @@ add_library(misaxx
         misaxx/algorithm_node_path.h
         misaxx/root_modules/misa_root_module_base.h
         misaxx/object_node_path.h
-        misaxx/parameters/voxel_size.h
-        misaxx/parameters/object_metadata.h
         misaxx/metadata/object2d_pixels.h
         misaxx/metadata/object3d_pixels.h
         misaxx/module_data/misa_json_file.h
@@ -43,7 +41,9 @@ add_library(misaxx
         misaxx/module_data/misa_exportable_meta_data.h
         misaxx/metadata/misa_metadata.h
         misaxx/metadata/object3d_voxel_bounds.h
-        misaxx/metadata/object3d_voxel_size.h misaxx/misa_future_dispatch.h misaxx/metadata/object_name.h)
+        misaxx/metadata/object3d_voxel_size.h
+        misaxx/misa_future_dispatch.h
+        misaxx/metadata/object_name.h)
 
 include(cmake_modules/find_cxxh.cmake)
 include(cmake_modules/find_pattxx.cmake)
