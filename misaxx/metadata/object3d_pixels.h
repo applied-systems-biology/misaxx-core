@@ -26,11 +26,11 @@ namespace misaxx {
         }
     };
 
-    void to_json(nlohmann::json& j, const object_name& p) {
+    void to_json(nlohmann::json& j, const object3d_pixels& p) {
         j = p.to_json();
     }
 
-    void from_json(const nlohmann::json& j, object_name& p) {
-        p.name = j;
+    void from_json(const nlohmann::json& j, object3d_pixels& p) {
+        p.pixels = j["pixels"];
     }
 }
