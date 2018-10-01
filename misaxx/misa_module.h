@@ -81,6 +81,12 @@ namespace misaxx {
             }
         }
 
+        template<class InstanceBase, class... FutureDispatchers> dispatched <InstanceBase>
+                future_dispatch_any_from_algorithm_json(const std::string &t_param_name,  const FutureDispatchers&... args) {
+            std::string n = from_algorithm_json<std::string>(t_param_name); // TODO: Fill metadata with enum values
+            return future_dispatch_any_from_name<InstanceBase>(n, args...);
+        }
+
         template<class Submodule, class Module = typename Submodule::module_type>
         dispatched<Module> future_dispatch(Submodule &t_submodule) {
             // TODO: Log which dispatchers should be called
