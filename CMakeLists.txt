@@ -1,11 +1,48 @@
 cmake_minimum_required(VERSION 3.11)
 project(misaxx)
 
+include(FetchContent)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Boost 1.63 COMPONENTS REQUIRED filesystem regex program_options)
 find_package(OpenMP)
+
+FetchContent_Declare(
+        coixx
+        GIT_REPOSITORY https://asb-git.hki-jena.de/RGerst/coixx.git
+        GIT_TAG origin/master
+)
+FetchContent_Declare(
+        cxxh
+        GIT_REPOSITORY https://asb-git.hki-jena.de/RGerst/cxx-helpers.git
+        GIT_TAG origin/master
+)
+FetchContent_Declare(
+        pattxx
+        GIT_REPOSITORY https://asb-git.hki-jena.de/RGerst/pattxx.git
+        GIT_TAG origin/master
+)
+
+FetchContent_GetProperties(coixx)
+if(NOT coixx_POPULATED)
+    message("-- Fetching dependency coixx ...")
+    FetchContent_Populate(coixx)
+    add_subdirectory(${coixx_SOURCE_DIR} ${coixx_BINARY_DIR})
+endif()
+FetchContent_GetProperties(cxxh)
+if(NOT cxxh_POPULATED)
+    message("-- Fetching dependency cxxh ...")
+    FetchContent_Populate(cxxh)
+    add_subdirectory(${cxxh_SOURCE_DIR} ${cxxh_BINARY_DIR})
+endif()
+FetchContent_GetProperties(pattxx)
+if(NOT pattxx_POPULATED)
+    message("-- Fetching dependency pattxx ...")
+    FetchContent_Populate(pattxx)
+    add_subdirectory(${pattxx_SOURCE_DIR} ${pattxx_BINARY_DIR})
+endif()
 
 add_library(misaxx
         misaxx/filesystem/vfs_folder.h
@@ -44,10 +81,6 @@ add_library(misaxx
         misaxx/metadata/object3d_voxel_size.h
         misaxx/misa_future_dispatch.h
         misaxx/metadata/object_name.h)
-
-include(cmake_modules/find_cxxh.cmake)
-include(cmake_modules/find_pattxx.cmake)
-include(cmake_modules/find_coixx.cmake)
 
 target_include_directories(misaxx SYSTEM BEFORE PUBLIC ${Boost_INCLUDE_DIRS})
 target_include_directories(misaxx BEFORE PUBLIC ${Boost_INCLUDE_DIRS})

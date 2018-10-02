@@ -44,17 +44,24 @@ namespace misaxx {
 
     protected:
 
-        /**
-         * Declares a future dispatch.
-         * @tparam Instance
-         * @param t_name
-         * @return
-         */
         template<class Instance>
         dispatched<Instance> future_dispatch(const std::string &t_name) {
             // TODO: Log which dispatchers should be called
             return [t_name](misa_module<ModuleDeclaration> &t_worker) -> Instance & {
                 return t_worker.template dispatch<Instance>(t_name, &t_worker);
+            };
+        }
+
+        template<class Submodule, class Module = typename Submodule::module_type>
+        dispatched<Module> future_dispatch(Submodule &t_submodule) {
+            // TODO: Log which dispatchers should be called
+            return [&t_submodule](misa_module<ModuleDeclaration> &t_worker) -> Module & {
+                if (t_submodule.has_instance())
+                    throw std::runtime_error("The submodule already has been instantiated!");
+                // Dispatch the module and tell the submodule holder
+                auto &instance = t_worker.template dispatch<Module>(t_submodule.name, std::move(t_submodule.definition()));
+                t_submodule.m_module = &instance;
+                return instance;
             };
         }
 
@@ -93,34 +100,11 @@ namespace misaxx {
             return future_dispatch_any_from_name<InstanceBase>(n, args...);
         }
 
-        template<class Submodule, class Module = typename Submodule::module_type>
-        dispatched<Module> future_dispatch(Submodule &t_submodule) {
-            // TODO: Log which dispatchers should be called
-            return [&t_submodule](misa_module<ModuleDeclaration> &t_worker) -> Module & {
-                if (t_submodule.has_instance())
-                    throw std::runtime_error("The submodule already has been instantiated!");
-                // Dispatch the module and tell the submodule holder
-                auto &instance = t_worker.template dispatch<Module>(t_submodule.name, std::move(t_submodule.definition()));
-                t_submodule.m_module = &instance;
-                return instance;
-            };
-        }
-
-        /**
-         * pattxx::dispatcher::dispatch with the additional function of setting the module accordingly.
-         * @tparam Instance
-         * @param t_name
-         * @return
-         */
         template<class FutureDispatch, class Instance = typename FutureDispatch::result_type>
         Instance &misa_dispatch(const FutureDispatch &t_dispatch) {
             return t_dispatch(*this);
         }
 
-        /**
-         * Returns the module definition
-         * @return
-         */
         ModuleDeclaration &module() override {
             return *this;
         }
