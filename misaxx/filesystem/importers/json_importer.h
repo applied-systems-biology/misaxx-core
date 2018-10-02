@@ -34,6 +34,8 @@ namespace misaxx::filesystem::importers {
      * \endcode
      */
     struct json_importer {
+
+        nlohmann::json input_json;
         boost::filesystem::path json_path;
 
         /**
@@ -79,10 +81,16 @@ namespace misaxx::filesystem::importers {
             vfs.imported = std::make_shared<filesystem::vfs_folder>("imported");
             vfs.exported = std::make_shared<filesystem::vfs_folder>("exported");
 
-            std::ifstream stream;
-            stream.open(json_path.string());
             nlohmann::json json;
-            stream >> json;
+
+            if(input_json.empty()) {
+                std::ifstream stream;
+                stream.open(json_path.string());
+                stream >> json;
+            }
+            else {
+                json = input_json;
+            }
 
             if(json.find("imported") != json.end()) {
                 import_folder(json["imported"], vfs.imported);

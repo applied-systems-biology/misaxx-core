@@ -183,5 +183,17 @@ namespace misaxx {
             return from_json_or<Parameter, typename Parameter::configuration_namespace_type, InputCheckTag>(Parameter().get_name(), std::move(t_default));
         }
 
+    public:
+
+        virtual void misa_init() = 0;
+
+        virtual void misa_simulate() {
+            // TODO: Dispatch from list
+        }
+
+        void init() override {
+            misa_init();
+        }
+
     };
 }

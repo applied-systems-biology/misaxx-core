@@ -33,7 +33,7 @@ struct other_task1 : public misa_task<other_module_def> {
 
     int abcde = from_object_json<int>("abcde");
 
-    void work() {
+    void misa_work() override {
         auto x = get_node().get_custom_path<algorithm_node_path>();
         auto y = get_node().get_custom_path<object_node_path>();
         std::cout << "test2" << std::endl;
@@ -45,7 +45,7 @@ struct other_module : public misa_module<other_module_def> {
 
     dispatched <other_task1> dispatch_other_task1 = future_dispatch<other_task1>("other task 1");
 
-    void init() {
+    void misa_init() override {
         auto x = get_node().get_custom_path<algorithm_node_path>();
         auto y = get_node().get_custom_path<object_node_path>();
         misa_dispatch(dispatch_other_task1);
@@ -68,7 +68,7 @@ struct my_module_declaration : public misa_module_declaration {
 struct my_task1 : public misa_task<my_module_declaration> {
     using misa_task::misa_task;
 
-    void work() {
+    void misa_work() override {
         std::cout << "test###abc" << std::endl;
     }
 };
@@ -76,7 +76,7 @@ struct my_task1 : public misa_task<my_module_declaration> {
 struct my_task2 : public misa_task<my_module_declaration> {
     using misa_task::misa_task;
 
-    void work() {
+    void misa_work() override {
         std::cout << "test###def" << std::endl;
     }
 };
@@ -93,7 +93,7 @@ struct my_module : public misa_module<my_module_declaration> {
 
     dispatched < misa_task<my_module_declaration>> test = future_dispatch_any_from_name< misa_task<my_module_declaration>>("def", option<my_task1>("abc"), option<my_task2>("def"));
 
-    void init() {
+    void misa_init() override {
         auto x = get_node().get_custom_path<algorithm_node_path>();
         auto y = get_node().get_custom_path<object_node_path>();
 

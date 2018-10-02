@@ -164,6 +164,18 @@ namespace misaxx {
             return future_dispatch_any_from_name<InstanceBase>(n, args...);
         }
 
+    public:
+
+        virtual void misa_init() = 0;
+
+        virtual void misa_simulate() {
+            // TODO: Dispatch from list
+        }
+
+        void init() override {
+            misa_init();
+        }
+
     private:
 
         ModuleDeclaration *m_module;

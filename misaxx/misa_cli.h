@@ -147,7 +147,12 @@ namespace misaxx {
             }
             else if(params["source"] == "json") {
                 filesystem::importers::json_importer importer;
-                importer.json_path = params["json-path"].get<std::string>();
+                if(params.find("json-data") != params.end()) {
+                    importer.input_json = params["json-data"];
+                }
+                else {
+                    importer.json_path = params["json-path"].get<std::string>();
+                }
                 get_runtime().get_filesystem() = importer.import();
             }
             else {

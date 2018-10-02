@@ -24,10 +24,11 @@ namespace misaxx {
      * as objects. The SubModule is called on each of this objects.
      * @tparam SubModule
      */
-    template<class SubModule> struct misa_multiobject_root : public misa_module<misa_multiobject_root_declaration>, public misa_root_module_base {
-        using misa_module::misa_module;
+    template<class SubModule> struct misa_multiobject_root : public misa_module<misa_multiobject_root_declaration>,
+            public misa_root_module_base {
+        using misa_module<misa_multiobject_root_declaration>::misa_module;
 
-        void init() {
+        void misa_init() override {
             for(const auto &ptr : *filesystem.imported) {
                 filesystem::folder as_folder = std::dynamic_pointer_cast<filesystem::vfs_folder>(ptr.second);
                 if(as_folder) {
@@ -36,6 +37,10 @@ namespace misaxx {
                     misa_dispatch(future_dispatch(module));
                 }
             }
+        }
+
+        void misa_simulate() override {
+            // TODO: Simulation
         }
     };
 
