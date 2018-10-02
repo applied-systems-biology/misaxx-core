@@ -9,6 +9,5 @@
     <mapping directory="$PROJECT_DIR$/cmake-build-debug/_deps/pattxx-src/cmake_modules" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/cmake-build-debug/_deps/pattxx-src/documentation/themes/docdock" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/cmake-build-debug/_deps/pattxx-src/libs/cxx-helpers" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/cmake_modules" vcs="Git" />
   </component>
 </project>
