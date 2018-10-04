@@ -111,7 +111,10 @@ namespace misaxx {
         }
 
         void work() override {
-            misa_work();
+            if(get_node().get_runtime().is_building_schema())
+                misa_simulate();
+            else
+                misa_work();
         }
 
     private:

@@ -44,7 +44,8 @@ namespace misaxx {
                     ("help,h", "Help screen")
                     ("parameters,p", po::value<std::string>(), "Provides the list of parameters")
                     ("threads,t", po::value<int>()->default_value(1), "Sets the number of threads")
-                    ("no-skip", "Disables skipping of work that already has been finished");
+                    ("no-skip", "Disables skipping of work that already has been finished")
+                    ("write-parameter-schema", po::value<std::string>(), "Writes a parameter schema to the target file");
 
             po::command_line_parser parser(argc, argv);
             parser.options(general_options);
@@ -64,11 +65,11 @@ namespace misaxx {
             if(vm.count("no-skip")) {
                 m_runtime.enable_skipping = false;
             }
-//            if(vm.count("write-parameter-schema")) {
-//                m_runtime.build_schema = true;
-//                m_parameter_schema_path = vm["write-parameter-schema"].as<std::string>();
-//                boost::filesystem::create_directories(m_parameter_schema_path.parent_path());
-//            }
+            if(vm.count("write-parameter-schema")) {
+                m_runtime.build_schema = true;
+                m_parameter_schema_path = vm["write-parameter-schema"].as<std::string>();
+                boost::filesystem::create_directories(m_parameter_schema_path.parent_path());
+            }
             if(vm.count("parameters")) {
                 std::cout << "<#> <#> Loading parameters from " << vm["parameters"].as<std::string>() << std::endl;
                 std::ifstream in(vm["parameters"].as<std::string>());
@@ -94,14 +95,14 @@ namespace misaxx {
             else {
                 std::cout << "<#> <#> Skipping is disabled" << std::endl;
             }
-//            if(m_runtime.build_schema) {
-//                std::cout << "<#> <#> Parameter schema will be built. Please note that this can reduce the performance." << std::endl;
-//            }
+            if(m_runtime.build_schema) {
+                std::cout << "<#> <#> Parameter schema will be built. Please note that this can reduce the performance." << std::endl;
+            }
             m_runtime.run();
-//            if(m_runtime.build_schema) {
-//                std::cout << "<#> <#> Writing parameter schema to " << m_parameter_schema_path.string() << std::endl;
-//                m_runtime.parameter_schema.write(m_parameter_schema_path);
-//            }
+            if(m_runtime.build_schema) {
+                std::cout << "<#> <#> Writing parameter schema to " << m_parameter_schema_path.string() << std::endl;
+                m_runtime.parameter_schema.write(m_parameter_schema_path);
+            }
         }
 
         /**
@@ -135,7 +136,10 @@ namespace misaxx {
         }
 
     private:
+
         Runtime m_runtime;
+
+        boost::filesystem::path m_parameter_schema_path;
 
         void load_filesystem() {
             nlohmann::json &params = m_runtime.parameters["runtime::filesystem"];

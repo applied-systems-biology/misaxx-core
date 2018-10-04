@@ -43,18 +43,6 @@ namespace misaxx {
     protected:
 
         /**
-         * Declares a future dispatch.
-         * @tparam Instance
-         * @param t_name
-         * @return
-         */
-        template<class Instance> dispatched <Instance> future_dispatch(const std::string &t_name) {
-            return [t_name](misa_dispatcher<ModuleDeclaration> &t_worker) -> Instance& {
-                return t_worker.template dispatch<Instance>(t_name, &t_worker);
-            };
-        }
-
-        /**
          * Loads a parameter from the object namespace. Global in the whole subtree of the object.
          * @tparam T
          * @tparam InputCheckTag
@@ -133,16 +121,27 @@ namespace misaxx {
             return t_dispatch(*this);
         }
 
+        template<class Instance>
+        dispatched<Instance> future_dispatch(const std::string &t_name) {
+            auto result = [t_name](misa_dispatcher<ModuleDeclaration> &t_worker) -> Instance & {
+                return t_worker.template dispatch<Instance>(t_name, &t_worker);
+            };
+            m_future_dispatched.push_back(result);
+            return result;
+        }
+
         template<class InstanceBase, class FutureDispatcher, class... FutureDispatchers> dispatched <InstanceBase>
         future_dispatch_any_from_name(const std::string &t_name,const FutureDispatcher& disp, const FutureDispatchers&... args) {
             static_assert(std::is_base_of<InstanceBase, typename FutureDispatcher::instance_type>::value, "Future dispatchers must instantiate the base type!");
             // TODO: Log which dispatchers should be called
             if(disp.name == t_name) {
-                return [t_name](misa_dispatcher<ModuleDeclaration> &t_worker) -> InstanceBase & {
-                    return t_worker.template dispatch<typename FutureDispatcher::instance_type>(t_name, &t_worker);
-                };
+                return future_dispatch<typename FutureDispatcher::instance_type>(disp.name);
             }
             else {
+
+                // Future dispatch for list
+                future_dispatch<typename FutureDispatcher::instance_type>(disp.name);
+
                 if constexpr (sizeof...(args) > 0) {
                     return future_dispatch_any_from_name<InstanceBase>(t_name, args...);
                 }
@@ -169,15 +168,25 @@ namespace misaxx {
         virtual void misa_init() = 0;
 
         virtual void misa_simulate() {
-            // TODO: Dispatch from list
+            for(const auto &f : m_future_dispatched) {
+                misa_dispatch(f);
+            }
         }
 
         void init() override {
-            misa_init();
+            if(get_node().get_runtime().is_building_schema())
+                misa_simulate();
+            else
+                misa_init();
         }
 
     private:
 
         ModuleDeclaration *m_module;
+
+        /**
+         * Lists all future dispatched entries for later use in misa_simulate()
+         */
+        std::vector<dispatched<pattxx::worker>> m_future_dispatched;
     };
 }

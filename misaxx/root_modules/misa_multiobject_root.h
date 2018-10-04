@@ -40,7 +40,9 @@ namespace misaxx {
         }
 
         void misa_simulate() override {
-            // TODO: Simulation
+            misa_submodule<SubModule> module;
+            init_submodule(module, "__OBJECT__");
+            misa_dispatch(future_dispatch(module));
         }
     };
 

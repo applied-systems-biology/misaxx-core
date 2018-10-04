@@ -51,6 +51,5 @@ namespace misaxx {
         misa_filesystem &get_filesystem() {
             return this->m_filesystem;
         }
-
     };
 }

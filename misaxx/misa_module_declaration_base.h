@@ -13,6 +13,7 @@ namespace misaxx {
 
 
     struct misa_module_declaration_base {
+
         /**
          * Filesystem of this module
          */

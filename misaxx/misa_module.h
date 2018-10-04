@@ -46,16 +46,16 @@ namespace misaxx {
 
         template<class Instance>
         dispatched<Instance> future_dispatch(const std::string &t_name) {
-            // TODO: Log which dispatchers should be called
-            return [t_name](misa_module<ModuleDeclaration> &t_worker) -> Instance & {
+            auto result = [t_name](misa_module<ModuleDeclaration> &t_worker) -> Instance & {
                 return t_worker.template dispatch<Instance>(t_name, &t_worker);
             };
+            m_future_dispatched.push_back(result);
+            return result;
         }
 
         template<class Submodule, class Module = typename Submodule::module_type>
         dispatched<Module> future_dispatch(Submodule &t_submodule) {
-            // TODO: Log which dispatchers should be called
-            return [&t_submodule](misa_module<ModuleDeclaration> &t_worker) -> Module & {
+            dispatched<Module> result = [&t_submodule](misa_module<ModuleDeclaration> &t_worker) -> Module & {
                 if (t_submodule.has_instance())
                     throw std::runtime_error("The submodule already has been instantiated!");
                 // Dispatch the module and tell the submodule holder
@@ -63,6 +63,8 @@ namespace misaxx {
                 t_submodule.m_module = &instance;
                 return instance;
             };
+            m_future_dispatched.push_back(result);
+            return result;
         }
 
         template<class Instance> misa_future_dispatch<Instance> option(std::string name) {
@@ -74,11 +76,13 @@ namespace misaxx {
             static_assert(std::is_base_of<InstanceBase, typename FutureDispatcher::instance_type>::value, "Future dispatchers must instantiate the base type!");
             // TODO: Log which dispatchers should be called
             if(disp.name == t_name) {
-                return [t_name](misa_module<ModuleDeclaration> &t_worker) -> InstanceBase & {
-                    return t_worker.template dispatch<typename FutureDispatcher::instance_type>(t_name, &t_worker);
-                };
+                return future_dispatch<typename FutureDispatcher::instance_type>(disp.name);
             }
             else {
+
+                // Future dispatch for list
+                future_dispatch<typename FutureDispatcher::instance_type>(disp.name);
+
                 if constexpr (sizeof...(args) > 0) {
                     return future_dispatch_any_from_name<InstanceBase>(t_name, args...);
                 }
@@ -188,12 +192,24 @@ namespace misaxx {
         virtual void misa_init() = 0;
 
         virtual void misa_simulate() {
-            // TODO: Dispatch from list
+            for(const auto &f : m_future_dispatched) {
+                misa_dispatch(f);
+            }
         }
 
         void init() override {
-            misa_init();
+            if(get_node().get_runtime().is_building_schema())
+                misa_simulate();
+            else
+                misa_init();
         }
+
+    private:
+
+        /**
+         * Lists all future dispatched entries for later use in misa_simulate()
+         */
+        std::vector<dispatched<pattxx::worker>> m_future_dispatched;
 
     };
 }
