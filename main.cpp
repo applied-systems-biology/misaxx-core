@@ -91,7 +91,8 @@ struct my_module : public misa_module<my_module_declaration> {
     dispatched <my_task1> dispatch_my_task1 = future_dispatch<my_task1>("abc");
     dispatched<other_module> dispatcher_other = future_dispatch(other);
 
-    dispatched < misa_task<my_module_declaration>> test = future_dispatch_any_from_name< misa_task<my_module_declaration>>("def", option<my_task1>("abc"), option<my_task2>("def"));
+    dispatched < misa_task<my_module_declaration>> test = select< misa_task<my_module_declaration>>("def", { future_dispatch<my_task1>("abc"), future_dispatch<my_task2>("def") });
+    dispatched < misa_task<my_module_declaration>> test2 = select_from_algorithm_json_or< misa_task<my_module_declaration>>("test2", "x.a", { future_dispatch<my_task1>("x.a"), future_dispatch<my_task2>("x.b") });
 
     void misa_init() override {
         auto x = get_node().get_custom_path<algorithm_node_path>();
