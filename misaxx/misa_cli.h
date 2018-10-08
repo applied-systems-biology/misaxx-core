@@ -10,10 +10,12 @@
 #include <iostream>
 #include <fstream>
 #include <boost/filesystem.hpp>
+#include <misaxx/filesystem/importers/empty_importer.h>
 #include "filesystem/importers/directories_importer.h"
 #include "filesystem/importers/json_importer.h"
 #include "misa_runtime.h"
 #include "misaxx/root_modules/misa_multiobject_root.h"
+#include "filesystem/json_schema_serializer.h"
 
 namespace misaxx {
 
@@ -59,23 +61,28 @@ namespace misaxx {
                 std::cout << general_options << std::endl;
                 return 1;
             }
-            if(vm.count("threads")) {
-                m_runtime.num_threads = vm["threads"].as<int>();
-            }
-            if(vm.count("no-skip")) {
-                m_runtime.enable_skipping = false;
-            }
             if(vm.count("write-parameter-schema")) {
                 m_runtime.build_schema = true;
                 m_parameter_schema_path = vm["write-parameter-schema"].as<std::string>();
                 boost::filesystem::create_directories(m_parameter_schema_path.parent_path());
+            }
+            if(vm.count("threads")) {
+                if(m_runtime.build_schema) {
+                    m_runtime.num_threads = vm["threads"].as<int>();
+                }
+                else {
+                    std::cout << "<#> <#> RUNNING IN SIMULATION MODE. This application will run only with 1 thread." << std::endl;
+                }
+            }
+            if(vm.count("no-skip")) {
+                m_runtime.enable_skipping = false;
             }
             if(vm.count("parameters")) {
                 std::cout << "<#> <#> Loading parameters from " << vm["parameters"].as<std::string>() << std::endl;
                 std::ifstream in(vm["parameters"].as<std::string>());
                 in >> m_runtime.parameters;
             }
-            else {
+            else if(!m_runtime.build_schema) {
                 throw std::runtime_error("You have to provide a parameter file!");
             }
 
@@ -96,10 +103,13 @@ namespace misaxx {
                 std::cout << "<#> <#> Skipping is disabled" << std::endl;
             }
             if(m_runtime.build_schema) {
-                std::cout << "<#> <#> Parameter schema will be built. Please note that this can reduce the performance." << std::endl;
+                std::cout << "<#> <#> RUNNING IN SIMULATION MODE. This will build a parameter schema, but no real work is done!" << std::endl;
             }
             m_runtime.run();
             if(m_runtime.build_schema) {
+                // Save filesystem to parameter schema
+                filesystem::to_json_schema(m_runtime.instance().filesystem, m_runtime.parameter_schema);
+
                 std::cout << "<#> <#> Writing parameter schema to " << m_parameter_schema_path.string() << std::endl;
                 m_runtime.parameter_schema.write(m_parameter_schema_path);
             }
@@ -142,6 +152,15 @@ namespace misaxx {
         boost::filesystem::path m_parameter_schema_path;
 
         void load_filesystem() {
+
+            // Do no importing if we build a schema
+            if(m_runtime.build_schema) {
+                filesystem::importers::empty_importer importer;
+                get_runtime().get_filesystem() = importer.import();
+                return;
+            }
+
+            // Otherwise load importer from parameters
             nlohmann::json &params = m_runtime.parameters["runtime::filesystem"];
             if(params["source"] == "directories") {
                 filesystem::importers::directories_importer importer;

@@ -19,6 +19,14 @@ namespace misaxx::filesystem {
         bool empty() const override {
             return false;
         }
+
+        bool is_file() const override {
+            return true;
+        }
+
+        bool is_folder() const override {
+            return false;
+        }
     };
 
     using file = std::shared_ptr<vfs_file>;

@@ -163,6 +163,14 @@ namespace misaxx::filesystem {
             }
         }
 
+        bool is_file() const override {
+            return false;
+        }
+
+        bool is_folder() const override {
+            return true;
+        }
+
     private:
 
         std::unordered_map<std::string, std::shared_ptr<vfs_entry>> children;

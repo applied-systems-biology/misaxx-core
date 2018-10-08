@@ -29,6 +29,7 @@ namespace misaxx {
          */
         std::unique_ptr<node_type> instantiate_root(pattxx::runtime &rt) {
             module_declaration_type definition;
+            definition.m_runtime = &rt;
             definition.filesystem = m_filesystem;
             return std::make_unique<node_type >(m_root_name, &rt, std::move(definition));
         }

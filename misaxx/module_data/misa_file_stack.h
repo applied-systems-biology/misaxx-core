@@ -34,31 +34,40 @@ namespace misaxx {
             return true;
         }
 
-        void import_from_filesystem(const misa_filesystem &t_filesystem, const boost::filesystem::path &t_path) {
-            auto t_folder = t_filesystem.imported->at<filesystem::const_folder>(t_path);
-            for(const auto &kv : *t_folder) {
-                filesystem::file file = std::dynamic_pointer_cast<filesystem::vfs_file>(kv.second);
-                if(file && file->has_external_path() && supports_file(file->external_path())) {
-                    File f;
-                    f.name = kv.first;
-                    f.path = file->external_path();
-                    files.insert({ file->name, std::make_shared<File>(std::move(f)) });
+        void import_from_filesystem(const misa_module_declaration_base &t_module, const boost::filesystem::path &t_path) {
+            if(!t_module.m_runtime->is_building_schema()) {
+                auto t_folder = t_module.filesystem.imported->at<filesystem::const_folder>(t_path);
+                for(const auto &kv : *t_folder) {
+                    filesystem::file file = std::dynamic_pointer_cast<filesystem::vfs_file>(kv.second);
+                    if(file && file->has_external_path() && supports_file(file->external_path())) {
+                        File f;
+                        f.name = kv.first;
+                        f.path = file->external_path();
+                        files.insert({ file->name, std::make_shared<File>(std::move(f)) });
+                    }
                 }
+            }
+            else {
+                // Ensure that the folder exists
+                t_module.filesystem.imported->access<filesystem::folder>(t_path);
             }
         }
 
-        template<class Source> void process(misa_filesystem &t_filesystem, const Source &t_source, const boost::filesystem::path &t_path) {
-            auto t_folder = t_filesystem.exported->access<filesystem::folder>(t_path);
-            t_folder->ensure_external_path_exists();
+        template<class Source> void process(misa_module_declaration_base &t_module, const Source &t_source, const boost::filesystem::path &t_path) {
+            auto t_folder = t_module.filesystem.exported->access<filesystem::folder>(t_path);
 
-            for(const auto &kv : t_source->files) {
-                if(!supports_file(kv.second->path))
-                    continue;
-                filesystem::file file = t_folder->access<filesystem::file>(kv.first);
-                File f;
-                f.name = kv.first;
-                f.path = file->external_path();
-                files.insert({ kv.first, std::make_shared<File>(std::move(f)) });
+            if(!t_module.m_runtime->is_building_schema()) {
+                t_folder->ensure_external_path_exists();
+
+                for(const auto &kv : t_source->files) {
+                    if(!supports_file(kv.second->path))
+                        continue;
+                    filesystem::file file = t_folder->access<filesystem::file>(kv.first);
+                    File f;
+                    f.name = kv.first;
+                    f.path = file->external_path();
+                    files.insert({ kv.first, std::make_shared<File>(std::move(f)) });
+                }
             }
         }
 

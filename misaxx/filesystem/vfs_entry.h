@@ -88,7 +88,12 @@ namespace misaxx::filesystem {
         }
 
         virtual bool empty() const = 0;
+
+        virtual bool is_file() const = 0;
+
+        virtual bool is_folder() const = 0;
     };
 
     using entry = std::shared_ptr<vfs_entry>;
+    using const_entry = std::shared_ptr<const vfs_entry>;
 }

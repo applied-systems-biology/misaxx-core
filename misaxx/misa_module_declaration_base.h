@@ -5,6 +5,7 @@
 
 #pragma once
 #include <memory>
+#include <pattxx/nodes/node.h>
 #include "misa_filesystem.h"
 
 namespace misaxx {
@@ -13,6 +14,11 @@ namespace misaxx {
 
 
     struct misa_module_declaration_base {
+
+        /**
+         * The current runtime
+         */
+        pattxx::runtime *m_runtime = nullptr;
 
         /**
          * Filesystem of this module

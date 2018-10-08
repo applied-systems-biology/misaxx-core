@@ -80,7 +80,9 @@ add_library(misaxx
         misaxx/metadata/object3d_voxel_bounds.h
         misaxx/metadata/object3d_voxel_size.h
         misaxx/misa_future_dispatch.h
-        misaxx/metadata/object_name.h)
+        misaxx/metadata/object_name.h
+        misaxx/filesystem/importers/empty_importer.h
+        misaxx/filesystem/json_schema_serializer.h)
 
 target_include_directories(misaxx SYSTEM BEFORE PUBLIC ${Boost_INCLUDE_DIRS})
 target_include_directories(misaxx BEFORE PUBLIC ${Boost_INCLUDE_DIRS})
