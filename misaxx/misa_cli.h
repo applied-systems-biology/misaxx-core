@@ -75,7 +75,9 @@ namespace misaxx {
                 }
             }
             if(vm.count("no-skip")) {
-                m_runtime.enable_skipping = false;
+                if(!m_runtime.build_schema) {
+                    m_runtime.enable_skipping = false;
+                }
             }
             if(vm.count("parameters")) {
                 std::cout << "<#> <#> Loading parameters from " << vm["parameters"].as<std::string>() << std::endl;
@@ -84,6 +86,14 @@ namespace misaxx {
             }
             else if(!m_runtime.build_schema) {
                 throw std::runtime_error("You have to provide a parameter file!");
+            }
+
+            // Load runtime parameters that are not from CLI
+            if(!vm.count("threads") && !m_runtime.build_schema) {
+                m_runtime.num_threads = m_runtime.template get_json_or<int>({ "runtime", "num-threads" }, 1, pattxx::json::json_property<int>());
+            }
+            if(!vm.count("no-skip") && !m_runtime.build_schema) {
+                m_runtime.enable_skipping = !m_runtime.template get_json_or<bool>({ "runtime", "no-skip" }, false, pattxx::json::json_property<bool>());
             }
 
             load_filesystem();
@@ -134,6 +144,10 @@ namespace misaxx {
                     base["additionalProperties"] = std::move(base["properties"]["__OBJECT__"]);
                     base["properties"].erase(base["properties"].find("__OBJECT__"));
                 }
+
+                // Write runtime parameters
+                schema.insert_optional<int>({"runtime", "num-threads"}, 1, pattxx::json::json_property<int>("Number of threads", ""));
+                schema.insert_optional<bool>({"runtime", "no-skip"}, false, pattxx::json::json_property<bool>("Disable skipping", ""));
 
                 std::cout << "<#> <#> Writing parameter schema to " << m_parameter_schema_path.string() << std::endl;
                 m_runtime.parameter_schema.write(m_parameter_schema_path);
