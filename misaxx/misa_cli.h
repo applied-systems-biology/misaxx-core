@@ -107,8 +107,33 @@ namespace misaxx {
             }
             m_runtime.run();
             if(m_runtime.build_schema) {
+
+                pattxx::json::json_schema_builder &schema = m_runtime.parameter_schema;
+
                 // Save filesystem to parameter schema
-                filesystem::to_json_schema(m_runtime.instance().filesystem, m_runtime.parameter_schema);
+                filesystem::to_json_schema(m_runtime.instance().filesystem, schema);
+                schema.insert_static<std::string>({"filesystem", "source"}, "json", pattxx::json::json_property<std::string>());
+
+                // Workaround: Due to inflexibility with schema generation, manually put "__OBJECT__" nodes into list builders
+                // /properties/algorithm -> nothing to do
+                // /properties/objects/properties/__OBJECT__ -> /properties/objects/additionalProperties
+                {
+                    auto &base = schema.data["properties"]["objects"];
+                    base["additionalProperties"] = std::move(base["properties"]["__OBJECT__"]);
+                    base["properties"].erase(base["properties"].find("__OBJECT__"));
+                }
+
+                // /properties/runtime::filesystem/properties/json-data/properties/imported/properties/children/properties/__OBJECT__ -> /properties/runtime::filesystem/properties/json-data/properties/imported/properties/children/additionalProperties
+                {
+                    auto &base = schema.data["properties"]["filesystem"]["properties"]["json-data"]["properties"]["imported"]["properties"]["children"];
+                    base["additionalProperties"] = std::move(base["properties"]["__OBJECT__"]);
+                    base["properties"].erase(base["properties"].find("__OBJECT__"));
+                }
+                {
+                    auto &base = schema.data["properties"]["filesystem"]["properties"]["json-data"]["properties"]["exported"]["properties"]["children"];
+                    base["additionalProperties"] = std::move(base["properties"]["__OBJECT__"]);
+                    base["properties"].erase(base["properties"].find("__OBJECT__"));
+                }
 
                 std::cout << "<#> <#> Writing parameter schema to " << m_parameter_schema_path.string() << std::endl;
                 m_runtime.parameter_schema.write(m_parameter_schema_path);
@@ -161,7 +186,7 @@ namespace misaxx {
             }
 
             // Otherwise load importer from parameters
-            nlohmann::json &params = m_runtime.parameters["runtime::filesystem"];
+            nlohmann::json &params = m_runtime.parameters["filesystem"];
             if(params["source"] == "directories") {
                 filesystem::importers::directories_importer importer;
                 importer.input_path = params["input-directory"].get<std::string>();

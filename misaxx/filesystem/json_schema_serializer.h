@@ -57,7 +57,7 @@ namespace misaxx::filesystem {
      * @param t_builder
      */
     inline void to_json_schema(const misa_filesystem &t_filesystem, pattxx::json::json_schema_builder &t_builder) {
-        to_json_schema(t_filesystem.imported, {"runtime::filesystem", "json-data", "imported"}, t_builder);
-        to_json_schema(t_filesystem.exported, {"runtime::filesystem", "json-data", "exported"}, t_builder);
+        to_json_schema(t_filesystem.imported, {"filesystem", "json-data", "imported"}, t_builder);
+        to_json_schema(t_filesystem.exported, {"filesystem", "json-data", "exported"}, t_builder);
     }
 }
