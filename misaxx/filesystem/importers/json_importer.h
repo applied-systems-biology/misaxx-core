@@ -59,7 +59,7 @@ namespace misaxx::filesystem::importers {
                             f->custom_external = json_entry["external-path"].get<std::string>();
                         }
                     }
-                    else if(json_entry["type"] == "directory") {
+                    else if(json_entry["type"] == "folder") {
                         folder f = t_folder->create<folder>(kv.key());
                         import_folder(json_entry, f);
                     }

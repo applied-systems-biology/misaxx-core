@@ -67,10 +67,11 @@ namespace misaxx {
                 boost::filesystem::create_directories(m_parameter_schema_path.parent_path());
             }
             if(vm.count("threads")) {
-                if(m_runtime.build_schema) {
+                if(!m_runtime.build_schema) {
                     m_runtime.num_threads = vm["threads"].as<int>();
                 }
                 else {
+                    m_runtime.num_threads = 1;
                     std::cout << "<#> <#> RUNNING IN SIMULATION MODE. This application will run only with 1 thread." << std::endl;
                 }
             }
