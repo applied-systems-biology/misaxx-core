@@ -67,7 +67,9 @@ namespace misaxx::filesystem::importers {
                     else if(json_entry["type"] == "folder") {
                         folder f = t_folder->create<folder>(kv.key());
                         // If there are no children and data-type is non-empty, import via filesystem importer
-                        if(json_entry["children"].empty() && json_entry["data-type"].is_string() && !(json_entry["data_type"].get<std::string>().empty())) {
+                        bool has_children = json_entry.find("children") != json_entry.end() && !json_entry["children"].empty();
+                        bool has_data_type  = json_entry.find("data-type") != json_entry.end() && json_entry["data-type"].is_string() && json_entry["data-type"].get<std::string>().empty();
+                        if(!has_children && has_data_type) {
                             import_into(t_folder->external_path(), t_folder);
                         } else {
                             import_folder(json_entry, f);
