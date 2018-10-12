@@ -76,7 +76,7 @@ namespace misaxx::filesystem::importers {
                 }
             }
             else {
-                bool has_data_type  = t_json.find("data-type") != t_json.end() && t_json["data-type"].is_string() && t_json["data-type"].get<std::string>().empty();
+                bool has_data_type  = t_json.find("data-type") != t_json.end() && t_json["data-type"].is_string() && !t_json["data-type"].get<std::string>().empty();
                 if(has_data_type)
                     import_into(t_folder->external_path(), t_folder);
             }
