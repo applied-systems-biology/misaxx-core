@@ -39,7 +39,7 @@ namespace misaxx::filesystem {
          * Set it on importing (usually just the class name)
          * This is exported to the parameter schema and can be parsed by an external pipeline
          */
-        std::string data_string;
+        mutable std::string data_string;
 
         explicit vfs_entry(std::string t_name = "", path t_custom_external = path()) : name(std::move(t_name)), custom_external(std::move(t_custom_external)){
         }
