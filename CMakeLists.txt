@@ -82,7 +82,7 @@ add_library(misaxx
         misaxx/misa_future_dispatch.h
         misaxx/metadata/object_name.h
         misaxx/filesystem/importers/empty_importer.h
-        misaxx/filesystem/json_schema_serializer.h)
+        misaxx/filesystem/json_schema_serializer.h misaxx/filesystem/importers/structured_data_importer.h)
 
 target_include_directories(misaxx SYSTEM BEFORE PUBLIC ${Boost_INCLUDE_DIRS})
 target_include_directories(misaxx BEFORE PUBLIC ${Boost_INCLUDE_DIRS})

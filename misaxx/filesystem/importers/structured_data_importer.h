@@ -1,11 +1,11 @@
 //
-// Created by rgerst on 03.09.18.
+// Created by rgerst on 12.10.18.
 //
 
 
 #pragma once
 
-#include <boost/filesystem.hpp>
+#include <boost/filesystem/path.hpp>
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include "misaxx/misa_filesystem.h"
@@ -13,34 +13,35 @@
 namespace misaxx::filesystem::importers {
 
     /**
-     * Imports a MISA++ filesystem from a JSON configuration file
-     * The JSON data should have following format:
-     *
-     * \code{.json}
-     * {
-     *  "imported" : {
-     *      "type" : "directory",
-     *      "external-path" : "<optional external path>",
-     *      "children" : {
-     *          "file.txt" : {
-     *              "type" : "file",
-     *              "external-path" : "<optional external path>"
-     *          }
-     *      }
-     *  },
-     *  "exported" : {
-     *  }
-     * }
-     * \endcode
-     *
-     * Please note that this importer requires that all files are defined in the JSON
-     * data. If the JSON data should only contain partially defined structures (such as
-     * the existance of a file stack, but not all files), use structured_data_importer instead.
+     * Similar to json_importer, but folders with a non-empty "data-type" property are additionally
+     * imported from filesystem.
      */
-    struct json_importer {
+    struct structured_data_importer {
 
         nlohmann::json input_json;
         boost::filesystem::path json_path;
+
+        /**
+         * Internal function that imports a OS filesystem path into a MISA filesystem path
+         * @param subdir
+         * @param t_folder
+         */
+        void import_into(const boost::filesystem::path &subdir, const folder &t_folder) {
+
+            using namespace boost::filesystem;
+
+            directory_iterator it { subdir };
+            while(it != directory_iterator()) {
+                path external_path = *it++;
+                if(is_regular_file(external_path)) {
+                    t_folder->create<filesystem::file>(external_path.filename().string(), external_path);
+                }
+                else if(is_directory(external_path)) {
+                    auto subfolder = t_folder->create<filesystem::folder>(external_path.filename().string(), external_path);
+                    import_into(external_path, subfolder);
+                }
+            }
+        }
 
         /**
          * Internal function used for importing
@@ -65,7 +66,12 @@ namespace misaxx::filesystem::importers {
                     }
                     else if(json_entry["type"] == "folder") {
                         folder f = t_folder->create<folder>(kv.key());
-                        import_folder(json_entry, f);
+                        // If there are no children and data-type is non-empty, import via filesystem importer
+                        if(json_entry["children"].empty() && json_entry["data-type"].is_string() && !(json_entry["data_type"].get<std::string>().empty())) {
+                            import_into(t_folder->external_path(), t_folder);
+                        } else {
+                            import_folder(json_entry, f);
+                        }
                     }
                     else {
                         throw std::runtime_error("Unsupported filesystem entry type " + json_entry["type"].get<std::string>());

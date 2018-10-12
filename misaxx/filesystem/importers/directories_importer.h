@@ -24,7 +24,7 @@ namespace misaxx::filesystem::importers {
          * @param subdir
          * @param t_folder
          */
-        void import_into(boost::filesystem::path &subdir, folder t_folder) {
+        void import_into(const boost::filesystem::path &subdir, const folder &t_folder) {
 
             using namespace boost::filesystem;
 

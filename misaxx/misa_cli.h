@@ -11,6 +11,7 @@
 #include <fstream>
 #include <boost/filesystem.hpp>
 #include <misaxx/filesystem/importers/empty_importer.h>
+#include <misaxx/filesystem/importers/structured_data_importer.h>
 #include "filesystem/importers/directories_importer.h"
 #include "filesystem/importers/json_importer.h"
 #include "misa_runtime.h"
@@ -123,7 +124,7 @@ namespace misaxx {
 
                 // Save filesystem to parameter schema
                 filesystem::to_json_schema(m_runtime.instance().filesystem, schema);
-                schema.insert_static<std::string>({"filesystem", "source"}, "json", pattxx::json::json_property<std::string>());
+                schema.insert_static<std::string>({"filesystem", "source"}, "structured-data", pattxx::json::json_property<std::string>());
 
                 // Workaround: Due to inflexibility with schema generation, manually put "__OBJECT__" nodes into list builders
                 // /properties/algorithm -> nothing to do
@@ -210,6 +211,16 @@ namespace misaxx {
             }
             else if(params["source"] == "json") {
                 filesystem::importers::json_importer importer;
+                if(params.find("json-data") != params.end()) {
+                    importer.input_json = params["json-data"];
+                }
+                else {
+                    importer.json_path = params["json-path"].get<std::string>();
+                }
+                get_runtime().get_filesystem() = importer.import();
+            }
+            else if(params["source"] == "structured-data") {
+                filesystem::importers::structured_data_importer importer;
                 if(params.find("json-data") != params.end()) {
                     importer.input_json = params["json-data"];
                 }
