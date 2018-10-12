@@ -32,7 +32,6 @@ namespace misaxx {
         template<class Data> void import_from_filesystem(data<Data> &t_data, const boost::filesystem::path &t_path, bool t_force = false) {
             if(!t_data || t_force) {
                 t_data = std::make_shared<Data>();
-                filesystem.imported->access<filesystem::entry>(t_path)->data_string = t_data->dataString();
                 t_data->import_from_filesystem(*this, t_path);
             }
         }
@@ -46,7 +45,6 @@ namespace misaxx {
         template<class Data> void export_to_filesystem(data<Data> &t_data, const boost::filesystem::path &t_path, bool t_force = false) {
             if(!t_data || t_force) {
                 t_data = std::make_shared<Data>();
-                filesystem.exported->access<filesystem::entry>(t_path)->data_string = t_data->dataString();
                 t_data->export_to_filesystem(*this, t_path);
             }
         }
@@ -64,7 +62,6 @@ namespace misaxx {
                     throw std::runtime_error("Source data is not initialized!");
                 }
                 t_data = std::make_shared<Data>();
-                filesystem.exported->access<filesystem::entry>(t_path)->data_string = t_data->dataString();
                 t_data->process(*this, t_source, t_path);
             }
         }

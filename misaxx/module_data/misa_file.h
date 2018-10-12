@@ -20,21 +20,25 @@ namespace misaxx {
 
         void import_from_filesystem(const misa_module_declaration_base &t_module, const boost::filesystem::path &t_path) {
             if(!t_module.m_runtime->is_building_schema()) {
-                path = t_module.filesystem.imported->at<filesystem::const_file >(t_path)->external_path();
+                const auto &vfs = t_module.filesystem.imported->at<filesystem::const_file >(t_path);
+                vfs->data_string = dataString();
+                path = vfs->external_path();
             }
             else {
                 // Ensure that the file exists
-                t_module.filesystem.imported->access<filesystem::file>(t_path);
+                t_module.filesystem.imported->access<filesystem::file>(t_path)->data_string = dataString();
             }
         }
 
         void export_to_filesystem(misa_module_declaration_base &t_module, const boost::filesystem::path &t_path) {
             if(!t_module.m_runtime->is_building_schema()) {
-                path = t_module.filesystem.exported->access<filesystem::file>(t_path)->external_path();
+                const auto &vfs = t_module.filesystem.exported->access<filesystem::file>(t_path);
+                vfs->data_string = dataString();
+                path = vfs->external_path();
             }
             else {
                 // Ensure that the file exists
-                t_module.filesystem.exported->access<filesystem::file>(t_path);
+                t_module.filesystem.exported->access<filesystem::file>(t_path)->data_string = dataString();
             }
         }
 

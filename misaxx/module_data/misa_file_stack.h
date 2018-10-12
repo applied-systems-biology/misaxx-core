@@ -36,7 +36,8 @@ namespace misaxx {
 
         void import_from_filesystem(const misa_module_declaration_base &t_module, const boost::filesystem::path &t_path) {
             if(!t_module.m_runtime->is_building_schema()) {
-                auto t_folder = t_module.filesystem.imported->at<filesystem::const_folder>(t_path);
+                const auto &t_folder = t_module.filesystem.imported->at<filesystem::const_folder>(t_path);
+                t_folder->data_string = dataString();
                 for(const auto &kv : *t_folder) {
                     filesystem::file file = std::dynamic_pointer_cast<filesystem::vfs_file>(kv.second);
                     if(file && file->has_external_path() && supports_file(file->external_path())) {
@@ -54,7 +55,8 @@ namespace misaxx {
         }
 
         template<class Source> void process(misa_module_declaration_base &t_module, const Source &t_source, const boost::filesystem::path &t_path) {
-            auto t_folder = t_module.filesystem.exported->access<filesystem::folder>(t_path);
+            const auto &t_folder = t_module.filesystem.exported->access<filesystem::folder>(t_path);
+            t_folder->data_string = dataString();
 
             if(!t_module.m_runtime->is_building_schema()) {
                 t_folder->ensure_external_path_exists();
