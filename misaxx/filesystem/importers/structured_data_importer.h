@@ -54,7 +54,7 @@ namespace misaxx::filesystem::importers {
                 t_folder->custom_external = t_json["external-path"].get<std::string>();
             }
 
-            if(t_json.find("children") != t_json.end()) {
+            if(t_json.find("children") != t_json.end() && !t_json["children"].empty()) {
                 const nlohmann::json &children = t_json["children"];
                 for(nlohmann::json::const_iterator kv = children.begin(); kv != children.end(); ++kv) {
                     const nlohmann::json &json_entry = kv.value();
@@ -66,14 +66,7 @@ namespace misaxx::filesystem::importers {
                     }
                     else if(json_entry["type"] == "folder") {
                         folder f = t_folder->create<folder>(kv.key());
-                        // If there are no children and data-type is non-empty, import via filesystem importer
-                        bool has_children = json_entry.find("children") != json_entry.end() && !json_entry["children"].empty();
-                        bool has_data_type  = json_entry.find("data-type") != json_entry.end() && json_entry["data-type"].is_string() && json_entry["data-type"].get<std::string>().empty();
-                        if(!has_children && has_data_type) {
-                            import_into(t_folder->external_path(), t_folder);
-                        } else {
-                            import_folder(json_entry, f);
-                        }
+                        import_folder(json_entry, f);
                     }
                     else {
                         throw std::runtime_error("Unsupported filesystem entry type " + json_entry["type"].get<std::string>());
@@ -81,6 +74,11 @@ namespace misaxx::filesystem::importers {
                     folder subfolder = t_folder->create<folder>(kv.key());
 
                 }
+            }
+            else {
+                bool has_data_type  = t_json.find("data-type") != t_json.end() && t_json["data-type"].is_string() && t_json["data-type"].get<std::string>().empty();
+                if(has_data_type)
+                    import_into(t_folder->external_path(), t_folder);
             }
         }
 
