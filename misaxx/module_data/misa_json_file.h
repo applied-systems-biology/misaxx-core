@@ -27,5 +27,9 @@ namespace misaxx {
             sr.open(path.string());
             sr >> json;
         }
+
+        std::string dataString() override {
+            return "json_file";
+        }
     };
 }

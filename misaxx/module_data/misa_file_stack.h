@@ -107,5 +107,9 @@ namespace misaxx {
             return files.size();
         }
 
+        std::string dataString() override {
+            return "generic_file_stack";
+        }
+
     };
 }

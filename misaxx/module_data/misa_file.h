@@ -37,5 +37,9 @@ namespace misaxx {
                 t_module.filesystem.exported->access<filesystem::file>(t_path);
             }
         }
+
+        std::string dataString() override {
+            return "file";
+        }
     };
 }

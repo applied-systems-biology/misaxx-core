@@ -21,5 +21,11 @@ namespace misaxx {
          */
         cxxh::containers::dynamic_singleton_map<misa_metadata> user_metadata;
 
+        /**
+         * Returns the data string that indicates how a filesystem entry is interpreted
+         * @return
+         */
+        virtual std::string dataString() = 0;
+
     };
 }

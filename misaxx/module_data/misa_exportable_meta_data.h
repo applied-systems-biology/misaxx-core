@@ -76,5 +76,9 @@ namespace misaxx {
             sw.open(path.string());
             sw << std::setw(4) << json;
         }
+
+        std::string dataString() override {
+            return "exportable_meta_data";
+        }
     };
 }

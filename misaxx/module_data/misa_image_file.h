@@ -42,5 +42,9 @@ namespace misaxx {
             using namespace coixx::toolbox;
             t_img << coixx::toolbox::save(path);
         }
+
+        std::string dataString() override {
+            return "image_file";
+        }
     };
 }

@@ -21,6 +21,10 @@ namespace misaxx::filesystem {
                 pattxx::json::json_property<std::string>("type", "Type of the filesystem node"));
         t_builder.insert_optional<std::string>(json_child_path(t_path, "external-path"), "",
                 pattxx::json::json_property<std::string>("external-path", "External path of VFS file"));
+        if(!t_file->data_string.empty()) {
+            t_builder.insert_static<std::string>(json_child_path(t_path, "data-type"), t_file->data_string,
+                                                 pattxx::json::json_property<std::string>("data-type", "How this filesystem node is interpreted by the MISA module"));
+        }
     }
 
     inline void to_json_schema(const const_folder &t_folder, const pattxx::json::path_t &t_path, pattxx::json::json_schema_builder &t_builder) {
@@ -29,6 +33,10 @@ namespace misaxx::filesystem {
                 pattxx::json::json_property<std::string>("type", "Type of the filesystem node"));
         t_builder.insert_optional<std::string>(json_child_path(t_path, "external-path"), "",
                 pattxx::json::json_property<std::string>("external-path", "External path of VFS folder"));
+        if(!t_folder->data_string.empty()) {
+            t_builder.insert_static<std::string>(json_child_path(t_path, "data-type"), t_folder->data_string,
+                                                 pattxx::json::json_property<std::string>("data-type", "How this filesystem node is interpreted by the MISA module"));
+        }
 
         if(!t_folder->empty()) {
             for(const auto &kv : *t_folder) {

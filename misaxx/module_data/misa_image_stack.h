@@ -19,5 +19,9 @@ namespace misaxx {
         bool supports_file(const boost::filesystem::path &t_path) const override {
             return t_path.extension() == ".tif";
         }
+
+        std::string dataString() override {
+            return "image_stack";
+        }
     };
 }

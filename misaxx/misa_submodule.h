@@ -16,6 +16,10 @@ namespace misaxx {
 
     struct misa_submodule_base : public misa_module_data {
         using misa_module_data::misa_module_data;
+
+        std::string dataString() override {
+            return "submodule";
+        }
     };
 
     /**
