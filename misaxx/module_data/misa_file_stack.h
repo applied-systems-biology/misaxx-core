@@ -50,7 +50,7 @@ namespace misaxx {
             }
             else {
                 // Ensure that the folder exists
-                t_module.filesystem.imported->access<filesystem::folder>(t_path);
+                t_module.filesystem.imported->access<filesystem::folder>(t_path)->data_string = dataString();
             }
         }
 
