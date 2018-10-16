@@ -56,7 +56,7 @@ namespace misaxx {
         }
 
         template<class Source> void process(misa_module_declaration_base &t_module, const Source &t_source, const boost::filesystem::path &t_path) {
-            std::cout << "[Data] Processing " << t_source.dataString() << " into " << t_path.string() << " as " << dataString() << std::endl;
+            std::cout << "[Data] Processing " << t_source->dataString() << " into " << t_path.string() << " as " << dataString() << std::endl;
             const auto &t_folder = t_module.filesystem.exported->access<filesystem::folder>(t_path);
             t_folder->data_string = dataString();
 
