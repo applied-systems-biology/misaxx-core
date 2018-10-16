@@ -48,13 +48,13 @@ namespace misaxx::filesystem::importers {
          * @param t_json
          * @param t_folder
          */
-        void import_folder(const nlohmann::json &t_json, const filesystem::folder &t_folder) {
+        void import_folder(const nlohmann::json &t_json, const filesystem::folder &t_folder, bool t_discover) {
 
             if(t_json.find("external-path") != t_json.end()) {
                 t_folder->custom_external = t_json["external-path"].get<std::string>();
             }
 
-            if(t_json.find("children") != t_json.end() && !t_json["children"].empty()) {
+            if(t_discover && t_json.find("children") != t_json.end() && !t_json["children"].empty()) {
                 const nlohmann::json &children = t_json["children"];
                 for(nlohmann::json::const_iterator kv = children.begin(); kv != children.end(); ++kv) {
                     const nlohmann::json &json_entry = kv.value();
@@ -66,7 +66,7 @@ namespace misaxx::filesystem::importers {
                     }
                     else if(json_entry["type"] == "folder") {
                         folder f = t_folder->create<folder>(kv.key());
-                        import_folder(json_entry, f);
+                        import_folder(json_entry, f, t_discover);
                     }
                     else {
                         throw std::runtime_error("Unsupported filesystem entry type " + json_entry["type"].get<std::string>());
@@ -103,10 +103,10 @@ namespace misaxx::filesystem::importers {
             }
 
             if(json.find("imported") != json.end()) {
-                import_folder(json["imported"], vfs.imported);
+                import_folder(json["imported"], vfs.imported, true);
             }
             if(json.find("exported") != json.end()) {
-                import_folder(json["exported"], vfs.exported);
+                import_folder(json["exported"], vfs.exported, false);
             }
 
             return vfs;
