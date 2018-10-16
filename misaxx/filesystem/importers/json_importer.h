@@ -9,6 +9,7 @@
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include "misaxx/misa_filesystem.h"
+#include <iostream>
 
 namespace misaxx::filesystem::importers {
 
@@ -51,6 +52,10 @@ namespace misaxx::filesystem::importers {
 
             if(t_json.find("external-path") != t_json.end()) {
                 t_folder->custom_external = t_json["external-path"].get<std::string>();
+                std::cout << "[Filesystem] Importing folder " << t_folder->custom_external.string() << " into " << t_folder->internal_path().string() << std::endl;
+            }
+            else {
+                std::cout << "[Filesystem] Importing folder " << t_folder->internal_path().string() << std::endl;
             }
 
             if(t_json.find("children") != t_json.end()) {
@@ -61,6 +66,9 @@ namespace misaxx::filesystem::importers {
                         file f = t_folder->create<filesystem::file>(kv.key());
                         if(json_entry.find("external-path") != json_entry.end()) {
                             f->custom_external = json_entry["external-path"].get<std::string>();
+                            std::cout << "[Filesystem] Importing file " << f->custom_external.string() << " into " << f->internal_path().string() << std::endl;
+                        } else {
+                            std::cout << "[Filesystem] Importing file " << f->internal_path().string() << std::endl;
                         }
                     }
                     else if(json_entry["type"] == "folder") {

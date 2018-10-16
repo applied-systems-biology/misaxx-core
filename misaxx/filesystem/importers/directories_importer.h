@@ -7,6 +7,7 @@
 
 #include <boost/filesystem.hpp>
 #include "misaxx/misa_filesystem.h"
+#include <iostream>
 
 namespace misaxx::filesystem::importers {
 
@@ -26,13 +27,16 @@ namespace misaxx::filesystem::importers {
          */
         void import_into(const boost::filesystem::path &subdir, const folder &t_folder) {
 
+            std::cout << "[Filesystem] Importing folder " << subdir.string() << " into " << t_folder->internal_path().string() << std::endl;
+
             using namespace boost::filesystem;
 
             directory_iterator it { subdir };
             while(it != directory_iterator()) {
                 path external_path = *it++;
                 if(is_regular_file(external_path)) {
-                    t_folder->create<filesystem::file>(external_path.filename().string(), external_path);
+                    const auto f = t_folder->create<filesystem::file>(external_path.filename().string(), external_path);
+                    std::cout << "[Filesystem] Importing file " << external_path.string() << " into " << f->internal_path().string() << std::endl;
                 }
                 else if(is_directory(external_path)) {
                     auto subfolder = t_folder->create<filesystem::folder>(external_path.filename().string(), external_path);

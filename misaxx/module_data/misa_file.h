@@ -19,6 +19,7 @@ namespace misaxx {
         using misa_module_data::misa_module_data;
 
         void import_from_filesystem(const misa_module_declaration_base &t_module, const boost::filesystem::path &t_path) {
+            std::cout << "[Data] Importing " << t_path.string() << " as " << dataString() << std::endl;
             if(!t_module.m_runtime->is_building_schema()) {
                 const auto &vfs = t_module.filesystem.imported->at<filesystem::const_file >(t_path);
                 vfs->data_string = dataString();
@@ -31,6 +32,7 @@ namespace misaxx {
         }
 
         void export_to_filesystem(misa_module_declaration_base &t_module, const boost::filesystem::path &t_path) {
+            std::cout << "[Data] Exporting " << t_path.string() << " as " << dataString() << std::endl;
             if(!t_module.m_runtime->is_building_schema()) {
                 const auto &vfs = t_module.filesystem.exported->access<filesystem::file>(t_path);
                 vfs->data_string = dataString();
