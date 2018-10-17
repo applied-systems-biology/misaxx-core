@@ -46,7 +46,7 @@ namespace misaxx {
             general_options.add_options()
                     ("help,h", "Help screen")
                     ("parameters,p", po::value<std::string>(), "Provides the list of parameters")
-                    ("threads,t", po::value<int>()->default_value(1), "Sets the number of threads")
+                    ("threads,t", po::value<int>(), "Sets the number of threads")
                     ("no-skip", "Disables skipping of work that already has been finished")
                     ("write-parameter-schema", po::value<std::string>(), "Writes a parameter schema to the target file");
 
