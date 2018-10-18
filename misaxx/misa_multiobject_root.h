@@ -29,11 +29,13 @@ namespace misaxx {
         using misa_module<misa_multiobject_root_declaration>::misa_module;
 
         void misa_init() override {
-            for(const auto &ptr : *filesystem.imported) {
-                filesystem::folder as_folder = std::dynamic_pointer_cast<filesystem::vfs_folder>(ptr.second);
-                if(as_folder) {
+            boost::filesystem::directory_iterator it(filesystem.imported->external_path());
+            while(it != boost::filesystem::directory_iterator()) {
+                boost::filesystem::path external_path = *it++;
+                if(boost::filesystem::is_directory(external_path)) {
+                    filesystem::entry e = filesystem.imported->access(external_path.filename());
                     misa_submodule<SubModule> module;
-                    init_submodule(module, ptr.first);
+                    init_submodule(module, external_path.filename().string());
                     misa_dispatch(future_dispatch(module));
                 }
             }

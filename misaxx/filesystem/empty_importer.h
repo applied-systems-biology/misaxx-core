@@ -6,8 +6,8 @@
 #pragma once
 
 #include <boost/filesystem/path.hpp>
-#include "../vfs_folder.h"
-#include "../../misa_filesystem.h"
+#include "misa_filesystem_entry.h"
+#include "misa_filesystem.h"
 
 namespace misaxx::filesystem::importers {
 
@@ -23,8 +23,8 @@ namespace misaxx::filesystem::importers {
          */
         misa_filesystem import() {
             misa_filesystem vfs;
-            vfs.imported = std::make_shared<filesystem::vfs_folder>("imported");
-            vfs.exported = std::make_shared<filesystem::vfs_folder>("exported");
+            vfs.imported = std::make_shared<filesystem::misa_filesystem_entry>("imported");
+            vfs.exported = std::make_shared<filesystem::misa_filesystem_entry>("exported");
             return vfs;
         }
     };

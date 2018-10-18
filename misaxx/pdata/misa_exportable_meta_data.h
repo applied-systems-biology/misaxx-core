@@ -6,7 +6,7 @@
 #pragma once
 
 #include "../metadata/misa_metadata.h"
-#include "../misa_module_data.h"
+#include "misa_pdata.h"
 #include "misa_json_file.h"
 
 namespace misaxx {

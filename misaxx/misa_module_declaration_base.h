@@ -6,11 +6,11 @@
 #pragma once
 #include <memory>
 #include <pattxx/nodes/node.h>
-#include "misa_filesystem.h"
+#include "misaxx/filesystem/misa_filesystem.h"
 
 namespace misaxx {
 
-    struct misa_module_data;
+    struct misa_pdata;
 
 
     struct misa_module_declaration_base {

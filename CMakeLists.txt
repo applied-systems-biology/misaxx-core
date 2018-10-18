@@ -45,44 +45,42 @@ if(NOT pattxx_POPULATED)
 endif()
 
 add_library(misaxx
-        misaxx/filesystem/vfs_folder.h
-        misaxx/filesystem/vfs_entry.h
-        misaxx/filesystem/importers/directories_importer.h
-        misaxx/filesystem/vfs_file.h
+        misaxx/filesystem/misa_filesystem_entry.h
+        misaxx/filesystem/directories_importer.h
         misaxx/misa_module.h
-        misaxx/module_data/misa_file_stack.h
+        misaxx/pdata/misa_file_stack.h
         misaxx/misa_module_declaration_base.h
         misaxx/misa_task.h
         misaxx/misa_worker.h
         misaxx/misa_module_base.h
         misaxx/misa_dispatcher.h
-        misaxx/misa_module_data.h
+        misaxx/pdata/misa_pdata.h
         misaxx/misa_submodule.h
         misaxx/misa_runtime.h
-        misaxx/misa_filesystem.h
+        misaxx/filesystem/misa_filesystem.h
         misaxx/misa_module_declaration.h
         misaxx/misa_cli.h
-        misaxx/module_data/misa_image_stack.h
-        misaxx/module_data/misa_file.h
-        misaxx/module_data/misa_generic_file_stack.h
-        misaxx/module_data/misa_image_file.h
-        misaxx/filesystem/importers/json_importer.h
-        misaxx/root_modules/misa_multiobject_root.h
+        misaxx/pdata/misa_image_stack.h
+        misaxx/pdata/misa_file.h
+        misaxx/pdata/misa_generic_file_stack.h
+        misaxx/pdata/misa_image_file.h
+        misaxx/filesystem/json_importer.h
+        misaxx/misa_multiobject_root.h
         misaxx/algorithm_node_path.h
-        misaxx/root_modules/misa_root_module_base.h
+        misaxx/misa_root_module_base.h
         misaxx/object_node_path.h
-        misaxx/metadata/object2d_pixels.h
-        misaxx/metadata/object3d_pixels.h
-        misaxx/module_data/misa_json_file.h
-        misaxx/metadata/object3d_volume.h
-        misaxx/module_data/misa_exportable_meta_data.h
-        misaxx/metadata/misa_metadata.h
-        misaxx/metadata/object3d_voxel_bounds.h
-        misaxx/metadata/object3d_voxel_size.h
+        misaxx/vdata/object2d_pixels.h
+        misaxx/vdata/object3d_pixels.h
+        misaxx/pdata/misa_json_file.h
+        misaxx/vdata/object3d_volume.h
+        misaxx/pdata/misa_exportable_meta_data.h
+        misaxx/vdata/misa_metadata.h
+        misaxx/vdata/object3d_voxel_bounds.h
+        misaxx/vdata/object3d_voxel_size.h
         misaxx/misa_future_dispatch.h
-        misaxx/metadata/object_name.h
-        misaxx/filesystem/importers/empty_importer.h
-        misaxx/filesystem/json_schema_serializer.h misaxx/filesystem/importers/structured_data_importer.h)
+        misaxx/vdata/object_name.h
+        misaxx/filesystem/empty_importer.h
+        misaxx/filesystem/json_schema_serializer.h)
 
 target_include_directories(misaxx SYSTEM BEFORE PUBLIC ${Boost_INCLUDE_DIRS})
 target_include_directories(misaxx BEFORE PUBLIC ${Boost_INCLUDE_DIRS})

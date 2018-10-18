@@ -7,40 +7,35 @@
 
 #include <boost/filesystem.hpp>
 #include "misaxx/misa_module_declaration_base.h"
-#include "../misa_module_data.h"
-#include "../filesystem/vfs_file.h"
+#include "misa_pdata.h"
+#include "misaxx/filesystem/misa_filesystem_entry.h"
 
 namespace misaxx {
-    struct misa_file : public misa_module_data {
+    struct misa_file : public misa_pdata {
 
         std::string name;
         boost::filesystem::path path;
 
-        using misa_module_data::misa_module_data;
+        using misa_pdata::misa_pdata;
 
         void import_from_filesystem(const misa_module_declaration_base &t_module, const boost::filesystem::path &t_path) {
             std::cout << "[Data] Importing " << t_path.string() << " as " << dataString() << std::endl;
+            t_module.filesystem.imported->access(t_path)->data_string = dataString();
+
             if(!t_module.m_runtime->is_building_schema()) {
-                const auto &vfs = t_module.filesystem.imported->at<filesystem::const_file >(t_path);
+                const auto &vfs = t_module.filesystem.imported->access(t_path);
                 vfs->data_string = dataString();
                 path = vfs->external_path();
-            }
-            else {
-                // Ensure that the file exists
-                t_module.filesystem.imported->access<filesystem::file>(t_path)->data_string = dataString();
             }
         }
 
         void export_to_filesystem(misa_module_declaration_base &t_module, const boost::filesystem::path &t_path) {
             std::cout << "[Data] Exporting " << t_path.string() << " as " << dataString() << std::endl;
+            t_module.filesystem.exported->access(t_path)->data_string = dataString();
             if(!t_module.m_runtime->is_building_schema()) {
-                const auto &vfs = t_module.filesystem.exported->access<filesystem::file>(t_path);
+                const auto &vfs = t_module.filesystem.exported->access(t_path);
                 vfs->data_string = dataString();
                 path = vfs->external_path();
-            }
-            else {
-                // Ensure that the file exists
-                t_module.filesystem.exported->access<filesystem::file>(t_path)->data_string = dataString();
             }
         }
 

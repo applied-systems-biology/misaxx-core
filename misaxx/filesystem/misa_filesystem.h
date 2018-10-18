@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "filesystem/vfs_folder.h"
+#include "misa_filesystem_entry.h"
 
 namespace misaxx {
     /**
@@ -15,11 +15,11 @@ namespace misaxx {
         /**
          * Contains all imported data
          */
-        filesystem::folder imported;
+        filesystem::entry imported;
         /**
          * Contains all exported / output data
          */
-        filesystem::folder exported;
+        filesystem::entry exported;
 
         /**
          * Returns true if this filesystem is valid
@@ -38,8 +38,8 @@ namespace misaxx {
             if(!is_valid())
                 throw std::runtime_error("Cannot create sub-filesystem from invalid filesystem!");
             misa_filesystem result;
-            result.imported = imported / t_name;
-            result.exported = exported / t_name;
+            result.imported = imported->access(t_name);
+            result.exported = exported->access(t_name);
             return result;
         }
     };

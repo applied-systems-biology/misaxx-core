@@ -5,8 +5,7 @@
 
 #pragma once
 
-#include "../filesystem/vfs_folder.h"
-#include "../misa_module_data.h"
+#include "misa_pdata.h"
 #include "misaxx/misa_module_declaration_base.h"
 #include "misa_file.h"
 
@@ -15,7 +14,7 @@ namespace misaxx {
     /**
      * Stack of files with any type.
      */
-    template<class File> struct misa_file_stack : public misa_module_data {
+    template<class File> struct misa_file_stack : public misa_pdata {
 
         using files_t = std::unordered_map<std::string, std::shared_ptr<File>>;
         using iterator = typename files_t::iterator;
@@ -23,7 +22,7 @@ namespace misaxx {
 
         files_t files;
 
-        using misa_module_data::misa_module_data;
+        using misa_pdata::misa_pdata;
 
         /**
          * Returns true if the file stack can import the file.
@@ -36,28 +35,30 @@ namespace misaxx {
 
         void import_from_filesystem(const misa_module_declaration_base &t_module, const boost::filesystem::path &t_path) {
             std::cout << "[Data] Importing " << t_path.string() << " as " << dataString() << std::endl;
+            t_module.filesystem.imported->access(t_path)->data_string = dataString();
             if(!t_module.m_runtime->is_building_schema()) {
-                const auto &t_folder = t_module.filesystem.imported->at<filesystem::const_folder>(t_path);
+                const auto &t_folder = t_module.filesystem.imported->access(t_path);
                 t_folder->data_string = dataString();
-                for(const auto &kv : *t_folder) {
-                    filesystem::file file = std::dynamic_pointer_cast<filesystem::vfs_file>(kv.second);
-                    if(file && file->has_external_path() && supports_file(file->external_path())) {
-                        File f;
-                        f.name = kv.first;
-                        f.path = file->external_path();
-                        files.insert({ file->name, std::make_shared<File>(std::move(f)) });
+
+                if(boost::filesystem::exists(t_folder->external_path())) {
+                    boost::filesystem::directory_iterator it(t_folder->external_path());
+                    while(it != boost::filesystem::directory_iterator()) {
+                        boost::filesystem::path external_path = *it++;
+                        if(boost::filesystem::is_regular_file(external_path)) {
+                            filesystem::entry e = t_folder->access(external_path.filename());
+                            File f;
+                            f.name = external_path.filename().string();
+                            f.path = external_path;
+                            files.insert({ f.name, std::make_shared<File>(std::move(f)) });
+                        }
                     }
                 }
-            }
-            else {
-                // Ensure that the folder exists
-                t_module.filesystem.imported->access<filesystem::folder>(t_path)->data_string = dataString();
             }
         }
 
         template<class Source> void process(misa_module_declaration_base &t_module, const Source &t_source, const boost::filesystem::path &t_path) {
             std::cout << "[Data] Processing " << t_source->dataString() << " into " << t_path.string() << " as " << dataString() << std::endl;
-            const auto &t_folder = t_module.filesystem.exported->access<filesystem::folder>(t_path);
+            const auto &t_folder = t_module.filesystem.exported->access(t_path);
             t_folder->data_string = dataString();
 
             if(!t_module.m_runtime->is_building_schema()) {
@@ -66,7 +67,7 @@ namespace misaxx {
                 for(const auto &kv : t_source->files) {
                     if(!supports_file(kv.second->path))
                         continue;
-                    filesystem::file file = t_folder->access<filesystem::file>(kv.first);
+                    filesystem::entry file = t_folder->access(kv.first);
                     File f;
                     f.name = kv.first;
                     f.path = file->external_path();

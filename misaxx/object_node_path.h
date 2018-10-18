@@ -5,7 +5,7 @@
 
 #pragma once
 #include <pattxx/guarded_node_path.h>
-#include "root_modules/misa_root_module_base.h"
+#include "misa_root_module_base.h"
 
 namespace misaxx {
 

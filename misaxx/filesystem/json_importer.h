@@ -8,7 +8,8 @@
 #include <boost/filesystem.hpp>
 #include <nlohmann/json.hpp>
 #include <fstream>
-#include "misaxx/misa_filesystem.h"
+#include "misa_filesystem.h"
+#include "misa_filesystem_entry.h"
 #include <iostream>
 
 namespace misaxx::filesystem::importers {
@@ -46,40 +47,24 @@ namespace misaxx::filesystem::importers {
         /**
          * Internal function used for importing
          * @param t_json
-         * @param t_folder
+         * @param t_entry
          */
-        void import_folder(const nlohmann::json &t_json, const filesystem::folder &t_folder) {
+        void import_entry(const nlohmann::json &t_json, const filesystem::entry &t_entry) {
 
             if(t_json.find("external-path") != t_json.end()) {
-                t_folder->custom_external = t_json["external-path"].get<std::string>();
-                std::cout << "[Filesystem] Importing folder " << t_folder->custom_external.string() << " into " << t_folder->internal_path().string() << std::endl;
+                t_entry->custom_external = t_json["external-path"].get<std::string>();
+                std::cout << "[Filesystem] Importing entry " << t_entry->custom_external.string() << " into " << t_entry->internal_path().string() << std::endl;
             }
             else {
-                std::cout << "[Filesystem] Importing folder " << t_folder->internal_path().string() << std::endl;
+                std::cout << "[Filesystem] Importing entry " << t_entry->internal_path().string() << std::endl;
             }
 
             if(t_json.find("children") != t_json.end()) {
                 const nlohmann::json &children = t_json["children"];
                 for(nlohmann::json::const_iterator kv = children.begin(); kv != children.end(); ++kv) {
                     const nlohmann::json &json_entry = kv.value();
-                    if(json_entry["type"] == "file") {
-                        file f = t_folder->create<filesystem::file>(kv.key());
-                        if(json_entry.find("external-path") != json_entry.end()) {
-                            f->custom_external = json_entry["external-path"].get<std::string>();
-                            std::cout << "[Filesystem] Importing file " << f->custom_external.string() << " into " << f->internal_path().string() << std::endl;
-                        } else {
-                            std::cout << "[Filesystem] Importing file " << f->internal_path().string() << std::endl;
-                        }
-                    }
-                    else if(json_entry["type"] == "folder") {
-                        folder f = t_folder->create<folder>(kv.key());
-                        import_folder(json_entry, f);
-                    }
-                    else {
-                        throw std::runtime_error("Unsupported filesystem entry type " + json_entry["type"].get<std::string>());
-                    }
-                    folder subfolder = t_folder->create<folder>(kv.key());
-
+                    entry f = t_entry->create(kv.key());
+                    import_entry(json_entry, f);
                 }
             }
         }
@@ -90,8 +75,8 @@ namespace misaxx::filesystem::importers {
          */
         misa_filesystem import() {
             misa_filesystem vfs;
-            vfs.imported = std::make_shared<filesystem::vfs_folder>("imported");
-            vfs.exported = std::make_shared<filesystem::vfs_folder>("exported");
+            vfs.imported = std::make_shared<misa_filesystem_entry>("imported");
+            vfs.exported = std::make_shared<misa_filesystem_entry>("exported");
 
             nlohmann::json json;
 
@@ -105,10 +90,10 @@ namespace misaxx::filesystem::importers {
             }
 
             if(json.find("imported") != json.end()) {
-                import_folder(json["imported"], vfs.imported);
+                import_entry(json["imported"], vfs.imported);
             }
             if(json.find("exported") != json.end()) {
-                import_folder(json["exported"], vfs.exported);
+                import_entry(json["exported"], vfs.exported);
             }
 
             return vfs;
