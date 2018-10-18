@@ -44,7 +44,7 @@ namespace misaxx {
                     boost::filesystem::directory_iterator it(t_folder->external_path());
                     while(it != boost::filesystem::directory_iterator()) {
                         boost::filesystem::path external_path = *it++;
-                        if(boost::filesystem::is_regular_file(external_path)) {
+                        if(boost::filesystem::is_regular_file(external_path) && supports_file(external_path)) {
                             filesystem::entry e = t_folder->access(external_path.filename());
                             File f;
                             f.name = external_path.filename().string();
