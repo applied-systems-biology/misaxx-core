@@ -49,7 +49,7 @@ namespace misaxx {
                             File f;
                             f.name = external_path.filename().string();
                             f.path = external_path;
-                            files.insert({ f.name, std::make_shared<File>(std::move(f)) });
+                            files.insert({ external_path.filename().string(), std::make_shared<File>(std::move(f)) });
                         }
                     }
                 }
