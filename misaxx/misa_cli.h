@@ -63,6 +63,7 @@ namespace misaxx {
             }
             if(vm.count("write-parameter-schema")) {
                 m_runtime.build_schema = true;
+                m_runtime.simulation_mode = true;
                 m_parameter_schema_path = vm["write-parameter-schema"].as<std::string>();
                 boost::filesystem::create_directories(m_parameter_schema_path.parent_path());
             }
