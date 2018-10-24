@@ -6,6 +6,8 @@ include(FetchContent)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(Boost_USE_STATIC_LIBS ON)
+
 find_package(Boost 1.63 COMPONENTS REQUIRED filesystem regex program_options)
 find_package(OpenMP)
 
