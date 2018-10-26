@@ -7,7 +7,7 @@
 
 #include <stdexcept>
 #include <nlohmann/json.hpp>
-#include "misa_metadata.h"
+#include "misaxx/misa_metadata.h"
 #include "../object_node_path.h"
 
 namespace misaxx {
@@ -37,6 +37,25 @@ namespace misaxx {
             return j;
         }
 
+        void from_json(const nlohmann::json& j) override {
+            nlohmann::json::const_iterator xz = j.find("xz");
+            nlohmann::json::const_iterator x = j.find("x");
+            nlohmann::json::const_iterator y = j.find("y");
+            nlohmann::json::const_iterator z = j.find("z");
+            if(xz != j.end()) {
+                this->x = this->z = xz.value();
+            }
+            if(x != j.end()) {
+                this->x = x.value();
+            }
+            if(y != j.end()) {
+                this->y = y.value();
+            }
+            if(z != j.end()) {
+                this->z = z.value();
+            }
+        }
+
         std::string get_name() const override {
             return "object3d-voxel-size";
         }
@@ -47,21 +66,6 @@ namespace misaxx {
     }
 
     void from_json(const nlohmann::json& j, object3d_voxel_size& p) {
-        nlohmann::json::const_iterator xz = j.find("xz");
-        nlohmann::json::const_iterator x = j.find("x");
-        nlohmann::json::const_iterator y = j.find("y");
-        nlohmann::json::const_iterator z = j.find("z");
-        if(xz != j.end()) {
-            p.x = p.z = xz.value();
-        }
-        if(x != j.end()) {
-            p.x = x.value();
-        }
-        if(y != j.end()) {
-            p.y = y.value();
-        }
-        if(z != j.end()) {
-            p.z = z.value();
-        }
+        p.from_json(j);
     }
 }

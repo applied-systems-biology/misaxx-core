@@ -123,7 +123,7 @@ namespace misaxx {
                 pattxx::json::json_schema_builder &schema = m_runtime.parameter_schema;
 
                 // Save filesystem to parameter schema
-                filesystem::to_json_schema(m_runtime.instance().filesystem, schema);
+                to_json_schema(m_runtime.instance().filesystem, schema);
                 schema.insert_static<std::string>({"filesystem", "source"}, "json", pattxx::json::json_property<std::string>());
 
                 // Workaround: Due to inflexibility with schema generation, manually put "__OBJECT__" nodes into list builders
@@ -196,7 +196,7 @@ namespace misaxx {
 
             // Do no importing if we build a schema
             if(m_runtime.build_schema) {
-                filesystem::importers::misa_filesystem_empty_importer importer;
+                misa_filesystem_empty_importer importer;
                 get_runtime().get_filesystem() = importer.import();
                 return;
             }
@@ -204,13 +204,13 @@ namespace misaxx {
             // Otherwise load importer from parameters
             nlohmann::json &params = m_runtime.parameters["filesystem"];
             if(params["source"] == "directories") {
-                filesystem::importers::misa_filesystem_directories_importer importer;
+                misa_filesystem_directories_importer importer;
                 importer.input_path = params["input-directory"].get<std::string>();
                 importer.output_path = params["output-directory"].get<std::string>();
                 get_runtime().get_filesystem() = importer.import();
             }
             else if(params["source"] == "json") {
-                filesystem::importers::misa_filesystem_json_importer importer;
+                misa_filesystem_json_importer importer;
                 if(params.find("json-data") != params.end()) {
                     importer.input_json = params["json-data"];
                 }

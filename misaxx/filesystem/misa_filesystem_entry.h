@@ -10,12 +10,23 @@
 #include <boost/filesystem.hpp>
 #include "misa_filesystem_metadata.h"
 
-namespace misaxx::filesystem {
+namespace misaxx {
 
     struct misa_filesystem_entry;
 
-    using entry = std::shared_ptr<misa_filesystem_entry>;
-    using const_entry = std::shared_ptr<const misa_filesystem_entry>;
+    namespace filesystem {
+        using entry = std::shared_ptr<misa_filesystem_entry>;
+        using const_entry = std::shared_ptr<const misa_filesystem_entry>;
+    }
+
+    /**
+     * Available modes of entry types
+     */
+    enum class misa_filesystem_entry_type {
+        unknown,
+        imported,
+        exported
+    };
 
     /**
      * An entry in the MISA++ virtual filesystem
@@ -32,9 +43,15 @@ namespace misaxx::filesystem {
         std::weak_ptr<misa_filesystem_entry> parent;
 
         /**
-         * Internal name of the filesystem entry
-         */
+       * Internal name of the filesystem entry
+       */
         std::string name;
+
+        /**
+         * Type of this entry
+         */
+        misa_filesystem_entry_type type;
+
 
         /**
          * Custom external path of this entry.
@@ -47,7 +64,8 @@ namespace misaxx::filesystem {
          */
         mutable misa_filesystem_metadata metadata;
 
-        explicit misa_filesystem_entry(std::string t_name = "", path t_custom_external = path()) : name(std::move(t_name)), custom_external(std::move(t_custom_external)){
+        explicit misa_filesystem_entry(std::string t_name, misa_filesystem_entry_type t_type, path t_custom_external = path()) :
+                name(std::move(t_name)), type(t_type), custom_external(std::move(t_custom_external)) {
         }
 
         misa_filesystem_entry(const misa_filesystem_entry &value) = delete;
@@ -59,10 +77,9 @@ namespace misaxx::filesystem {
          * @return
          */
         path internal_path() const {
-            if(parent.expired()) {
+            if (parent.expired()) {
                 return name;
-            }
-            else {
+            } else {
                 return parent.lock()->internal_path() / name;
             }
         }
@@ -80,9 +97,9 @@ namespace misaxx::filesystem {
          * @return
          */
         path external_path() const {
-            if(!custom_external.empty())
+            if (!custom_external.empty())
                 return custom_external;
-            else if(!parent.expired())
+            else if (!parent.expired())
                 return parent.lock()->external_path() / name;
             else
                 throw std::runtime_error("Path " + internal_path().string() + " has no external path!");
@@ -92,21 +109,21 @@ namespace misaxx::filesystem {
          * Returns a managed pointer to this entry
          * @return
          */
-        entry self() {
+        filesystem::entry self() {
             return shared_from_this();
         }
 
-        const_entry self() const {
+        filesystem::const_entry self() const {
             return shared_from_this();
         }
 
-        entry create(std::string t_name, path t_custom_external = path()) {
-           return insert(std::make_shared<misa_filesystem_entry>(std::move(t_name), std::move(t_custom_external)));
+        filesystem::entry create(std::string t_name, path t_custom_external = path()) {
+            return insert(std::make_shared<misa_filesystem_entry>(std::move(t_name), type, std::move(t_custom_external)));
         }
 
-        entry insert(entry ptr) {
+        filesystem::entry insert(filesystem::entry ptr) {
             ptr->parent = self();
-            children.insert({ ptr->name,  ptr});
+            children.insert({ptr->name, std::move(ptr)});
             return ptr;
         }
 
@@ -143,9 +160,9 @@ namespace misaxx::filesystem {
          * Throws an exception if there is no external path.
          */
         void ensure_external_path_exists() const {
-            if(!has_external_path())
+            if (!has_external_path())
                 throw std::runtime_error("This VFS folder has no external path!");
-            if(!boost::filesystem::exists(external_path()))
+            if (!boost::filesystem::exists(external_path()))
                 boost::filesystem::create_directories(external_path());
         }
 
@@ -155,30 +172,28 @@ namespace misaxx::filesystem {
          * @param t_segment
          * @return
          */
-        entry access(boost::filesystem::path t_segment) {
+        filesystem::entry access(boost::filesystem::path t_segment) {
             t_segment.remove_trailing_separator();
-            if(t_segment.empty())
+            if (t_segment.empty())
                 return self();
 
             misa_filesystem_entry *current = this;
 
             // Navigate to subfolders if needed
-            for(const auto &seg : t_segment.parent_path()) {
+            for (const auto &seg : t_segment.parent_path()) {
                 auto it = current->find(seg.string());
-                if(it == end()) {
+                if (it == end()) {
                     current = create(seg.string()).get();
-                }
-                else {
+                } else {
                     current = it->second.get();
                 }
             }
 
             // Create / access the target element
             auto it = current->find(t_segment.filename().string());
-            if(it == end()) {
+            if (it == end()) {
                 return create(t_segment.filename().string());
-            }
-            else {
+            } else {
                 return it->second;
             }
         }
@@ -189,31 +204,29 @@ namespace misaxx::filesystem {
          * @param t_segment
          * @return
          */
-        const_entry at(boost::filesystem::path t_segment) const {
+        filesystem::const_entry at(boost::filesystem::path t_segment) const {
             t_segment.remove_trailing_separator();
-            if(t_segment.empty())
+            if (t_segment.empty())
                 return self();
 
             const misa_filesystem_entry *current = this;
             auto current_segment_it = t_segment.begin();
 
             // Navigate to subfolders if needed
-            for(const auto &seg : t_segment.parent_path()) {
+            for (const auto &seg : t_segment.parent_path()) {
                 auto it = current->find(seg.string());
-                if(it == end()) {
+                if (it == end()) {
                     throw std::runtime_error("Cannot access path " + (internal_path() / t_segment).string());
-                }
-                else {
+                } else {
                     current = it->second.get();
                 }
             }
 
             // Create / access the target element
             auto it = current->find(t_segment.filename().string());
-            if(it == end()) {
+            if (it == end()) {
                 throw std::runtime_error("Cannot access path " + (internal_path() / t_segment).string());
-            }
-            else {
+            } else {
                 return it->second;
             }
         }
@@ -225,19 +238,18 @@ namespace misaxx::filesystem {
          */
         bool has_subpath(boost::filesystem::path t_segment) const {
             t_segment.remove_trailing_separator();
-            if(t_segment.empty())
+            if (t_segment.empty())
                 return true;
 
             const misa_filesystem_entry *current = this;
             auto current_segment_it = t_segment.begin();
 
             // Navigate to subfolders if needed
-            for(const auto &seg : t_segment.parent_path()) {
+            for (const auto &seg : t_segment.parent_path()) {
                 auto it = current->find(seg.string());
-                if(it == end()) {
+                if (it == end()) {
                     return false;
-                }
-                else {
+                } else {
                     current = it->second.get();
                 }
             }

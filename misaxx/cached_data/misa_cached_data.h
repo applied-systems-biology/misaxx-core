@@ -10,7 +10,7 @@
 #include <cxxh/access/readwrite_access.h>
 #include <cxxh/access/write_access.h>
 #include "misaxx/misa_module_declaration_base.h"
-#include "../ome_data/misa_metadata.h"
+#include "misaxx/misa_metadata.h"
 #include "misa_cache.h"
 
 namespace misaxx {
@@ -50,12 +50,23 @@ namespace misaxx {
         }
 
         /**
+        * Links this cache to a filesystem location if not already set
+        * @param t_location
+        */
+        void suggest_create(const filesystem::const_entry &t_location, const misa_filesystem_metadata &t_description) {
+            if(!cache) {
+                cache = std::make_shared<Cache>();
+                cache->describe(t_location, t_description);
+            }
+        }
+
+        /**
          * Links this cache to an imported filesystem path.
          * This path must exist. Otherwise, an exception is thrown.
          * @param t_filesystem
          * @param t_path
          */
-        void suggest_import_location(const filesystem::misa_filesystem &t_filesystem, const boost::filesystem::path &t_path) {
+        void suggest_import_location(const misa_filesystem &t_filesystem, const boost::filesystem::path &t_path) {
             if(!cache) {
                 suggest_link(t_filesystem.imported->at(t_path));
             }
@@ -66,13 +77,14 @@ namespace misaxx {
          * This path must not exist. Otherwise, an exception is thrown.
          * @param t_filesystem
          * @param t_path
-         * @param t_metadata
+         * @param t_description
          */
-        void suggest_export_location(const filesystem::misa_filesystem &t_filesystem, const boost::filesystem::path &t_path, const filesystem::misa_filesystem_metadata &t_metadata) {
+        void suggest_export_location(const misa_filesystem &t_filesystem,
+                const boost::filesystem::path &t_path, const misa_filesystem_metadata &t_description) {
             if(!cache) {
                 if(t_filesystem.exported->has_subpath(t_path))
                     throw std::runtime_error("Suggested export location exported/" + t_path.string() + " is already used!");
-                suggest_link(t_filesystem.exported->access(t_path));
+                suggest_create(t_filesystem.exported->access(t_path), t_description);
             }
         }
 

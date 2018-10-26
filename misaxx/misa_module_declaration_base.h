@@ -20,7 +20,7 @@ namespace misaxx {
         /**
          * Filesystem of this module
          */
-        filesystem::misa_filesystem filesystem;
+        misa_filesystem filesystem;
 
         /**
          * Initializes the data and sets them into relation with each other

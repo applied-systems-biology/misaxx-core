@@ -8,7 +8,7 @@
 #include "misa_filesystem_entry.h"
 #include <pattxx/json/json_schema_builder.h>
 
-namespace misaxx::filesystem {
+namespace misaxx {
     /**
      * Filesystem of a MISA++ module. The filesystem has 3 folders, "imported", "exported" and "modules".
      */
@@ -50,7 +50,7 @@ namespace misaxx::filesystem {
         return t_path;
     }
 
-    inline void to_json_schema(const const_entry &t_entry, const pattxx::json::path_t &t_path, pattxx::json::json_schema_builder &t_builder) {
+    inline void to_json_schema(const filesystem::const_entry &t_entry, const pattxx::json::path_t &t_path, pattxx::json::json_schema_builder &t_builder) {
         t_builder.insert_optional<std::string>(json_child_path(t_path, "external-path"), "", pattxx::json::json_property<std::string>());
         if(!t_entry->metadata.is_empty()) {
             to_json_schema(t_builder, json_child_path(t_path, "data-metadata"), t_entry->metadata);

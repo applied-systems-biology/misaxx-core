@@ -12,7 +12,7 @@
 #include "misa_filesystem_entry.h"
 #include <iostream>
 
-namespace misaxx::filesystem::importers {
+namespace misaxx {
 
     /**
      * Imports a MISA++ filesystem from a JSON configuration file
@@ -78,7 +78,7 @@ namespace misaxx::filesystem::importers {
                 const nlohmann::json &children = t_json["children"];
                 for(nlohmann::json::const_iterator kv = children.begin(); kv != children.end(); ++kv) {
                     const nlohmann::json &json_entry = kv.value();
-                    entry f = t_entry->create(kv.key());
+                    filesystem::entry f = t_entry->create(kv.key());
                     import_entry(json_entry, f);
                 }
             }
@@ -90,8 +90,8 @@ namespace misaxx::filesystem::importers {
          */
         misa_filesystem import() {
             misa_filesystem vfs;
-            vfs.imported = std::make_shared<misa_filesystem_entry>("imported");
-            vfs.exported = std::make_shared<misa_filesystem_entry>("exported");
+            vfs.imported = std::make_shared<misa_filesystem_entry>("imported", misa_filesystem_entry_type::imported);
+            vfs.exported = std::make_shared<misa_filesystem_entry>("exported", misa_filesystem_entry_type::exported);
 
             nlohmann::json json;
 

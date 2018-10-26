@@ -9,7 +9,7 @@
 #include "misa_filesystem_entry.h"
 #include "misa_filesystem.h"
 
-namespace misaxx::filesystem::importers {
+namespace misaxx {
 
 
     /**
@@ -23,8 +23,8 @@ namespace misaxx::filesystem::importers {
          */
         misa_filesystem import() {
             misa_filesystem vfs;
-            vfs.imported = std::make_shared<filesystem::misa_filesystem_entry>("imported");
-            vfs.exported = std::make_shared<filesystem::misa_filesystem_entry>("exported");
+            vfs.imported = std::make_shared<misa_filesystem_entry>("imported", misa_filesystem_entry_type::imported);
+            vfs.exported = std::make_shared<misa_filesystem_entry>("exported", misa_filesystem_entry_type::exported);
             return vfs;
         }
     };

@@ -74,13 +74,13 @@ add_library(misaxx
         misaxx/cached_data/misa_unsafe_json_file.h
         misaxx/ome_data/object3d_volume.h
         misaxx/cached_data/misa_unsafe_exportable_meta_data.h
-        misaxx/ome_data/misa_metadata.h
+        misaxx/misa_metadata.h
         misaxx/ome_data/object3d_voxel_bounds.h
         misaxx/ome_data/object3d_voxel_size.h
         misaxx/misa_future_dispatch.h
         misaxx/ome_data/object_name.h
         misaxx/filesystem/misa_filesystem_empty_importer.h
-        misaxx/filesystem/misa_filesystem_metadata.h misaxx/cached_data/misa_cache.h misaxx/cached_data/misa_cache_registry.h)
+        misaxx/filesystem/misa_filesystem_metadata.h misaxx/cached_data/misa_cache.h misaxx/cached_data/misa_cache_registry.h misaxx/cached_data/descriptions/misa_file_description.h misaxx/cached_data/descriptions/misa_file_stack_description.h)
 
 target_include_directories(misaxx SYSTEM BEFORE PUBLIC ${Boost_INCLUDE_DIRS})
 target_include_directories(misaxx BEFORE PUBLIC ${Boost_INCLUDE_DIRS})

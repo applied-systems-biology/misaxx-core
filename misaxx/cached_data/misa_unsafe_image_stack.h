@@ -42,6 +42,13 @@ namespace misaxx {
             }
         }
 
+        void create(const filesystem::const_entry &t_location, const misa_filesystem_metadata &t_description) override {
+
+        }
+
+        misa_filesystem_metadata describe() override {
+        }
+
         files_t &get() override {
             return files;
         }

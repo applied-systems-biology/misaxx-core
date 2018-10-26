@@ -35,7 +35,7 @@ namespace misaxx {
         }
 
         std::string m_root_name;
-        filesystem::misa_filesystem m_filesystem;
+        misa_filesystem m_filesystem;
     };
 
     template<class RootModule> class misa_runtime : public pattxx::default_runtime<RootModule, misa_runtime_root_instantiator<RootModule>> {
@@ -49,7 +49,7 @@ namespace misaxx {
          * Returns the filesystem instance of this runtime
          * @return
          */
-        filesystem::misa_filesystem &get_filesystem() {
+        misa_filesystem &get_filesystem() {
             return this->m_filesystem;
         }
     };

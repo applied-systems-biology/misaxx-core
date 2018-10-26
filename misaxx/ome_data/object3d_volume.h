@@ -24,6 +24,10 @@ namespace misaxx {
             return j;
         }
 
+        void from_json(const nlohmann::json& j) override {
+            volume = j["volume"];
+        }
+
         std::string get_name() const override {
             return "object3d-volume";
         }
@@ -34,6 +38,6 @@ namespace misaxx {
     }
 
     void from_json(const nlohmann::json& j, object3d_volume& p) {
-        p.volume = j["volume"];
+        p.from_json(j);
     }
 }

@@ -50,7 +50,7 @@ namespace misaxx {
                 return m_module_declaration;
         }
 
-        filesystem::misa_filesystem &get_filesystem() {
+        misa_filesystem &get_filesystem() {
             return m_module_declaration.filesystem;
         }
 

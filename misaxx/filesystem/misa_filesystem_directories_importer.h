@@ -10,7 +10,7 @@
 #include "misa_filesystem_entry.h"
 #include <iostream>
 
-namespace misaxx::filesystem::importers {
+namespace misaxx {
 
     /**
      * Imports a filesystem from an input folder.
@@ -27,9 +27,9 @@ namespace misaxx::filesystem::importers {
          */
         misa_filesystem import() {
             misa_filesystem vfs;
-            vfs.imported = std::make_shared<misa_filesystem_entry>("imported", input_path);
+            vfs.imported = std::make_shared<misa_filesystem_entry>("imported", misa_filesystem_entry_type ::imported, input_path);
             discoverImporterEntry(vfs.imported);
-            vfs.exported = std::make_shared<misa_filesystem_entry>("exported", output_path);
+            vfs.exported = std::make_shared<misa_filesystem_entry>("exported", misa_filesystem_entry_type ::exported, output_path);
             return vfs;
         }
 

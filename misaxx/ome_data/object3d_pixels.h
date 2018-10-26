@@ -6,7 +6,7 @@
 #pragma once
 
 #include <nlohmann/json.hpp>
-#include "misa_metadata.h"
+#include "misaxx/misa_metadata.h"
 
 namespace misaxx {
     /**
@@ -21,6 +21,10 @@ namespace misaxx {
             return j;
         }
 
+        void from_json(const nlohmann::json& j) override {
+            pixels = j["pixels"];
+        }
+
         std::string get_name() const override {
             return "object3d-pixels";
         }
@@ -31,6 +35,6 @@ namespace misaxx {
     }
 
     void from_json(const nlohmann::json& j, object3d_pixels& p) {
-        p.pixels = j["pixels"];
+        p.from_json(j);
     }
 }

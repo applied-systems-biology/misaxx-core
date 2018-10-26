@@ -6,7 +6,7 @@
 #pragma once
 
 #include <nlohmann/json.hpp>
-#include "misa_metadata.h"
+#include "misaxx/misa_metadata.h"
 #include "object3d_voxel_size.h"
 
 namespace misaxx {
@@ -28,6 +28,15 @@ namespace misaxx {
             j["max-y"] = max_y;
             j["max-z"] = max_z;
             return j;
+        }
+
+        void from_json(const nlohmann::json& j) override {
+            min_x = j["min-x"];
+            min_y = j["min-y"];
+            min_z = j["min-z"];
+            max_x = j["max-x"];
+            max_y = j["max-y"];
+            max_z = j["max-z"];
         }
 
         std::string get_name() const override {
@@ -54,11 +63,6 @@ namespace misaxx {
     }
 
     void from_json(const nlohmann::json& j, object3d_voxel_bounds& p) {
-        p.min_x = j["min-x"];
-        p.min_y = j["min-y"];
-        p.min_z = j["min-z"];
-        p.max_x = j["max-x"];
-        p.max_y = j["max-y"];
-        p.max_z = j["max-z"];
+        p.from_json(j);
     }
 }
