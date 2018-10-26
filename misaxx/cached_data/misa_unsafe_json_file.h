@@ -12,8 +12,9 @@
 namespace misaxx {
     /**
      * misa_file with additional operators for easier serialization of JSON data
+     * Legacy class. Do not use.
      */
-    struct misa_unsafe_json_file : public misa_unsafe_file {
+    struct [[deprecated]] misa_unsafe_json_file : public misa_unsafe_file {
 
         /**
         * Used by the misa_cache_registry

@@ -57,10 +57,12 @@ struct other_module : public misa_module<other_module_def> {
 struct my_module_declaration : public misa_module_declaration {
 //    misa_cached_data<misa_unsafe_image_stack> my_stack;
     misa_cached_data<misa_unsafe_file> test_file1;
+    misa_cached_data<misa_unsafe_image_stack<coixx::images::grayscale_float >> example_stack;
     submodule <other_module> other;
 
     void init_data() override {
         test_file1.suggest_import_location(filesystem, "test_file1");
+        example_stack.suggest_import_location(filesystem, "example_stack");
 //        import_from_filesystem(my_stack, "/");
 //        process(processed, my_stack, "processed");
 //        init_submodule(other, "other");

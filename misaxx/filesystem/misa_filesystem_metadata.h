@@ -36,7 +36,8 @@ namespace misaxx::filesystem {
 
     inline void from_json(const nlohmann::json &t_json, misa_filesystem_metadata &t_data) {
         t_data.data_type = t_json["data-type"];
-        t_data.data_parameters = t_json["data-parameters"];
+        if(t_json.find("data-parameters") != t_json.end())
+            t_data.data_parameters = t_json["data-parameters"];
     }
 
     inline void to_json_schema(pattxx::json::json_schema_builder &t_builder, const pattxx::json::path_t &t_path, const misa_filesystem_metadata &t_data) {

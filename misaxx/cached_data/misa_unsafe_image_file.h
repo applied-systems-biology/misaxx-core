@@ -9,7 +9,12 @@
 #include <coixx/toolbox/toolbox_io.h>
 
 namespace misaxx {
-    template<class Image> struct misa_unsafe_image_file : public misa_unsafe_file {
+    /**
+     * Legacy image file that does not use the properties of the cache system
+     * Please do not use it
+     * @tparam Image
+     */
+    template<class Image> struct [[deprecated]] misa_unsafe_image_file : public misa_unsafe_file {
 
         /**
         * Used by the misa_cache_registry
@@ -47,10 +52,6 @@ namespace misaxx {
             using namespace coixx;
             using namespace coixx::toolbox;
             t_img << coixx::toolbox::save(path);
-        }
-
-        std::string dataString() override {
-            return "image_file";
         }
     };
 }

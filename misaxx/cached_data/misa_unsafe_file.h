@@ -14,7 +14,7 @@
 #include "misa_cache.h"
 
 namespace misaxx {
-    struct misa_unsafe_file : public cxxh::access::cache<boost::filesystem::path> , public misa_cache {
+    struct [[deprecated]] misa_unsafe_file : public cxxh::access::cache<boost::filesystem::path> , public misa_cache {
 
         /**
          * Used by the misa_cache_registry
@@ -45,7 +45,7 @@ namespace misaxx {
                 return it.value();
             }
             else if( it2  != data_parameters.end()) {
-                return boost::filesystem::extension(std::string(it2.value()));
+                return boost::filesystem::path(std::string(it2.value())).extension().string();
             }
             else {
                 throw std::runtime_error("Could not determine file type from parameters!");
@@ -59,10 +59,11 @@ namespace misaxx {
          * @param t_path
          */
         void manual_link(std::string t_filename, std::string t_filetype, boost::filesystem::path t_path) {
+            std::cout << "[MISA-cache] Manually linking cache of type " << DATA_TYPE << std::endl;
+
             filename = std::move(t_filename);
             filetype = std::move(t_filetype);
             path = std::move(t_path);
-            std::cout << "[MISA-cache] Manually linked cache of type " << DATA_TYPE << std::endl;
         }
 
         /**
@@ -70,6 +71,8 @@ namespace misaxx {
          * @param t_location
          */
         void link(const filesystem::const_entry &t_location) override {
+            std::cout << "[MISA-cache] Linking cache of type " << DATA_TYPE << " to " << t_location->internal_path().string() << std::endl;
+
             const nlohmann::json data_parameters = t_location->metadata.data_parameters;
             filetype = determineFileType(data_parameters);
             auto it = data_parameters.find("filename");
@@ -79,7 +82,7 @@ namespace misaxx {
             else {
                 // Try to automatically find a file
                 for(const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_location->external_path()))) {
-                    if(boost::filesystem::is_regular_file(entry) && boost::iequals(boost::filesystem::extension(entry), filetype)) {
+                    if(boost::filesystem::is_regular_file(entry) && boost::iequals(entry.path().extension().string(), filetype)) {
                         filename = entry.path().filename().string();
                         break;
                     }
@@ -91,7 +94,6 @@ namespace misaxx {
             }
 
             path = t_location->external_path() / filename;
-            std::cout << "[MISA-cache] Linked cache of type " << DATA_TYPE << " to " << t_location->internal_path().string() << std::endl;
         }
 
         boost::filesystem::path &get() override {

@@ -76,14 +76,28 @@ namespace misaxx {
             }
         }
 
+        /**
+         * Thread-safe read-only access to the data.
+         * @return
+         */
         readonly_access <value_type > access_readonly() {
             return readonly_access<value_type >(*cache);
         }
 
+        /**
+        * Thread-safe read & write access to the data.
+        * Other threads are blocked from access.
+        * @return
+        */
         readwrite_access <value_type > access_readwrite() {
             return readwrite_access<value_type >(*cache);
         }
 
+        /**
+         * Thread-safe write-only access to the data.
+         * Other threads are blocked from access.
+         * @return
+         */
         write_access <value_type > access_write() {
             return write_access<value_type >(*cache);
         }
