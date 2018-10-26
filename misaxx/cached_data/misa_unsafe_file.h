@@ -9,36 +9,121 @@
 #include "misaxx/misa_module_declaration_base.h"
 #include "misa_cached_data.h"
 #include "misaxx/filesystem/misa_filesystem_entry.h"
-#include <coipxx/cache.h>
+#include <cxxh/access/cache.h>
+#include <boost/algorithm/string.hpp>
 #include "misa_cache.h"
 
 namespace misaxx {
-    struct misa_unsafe_file : public coipxx::cache<boost::filesystem::path> , public misa_cache {
+    struct misa_unsafe_file : public cxxh::access::cache<boost::filesystem::path> , public misa_cache {
 
         /**
          * Used by the misa_cache_registry
          */
         static inline const std::string DATA_TYPE = "unsafe-file";
 
-        std::string name;
+        /**
+         * Complete filename
+         */
+        std::string filename;
+
+        /**
+         * Filetype (extension) with dot
+         */
+        std::string filetype;
+
+        /**
+         * Full path
+         */
         boost::filesystem::path path;
 
-        using coipxx::cache<boost::filesystem::path>::cache;
+        using cxxh::access::cache<boost::filesystem::path>::cache;
 
-        void import_from_filesystem(const misa_module_declaration_base &t_module, const boost::filesystem::path &t_path) {
-            if(!t_module.m_runtime->is_building_schema()) {
-                const auto &vfs = t_module.filesystem.imported->access(t_path);
-//                vfs->data_string = dataString();
-                path = vfs->external_path();
+        virtual std::string determineFileType(const nlohmann::json &data_parameters) const {
+            auto it = data_parameters.find("extension");
+            auto it2 = data_parameters.find("filename");
+            if(it != data_parameters.end()) {
+                return it.value();
+            }
+            else if( it2  != data_parameters.end()) {
+                return boost::filesystem::extension(std::string(it2.value()));
+            }
+            else {
+                throw std::runtime_error("Could not determine file type from parameters!");
             }
         }
 
-        void export_to_filesystem(misa_module_declaration_base &t_module, const boost::filesystem::path &t_path) {
-            if(!t_module.m_runtime->is_building_schema()) {
-                const auto &vfs = t_module.filesystem.exported->access(t_path);
-//                vfs->data_string = dataString();
-                path = vfs->external_path();
+        /**
+         * Links from code
+         * @param t_filename
+         * @param t_filetype
+         * @param t_path
+         */
+        void manual_link(std::string t_filename, std::string t_filetype, boost::filesystem::path t_path) {
+            filename = std::move(t_filename);
+            filetype = std::move(t_filetype);
+            path = std::move(t_path);
+            std::cout << "[MISA-cache] Manually linked cache of type " << DATA_TYPE << std::endl;
+        }
+
+        /**
+         * Links to filesystem entry
+         * @param t_location
+         */
+        void link(const filesystem::const_entry &t_location) override {
+            const nlohmann::json data_parameters = t_location->metadata.data_parameters;
+            filetype = determineFileType(data_parameters);
+            auto it = data_parameters.find("filename");
+            if(it != data_parameters.end()) {
+                filename = it.value();
             }
+            else {
+                // Try to automatically find a file
+                for(const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_location->external_path()))) {
+                    if(boost::filesystem::is_regular_file(entry) && boost::iequals(boost::filesystem::extension(entry), filetype)) {
+                        filename = entry.path().filename().string();
+                        break;
+                    }
+                }
+            }
+
+            if(filename.empty()) {
+                throw std::runtime_error("Could not find a file in the storage!");
+            }
+
+            path = t_location->external_path() / filename;
+            std::cout << "[MISA-cache] Linked cache of type " << DATA_TYPE << " to " << t_location->internal_path().string() << std::endl;
+        }
+
+        boost::filesystem::path &get() override {
+            return path;
+        }
+
+        const boost::filesystem::path &get() const override {
+            return path;
+        }
+
+        void set(boost::filesystem::path &&value) override {
+            path = std::forward<boost::filesystem::path>(value);
+        }
+
+        bool has() const override {
+            return true;
+        }
+
+        bool can_pull() const override {
+            return true;
+        }
+
+        void pull() override {
+
+        }
+
+        void stash() override {
+
+        }
+
+        void push() override {
+
         }
     };
 }

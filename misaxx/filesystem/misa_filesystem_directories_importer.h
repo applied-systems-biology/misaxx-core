@@ -36,7 +36,7 @@ namespace misaxx::filesystem::importers {
     private:
 
         void discoverImporterEntry(const filesystem::entry &t_entry) {
-            std::cout << "[Filesystem][directories-importer] Importing entry " << t_entry->internal_path().string() << " @ " << t_entry->custom_external.string() << std::endl;
+            std::cout << "[Filesystem][directories-importer] Importing entry " << t_entry->internal_path().string() << " @ " << t_entry->external_path().string() << std::endl;
             auto metadata_file = t_entry->external_path() / "metadata.json";
             if(boost::filesystem::is_regular_file(metadata_file)) {
                 std::cout << "[Filesystem][directories-importer] Importing metadata from file " << metadata_file.string() << std::endl;
@@ -47,10 +47,9 @@ namespace misaxx::filesystem::importers {
                 from_json(json, t_entry->metadata);
             }
 
-            boost::filesystem::directory_iterator it(t_entry->external_path());
-            while(it != boost::filesystem::directory_iterator()) {
-                if(boost::filesystem::is_directory(*it)) {
-                    filesystem::entry e = t_entry->create(it->path().filename().string());
+            for(const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_entry->external_path()))) {
+                if(boost::filesystem::is_directory(entry)) {
+                    filesystem::entry e = t_entry->create(entry.path().filename().string());
                     discoverImporterEntry(e);
                 }
             }

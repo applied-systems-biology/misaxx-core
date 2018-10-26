@@ -6,12 +6,12 @@
 #pragma once
 
 #include <coixx/opencv_image.h>
-#include <coipxx/cache.h>
+#include <cxxh/access/cache.h>
 #include "misa_cache.h"
 #include "misa_unsafe_image_file.h"
 
 namespace misaxx {
-    template<class Image> struct misa_unsafe_image_stack : public coipxx::cache<std::unordered_map<std::string, misa_unsafe_image_file<Image>>>, public misa_cache {
+    template<class Image> struct misa_unsafe_image_stack : public cxxh::access::cache<std::unordered_map<std::string, misa_unsafe_image_file<Image>>>, public misa_cache {
 
         /**
         * Used by the misa_cache_registry
@@ -20,7 +20,7 @@ namespace misaxx {
 
         using image_type = Image;
 
-        using coipxx::cache<std::unordered_map<std::string, misa_unsafe_image_file<Image>>>::cache;
+        using cxxh::access::cache<std::unordered_map<std::string, misa_unsafe_image_file<Image>>>::cache;
 
         bool supports_file(const boost::filesystem::path &t_path) const override {
             return t_path.extension() == ".tif";

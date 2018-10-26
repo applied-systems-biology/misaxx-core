@@ -5,7 +5,6 @@
 
 #include <iostream>
 #include <fstream>
-#include <misaxx/cached_data/misa_unsafe_file_stack.h>
 #include <misaxx/misa_module.h>
 #include <misaxx/misa_module_declaration.h>
 #include <misaxx/misa_task.h>
@@ -13,11 +12,13 @@
 #include <misaxx/misa_runtime.h>
 #include <misaxx/filesystem/misa_filesystem_directories_importer.h>
 #include <misaxx/misa_cli.h>
-#include <misaxx/cached_data/misa_unsafe_generic_file_stack.h>
 #include <misaxx/algorithm_node_path.h>
 #include <misaxx/object_node_path.h>
 #include <misaxx/ome_data/object3d_voxel_size.h>
 #include <misaxx/ome_data/object_name.h>
+#include <misaxx/cached_data/misa_cache.h>
+#include <misaxx/cached_data/misa_cached_data.h>
+#include <misaxx/cached_data/misa_unsafe_image_stack.h>
 
 using namespace misaxx;
 using namespace pattxx;
@@ -54,14 +55,15 @@ struct other_module : public misa_module<other_module_def> {
 
 
 struct my_module_declaration : public misa_module_declaration {
-    data<misa_generic_file_stack> my_stack;
-    data<misa_generic_file_stack> processed;
+//    misa_cached_data<misa_unsafe_image_stack> my_stack;
+    misa_cached_data<misa_unsafe_file> test_file1;
     submodule <other_module> other;
 
     void init_data() override {
-        import_from_filesystem(my_stack, "/");
-        process(processed, my_stack, "processed");
-        init_submodule(other, "other");
+        test_file1.suggest_import_location(filesystem, "test_file1");
+//        import_from_filesystem(my_stack, "/");
+//        process(processed, my_stack, "processed");
+//        init_submodule(other, "other");
     }
 };
 
@@ -69,6 +71,7 @@ struct my_task1 : public misa_task<my_module_declaration> {
     using misa_task::misa_task;
 
     void misa_work() override {
+        std::cout << module().test_file1.access_readonly().get().string() << std::endl;
         std::cout << "test###abc" << std::endl;
     }
 };

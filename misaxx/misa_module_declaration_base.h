@@ -10,9 +10,6 @@
 
 namespace misaxx {
 
-    struct misa_cached_data;
-
-
     struct misa_module_declaration_base {
 
         /**

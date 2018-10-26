@@ -12,8 +12,8 @@ find_package(Boost 1.63 COMPONENTS REQUIRED filesystem regex program_options)
 find_package(OpenMP)
 
 FetchContent_Declare(
-        coipxx
-        GIT_REPOSITORY https://asb-git.hki-jena.de/RGerst/coipxx.git
+        coixx
+        GIT_REPOSITORY https://asb-git.hki-jena.de/RGerst/coixx.git
         GIT_TAG origin/master
 )
 FetchContent_Declare(
@@ -27,11 +27,11 @@ FetchContent_Declare(
         GIT_TAG origin/master
 )
 
-FetchContent_GetProperties(coipxx)
-if(NOT coipxx_POPULATED)
-    message("-- Fetching dependency coipxx ...")
-    FetchContent_Populate(coipxx)
-    add_subdirectory(${coipxx_SOURCE_DIR} ${coipxx_BINARY_DIR})
+FetchContent_GetProperties(coixx)
+if(NOT coixx_POPULATED)
+    message("-- Fetching dependency coixx ...")
+    FetchContent_Populate(coixx)
+    add_subdirectory(${coixx_SOURCE_DIR} ${coixx_BINARY_DIR})
 endif()
 FetchContent_GetProperties(cxxh)
 if(NOT cxxh_POPULATED)
@@ -91,7 +91,7 @@ target_link_libraries(misaxx PUBLIC
         ${OpenMP_CXX_LIBRARIES}
         cxx-helpers
         pattxx
-        coipxx)
+        coixx)
 
 target_compile_options(misaxx PUBLIC ${OpenMP_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -pedantic-errors)
 

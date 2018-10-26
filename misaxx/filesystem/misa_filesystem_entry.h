@@ -218,6 +218,35 @@ namespace misaxx::filesystem {
             }
         }
 
+        /**
+         * Returns true if this filesystem has given subpath
+         * @param t_segment
+         * @return
+         */
+        bool has_subpath(boost::filesystem::path t_segment) const {
+            t_segment.remove_trailing_separator();
+            if(t_segment.empty())
+                return true;
+
+            const misa_filesystem_entry *current = this;
+            auto current_segment_it = t_segment.begin();
+
+            // Navigate to subfolders if needed
+            for(const auto &seg : t_segment.parent_path()) {
+                auto it = current->find(seg.string());
+                if(it == end()) {
+                    return false;
+                }
+                else {
+                    current = it->second.get();
+                }
+            }
+
+            // Create / access the target element
+            auto it = current->find(t_segment.filename().string());
+            return !(it == end());
+        }
+
     private:
 
         std::unordered_map<std::string, std::shared_ptr<misa_filesystem_entry>> children;
