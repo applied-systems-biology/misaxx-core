@@ -7,14 +7,11 @@
 
 #include <cxxh/containers/dynamic_singleton_map.h>
 #include "misaxx/misa_module_declaration_base.h"
-#include "../vdata/misa_metadata.h"
+#include "../ome_data/misa_metadata.h"
 
 namespace misaxx {
 
-    /**
-     * Base class for data contained in a MISA++ module definition
-     */
-    struct misa_pdata {
+    template<class Cache> struct misa_cached_data {
 
         /**
          * Additional metadata attached by algorithms

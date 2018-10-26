@@ -5,19 +5,19 @@
 
 #include <iostream>
 #include <fstream>
-#include <misaxx/pdata/misa_file_stack.h>
+#include <misaxx/cached_data/misa_unsafe_file_stack.h>
 #include <misaxx/misa_module.h>
 #include <misaxx/misa_module_declaration.h>
 #include <misaxx/misa_task.h>
 #include <pattxx/default_runtime.h>
 #include <misaxx/misa_runtime.h>
-#include <misaxx/filesystem/directories_importer.h>
+#include <misaxx/filesystem/misa_filesystem_directories_importer.h>
 #include <misaxx/misa_cli.h>
-#include <misaxx/pdata/misa_generic_file_stack.h>
+#include <misaxx/cached_data/misa_unsafe_generic_file_stack.h>
 #include <misaxx/algorithm_node_path.h>
 #include <misaxx/object_node_path.h>
-#include <misaxx/vdata/object3d_voxel_size.h>
-#include <misaxx/vdata/object_name.h>
+#include <misaxx/ome_data/object3d_voxel_size.h>
+#include <misaxx/ome_data/object_name.h>
 
 using namespace misaxx;
 using namespace pattxx;

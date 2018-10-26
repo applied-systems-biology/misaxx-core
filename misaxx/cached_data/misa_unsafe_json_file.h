@@ -6,15 +6,21 @@
 #pragma once
 
 #include <nlohmann/json.hpp>
-#include "misa_file.h"
+#include "misa_unsafe_file.h"
 #include <fstream>
 
 namespace misaxx {
     /**
      * misa_file with additional operators for easier serialization of JSON data
      */
-    struct misa_json_file : public misa_file {
-        using misa_file::misa_file;
+    struct misa_unsafe_json_file : public misa_unsafe_file {
+
+        /**
+        * Used by the misa_cache_registry
+        */
+        static inline const std::string DATA_TYPE = "unsafe-json-file";
+
+        using misa_unsafe_file::misa_unsafe_file;
 
         void load (const nlohmann::json &json) {
             std::ofstream sw;
@@ -26,10 +32,6 @@ namespace misaxx {
             std::ifstream sr;
             sr.open(path.string());
             sr >> json;
-        }
-
-        std::string dataString() override {
-            return "json_file";
         }
     };
 }

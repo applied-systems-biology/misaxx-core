@@ -10,7 +10,7 @@
 
 namespace misaxx {
 
-    struct misa_pdata;
+    struct misa_cached_data;
 
 
     struct misa_module_declaration_base {
@@ -23,7 +23,7 @@ namespace misaxx {
         /**
          * Filesystem of this module
          */
-        misa_filesystem filesystem;
+        filesystem::misa_filesystem filesystem;
 
         /**
          * Initializes the data and sets them into relation with each other

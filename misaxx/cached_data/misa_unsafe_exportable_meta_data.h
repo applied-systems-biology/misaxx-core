@@ -5,16 +5,22 @@
 
 #pragma once
 
-#include "misa_pdata.h"
-#include "misa_json_file.h"
+#include "misa_cached_data.h"
+#include "misa_unsafe_json_file.h"
 
 namespace misaxx {
 
     /**
      * Module data class that only stores metadata.
      */
-    struct misa_exportable_meta_data : public misa_file {
-        using misa_file::misa_file;
+    struct misa_unsafe_exportable_meta_data : public misa_unsafe_file {
+
+        /**
+        * Used by the misa_cache_registry
+        */
+        static inline const std::string DATA_TYPE = "unsafe-exportable-metadata";
+
+        using misa_unsafe_file::misa_unsafe_file;
 
         template<class Type>
         const Type &at() const {
@@ -74,10 +80,6 @@ namespace misaxx {
             std::ofstream sw;
             sw.open(path.string());
             sw << std::setw(4) << json;
-        }
-
-        std::string dataString() override {
-            return "exportable_meta_data";
         }
     };
 }

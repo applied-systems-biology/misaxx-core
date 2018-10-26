@@ -8,18 +8,12 @@
 #include <pattxx/dispatcher.h>
 #include "misaxx/filesystem/misa_filesystem.h"
 #include "misa_module_declaration_base.h"
-#include "misaxx/pdata/misa_pdata.h"
 
 namespace misaxx {
 
     struct misa_module_declaration_base;
 
-    struct misa_submodule_base : public misa_pdata {
-        using misa_pdata::misa_pdata;
-
-        std::string dataString() override {
-            return "submodule";
-        }
+    struct misa_submodule_base {
     };
 
     /**
@@ -56,7 +50,7 @@ namespace misaxx {
                 return m_module_declaration;
         }
 
-        misa_filesystem &get_filesystem() {
+        filesystem::misa_filesystem &get_filesystem() {
             return m_module_declaration.filesystem;
         }
 

@@ -5,14 +5,20 @@
 
 #pragma once
 
-#include "misa_file.h"
+#include "misa_unsafe_file.h"
 #include <coixx/toolbox/toolbox_io.h>
 
 namespace misaxx {
-    template<class Image> struct misa_image_file : public misa_file {
+    template<class Image> struct misa_unsafe_image_file : public misa_unsafe_file {
+
+        /**
+        * Used by the misa_cache_registry
+        */
+        static inline const std::string DATA_TYPE = "unsafe-image-file";
+
         using image_type = Image;
 
-        using misa_file::misa_file;
+        using misa_unsafe_file::misa_unsafe_file;
 
         /**
          * Loads the image described in this file.

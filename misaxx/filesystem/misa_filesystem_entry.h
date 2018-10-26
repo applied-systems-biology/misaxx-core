@@ -8,6 +8,7 @@
 #include <string>
 #include <stdexcept>
 #include <boost/filesystem.hpp>
+#include "misa_filesystem_metadata.h"
 
 namespace misaxx::filesystem {
 
@@ -42,11 +43,9 @@ namespace misaxx::filesystem {
         path custom_external;
 
         /**
-         * String that describes which data is contained in this entry.
-         * Set it on importing (usually just the class name)
-         * This is exported to the parameter schema and can be parsed by an external pipeline
+         * Contains important information how this filesystem entry is interpreted from a data point
          */
-        mutable std::string data_string;
+        mutable misa_filesystem_metadata metadata;
 
         explicit misa_filesystem_entry(std::string t_name = "", path t_custom_external = path()) : name(std::move(t_name)), custom_external(std::move(t_custom_external)){
         }

@@ -10,12 +10,11 @@
 #include <iostream>
 #include <fstream>
 #include <boost/filesystem.hpp>
-#include <misaxx/filesystem/empty_importer.h>
-#include "misaxx/filesystem/directories_importer.h"
-#include "misaxx/filesystem/json_importer.h"
+#include <misaxx/filesystem/misa_filesystem_empty_importer.h>
+#include "misaxx/filesystem/misa_filesystem_directories_importer.h"
+#include "misaxx/filesystem/misa_filesystem_json_importer.h"
 #include "misa_runtime.h"
 #include "misa_multiobject_root.h"
-#include "filesystem/json_schema_serializer.h"
 
 namespace misaxx {
 
@@ -197,7 +196,7 @@ namespace misaxx {
 
             // Do no importing if we build a schema
             if(m_runtime.build_schema) {
-                filesystem::importers::empty_importer importer;
+                filesystem::importers::misa_filesystem_empty_importer importer;
                 get_runtime().get_filesystem() = importer.import();
                 return;
             }
@@ -205,13 +204,13 @@ namespace misaxx {
             // Otherwise load importer from parameters
             nlohmann::json &params = m_runtime.parameters["filesystem"];
             if(params["source"] == "directories") {
-                filesystem::importers::directories_importer importer;
+                filesystem::importers::misa_filesystem_directories_importer importer;
                 importer.input_path = params["input-directory"].get<std::string>();
                 importer.output_path = params["output-directory"].get<std::string>();
                 get_runtime().get_filesystem() = importer.import();
             }
             else if(params["source"] == "json") {
-                filesystem::importers::json_importer importer;
+                filesystem::importers::misa_filesystem_json_importer importer;
                 if(params.find("json-data") != params.end()) {
                     importer.input_json = params["json-data"];
                 }

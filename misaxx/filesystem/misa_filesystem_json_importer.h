@@ -39,7 +39,7 @@ namespace misaxx::filesystem::importers {
      * data. If the JSON data should only contain partially defined structures (such as
      * the existance of a file stack, but not all files), use structured_data_importer instead.
      */
-    struct json_importer {
+    struct misa_filesystem_json_importer {
 
         nlohmann::json input_json;
         boost::filesystem::path json_path;
@@ -53,10 +53,25 @@ namespace misaxx::filesystem::importers {
 
             if(t_json.find("external-path") != t_json.end()) {
                 t_entry->custom_external = t_json["external-path"].get<std::string>();
-                std::cout << "[Filesystem] Importing entry " << t_entry->custom_external.string() << " into " << t_entry->internal_path().string() << std::endl;
+                std::cout << "[Filesystem][json-importer] Importing entry " << t_entry->custom_external.string() << " into " << t_entry->internal_path().string() << std::endl;
             }
             else {
-                std::cout << "[Filesystem] Importing entry " << t_entry->internal_path().string() << std::endl;
+                std::cout << "[Filesystem][json-importer] Importing entry " << t_entry->internal_path().string() << std::endl;
+            }
+
+            // Load the metadata from JSON or file if applicable
+            // File metadata is preferred
+            if(t_entry->has_external_path() && boost::filesystem::is_regular_file(t_entry->external_path() / "metadata.json")) {
+                std::cout << "[Filesystem][json-importer] Importing metadata from file " << (t_entry->external_path() / "metadata.json").string() << std::endl;
+                nlohmann::json json;
+                std::ifstream stream;
+                stream.open((t_entry->external_path() / "metadata.json").string());
+                stream >> json;
+                from_json(json, t_entry->metadata);
+            }
+            else if(t_json.find("data-metadata") != t_json.end()) {
+                std::cout << "[Filesystem][json-importer] Importing metadata from JSON" << std::endl;
+                from_json(t_json["data-metadata"], t_entry->metadata);
             }
 
             if(t_json.find("children") != t_json.end()) {

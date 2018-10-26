@@ -15,7 +15,7 @@ namespace misaxx::filesystem::importers {
     /**
      * Empty importer used by parameter schema builder
      */
-    struct empty_importer {
+    struct misa_filesystem_empty_importer {
 
         /**
          * Imports the filesystem
