@@ -56,7 +56,7 @@ namespace misaxx {
         void suggest_create(const filesystem::const_entry &t_location, const misa_filesystem_metadata &t_description) {
             if(!cache) {
                 cache = std::make_shared<Cache>();
-                cache->describe(t_location, t_description);
+                cache->create(t_location, t_description);
             }
         }
 
