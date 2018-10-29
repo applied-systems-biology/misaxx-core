@@ -13,9 +13,9 @@
 
 namespace misaxx {
     template<class Image> struct [[deprecated]] misa_unsafe_image_stack :
-    public cxxh::access::cache<std::unordered_map<std::string, std::shared_ptr<misa_unsafe_image_file<Image>>>>, public misa_cache {
+    public cxxh::access::cache<std::unordered_map<std::string, misa_cached_data<misa_unsafe_image_file<Image>>>>, public misa_cache {
 
-        using files_t = std::unordered_map<std::string, std::shared_ptr<misa_unsafe_image_file<Image>>>;
+        using files_t = std::unordered_map<std::string, misa_cached_data<misa_unsafe_image_file<Image>>>;
 
         /**
         * Used by the misa_cache_registry
@@ -42,16 +42,22 @@ namespace misaxx {
                 for(const auto &entry : description.files) {
                     misa_unsafe_image_file<Image> img;
                     const auto entry_path = base_path / entry.second.filename;
-                    img.manual_link(entry_path.filename().string(),entry_path.extension().string(), entry_path);
-                    files.insert({ entry.second.filename , std::make_shared<misa_unsafe_image_file<Image>>(std::move(img)) });
+                    img.description.filename = entry_path.filename().string();
+                    img.description.filetype = entry_path.extension().string();
+                    img.path = entry_path;
+
+                    files.insert({ entry.second.filename , misa_cached_data<misa_unsafe_image_file<Image>>(std::move(img)) });
                 }
             }
             else {
                 for(const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_location->external_path()))) {
                     if(supports_file(entry)) {
                         misa_unsafe_image_file<Image> img;
-                        img.manual_link(entry.path().filename().string(), entry.path().extension().string(), entry.path());
-                        files.insert({ entry.path().filename().string() , std::make_shared<misa_unsafe_image_file<Image>>(std::move(img)) });
+                        img.description.filename = entry.path().filename().string();
+                        img.description.filetype = entry.path().extension().string();
+                        img.path = entry.path();
+
+                        files.insert({ entry.path().filename().string(), misa_cached_data<misa_unsafe_image_file<Image>>(std::move(img)) });
 
                         // Create description entry
                         misa_file_description entry_description;

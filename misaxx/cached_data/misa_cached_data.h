@@ -30,6 +30,11 @@ namespace misaxx {
 
         std::shared_ptr<Cache> cache;
 
+        misa_cached_data() = default;
+
+        explicit misa_cached_data(Cache t_cache) : cache(std::make_shared<Cache>(std::move(t_cache))) {
+        }
+
         /**
          * Returns true if this cache is set from a parent module
          * @return

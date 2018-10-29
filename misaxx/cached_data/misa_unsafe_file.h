@@ -30,20 +30,6 @@ namespace misaxx {
         using cxxh::access::cache<boost::filesystem::path>::cache;
 
         /**
-         * Links from code
-         * @param t_filename
-         * @param t_filetype
-         * @param t_path
-         */
-        void manual_link(std::string t_filename, std::string t_filetype, boost::filesystem::path t_path) {
-            std::cout << "[MISA-cache] Manually linking cache of type " << DATA_TYPE << std::endl;
-
-            description.filename = std::move(t_filename);
-            description.filetype = std::move(t_filetype);
-            path = std::move(t_path);
-        }
-
-        /**
          * Links to filesystem entry
          * @param t_location
          */

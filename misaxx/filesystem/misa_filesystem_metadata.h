@@ -25,8 +25,8 @@ namespace misaxx {
 
         misa_filesystem_metadata() = default;
 
-        template<typename Arg, typename... Args> explicit misa_filesystem_metadata(Arg arg, Args... args) {
-            describe(arg);
+        template<typename Arg, typename... Args> explicit misa_filesystem_metadata(Arg &&arg, Args&&... args) {
+            describe(std::forward<Arg>(arg));
             if constexpr (sizeof...(Args) > 0) {
                 misa_filesystem_metadata(std::forward<Args>(args)...);
             }
@@ -72,8 +72,8 @@ namespace misaxx {
          * @tparam Metadata
          * @return
          */
-        template <class Metadata> Metadata &describe(Metadata &&t_description) {
-            m_metadata_instances.access<Metadata>() = std::forward<Metadata>(t_description);
+        template <class Metadata> Metadata &describe(Metadata t_description) {
+            m_metadata_instances.access<Metadata>() = std::move(t_description);
             return m_metadata_instances.access<Metadata>();
         }
 
