@@ -13,9 +13,5 @@ namespace misaxx {
     template<class ModuleDeclaration> struct misa_worker {
         using module_type = ModuleDeclaration;
         virtual ModuleDeclaration &module() = 0;
-
-        template<class Metadata, class DataPtr> Metadata &access_metadata(DataPtr &ptr) {
-            return ptr->user_metadata.template access<Metadata>();
-        }
     };
 }
