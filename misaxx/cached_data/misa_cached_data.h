@@ -9,6 +9,7 @@
 #include <cxxh/access/readonly_access.h>
 #include <cxxh/access/readwrite_access.h>
 #include <cxxh/access/write_access.h>
+#include <cxxh/access/memory_cache.h>
 #include "misaxx/misa_module_declaration_base.h"
 #include "misaxx/misa_metadata.h"
 #include "misa_cache.h"
@@ -27,10 +28,22 @@ namespace misaxx {
 
         using cache_type = Cache;
         using value_type = typename Cache::value_type;
+        using attachment_type = cxxh::containers::dynamic_singleton_map<misa_metadata>;
+        using attachment_cache_type = cxxh::access::memory_cache<attachment_type>;
 
+        /**
+         * Main cache for the data
+         */
         std::shared_ptr<Cache> cache;
 
-        misa_cached_data() = default;
+        /**
+         * Attachments to this cache. Can be used by algorithms to communicate results.
+         */
+        std::shared_ptr<attachment_cache_type> attachments;
+
+        misa_cached_data() {
+            attachments = std::make_shared<attachment_cache_type>();
+        }
 
         explicit misa_cached_data(Cache t_cache) : cache(std::make_shared<Cache>(std::move(t_cache))) {
         }
@@ -125,6 +138,26 @@ namespace misaxx {
          */
         write_access <value_type > access_write() {
             return write_access<value_type >(*cache);
+        }
+
+        /**
+         * Attaches data
+         * @tparam Attachment
+         * @param attachment
+         */
+        template<class Attachment> void attach(Attachment attachment) {
+            readwrite_access <attachment_type > access(*attachments);
+            access.get().access<Attachment>() = std::move(attachment);
+        }
+
+        /**
+         * Gets copy of attached data
+         * @tparam Attachment
+         * @return
+         */
+        template<class Attachment> Attachment get_attachment() {
+            readwrite_access <attachment_type > access(*attachments);
+            return access.get().access<Attachment>();
         }
     };
 }
