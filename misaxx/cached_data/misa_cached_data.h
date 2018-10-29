@@ -156,7 +156,7 @@ namespace misaxx {
          * @tparam Attachment
          * @return
          */
-        template<class Attachment> Attachment get_attachment() {
+        template<class Attachment> Attachment get_attachment() const {
             readwrite_access <attachment_type > access(*attachments);
             return access.get().at<Attachment>();
         }
@@ -167,7 +167,7 @@ namespace misaxx {
         * @tparam Attachment
         * @return
         */
-        template<class Attachment> bool has_attachment() {
+        template<class Attachment> bool has_attachment() const {
             readonly_access <attachment_type > access(*attachments);
             return access.get().has<Attachment>();
         }
