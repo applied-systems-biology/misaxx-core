@@ -25,13 +25,13 @@ namespace misaxx {
 
         void load (const nlohmann::json &json) {
             std::ofstream sw;
-            sw.open(path.string());
+            sw.open(get().string());
             sw << json;
         }
 
         void save (nlohmann::json &json) {
             std::ifstream sr;
-            sr.open(path.string());
+            sr.open(get().string());
             sr >> json;
         }
     };

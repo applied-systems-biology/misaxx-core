@@ -39,7 +39,7 @@ namespace misaxx {
             }
 
             std::ofstream sw;
-            sw.open(path.string());
+            sw.open(get().string());
             sw << std::setw(4) << json;
         }
     };

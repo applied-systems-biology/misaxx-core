@@ -12,22 +12,18 @@
 #include <cxxh/access/cache.h>
 #include <boost/algorithm/string.hpp>
 #include <misaxx/cached_data/descriptions/misa_file_description.h>
+#include <cxxh/access/memory_cache.h>
 #include "misa_cache.h"
 
 namespace misaxx {
-    struct [[deprecated]] misa_unsafe_file : public cxxh::access::cache<boost::filesystem::path> , public misa_cache {
+    struct [[deprecated]] misa_unsafe_file : public cxxh::access::memory_cache<boost::filesystem::path> , public misa_cache {
 
         static inline const std::string DATA_TYPE = "unsafe-file";
 
 
         misa_file_description description;
 
-        /**
-         * Full path
-         */
-        boost::filesystem::path path;
-
-        using cxxh::access::cache<boost::filesystem::path>::cache;
+        using cxxh::access::memory_cache<boost::filesystem::path>::memory_cache;
 
         /**
          * Links to filesystem entry
@@ -51,7 +47,7 @@ namespace misaxx {
                 throw std::runtime_error("Could not find a file in the storage!");
             }
 
-            path = t_location->external_path() / description.filename;
+            this->set(t_location->external_path() / description.filename);
         }
 
         void create(const filesystem::const_entry &t_location, const misa_filesystem_metadata &t_description) override {
@@ -67,45 +63,13 @@ namespace misaxx {
                 description.filename = "file" + description.filetype;
             }
 
-            path = t_location->external_path() / description.filename;
+            this->set(t_location->external_path() / description.filename);
         }
 
         misa_filesystem_metadata describe() override {
             misa_filesystem_metadata result;
             result.describe(description);
             return result;
-        }
-
-        boost::filesystem::path &get() override {
-            return path;
-        }
-
-        const boost::filesystem::path &get() const override {
-            return path;
-        }
-
-        void set(boost::filesystem::path &&value) override {
-            path = std::forward<boost::filesystem::path>(value);
-        }
-
-        bool has() const override {
-            return true;
-        }
-
-        bool can_pull() const override {
-            return true;
-        }
-
-        void pull() override {
-
-        }
-
-        void stash() override {
-
-        }
-
-        void push() override {
-
         }
     };
 }

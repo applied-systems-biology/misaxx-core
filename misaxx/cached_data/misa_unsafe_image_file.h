@@ -31,7 +31,7 @@ namespace misaxx {
          * @return
          */
         Image load() {
-            return coixx::toolbox::load<Image>(path);
+            return coixx::toolbox::load<Image>(get());
         }
 
         /**
@@ -41,7 +41,7 @@ namespace misaxx {
         * @return
         */
         Image auto_load() {
-            return coixx::toolbox::auto_load<Image>(path);
+            return coixx::toolbox::auto_load<Image>(get());
         }
 
         /**
@@ -51,7 +51,7 @@ namespace misaxx {
         void save(const Image &t_img) {
             using namespace coixx;
             using namespace coixx::toolbox;
-            t_img << coixx::toolbox::save(path);
+            t_img << coixx::toolbox::save(get());
         }
     };
 }

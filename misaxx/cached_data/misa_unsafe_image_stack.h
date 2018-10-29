@@ -12,10 +12,11 @@
 #include "misa_unsafe_image_file.h"
 
 namespace misaxx {
-    template<class Image> struct [[deprecated]] misa_unsafe_image_stack :
-    public cxxh::access::cache<std::unordered_map<std::string, misa_cached_data<misa_unsafe_image_file<Image>>>>, public misa_cache {
 
-        using files_t = std::unordered_map<std::string, misa_cached_data<misa_unsafe_image_file<Image>>>;
+    template<class Image> using misa_unsafe_image_stack_contents = std::unordered_map<std::string, misa_cached_data<misa_unsafe_image_file<Image>>>;
+
+    template<class Image> struct [[deprecated]] misa_unsafe_image_stack :
+    public cxxh::access::memory_cache<misa_unsafe_image_stack_contents<Image>>, public misa_cache {
 
         /**
         * Used by the misa_cache_registry
@@ -24,11 +25,9 @@ namespace misaxx {
 
         misa_file_stack_description description;
 
-        files_t files;
-
         using image_type = Image;
 
-        using cxxh::access::cache<files_t>::cache;
+        using cxxh::access::memory_cache<misa_unsafe_image_stack_contents<Image>>::cache;
 
         bool supports_file(const boost::filesystem::path &t_path) const {
             return t_path.extension() == ".tif";
@@ -37,6 +36,9 @@ namespace misaxx {
         void link(const filesystem::const_entry &t_location) override {
             std::cout << "[MISA-cache] Linking cache of type " << DATA_TYPE << " to " << t_location->internal_path().string() << std::endl;
             description = t_location->metadata.get_description<misa_file_stack_description>();
+
+            auto &files = this->get();
+
             if(description.has_files()) {
                 const auto base_path = t_location->external_path();
                 for(const auto &entry : description.files) {
@@ -44,7 +46,7 @@ namespace misaxx {
                     const auto entry_path = base_path / entry.second.filename;
                     img.description.filename = entry_path.filename().string();
                     img.description.filetype = entry_path.extension().string();
-                    img.path = entry_path;
+                    img.set(entry_path);
 
                     files.insert({ entry.second.filename , misa_cached_data<misa_unsafe_image_file<Image>>(std::move(img)) });
                 }
@@ -55,7 +57,7 @@ namespace misaxx {
                         misa_unsafe_image_file<Image> img;
                         img.description.filename = entry.path().filename().string();
                         img.description.filetype = entry.path().extension().string();
-                        img.path = entry.path();
+                        img.set(entry.path());
 
                         files.insert({ entry.path().filename().string(), misa_cached_data<misa_unsafe_image_file<Image>>(std::move(img)) });
 
@@ -78,38 +80,6 @@ namespace misaxx {
             misa_filesystem_metadata result;
             result.describe(description);
             return result;
-        }
-
-        files_t &get() override {
-            return files;
-        }
-
-        const files_t &get() const override {
-            return files;
-        }
-
-        void set(files_t &&value) override {
-            files = std::forward<files_t>(value);
-        }
-
-        bool has() const override {
-            return true;
-        }
-
-        bool can_pull() const override {
-            return true;
-        }
-
-        void pull() override {
-
-        }
-
-        void stash() override {
-
-        }
-
-        void push() override {
-
         }
     };
 }
