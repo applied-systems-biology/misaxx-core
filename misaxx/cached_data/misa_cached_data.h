@@ -89,6 +89,14 @@ namespace misaxx {
         }
 
         /**
+         * Returns a description of the current cache
+         * @return
+         */
+        misa_filesystem_metadata describe() {
+            return cache->describe();
+        }
+
+        /**
          * Thread-safe read-only access to the data.
          * @return
          */
