@@ -29,12 +29,10 @@ namespace misaxx {
             return x * y * z;
         }
 
-        nlohmann::json to_json() const override {
-            nlohmann::json j;
-            j["x"] = x;
-            j["y"] = y;
-            j["z"] = z;
-            return j;
+        void to_json(nlohmann::json &t_json) const override {
+            t_json["x"] = x;
+            t_json["y"] = y;
+            t_json["z"] = z;
         }
 
         void from_json(const nlohmann::json& j) override {
@@ -62,7 +60,7 @@ namespace misaxx {
     };
 
     void to_json(nlohmann::json& j, const object3d_voxel_size& p) {
-        j = p.to_json();
+        p.to_json(j);
     }
 
     void from_json(const nlohmann::json& j, object3d_voxel_size& p) {

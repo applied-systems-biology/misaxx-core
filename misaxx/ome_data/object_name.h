@@ -22,8 +22,8 @@ namespace misaxx {
         explicit object_name(std::string t_name) : name(std::move(t_name)) {
         }
 
-        nlohmann::json to_json() const override {
-            return name;
+        void to_json(nlohmann::json &t_json) const override {
+            t_json = name;
         }
 
         void from_json(const nlohmann::json& j) override {
@@ -36,7 +36,7 @@ namespace misaxx {
     };
 
     void to_json(nlohmann::json& j, const object_name& p) {
-        j = p.to_json();
+        p.to_json(j);
     }
 
     void from_json(const nlohmann::json& j, object_name& p) {

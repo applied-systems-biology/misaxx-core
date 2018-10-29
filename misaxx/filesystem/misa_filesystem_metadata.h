@@ -36,7 +36,7 @@ namespace misaxx {
             m_raw_metadata = t_json;
         }
 
-        nlohmann::json to_json() const override {
+        void to_json(nlohmann::json &t_json) const override {
             throw std::runtime_error("Not implemented!");
         }
 
@@ -50,12 +50,22 @@ namespace misaxx {
          * @tparam Metadata
          * @return
          */
-        template <class Metadata> const Metadata &get_description() {
+        template <class Metadata> const Metadata &get_description() const {
             if(m_metadata_instances.find<Metadata>() != m_metadata_instances.end()) {
                 m_metadata_instances.access<Metadata>().from_json(m_raw_metadata);
             }
 
             return m_metadata_instances.at<Metadata>();
+        }
+
+        /**
+         * Sets a description.
+         * @tparam Metadata
+         * @return
+         */
+        template <class Metadata> Metadata &describe(const Metadata &t_description) {
+            m_metadata_instances.access<Metadata>() = t_description;
+            return m_metadata_instances.access<Metadata>();
         }
 
     private:
@@ -65,7 +75,7 @@ namespace misaxx {
     };
 
     void to_json(nlohmann::json& j, const misa_filesystem_metadata& p) {
-        j = p.to_json();
+        p.to_json(j);
     }
 
     void from_json(const nlohmann::json& j, misa_filesystem_metadata& p) {

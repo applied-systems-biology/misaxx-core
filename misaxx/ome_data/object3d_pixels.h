@@ -15,10 +15,8 @@ namespace misaxx {
     struct object3d_pixels : public misa_metadata {
         int pixels = 0;
 
-        nlohmann::json to_json() const override {
-            nlohmann::json j;
-            j["pixels"] = pixels;
-            return j;
+        void to_json(nlohmann::json &t_json) const override {
+            t_json["pixels"] = pixels;
         }
 
         void from_json(const nlohmann::json& j) override {
@@ -31,7 +29,7 @@ namespace misaxx {
     };
 
     void to_json(nlohmann::json& j, const object3d_pixels& p) {
-        j = p.to_json();
+        p.to_json(j);
     }
 
     void from_json(const nlohmann::json& j, object3d_pixels& p) {

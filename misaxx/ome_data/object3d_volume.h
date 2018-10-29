@@ -18,10 +18,8 @@ namespace misaxx {
 
         }
 
-        nlohmann::json to_json() const override {
-            nlohmann::json j;
-            j["volume"] = volume;
-            return j;
+        void to_json(nlohmann::json &t_json) const override {
+            t_json["volume"] = volume;
         }
 
         void from_json(const nlohmann::json& j) override {
@@ -34,7 +32,7 @@ namespace misaxx {
     };
 
     void to_json(nlohmann::json& j, const object3d_volume& p) {
-        j = p.to_json();
+        p.to_json(j);
     }
 
     void from_json(const nlohmann::json& j, object3d_volume& p) {

@@ -7,6 +7,7 @@
 
 #include <coixx/opencv_image.h>
 #include <cxxh/access/cache.h>
+#include <misaxx/cached_data/descriptions/misa_file_stack_description.h>
 #include "misa_cache.h"
 #include "misa_unsafe_image_file.h"
 
@@ -21,6 +22,8 @@ namespace misaxx {
         */
         static inline const std::string DATA_TYPE = "unsafe-image-stack";
 
+        misa_file_stack_description description;
+
         files_t files;
 
         using image_type = Image;
@@ -33,20 +36,42 @@ namespace misaxx {
 
         void link(const filesystem::const_entry &t_location) override {
             std::cout << "[MISA-cache] Linking cache of type " << DATA_TYPE << " to " << t_location->internal_path().string() << std::endl;
-            for(const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_location->external_path()))) {
-                if(supports_file(entry)) {
+            description = t_location->metadata.get_description<misa_file_stack_description>();
+            if(description.has_files()) {
+                const auto base_path = t_location->external_path();
+                for(const auto &entry : description.files) {
                     misa_unsafe_image_file<Image> img;
-                    img.manual_link(entry.path().filename().string(), entry.path().extension().string(), entry.path());
-                    files.insert({ entry.path().filename().string() , std::make_shared<misa_unsafe_image_file<Image>>(std::move(img)) });
+                    const auto entry_path = base_path / entry.second.filename;
+                    img.manual_link(entry_path.filename().string(),entry_path.extension().string(), entry_path);
+                    files.insert({ entry.second.filename , std::make_shared<misa_unsafe_image_file<Image>>(std::move(img)) });
+                }
+            }
+            else {
+                for(const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_location->external_path()))) {
+                    if(supports_file(entry)) {
+                        misa_unsafe_image_file<Image> img;
+                        img.manual_link(entry.path().filename().string(), entry.path().extension().string(), entry.path());
+                        files.insert({ entry.path().filename().string() , std::make_shared<misa_unsafe_image_file<Image>>(std::move(img)) });
+
+                        // Create description entry
+                        misa_file_description entry_description;
+                        entry_description.filename = entry.path().filename().string();
+                        entry_description.filetype = entry.path().extension().string();
+                        description.files.insert({ entry_description.filename, entry_description });
+                    }
                 }
             }
         }
 
         void create(const filesystem::const_entry &t_location, const misa_filesystem_metadata &t_description) override {
-
+            std::cout << "[MISA-cache] Creating cache of type " << DATA_TYPE << " at internal location " << t_location->internal_path().string() << std::endl;
+            description = t_description.get_description<misa_file_stack_description>();
         }
 
         misa_filesystem_metadata describe() override {
+            misa_filesystem_metadata result;
+            result.describe(description);
+            return result;
         }
 
         files_t &get() override {

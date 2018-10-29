@@ -15,20 +15,15 @@ namespace misaxx {
         std::string filetype;
 
         void from_json(const nlohmann::json &t_json) override {
-            filename = t_json["filename"];
-            filetype = t_json["filetype"];
-
-            // Auto-assign filetype from filename if needed
-            if(!filename.empty() && filetype.empty()) {
-                filetype = boost::filesystem::path(filename).extension().string();
-            }
+            if(t_json.find("filename") != t_json.end())
+                filename = t_json["filename"];
+            if(t_json.find("filetype")  != t_json.end())
+                filetype = t_json["filetype"];
         }
 
-        nlohmann::json to_json() const override {
-            nlohmann::json result;
-            result["filename"] = filename;
-            result["filetype"] = filetype;
-            return result;
+        void to_json(nlohmann::json &t_json) const override {
+            t_json["filename"] = filename;
+            t_json["filetype"] = filetype;
         }
 
         std::string get_name() const override {
@@ -45,7 +40,7 @@ namespace misaxx {
     };
 
     void to_json(nlohmann::json& j, const misa_file_description& p) {
-        j = p.to_json();
+        p.to_json(j);
     }
 
     void from_json(const nlohmann::json& j, misa_file_description& p) {

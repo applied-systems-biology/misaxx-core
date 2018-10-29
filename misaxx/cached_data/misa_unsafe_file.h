@@ -19,15 +19,8 @@ namespace misaxx {
 
         static inline const std::string DATA_TYPE = "unsafe-file";
 
-        /**
-         * Complete filename
-         */
-        std::string filename;
 
-        /**
-         * Filetype (extension) with dot
-         */
-        std::string filetype;
+        misa_file_description description;
 
         /**
          * Full path
@@ -45,8 +38,8 @@ namespace misaxx {
         void manual_link(std::string t_filename, std::string t_filetype, boost::filesystem::path t_path) {
             std::cout << "[MISA-cache] Manually linking cache of type " << DATA_TYPE << std::endl;
 
-            filename = std::move(t_filename);
-            filetype = std::move(t_filetype);
+            description.filename = std::move(t_filename);
+            description.filetype = std::move(t_filetype);
             path = std::move(t_path);
         }
 
@@ -57,36 +50,44 @@ namespace misaxx {
         void link(const filesystem::const_entry &t_location) override {
             std::cout << "[MISA-cache] Linking cache of type " << DATA_TYPE << " to " << t_location->internal_path().string() << std::endl;
 
-            const auto &description = t_location->metadata.get_description<misa_file_description>();
-            if(description.has_filename()) {
-                filename = description.filename;
-            }
-            else {
-                if(description.has_filetype()) {
-                    throw std::runtime_error("Cannot automatically determine filename without filetype!");
-                }
-
+            description = t_location->metadata.get_description<misa_file_description>();
+            if (description.has_filetype() && !description.has_filename()) {
                 // Try to automatically find a file
-                for(const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_location->external_path()))) {
-                    if(boost::filesystem::is_regular_file(entry) && boost::iequals(entry.path().extension().string(), filetype)) {
-                        filename = entry.path().filename().string();
+                for (const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_location->external_path()))) {
+                    if (boost::filesystem::is_regular_file(entry) && boost::iequals(entry.path().extension().string(), description.filetype)) {
+                        description.filename = entry.path().filename().string();
                         break;
                     }
                 }
             }
 
-            if(filename.empty()) {
+            if(!description.has_filename()) {
                 throw std::runtime_error("Could not find a file in the storage!");
             }
 
-            path = t_location->external_path() / filename;
+            path = t_location->external_path() / description.filename;
         }
 
         void create(const filesystem::const_entry &t_location, const misa_filesystem_metadata &t_description) override {
 
+            std::cout << "[MISA-cache] Creating cache of type " << DATA_TYPE << " at internal location " << t_location->internal_path().string() << std::endl;
+
+            description = t_description.get_description<misa_file_description>();
+
+            if(!description.has_filename()) {
+                if(!description.has_filetype())
+                    throw std::runtime_error("Cannot create new file without filename and filetype!");
+
+                description.filename = "file" + description.filetype;
+            }
+
+            path = t_location->external_path() / description.filename;
         }
 
         misa_filesystem_metadata describe() override {
+            misa_filesystem_metadata result;
+            result.describe(description);
+            return result;
         }
 
         boost::filesystem::path &get() override {

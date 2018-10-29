@@ -11,23 +11,32 @@
 namespace misaxx {
     struct misa_file_stack_description : public misa_metadata {
 
+        misa_file_description file_template;
         std::unordered_map<std::string, misa_file_description> files;
 
         void from_json(const nlohmann::json &t_json) override {
-            files = t_json;
+            for(auto it = t_json.find("filetype"); it != t_json.end(); ++it) {
+                files[it.key()] = it.value();
+            }
+            file_template.from_json(t_json);
         }
 
-        nlohmann::json to_json() const override {
-            return files;
+        void to_json(nlohmann::json &t_json) const override {
+            t_json["files"] = files;
+            file_template.to_json(t_json);
         }
 
         std::string get_name() const override {
             return "misa-file-stack";
         }
+
+        bool has_files() const {
+            return !files.empty();
+        }
     };
 
     void to_json(nlohmann::json& j, const misa_file_stack_description& p) {
-        j = p.to_json();
+        p.to_json(j);
     }
 
     void from_json(const nlohmann::json& j, misa_file_stack_description& p) {

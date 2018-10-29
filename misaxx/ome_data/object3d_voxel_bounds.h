@@ -19,15 +19,13 @@ namespace misaxx {
         int max_z = std::numeric_limits<int>::min();
         int max_y = std::numeric_limits<int>::min();
 
-        nlohmann::json to_json() const override {
-            nlohmann::json j;
-            j["min-x"] = min_x;
-            j["min-y"] = min_y;
-            j["min-z"] = min_z;
-            j["max-x"] = max_x;
-            j["max-y"] = max_y;
-            j["max-z"] = max_z;
-            return j;
+        void to_json(nlohmann::json &t_json) const override {
+            t_json["min-x"] = min_x;
+            t_json["min-y"] = min_y;
+            t_json["min-z"] = min_z;
+            t_json["max-x"] = max_x;
+            t_json["max-y"] = max_y;
+            t_json["max-z"] = max_z;
         }
 
         void from_json(const nlohmann::json& j) override {
@@ -59,7 +57,7 @@ namespace misaxx {
     };
 
     void to_json(nlohmann::json& j, const object3d_voxel_bounds& p) {
-        j = p.to_json();
+        p.to_json(j);
     }
 
     void from_json(const nlohmann::json& j, object3d_voxel_bounds& p) {
