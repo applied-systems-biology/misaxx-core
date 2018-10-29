@@ -151,13 +151,25 @@ namespace misaxx {
         }
 
         /**
-         * Gets copy of attached data
+         * Gets copy of attached data.
+         * Throws exception if attachment does not exist
          * @tparam Attachment
          * @return
          */
         template<class Attachment> Attachment get_attachment() {
             readwrite_access <attachment_type > access(*attachments);
-            return access.get().access<Attachment>();
+            return access.get().at<Attachment>();
+        }
+
+        /**
+        * Gets copy of attached data.
+        * Throws exception if attachment does not exist
+        * @tparam Attachment
+        * @return
+        */
+        template<class Attachment> bool has_attachment() {
+            readonly_access <attachment_type > access(*attachments);
+            return access.get().has<Attachment>();
         }
     };
 }
