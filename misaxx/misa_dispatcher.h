@@ -22,8 +22,6 @@ namespace misaxx {
     template<class ModuleDeclaration> struct misa_dispatcher : public pattxx::dispatcher, public misa_worker<ModuleDeclaration> {
         static_assert(std::is_base_of<misa_module_declaration_base, ModuleDeclaration>::value, "Template argument must be a module definition!");
 
-        template<class Data> using misa_data = std::shared_ptr<Data>;
-
         /**
          * A future dispatch instance
          */
