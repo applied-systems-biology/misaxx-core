@@ -14,6 +14,13 @@ namespace misaxx {
         std::string filename;
         std::string filetype;
 
+        misa_file_description() = default;
+
+        explicit misa_file_description(std::string t_filename, std::string t_filetype) :
+        filename(std::move(t_filename)), filetype(std::move(t_filetype)) {
+
+        }
+
         void from_json(const nlohmann::json &t_json) override {
             if(t_json.find("filename") != t_json.end())
                 filename = t_json["filename"];

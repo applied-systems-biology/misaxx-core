@@ -14,6 +14,16 @@ namespace misaxx {
         misa_file_description file_template;
         std::unordered_map<std::string, misa_file_description> files;
 
+        misa_file_stack_description() = default;
+
+        explicit misa_file_stack_description(misa_file_description t_file_template) : file_template(std::move(t_file_template)) {
+
+        }
+
+        explicit misa_file_stack_description(std::unordered_map<std::string, misa_file_description> t_files) : files(std::move(t_files)) {
+
+        }
+
         void from_json(const nlohmann::json &t_json) override {
             for(auto it = t_json.find("filetype"); it != t_json.end(); ++it) {
                 files[it.key()] = it.value();
