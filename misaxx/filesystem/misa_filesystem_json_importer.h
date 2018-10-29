@@ -67,11 +67,11 @@ namespace misaxx {
                 std::ifstream stream;
                 stream.open((t_entry->external_path() / "metadata.json").string());
                 stream >> json;
-                from_json(json, t_entry->metadata);
+                t_entry->metadata.from_json(json);
             }
             else if(t_json.find("data-metadata") != t_json.end()) {
                 std::cout << "[Filesystem][json-importer] Importing metadata from JSON" << std::endl;
-                from_json(t_json["data-metadata"], t_entry->metadata);
+                t_entry->metadata.from_json(t_json["data-metadata"]);
             }
 
             if(t_json.find("children") != t_json.end()) {

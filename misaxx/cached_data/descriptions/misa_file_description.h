@@ -6,6 +6,7 @@
 #pragma once
 
 #include "../../misa_metadata.h"
+#include <boost/filesystem.hpp>
 
 namespace misaxx {
     struct misa_file_description : public misa_metadata {
@@ -16,6 +17,11 @@ namespace misaxx {
         void from_json(const nlohmann::json &t_json) override {
             filename = t_json["filename"];
             filetype = t_json["filetype"];
+
+            // Auto-assign filetype from filename if needed
+            if(!filename.empty() && filetype.empty()) {
+                filetype = boost::filesystem::path(filename).extension().string();
+            }
         }
 
         nlohmann::json to_json() const override {
@@ -27,6 +33,14 @@ namespace misaxx {
 
         std::string get_name() const override {
             return "misa-file";
+        }
+
+        bool has_filename() const {
+            return !filename.empty();
+        }
+
+        bool has_filetype() const {
+            return !filetype.empty();
         }
     };
 

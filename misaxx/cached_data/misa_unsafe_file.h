@@ -11,14 +11,12 @@
 #include "misaxx/filesystem/misa_filesystem_entry.h"
 #include <cxxh/access/cache.h>
 #include <boost/algorithm/string.hpp>
+#include <misaxx/cached_data/descriptions/misa_file_description.h>
 #include "misa_cache.h"
 
 namespace misaxx {
     struct [[deprecated]] misa_unsafe_file : public cxxh::access::cache<boost::filesystem::path> , public misa_cache {
 
-        /**
-         * Used by the misa_cache_registry
-         */
         static inline const std::string DATA_TYPE = "unsafe-file";
 
         /**
@@ -37,20 +35,6 @@ namespace misaxx {
         boost::filesystem::path path;
 
         using cxxh::access::cache<boost::filesystem::path>::cache;
-
-        virtual std::string determineFileType(const nlohmann::json &data_parameters) const {
-            auto it = data_parameters.find("extension");
-            auto it2 = data_parameters.find("filename");
-            if(it != data_parameters.end()) {
-                return it.value();
-            }
-            else if( it2  != data_parameters.end()) {
-                return boost::filesystem::path(std::string(it2.value())).extension().string();
-            }
-            else {
-                throw std::runtime_error("Could not determine file type from parameters!");
-            }
-        }
 
         /**
          * Links from code
@@ -73,13 +57,15 @@ namespace misaxx {
         void link(const filesystem::const_entry &t_location) override {
             std::cout << "[MISA-cache] Linking cache of type " << DATA_TYPE << " to " << t_location->internal_path().string() << std::endl;
 
-            const nlohmann::json data_parameters = t_location->metadata.data_parameters;
-            filetype = determineFileType(data_parameters);
-            auto it = data_parameters.find("filename");
-            if(it != data_parameters.end()) {
-                filename = it.value();
+            const auto &description = t_location->metadata.get_description<misa_file_description>();
+            if(description.has_filename()) {
+                filename = description.filename;
             }
             else {
+                if(description.has_filetype()) {
+                    throw std::runtime_error("Cannot automatically determine filename without filetype!");
+                }
+
                 // Try to automatically find a file
                 for(const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_location->external_path()))) {
                     if(boost::filesystem::is_regular_file(entry) && boost::iequals(entry.path().extension().string(), filetype)) {

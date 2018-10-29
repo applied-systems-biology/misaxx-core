@@ -44,7 +44,7 @@ namespace misaxx {
                 std::ifstream stream;
                 stream.open(metadata_file.string());
                 stream >> json;
-                from_json(json, t_entry->metadata);
+                t_entry->metadata.from_json(json);
             }
 
             for(const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_entry->external_path()))) {
