@@ -80,7 +80,7 @@ namespace misaxx {
                         img.description.filename = entry.first + img.description.filetype;
                     }
                     img.set(t_location->external_path() / img.description.filename);
-                    this->get().insert({ entry.path().filename().string(), misa_cached_data<misa_unsafe_image_file<Image>>(std::move(img)) });
+                    this->get().insert({ entry.first, misa_cached_data<misa_unsafe_image_file<Image>>(std::move(img)) });
                 }
             }
             else {
