@@ -9,7 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(Boost_USE_STATIC_LIBS ON)
 
 find_package(Boost 1.63 COMPONENTS REQUIRED filesystem regex program_options)
-find_package(OpenMP)
 
 FetchContent_Declare(
         coixx
@@ -80,15 +79,18 @@ add_library(misaxx
         misaxx/misa_future_dispatch.h
         misaxx/ome_data/object_name.h
         misaxx/filesystem/misa_filesystem_empty_importer.h
-        misaxx/filesystem/misa_filesystem_metadata.h misaxx/cached_data/misa_cache.h misaxx/cached_data/misa_cache_registry.h misaxx/cached_data/descriptions/misa_file_description.h misaxx/cached_data/descriptions/misa_file_stack_description.h)
+        misaxx/filesystem/misa_filesystem_metadata.h
+        misaxx/cached_data/misa_cache.h
+        misaxx/cached_data/misa_cache_registry.h
+        misaxx/cached_data/descriptions/misa_file_description.h
+        misaxx/cached_data/descriptions/misa_file_stack_description.h)
 
-target_include_directories(misaxx SYSTEM BEFORE PUBLIC ${Boost_INCLUDE_DIRS})
-target_include_directories(misaxx BEFORE PUBLIC ${Boost_INCLUDE_DIRS})
 target_include_directories(misaxx INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(misaxx PUBLIC
-        ${Boost_LIBRARIES}
-        ${OpenMP_CXX_LIBRARIES}
+        Boost::filesystem
+        Boost::regex
+        Boost::program_options
         cxx-helpers
         pattxx
         coixx)
