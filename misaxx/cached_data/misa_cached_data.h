@@ -147,7 +147,7 @@ namespace misaxx {
          */
         template<class Attachment> void attach(Attachment attachment) {
             readwrite_access <attachment_type > access(*attachments);
-            access.get().access<Attachment>() = std::move(attachment);
+            access.get().insert(std::move(attachment));
         }
 
         /**
