@@ -118,7 +118,7 @@ namespace misaxx {
          * Thread-safe read-only access to the data.
          * @return
          */
-        readonly_access <value_type > access_readonly() {
+        readonly_access <value_type > access_readonly() const {
             return readonly_access<value_type >(*cache);
         }
 
