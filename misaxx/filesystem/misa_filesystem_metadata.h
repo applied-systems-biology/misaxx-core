@@ -60,7 +60,7 @@ namespace misaxx {
          * @return
          */
         template <class Metadata> const Metadata &get_description() const {
-            if(m_metadata_instances.find<Metadata>() != m_metadata_instances.end()) {
+            if(m_metadata_instances.find<Metadata>() == m_metadata_instances.end()) {
                 m_metadata_instances.access<Metadata>().from_json(m_raw_metadata);
             }
 
