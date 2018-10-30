@@ -72,6 +72,20 @@ namespace misaxx {
 
         void create(const filesystem::const_entry &t_location, const misa_filesystem_metadata &t_description) override {
             description = t_description.get_description<misa_file_stack_description>();
+            if(description.has_files()) {
+                for(const auto &entry : description.files) {
+                    misa_unsafe_image_file<Image> img;
+                    img.description = entry.second;
+                    if(!img.description.has_filename()) {
+                        img.description.filename = entry.first + img.description.filetype;
+                    }
+                    img.set(t_location->external_path() / img.description.filename);
+                    this->get().insert({ entry.path().filename().string(), misa_cached_data<misa_unsafe_image_file<Image>>(std::move(img)) });
+                }
+            }
+            else {
+                throw std::runtime_error("Cannot create a new image stack without file descriptions!");
+            }
         }
 
         misa_filesystem_metadata describe() override {
