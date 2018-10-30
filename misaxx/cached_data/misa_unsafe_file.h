@@ -30,8 +30,6 @@ namespace misaxx {
          * @param t_location
          */
         void link(const filesystem::const_entry &t_location) override {
-            std::cout << "[MISA-cache] Linking cache of type " << DATA_TYPE << " to " << t_location->internal_path().string() << std::endl;
-
             description = t_location->metadata.get_description<misa_file_description>();
             if (description.has_filetype() && !description.has_filename()) {
                 // Try to automatically find a file
@@ -51,9 +49,6 @@ namespace misaxx {
         }
 
         void create(const filesystem::const_entry &t_location, const misa_filesystem_metadata &t_description) override {
-
-            std::cout << "[MISA-cache] Creating cache of type " << DATA_TYPE << " at internal location " << t_location->internal_path().string() << std::endl;
-
             description = t_description.get_description<misa_file_description>();
 
             if(!description.has_filename()) {

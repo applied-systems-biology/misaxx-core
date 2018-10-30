@@ -63,7 +63,9 @@ namespace misaxx {
         void suggest_link(const filesystem::const_entry &t_location) {
             if(!cache) {
                 cache = std::make_shared<Cache>();
+                std::cout << "[Cache] Linking " << t_location->internal_path() << " [" << t_location->external_path() << "] into cache of type " << Cache::DATA_TYPE << std::endl;
                 cache->link(t_location);
+                std::cout << "[Cache] ... success!";
             }
         }
 
@@ -74,7 +76,9 @@ namespace misaxx {
         void suggest_create(const filesystem::const_entry &t_location, const misa_filesystem_metadata &t_description) {
             if(!cache) {
                 cache = std::make_shared<Cache>();
+                std::cout << "[Cache] Creating " << t_location->internal_path() << " [" << t_location->external_path() << "] as cache of type " << Cache::DATA_TYPE << std::endl;
                 cache->create(t_location, t_description);
+                std::cout << "[Cache] ... success!";
             }
         }
 
