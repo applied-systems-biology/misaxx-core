@@ -123,7 +123,7 @@ namespace misaxx {
 
         filesystem::entry insert(filesystem::entry ptr) {
             ptr->parent = self();
-            children.insert({ptr->name, std::move(ptr)});
+            children.insert({ptr->name, ptr});
             return ptr;
         }
 
