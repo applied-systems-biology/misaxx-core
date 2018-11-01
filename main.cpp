@@ -19,7 +19,6 @@
 #include <misaxx/cached_data/misa_cache.h>
 #include <misaxx/cached_data/misa_cached_data.h>
 #include <misaxx/cached_data/misa_unsafe_image_stack.h>
-#include <misaxx/cached_data/descriptions/misa_image_file_description.h>
 
 using namespace misaxx;
 using namespace pattxx;
@@ -112,10 +111,6 @@ struct my_module : public misa_module<my_module_declaration> {
 };
 
 int main(int argc, const char** argv) {
-
-    misa_image_file_description description;
-    description.set_image_type("8UC3_BGR");
-
     misa_cli<misa_multiobject_root<my_module>> cli("my_module");
     return cli.prepare_and_run(argc, argv);
 }

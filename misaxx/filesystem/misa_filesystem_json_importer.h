@@ -61,17 +61,17 @@ namespace misaxx {
 
             // Load the metadata from JSON or file if applicable
             // File metadata is preferred
-            if(t_entry->has_external_path() && boost::filesystem::is_regular_file(t_entry->external_path() / "metadata.json")) {
-                std::cout << "[Filesystem][json-importer] Importing metadata from file " << (t_entry->external_path() / "metadata.json").string() << std::endl;
+            if(t_entry->has_external_path() && boost::filesystem::is_regular_file(t_entry->external_path() / "misa-data.json")) {
+                std::cout << "[Filesystem][json-importer] Importing metadata from file " << (t_entry->external_path() / "misa-data.json").string() << std::endl;
                 nlohmann::json json;
                 std::ifstream stream;
-                stream.open((t_entry->external_path() / "metadata.json").string());
+                stream.open((t_entry->external_path() / "misa-data.json").string());
                 stream >> json;
-                t_entry->metadata.from_json(json);
+                t_entry->metadata->from_json(json);
             }
             else if(t_json.find("data-metadata") != t_json.end()) {
                 std::cout << "[Filesystem][json-importer] Importing metadata from JSON" << std::endl;
-                t_entry->metadata.from_json(t_json["data-metadata"]);
+                t_entry->metadata->from_json(t_json["data-metadata"]);
             }
 
             if(t_json.find("children") != t_json.end()) {

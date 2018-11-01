@@ -13,58 +13,47 @@
 #include <boost/algorithm/string.hpp>
 #include <misaxx/cached_data/descriptions/misa_file_description.h>
 #include <cxxh/access/memory_cache.h>
+#include <misaxx/cached_data/patterns/misa_file_pattern.h>
 #include "misa_cache.h"
 
 namespace misaxx {
-    struct [[deprecated]] misa_unsafe_file : public cxxh::access::memory_cache<boost::filesystem::path> , public misa_cache {
+    struct [[deprecated]] misa_unsafe_file : public cxxh::access::memory_cache<boost::filesystem::path>, public misa_cache {
 
         static inline const std::string DATA_TYPE = "unsafe-file";
 
-
-        misa_file_description description;
+        std::shared_ptr<misa_filesystem_metadata> metadata;
 
         using cxxh::access::memory_cache<boost::filesystem::path>::memory_cache;
+
+        /**
+         * Links the file to any folder using the description
+         * @param t_directory
+         * @param t_description
+         */
+        void manual_link(const boost::filesystem::path &t_directory, const std::shared_ptr<misa_filesystem_metadata> &t_description) {
+            metadata = t_description;
+            auto &pattern = get_description<misa_file_pattern>();
+            metadata->describe(pattern.produce(t_directory));
+            this->set(t_directory / get_description<misa_file_description>().filename);
+        }
 
         /**
          * Links to filesystem entry
          * @param t_location
          */
         void link(const filesystem::const_entry &t_location) override {
-            description = t_location->metadata.get_description<misa_file_description>();
-            if (description.has_filetype() && !description.has_filename()) {
-                // Try to automatically find a file
-                for (const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_location->external_path()))) {
-                    if (boost::filesystem::is_regular_file(entry) && boost::iequals(entry.path().extension().string(), description.filetype)) {
-                        description.filename = entry.path().filename().string();
-                        break;
-                    }
-                }
-            }
-
-            if(!description.has_filename()) {
-                throw std::runtime_error("Could not find a file in the storage!");
-            }
-
-            this->set(t_location->external_path() / description.filename);
+            manual_link(t_location->external_path(), t_location->metadata);
         }
 
-        void create(const filesystem::const_entry &t_location, const misa_filesystem_metadata &t_description) override {
-            description = t_description.get_description<misa_file_description>();
+        void create(const filesystem::entry &t_location, const std::shared_ptr<misa_filesystem_metadata> &t_description) override {
+            // Update metadata in location
+            t_location->metadata = t_description;
 
-            if(!description.has_filename()) {
-                if(!description.has_filetype())
-                    throw std::runtime_error("Cannot create new file without filename and filetype!");
-
-                description.filename = "file" + description.filetype;
-            }
-
-            this->set(t_location->external_path() / description.filename);
+            link(t_location);
         }
 
-        misa_filesystem_metadata describe() override {
-            misa_filesystem_metadata result;
-            result.describe(description);
-            return result;
+        std::shared_ptr<misa_filesystem_metadata> describe() const override {
+            return metadata;
         }
     };
 }

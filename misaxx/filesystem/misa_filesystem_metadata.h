@@ -9,12 +9,15 @@
 #include <nlohmann/json.hpp>
 #include <pattxx/json/json_schema_builder.h>
 #include <cxxh/containers/dynamic_singleton_map.h>
+#include <misaxx/cached_data/misa_pattern.h>
+#include <misaxx/cached_data/misa_description.h>
 #include "../misa_metadata.h"
+#include <cxxh/types/static_helpers.h>
 
 namespace misaxx {
     /**
      * Metadata that is attached to filesystem entries.
-     * For flexibility, the filesystem metadata holds the raw JSON file that can be interpreted as misa_metadata instances
+     * For flexibility, the filesystem metadata holds the raw JSON data that can be interpreted as misa_metadata instances
      */
     struct misa_filesystem_metadata : public misa_metadata {
 
@@ -32,6 +35,22 @@ namespace misaxx {
             }
         }
 
+        misa_filesystem_metadata(const misa_filesystem_metadata &t_source) {
+            nlohmann::json json;
+            t_source.to_json(json);
+            from_json(json);
+        }
+
+        misa_filesystem_metadata(misa_filesystem_metadata && t_source) = default;
+
+        /**
+         * Clones this metadata
+         * @return
+         */
+        std::shared_ptr<misa_filesystem_metadata> clone() const {
+            return std::make_shared<misa_filesystem_metadata>(*this);
+        }
+
         /**
          * If true, this metadata is empty
          * @return
@@ -40,13 +59,40 @@ namespace misaxx {
             return data_type.empty();
         }
 
+        /**
+         * Loads from an imported JSON where all the data is assumed to be pattern metadata
+         * @param t_json
+         */
+        void from_imported_json(const nlohmann::json &t_json) {
+            data_type = t_json["data-type"];
+            m_raw_pattern_metadata = t_json;
+        }
+
         void from_json(const nlohmann::json &t_json) override {
             data_type = t_json["data-type"];
-            m_raw_metadata = t_json;
+            {
+                auto it = t_json.find("patterns");
+                if(it != t_json.end()) {
+                    m_raw_pattern_metadata = it.value();
+                }
+            }
+            {
+                auto it = t_json.find("descriptions");
+                if(it != t_json.end()) {
+                    m_raw_description_metadata = it.value();
+                }
+            }
         }
 
         void to_json(nlohmann::json &t_json) const override {
-            throw std::runtime_error("Not implemented!");
+            t_json["patterns"] = m_raw_pattern_metadata; // Pass along the raw metadata. This is very important!
+            t_json["descriptions"] = m_raw_description_metadata;
+
+            // Serialize any instances
+            for(const auto &kv : m_metadata_instances) {
+                auto &j = t_json[kv.second->get_name()]; // Patterns and descriptions have special overrides to do this
+                kv.second->to_json(j);
+            }
         }
 
         std::string get_name() const override {
@@ -60,8 +106,42 @@ namespace misaxx {
          * @return
          */
         template <class Metadata> const Metadata &get_description() const {
-            if(m_metadata_instances.find<Metadata>() == m_metadata_instances.end()) {
-                m_metadata_instances.access<Metadata>().from_json(m_raw_metadata);
+            if constexpr (std::is_base_of<misa_pattern_base, Metadata>::value) {
+                if(m_metadata_instances.find<Metadata>() == m_metadata_instances.end()) {
+                    m_metadata_instances.access<Metadata>().from_json(m_raw_pattern_metadata);
+                }
+            }
+            else if constexpr (std::is_base_of<misa_description, Metadata>::value) {
+                if(m_metadata_instances.find<Metadata>() == m_metadata_instances.end()) {
+                    m_metadata_instances.access<Metadata>().from_json(m_raw_description_metadata);
+                }
+            }
+            else {
+                static_assert(cxxh::types::template always_false<Metadata>::value, "Only patterns and descriptions are supported!");
+            }
+
+            return m_metadata_instances.at<Metadata>();
+        }
+
+        /**
+        * Gets a description from this metadata instance. It is deserialized from the
+        * internal JSON if needed.
+        * @tparam Metadata
+        * @return
+        */
+        template <class Metadata> Metadata &get_description() {
+            if constexpr (std::is_base_of<misa_pattern_base, Metadata>::value) {
+                if(m_metadata_instances.find<Metadata>() == m_metadata_instances.end()) {
+                    m_metadata_instances.access<Metadata>().from_json(m_raw_pattern_metadata);
+                }
+            }
+            else if constexpr (std::is_base_of<misa_description, Metadata>::value) {
+                if(m_metadata_instances.find<Metadata>() == m_metadata_instances.end()) {
+                    m_metadata_instances.access<Metadata>().from_json(m_raw_description_metadata);
+                }
+            }
+            else {
+                static_assert(cxxh::types::template always_false<Metadata>::value, "Only patterns and descriptions are supported!");
             }
 
             return m_metadata_instances.at<Metadata>();
@@ -78,7 +158,8 @@ namespace misaxx {
         }
 
     private:
-        nlohmann::json m_raw_metadata;
+        nlohmann::json m_raw_pattern_metadata;
+        nlohmann::json m_raw_description_metadata;
         mutable cxxh::containers::dynamic_singleton_map<misa_metadata> m_metadata_instances;
 
     };

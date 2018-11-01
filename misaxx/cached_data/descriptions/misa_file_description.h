@@ -6,43 +6,32 @@
 #pragma once
 
 #include "../../misa_metadata.h"
+#include "../misa_description.h"
 #include <boost/filesystem.hpp>
+#include <boost/range.hpp>
+#include <boost/algorithm/string.hpp>
 
 namespace misaxx {
-    struct misa_file_description : public misa_metadata {
 
-        std::string filename;
-        std::string filetype;
+    /**
+     * Describes a file
+     */
+    struct misa_file_description : public misa_description {
+
+        boost::filesystem::path filename;
 
         misa_file_description() = default;
 
-        explicit misa_file_description(std::string t_filename, std::string t_filetype) :
-        filename(std::move(t_filename)), filetype(std::move(t_filetype)) {
+        explicit misa_file_description(const boost::filesystem::path &t_path) : filename(t_path.filename()) {
 
         }
 
         void from_json(const nlohmann::json &t_json) override {
-            if(t_json.find("filename") != t_json.end())
-                filename = t_json["filename"];
-            if(t_json.find("filetype")  != t_json.end())
-                filetype = t_json["filetype"];
+            filename = t_json["filename"].get<std::string>();
         }
 
         void to_json(nlohmann::json &t_json) const override {
-            t_json["filename"] = filename;
-            t_json["filetype"] = filetype;
-        }
-
-        std::string get_name() const override {
-            return "misa-file";
-        }
-
-        bool has_filename() const {
-            return !filename.empty();
-        }
-
-        bool has_filetype() const {
-            return !filetype.empty();
+            t_json["filename"] = filename.string();
         }
     };
 

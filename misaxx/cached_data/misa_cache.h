@@ -25,12 +25,30 @@ namespace misaxx {
          * @param t_location
          * @param t_description Description of contents
          */
-        virtual void create(const filesystem::const_entry &t_location, const misa_filesystem_metadata &t_description) = 0;
+        virtual void create(const filesystem::entry &t_location, const std::shared_ptr<misa_filesystem_metadata> &t_description) = 0;
 
         /**
-         * Describes the contents of this cache
+         * Describes the contents of this cache using filesystem metadata
          * @return
          */
-        virtual misa_filesystem_metadata describe() = 0;
+        virtual std::shared_ptr<misa_filesystem_metadata> describe() const = 0;
+
+        /**
+         * Gets a particular description from the description store
+         * @tparam Description
+         * @return
+         */
+        template<class Description> const Description &get_description() const {
+            return describe()->get_description<Description>();
+        }
+
+        /**
+         * Gets a particular description from the description store
+         * @tparam Description
+         * @return
+         */
+        template<class Description> Description &get_description() {
+            return describe()->get_description<Description>();
+        }
     };
 }

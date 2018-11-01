@@ -83,7 +83,7 @@ add_library(misaxx
         misaxx/cached_data/misa_cache.h
         misaxx/cached_data/misa_cache_registry.h
         misaxx/cached_data/descriptions/misa_file_description.h
-        misaxx/cached_data/descriptions/misa_file_stack_description.h misaxx/cached_data/misa_image_file.h misaxx/cached_data/descriptions/misa_image_file_description.h)
+        misaxx/cached_data/descriptions/misa_file_stack_description.h misaxx/cached_data/misa_image_file.h misaxx/cached_data/patterns/misa_file_pattern.h misaxx/cached_data/misa_pattern.h misaxx/cached_data/misa_description.h misaxx/cached_data/patterns/misa_file_stack_pattern.h)
 
 target_include_directories(misaxx INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 

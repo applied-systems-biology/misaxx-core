@@ -37,14 +37,14 @@ namespace misaxx {
 
         void discoverImporterEntry(const filesystem::entry &t_entry) {
             std::cout << "[Filesystem][directories-importer] Importing entry " << t_entry->internal_path().string() << " @ " << t_entry->external_path().string() << std::endl;
-            auto metadata_file = t_entry->external_path() / "metadata.json";
+            auto metadata_file = t_entry->external_path() / "misa-data.json";
             if(boost::filesystem::is_regular_file(metadata_file)) {
                 std::cout << "[Filesystem][directories-importer] Importing metadata from file " << metadata_file.string() << std::endl;
                 nlohmann::json json;
                 std::ifstream stream;
                 stream.open(metadata_file.string());
                 stream >> json;
-                t_entry->metadata.from_json(json);
+                t_entry->metadata->from_json(json);
             }
 
             for(const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_entry->external_path()))) {
