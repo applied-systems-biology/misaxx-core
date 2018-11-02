@@ -33,12 +33,12 @@ namespace misaxx {
 
         void link(const boost::filesystem::path &t_location, const std::shared_ptr<misa_description_storage> &t_description) override {
             metadata = t_description;
-            if(!has_description<misa_image_file_stack_pattern>()) {
-                metadata->set(get_description<misa_image_file_stack_pattern>().produce(t_location));
+            if(!t_description->has_description()) {
+                metadata->set(t_description->get<misa_image_file_stack_pattern>().produce(t_location));
             }
 
             auto &files = this->get();
-            for(const auto &kv : get_description<misa_file_stack_description>().files) {
+            for(const auto &kv : t_description->get<misa_file_stack_description>().files) {
                 misa_cached_data<misa_unsafe_image_file<Image>> cache;
                 cache.suggest_link(t_location, misa_description_storage::with(kv.second)); // We link manually with the loaded description
                 files.insert({ kv.first, cache });

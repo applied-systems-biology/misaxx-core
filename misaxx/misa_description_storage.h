@@ -51,6 +51,7 @@ namespace misaxx {
             }
             else {
                 m_raw_pattern_json = t_json;
+                m_has_pattern = !m_raw_pattern_json.empty();
             }
         }
 
@@ -59,12 +60,14 @@ namespace misaxx {
                 auto it = t_json.find("pattern");
                 if(it != t_json.end()) {
                     m_raw_pattern_json = it.value();
+                    m_has_pattern = true;
                 }
             }
             {
                 auto it = t_json.find("description");
                 if(it != t_json.end()) {
                     m_raw_description_json = it.value();
+                    m_has_description = true;
                 }
             }
         }
@@ -153,6 +156,14 @@ namespace misaxx {
          */
         template <class Metadata> Metadata &set(Metadata t_description) {
             m_instances.insert(std::move(t_description));
+
+            if constexpr (std::is_base_of<misa_data_pattern_base, Metadata>::value) {
+                m_has_pattern = true;
+            }
+            else if constexpr (std::is_base_of<misa_data_description, Metadata>::value) {
+                m_has_description = true;
+            }
+
             return m_instances.access<Metadata>();
         }
 
@@ -182,7 +193,7 @@ namespace misaxx {
         * @tparam Metadata
         * @return
         */
-        template <class Metadata> bool has_description() {
+        template <class Metadata> bool has() {
             return m_instances.has<Metadata>();
         }
 
@@ -210,6 +221,14 @@ namespace misaxx {
             }
         }
 
+        bool has_pattern() const {
+            return m_has_pattern;
+        }
+
+        bool has_description() const {
+            return m_has_description;
+        }
+
     private:
 
         /**
@@ -226,6 +245,10 @@ namespace misaxx {
          * The drilldown implements all necessary methods of virtual access
          */
         mutable cxxh::containers::drilldown_singleton_map<misa_serializeable> m_instances;
+
+        bool m_has_pattern = false;
+
+        bool m_has_description = false;
 
     };
 

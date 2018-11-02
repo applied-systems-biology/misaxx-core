@@ -24,32 +24,5 @@ namespace misaxx {
          * @return
          */
         virtual std::shared_ptr<misa_description_storage> describe() const = 0;
-
-        /**
-         * Gets a particular description from the description store
-         * @tparam Description
-         * @return
-         */
-        template<class Description> const Description &get_description() const {
-            return describe()->get<Description>();
-        }
-
-        /**
-         * Gets a particular description from the description store
-         * @tparam Description
-         * @return
-         */
-        template<class Description> Description &get_description() {
-            return describe()->get<Description>();
-        }
-
-        /**
-        * Gets a particular description from the description store
-        * @tparam Description
-        * @return
-        */
-        template<class Description> bool has_description() const {
-            return describe()->has_description<Description>();
-        }
     };
 }
