@@ -5,14 +5,14 @@
 
 #pragma once
 
-#include "../misa_metadata.h"
+#include <misaxx/misa_serializeable.h>
 
 namespace misaxx {
     /**
      * A description contains all necessary information to further process some data.
      * During importing, it is produced using a pattern.
      */
-    struct misa_description : public misa_metadata {
+    struct misa_data_description : public misa_serializeable {
 
         /**
          * Internally used by the metadata serialization

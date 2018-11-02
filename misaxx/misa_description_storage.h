@@ -9,9 +9,9 @@
 #include <nlohmann/json.hpp>
 #include <pattxx/json/json_schema_builder.h>
 #include <cxxh/containers/dynamic_singleton_map.h>
-#include <misaxx/cached_data/misa_pattern.h>
-#include <misaxx/cached_data/misa_description.h>
-#include "../misa_metadata.h"
+#include <misaxx/misa_data_pattern.h>
+#include <misaxx/misa_data_description.h>
+#include <misaxx/misa_serializeable.h>
 #include <cxxh/types/static_helpers.h>
 
 namespace misaxx {
@@ -19,36 +19,36 @@ namespace misaxx {
      * Metadata that is attached to filesystem entries.
      * For flexibility, the filesystem metadata holds the raw JSON data that can be interpreted as misa_metadata instances
      */
-    struct misa_filesystem_metadata : public misa_metadata {
+    struct misa_description_storage : public misa_serializeable {
 
         /**
          * The data type how the filesystem data is being interpreted
          */
         std::string data_type;
 
-        misa_filesystem_metadata() = default;
+        misa_description_storage() = default;
 
-        template<typename Arg, typename... Args> explicit misa_filesystem_metadata(Arg &&arg, Args&&... args) {
+        template<typename Arg, typename... Args> explicit misa_description_storage(Arg &&arg, Args&&... args) {
             describe(std::forward<Arg>(arg));
             if constexpr (sizeof...(Args) > 0) {
-                misa_filesystem_metadata(std::forward<Args>(args)...);
+                misa_description_storage(std::forward<Args>(args)...);
             }
         }
 
-        misa_filesystem_metadata(const misa_filesystem_metadata &t_source) {
+        misa_description_storage(const misa_description_storage &t_source) {
             nlohmann::json json;
             t_source.to_json(json);
             from_json(json);
         }
 
-        misa_filesystem_metadata(misa_filesystem_metadata && t_source) = default;
+        misa_description_storage(misa_description_storage && t_source) = default;
 
         /**
          * Clones this metadata
          * @return
          */
-        std::shared_ptr<misa_filesystem_metadata> clone() const {
-            return std::make_shared<misa_filesystem_metadata>(*this);
+        std::shared_ptr<misa_description_storage> clone() const {
+            return std::make_shared<misa_description_storage>(*this);
         }
 
         /**
@@ -111,7 +111,7 @@ namespace misaxx {
                     m_metadata_instances.access<Metadata>().from_json(m_raw_pattern_metadata);
                 }
             }
-            else if constexpr (std::is_base_of<misa_description, Metadata>::value) {
+            else if constexpr (std::is_base_of<misa_data_description, Metadata>::value) {
                 if(m_metadata_instances.find<Metadata>() == m_metadata_instances.end()) {
                     m_metadata_instances.access<Metadata>().from_json(m_raw_description_metadata);
                 }
@@ -135,7 +135,7 @@ namespace misaxx {
                     m_metadata_instances.access<Metadata>().from_json(m_raw_pattern_metadata);
                 }
             }
-            else if constexpr (std::is_base_of<misa_description, Metadata>::value) {
+            else if constexpr (std::is_base_of<misa_data_description, Metadata>::value) {
                 if(m_metadata_instances.find<Metadata>() == m_metadata_instances.end()) {
                     m_metadata_instances.access<Metadata>().from_json(m_raw_description_metadata);
                 }
@@ -160,19 +160,19 @@ namespace misaxx {
     private:
         nlohmann::json m_raw_pattern_metadata;
         nlohmann::json m_raw_description_metadata;
-        mutable cxxh::containers::dynamic_singleton_map<misa_metadata> m_metadata_instances;
+        mutable cxxh::containers::dynamic_singleton_map<misa_serializeable> m_metadata_instances;
 
     };
 
-    void to_json(nlohmann::json& j, const misa_filesystem_metadata& p) {
+    void to_json(nlohmann::json& j, const misa_description_storage& p) {
         p.to_json(j);
     }
 
-    void from_json(const nlohmann::json& j, misa_filesystem_metadata& p) {
+    void from_json(const nlohmann::json& j, misa_description_storage& p) {
         p.from_json(j);
     }
 
-    inline void to_json_schema(pattxx::json::json_schema_builder &t_builder, const pattxx::json::path_t &t_path, const misa_filesystem_metadata &t_data) {
+    inline void to_json_schema(pattxx::json::json_schema_builder &t_builder, const pattxx::json::path_t &t_path, const misa_description_storage &t_data) {
         throw std::runtime_error("Not implemented!");
     }
 }

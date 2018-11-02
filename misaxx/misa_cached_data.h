@@ -10,9 +10,9 @@
 #include <cxxh/access/readwrite_access.h>
 #include <cxxh/access/write_access.h>
 #include <cxxh/access/memory_cache.h>
-#include "misaxx/misa_module_declaration_base.h"
-#include "misaxx/misa_metadata.h"
-#include "misa_cache.h"
+#include <misaxx/misa_module_declaration_base.h>
+#include <misaxx/misa_serializeable.h>
+#include <misaxx/misa_cache.h>
 
 namespace misaxx {
 
@@ -28,7 +28,7 @@ namespace misaxx {
 
         using cache_type = Cache;
         using value_type = typename Cache::value_type;
-        using attachment_type = cxxh::containers::dynamic_singleton_map<misa_metadata>;
+        using attachment_type = cxxh::containers::dynamic_singleton_map<misa_serializeable>;
         using attachment_cache_type = cxxh::access::memory_cache<attachment_type>;
 
         /**
@@ -63,7 +63,7 @@ namespace misaxx {
          * @param t_location
          * @param t_description
          */
-        void suggest_link(const boost::filesystem::path &t_location, const std::shared_ptr<misa_filesystem_metadata> &t_description) {
+        void suggest_link(const boost::filesystem::path &t_location, const std::shared_ptr<misa_description_storage> &t_description) {
             if(!cache) {
                 cache = std::make_shared<Cache>();
                 std::cout << "[Cache] Manually linking " << t_location << " into cache of type " << Cache::DATA_TYPE << std::endl;
@@ -93,7 +93,7 @@ namespace misaxx {
         * Metadata is copied if it is not unique
         * @param t_location
         */
-        void suggest_create(const filesystem::entry &t_location, const std::shared_ptr<misa_filesystem_metadata> &t_description) {
+        void suggest_create(const filesystem::entry &t_location, const std::shared_ptr<misa_description_storage> &t_description) {
             if(!cache) {
                 cache = std::make_shared<Cache>();
                 std::cout << "[Cache] Creating " << t_location->internal_path() << " [" << t_location->external_path() << "] as cache of type " << Cache::DATA_TYPE << std::endl;
@@ -102,7 +102,7 @@ namespace misaxx {
                     cache->link(t_location->external_path(), t_description);
                 }
                 else {
-                    cache->link(t_location->external_path(), std::make_shared<misa_filesystem_metadata>(*t_description));
+                    cache->link(t_location->external_path(), std::make_shared<misa_description_storage>(*t_description));
                 }
 
                 std::cout << "[Cache] ... success!" << std::endl;
@@ -129,7 +129,7 @@ namespace misaxx {
          * @param t_description
          */
         void suggest_export_location(const misa_filesystem &t_filesystem,
-                const boost::filesystem::path &t_path, const std::shared_ptr<misa_filesystem_metadata> &t_description) {
+                const boost::filesystem::path &t_path, const std::shared_ptr<misa_description_storage> &t_description) {
             if(!cache) {
                 if(t_filesystem.exported->has_subpath(t_path))
                     throw std::runtime_error("Suggested export location exported/" + t_path.string() + " is already used!");
@@ -141,7 +141,7 @@ namespace misaxx {
          * Returns a description of the current cache
          * @return
          */
-        misa_filesystem_metadata describe() {
+        misa_description_storage describe() {
             return cache->describe();
         }
 

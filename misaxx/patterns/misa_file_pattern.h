@@ -5,15 +5,15 @@
 
 #pragma once
 
-#include "../misa_pattern.h"
-#include "../descriptions/misa_file_description.h"
+#include <misaxx/misa_data_pattern.h>
+#include <misaxx/descriptions/misa_file_description.h>
 
 namespace misaxx {
 
     /**
      * A file pattern is a description that allows
      */
-    struct misa_file_pattern : public misa_pattern<misa_file_description> {
+    struct misa_file_pattern : public misa_data_pattern<misa_file_description> {
 
         boost::filesystem::path filename;
         boost::filesystem::path extension;

@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "misa_cached_data.h"
-#include "misa_unsafe_json_file.h"
+#include <misaxx/misa_cached_data.h>
+#include <misaxx/caches/misa_unsafe_json_file.h>
 
 namespace misaxx {
 
@@ -26,7 +26,7 @@ namespace misaxx {
         /**
          * Metadata
          */
-        cxxh::containers::dynamic_singleton_map<misa_metadata> user_metadata;
+        cxxh::containers::dynamic_singleton_map<misa_serializeable> user_metadata;
 
         /**
          * Saves the metadata included in this instance to the target JSON file
@@ -34,7 +34,7 @@ namespace misaxx {
         void save() {
             nlohmann::json json;
             for(const auto &kv : user_metadata) {
-                const misa_metadata *md = kv.second.get();
+                const misa_serializeable *md = kv.second.get();
                 md->to_json(json[md->get_name()]);
             }
 

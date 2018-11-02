@@ -6,11 +6,11 @@
 #pragma once
 
 #include <nlohmann/json.hpp>
-#include "misaxx/misa_metadata.h"
+#include <misaxx/misa_serializeable.h>
 #include "object3d_voxel_size.h"
 
 namespace misaxx {
-    struct object3d_voxel_bounds : public misa_metadata {
+    struct object3d_voxel_bounds : public misa_serializeable {
 
         int min_x = std::numeric_limits<int>::max();
         int min_z = std::numeric_limits<int>::max();

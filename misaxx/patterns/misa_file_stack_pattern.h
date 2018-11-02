@@ -5,18 +5,18 @@
 
 #pragma once
 
-#include "../descriptions/misa_file_stack_description.h"
+#include <misaxx/descriptions/misa_file_stack_description.h>
 #include "misa_file_pattern.h"
-#include "../misa_pattern.h"
+#include <misaxx/misa_data_pattern.h>
 
 namespace misaxx {
-    struct misa_file_stack_pattern : public misa_pattern<misa_file_stack_description> {
+    struct misa_file_stack_pattern : public misa_data_pattern<misa_file_stack_description> {
 
         std::vector<boost::filesystem::path> extensions;
 
         misa_file_stack_pattern() = default;
 
-        misa_file_stack_pattern(std::vector<boost::filesystem::path> t_extensions) : extensions(std::move(t_extensions)) {
+        explicit misa_file_stack_pattern(std::vector<boost::filesystem::path> t_extensions) : extensions(std::move(t_extensions)) {
 
         }
 

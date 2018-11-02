@@ -8,7 +8,7 @@
 #include <string>
 #include <stdexcept>
 #include <boost/filesystem.hpp>
-#include "misa_filesystem_metadata.h"
+#include <misaxx/misa_description_storage.h>
 
 namespace misaxx {
 
@@ -62,7 +62,7 @@ namespace misaxx {
         /**
          * Contains important information how this filesystem entry is interpreted from a data point
          */
-        std::shared_ptr<misa_filesystem_metadata> metadata = std::make_shared<misa_filesystem_metadata>();
+        std::shared_ptr<misa_description_storage> metadata = std::make_shared<misa_description_storage>();
 
         explicit misa_filesystem_entry(std::string t_name, misa_filesystem_entry_type t_type, path t_custom_external = path()) :
                 name(std::move(t_name)), type(t_type), custom_external(std::move(t_custom_external)) {

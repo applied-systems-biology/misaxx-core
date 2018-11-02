@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "../../misa_metadata.h"
-#include "../misa_description.h"
+#include <misaxx/misa_serializeable.h>
+#include <misaxx/misa_data_description.h>
 #include <boost/filesystem.hpp>
 #include <boost/range.hpp>
 #include <boost/algorithm/string.hpp>
@@ -16,7 +16,7 @@ namespace misaxx {
     /**
      * Describes a file
      */
-    struct misa_file_description : public misa_description {
+    struct misa_file_description : public misa_data_description {
 
         boost::filesystem::path filename;
 

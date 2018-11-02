@@ -6,12 +6,12 @@
 #pragma once
 
 #include <string>
-#include "misaxx/misa_metadata.h"
+#include <misaxx/misa_serializeable.h>
 #include "../object_node_path.h"
 
 namespace misaxx {
 
-    struct object_name : public misa_metadata {
+    struct object_name : public misa_serializeable {
 
         using configuration_namespace_type = object_node_path;
 

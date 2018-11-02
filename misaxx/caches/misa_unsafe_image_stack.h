@@ -7,10 +7,10 @@
 
 #include <coixx/opencv_image.h>
 #include <cxxh/access/cache.h>
-#include <misaxx/cached_data/descriptions/misa_file_stack_description.h>
-#include <misaxx/cached_data/patterns/misa_file_stack_pattern.h>
-#include <misaxx/cached_data/patterns/misa_image_file_stack_pattern.h>
-#include "misa_cache.h"
+#include <misaxx/descriptions/misa_file_stack_description.h>
+#include <misaxx/patterns/misa_file_stack_pattern.h>
+#include <misaxx/patterns/misa_image_file_stack_pattern.h>
+#include <misaxx/misa_cache.h>
 #include "misa_unsafe_image_file.h"
 
 namespace misaxx {
@@ -25,13 +25,13 @@ namespace misaxx {
         */
         static inline const std::string DATA_TYPE = "unsafe-image-stack";
 
-        std::shared_ptr<misa_filesystem_metadata> metadata;
+        std::shared_ptr<misa_description_storage> metadata;
 
         using image_type = Image;
 
         using cxxh::access::memory_cache<misa_unsafe_image_stack_contents<Image>>::cache;
 
-        void link(const boost::filesystem::path &t_location, const std::shared_ptr<misa_filesystem_metadata> &t_description) override {
+        void link(const boost::filesystem::path &t_location, const std::shared_ptr<misa_description_storage> &t_description) override {
             metadata = t_description;
             auto &pattern = get_description<misa_image_file_stack_pattern>();
             metadata->describe(pattern.produce(t_location));
@@ -39,12 +39,12 @@ namespace misaxx {
             auto &files = this->get();
             for(const auto &kv : get_description<misa_file_stack_description>().files) {
                 misa_cached_data<misa_unsafe_image_file<Image>> cache;
-                cache.suggest_link(t_location, std::make_shared<misa_filesystem_metadata>(kv.second)); // We link manually with the loaded description
+                cache.suggest_link(t_location, std::make_shared<misa_description_storage>(kv.second)); // We link manually with the loaded description
                 files.insert({ kv.first, cache });
             }
         }
 
-        std::shared_ptr<misa_filesystem_metadata> describe() const override {
+        std::shared_ptr<misa_description_storage> describe() const override {
             return metadata;
         }
     };

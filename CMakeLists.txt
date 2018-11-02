@@ -54,36 +54,35 @@ add_library(misaxx
         misaxx/misa_worker.h
         misaxx/misa_module_base.h
         misaxx/misa_dispatcher.h
-        misaxx/cached_data/misa_cached_data.h
+        misaxx/misa_cached_data.h
         misaxx/misa_submodule.h
         misaxx/misa_runtime.h
         misaxx/filesystem/misa_filesystem.h
         misaxx/misa_module_declaration.h
         misaxx/misa_cli.h
-        misaxx/cached_data/misa_unsafe_image_stack.h
-        misaxx/cached_data/misa_unsafe_file.h
-        misaxx/cached_data/misa_unsafe_image_file.h
+        misaxx/caches/misa_unsafe_image_stack.h
+        misaxx/caches/misa_unsafe_file.h
+        misaxx/caches/misa_unsafe_image_file.h
         misaxx/filesystem/misa_filesystem_json_importer.h
         misaxx/misa_multiobject_root.h
         misaxx/algorithm_node_path.h
         misaxx/misa_root_module_base.h
         misaxx/object_node_path.h
-        misaxx/ome_data/object2d_pixels.h
-        misaxx/ome_data/object3d_pixels.h
-        misaxx/cached_data/misa_unsafe_json_file.h
-        misaxx/ome_data/object3d_volume.h
-        misaxx/cached_data/misa_unsafe_exportable_meta_data.h
-        misaxx/misa_metadata.h
-        misaxx/ome_data/object3d_voxel_bounds.h
-        misaxx/ome_data/object3d_voxel_size.h
+        misaxx/attachments/object2d_pixels.h
+        misaxx/attachments/object3d_pixels.h
+        misaxx/caches/misa_unsafe_json_file.h
+        misaxx/attachments/object3d_volume.h
+        misaxx/caches/misa_unsafe_exportable_meta_data.h
+        misaxx/misa_serializeable.h
+        misaxx/attachments/object3d_voxel_bounds.h
+        misaxx/attachments/object3d_voxel_size.h
         misaxx/misa_future_dispatch.h
-        misaxx/ome_data/object_name.h
+        misaxx/attachments/object_name.h
         misaxx/filesystem/misa_filesystem_empty_importer.h
-        misaxx/filesystem/misa_filesystem_metadata.h
-        misaxx/cached_data/misa_cache.h
-        misaxx/cached_data/misa_cache_registry.h
-        misaxx/cached_data/descriptions/misa_file_description.h
-        misaxx/cached_data/descriptions/misa_file_stack_description.h misaxx/cached_data/misa_image_file.h misaxx/cached_data/patterns/misa_file_pattern.h misaxx/cached_data/misa_pattern.h misaxx/cached_data/misa_description.h misaxx/cached_data/patterns/misa_file_stack_pattern.h misaxx/cached_data/patterns/misa_image_file_stack_pattern.h)
+        misaxx/misa_description_storage.h
+        misaxx/misa_cache.h
+        misaxx/descriptions/misa_file_description.h
+        misaxx/descriptions/misa_file_stack_description.h misaxx/caches/misa_image_file.h misaxx/patterns/misa_file_pattern.h misaxx/misa_data_pattern.h misaxx/misa_data_description.h misaxx/patterns/misa_file_stack_pattern.h misaxx/patterns/misa_image_file_stack_pattern.h)
 
 target_include_directories(misaxx INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 

@@ -5,12 +5,12 @@
 
 #pragma once
 
-#include "../../misa_metadata.h"
+#include <misaxx/misa_serializeable.h>
 #include "misa_file_description.h"
-#include "../misa_description.h"
+#include <misaxx/misa_data_description.h>
 
 namespace misaxx {
-    struct misa_file_stack_description : public misa_description {
+    struct misa_file_stack_description : public misa_data_description {
 
         using files_type = std::unordered_map<std::string, misa_file_description>;
 

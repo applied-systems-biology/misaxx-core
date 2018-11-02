@@ -9,8 +9,8 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <coixx/toolbox/toolbox_io.h>
-#include <misaxx/cached_data/descriptions/misa_image_file_description.h>
-#include "misa_cache.h"
+#include <misaxx/descriptions/misa_image_file_description.h>
+#include <misaxx/misa_cache.h>
 
 namespace misaxx {
     /**
@@ -58,12 +58,12 @@ namespace misaxx {
             m_description = t_location->metadata.get_description<misa_image_file_description>();
         }
 
-        void create(const filesystem::const_entry &t_location, const misa_filesystem_metadata &t_description) override {
+        void create(const filesystem::const_entry &t_location, const misa_description_storage &t_description) override {
             m_description = t_description;
             m_path = t_location->external_path() / t_description.get_description<misa_image_file_description>().get_or_generate_filename("image");
         }
 
-        misa_filesystem_metadata describe() override {
+        misa_description_storage describe() override {
             return m_description;
         }
 
@@ -71,6 +71,6 @@ namespace misaxx {
         Image m_value;
         bool m_has_value;
         boost::filesystem::path m_path;
-        misa_filesystem_metadata m_description;
+        misa_description_storage m_description;
     };
 }

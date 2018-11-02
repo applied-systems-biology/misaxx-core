@@ -14,11 +14,11 @@
 #include <misaxx/misa_cli.h>
 #include <misaxx/algorithm_node_path.h>
 #include <misaxx/object_node_path.h>
-#include <misaxx/ome_data/object3d_voxel_size.h>
-#include <misaxx/ome_data/object_name.h>
-#include <misaxx/cached_data/misa_cache.h>
-#include <misaxx/cached_data/misa_cached_data.h>
-#include <misaxx/cached_data/misa_unsafe_image_stack.h>
+#include <misaxx/attachments/object3d_voxel_size.h>
+#include <misaxx/attachments/object_name.h>
+#include <misaxx/misa_cache.h>
+#include <misaxx/misa_cached_data.h>
+#include <misaxx/caches/misa_unsafe_image_stack.h>
 
 using namespace misaxx;
 using namespace pattxx;
@@ -88,7 +88,7 @@ struct my_task2 : public misa_task<my_module_declaration> {
 
 struct my_module : public misa_module<my_module_declaration> {
 
-    using misa_module::misa_module;
+    using misa_module<my_module_declaration>::misa_module;
 
     object_name md = from_parameter<object_name>();
     object3d_voxel_size vs = from_parameter<object3d_voxel_size>();

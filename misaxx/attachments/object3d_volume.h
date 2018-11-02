@@ -10,7 +10,7 @@
 #include "object3d_pixels.h"
 
 namespace misaxx {
-    struct object3d_volume : public misa_metadata {
+    struct object3d_volume : public misa_serializeable {
         double volume = 0;
 
         object3d_volume() = default;

@@ -6,7 +6,7 @@
 #pragma once
 
 #include <misaxx/filesystem/misa_filesystem_entry.h>
-#include "../misa_metadata.h"
+#include <misaxx/misa_serializeable.h>
 
 namespace misaxx {
 
@@ -22,7 +22,7 @@ namespace misaxx {
      *
      * @tparam Description
      */
-    template<class Description> struct misa_pattern : public misa_metadata, public misa_pattern_base {
+    template<class Description> struct misa_data_pattern : public misa_serializeable, public misa_pattern_base {
 
         using description_type = Description;
 

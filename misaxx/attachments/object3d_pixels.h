@@ -6,13 +6,13 @@
 #pragma once
 
 #include <nlohmann/json.hpp>
-#include "misaxx/misa_metadata.h"
+#include <misaxx/misa_serializeable.h>
 
 namespace misaxx {
     /**
      * Attachable metadata containing the number of pixels of a 3D object
      */
-    struct object3d_pixels : public misa_metadata {
+    struct object3d_pixels : public misa_serializeable {
         int pixels = 0;
 
         void to_json(nlohmann::json &t_json) const override {
