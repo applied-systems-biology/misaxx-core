@@ -11,6 +11,8 @@
 #include <coixx/toolbox/toolbox_io.h>
 #include <misaxx/descriptions/misa_image_file_description.h>
 #include <misaxx/misa_cache.h>
+#include <misaxx/patterns/misa_image_file_pattern.h>
+#include <misaxx/patterns/misa_image_file_stack_pattern.h>
 
 namespace misaxx {
     /**
@@ -54,13 +56,12 @@ namespace misaxx {
             stash();
         }
 
-        void link(const filesystem::const_entry &t_location) override {
-            m_description = t_location->metadata.get_description<misa_image_file_description>();
-        }
-
-        void create(const filesystem::const_entry &t_location, const misa_description_storage &t_description) override {
+        void link(const boost::filesystem::path &t_location, const std::shared_ptr<misa_description_storage> &t_description) override {
             m_description = t_description;
-            m_path = t_location->external_path() / t_description.get_description<misa_image_file_description>().get_or_generate_filename("image");
+            if(!has_description<misa_image_file_description>()) {
+                m_description->describe(get_description<misa_image_file_stack_pattern>().produce(t_location));
+            }
+            m_path = t_location / m_description->get_description<misa_image_file_description>().filename;
         }
 
         misa_description_storage describe() override {
@@ -71,6 +72,6 @@ namespace misaxx {
         Image m_value;
         bool m_has_value;
         boost::filesystem::path m_path;
-        misa_description_storage m_description;
+        std::shared_ptr<misa_description_storage> m_description;
     };
 }

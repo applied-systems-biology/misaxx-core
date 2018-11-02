@@ -13,6 +13,7 @@
 #include <misaxx/misa_data_description.h>
 #include <misaxx/misa_serializeable.h>
 #include <cxxh/types/static_helpers.h>
+#include <cxxh/containers/drilldown_singleton_map.h>
 
 namespace misaxx {
     /**
@@ -89,9 +90,9 @@ namespace misaxx {
             t_json["descriptions"] = m_raw_description_metadata;
 
             // Serialize any instances
-            for(const auto &kv : m_metadata_instances) {
-                auto &j = t_json[kv.second->get_name()]; // Patterns and descriptions have special overrides to do this
-                kv.second->to_json(j);
+            for(const auto &v : m_metadata_instances) {
+                auto &j = t_json[v->get_name()]; // Patterns and descriptions have special overrides to do this
+                v->to_json(j);
             }
         }
 
@@ -148,19 +149,40 @@ namespace misaxx {
         }
 
         /**
-         * Sets a description.
+         * Sets a description. Existing descriptions are overwritten
          * @tparam Metadata
          * @return
          */
         template <class Metadata> Metadata &describe(Metadata t_description) {
-            m_metadata_instances.access<Metadata>() = std::move(t_description);
+            m_metadata_instances.insert(std::move(t_description));
             return m_metadata_instances.access<Metadata>();
+        }
+
+        /**
+         * Sets a description. Existing descriptions are NOT overwritten.
+         * @tparam Metadata
+         * @return
+         */
+        template <class Metadata> Metadata &try_describe(Metadata t_description) {
+            if(!m_metadata_instances.has<Metadata>())
+                return describe(std::move(t_description));
+            else
+                return m_metadata_instances.access<Metadata>();
+        }
+
+        /**
+        * Sets a description. Existing descriptions are overwritten
+        * @tparam Metadata
+        * @return
+        */
+        template <class Metadata> bool has_description() {
+            return m_metadata_instances.has<Metadata>();
         }
 
     private:
         nlohmann::json m_raw_pattern_metadata;
         nlohmann::json m_raw_description_metadata;
-        mutable cxxh::containers::dynamic_singleton_map<misa_serializeable> m_metadata_instances;
+        mutable cxxh::containers::drilldown_singleton_map<misa_serializeable> m_metadata_instances;
 
     };
 

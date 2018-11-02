@@ -16,32 +16,51 @@ namespace misaxx {
     struct misa_file_pattern : public misa_data_pattern<misa_file_description> {
 
         boost::filesystem::path filename;
-        boost::filesystem::path extension;
+        std::vector<boost::filesystem::path> extensions;
 
         misa_file_pattern() = default;
+
+        explicit misa_file_pattern(std::vector<boost::filesystem::path> t_extensions) :
+        extensions(std::move(t_extensions)) {
+
+        }
 
         void from_json(const nlohmann::json &t_json) override {
             if(t_json.find("filename") != t_json.end())
                 filename = t_json["filename"].get<std::string>();
-            if(t_json.find("extension")  != t_json.end())
-                extension = t_json["extension"].get<std::string>();
+            if(t_json.find("extensions")  != t_json.end()) {
+                extensions.clear();
+                for (const auto &i : t_json["extensions"]) {
+                    extensions.emplace_back(i.get<std::string>());
+                }
+            }
         }
 
         void to_json(nlohmann::json &t_json) const override {
             t_json["filename"] = filename.string();
-            t_json["extension"] = extension.string();
+            {
+                std::vector<std::string> extensions_;
+                for(const auto &extension : extensions) {
+                    extensions_.emplace_back(extension.string());
+                }
+                t_json["extensions"] = extensions_;
+            }
         }
 
         bool has_filename() const {
             return !filename.empty();
         }
 
-        bool has_extension() const {
-            return !extension.empty();
+        bool has_extensions() const {
+            return !extensions.empty();
         }
 
-        bool matches_filetype(const boost::filesystem::path &t_path) const {
-            return t_path.extension() == extension;
+        bool matches(const boost::filesystem::path &t_path) const {
+            for(const auto &extension : extensions) {
+                if(t_path.extension() == extension)
+                    return true;
+            }
+            return false;
         }
 
         misa_file_description produce() const {
@@ -57,7 +76,7 @@ namespace misaxx {
             }
             else {
                 for(const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_directory))) {
-                    if(boost::iequals(entry.path().extension().string(), extension.string())) {
+                    if(matches(entry.path())) {
                         result.filename = entry.path().filename();
                         break;
                     }

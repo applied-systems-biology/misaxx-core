@@ -42,5 +42,14 @@ namespace misaxx {
         template<class Description> Description &get_description() {
             return describe()->get_description<Description>();
         }
+
+        /**
+        * Gets a particular description from the description store
+        * @tparam Description
+        * @return
+        */
+        template<class Description> bool has_description() const {
+            return describe()->has_description<Description>();
+        }
     };
 }

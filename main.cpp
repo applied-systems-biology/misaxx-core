@@ -19,6 +19,7 @@
 #include <misaxx/misa_cache.h>
 #include <misaxx/misa_cached_data.h>
 #include <misaxx/caches/misa_unsafe_image_stack.h>
+#include <cxxh/containers/drilldown_singleton_map.h>
 
 using namespace misaxx;
 using namespace pattxx;
@@ -110,7 +111,45 @@ struct my_module : public misa_module<my_module_declaration> {
     }
 };
 
+struct A {
+    int x;
+    int y;
+    std::unique_ptr<int> p;
+
+    virtual ~A() = default;
+
+    A() = default;
+    A(const A &s) = delete;
+    A(A&& s) noexcept = default;
+
+};
+
+struct B : public A{
+    int z;
+};
+
 int main(int argc, const char** argv) {
+
+//    cxxh::containers::drilldown_singleton_map<A> map;
+//
+//
+////    A x;
+////    x.x = 5;
+////    x.y = 10;
+////    x.p = std::make_unique<int>(1);
+////
+//    B y;
+//    y.x = 1;
+//    y.y = 2;
+//    y.z = 3;
+//    y.p = std::make_unique<int>(2);
+////
+////    *dynamic_cast<A*>(&y) = std::move(x);
+//
+//    map.insert(std::move(y));
+//
+//    auto &get = map.at<A>();
+
     misa_cli<misa_multiobject_root<my_module>> cli("my_module");
     return cli.prepare_and_run(argc, argv);
 }
