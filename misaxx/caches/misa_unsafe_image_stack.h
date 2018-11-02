@@ -40,7 +40,7 @@ namespace misaxx {
             auto &files = this->get();
             for(const auto &kv : get_description<misa_file_stack_description>().files) {
                 misa_cached_data<misa_unsafe_image_file<Image>> cache;
-                cache.suggest_link(t_location, std::make_shared<misa_description_storage>(kv.second)); // We link manually with the loaded description
+                cache.suggest_link(t_location, misa_description_storage::with(kv.second)); // We link manually with the loaded description
                 files.insert({ kv.first, cache });
             }
         }

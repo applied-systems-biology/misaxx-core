@@ -24,13 +24,6 @@ namespace misaxx {
 
         misa_description_storage() = default;
 
-        template<typename Arg, typename... Args> explicit misa_description_storage(Arg &&arg, Args&&... args) {
-            set(std::forward<Arg>(arg));
-            if constexpr (sizeof...(Args) > 0) {
-                misa_description_storage(std::forward<Args>(args)...);
-            }
-        }
-
         misa_description_storage(const misa_description_storage &t_source) {
             nlohmann::json json;
             t_source.to_json(json);
@@ -191,6 +184,30 @@ namespace misaxx {
         */
         template <class Metadata> bool has_description() {
             return m_instances.has<Metadata>();
+        }
+
+        /**
+         * Creates a description storage that already includes data
+         * @tparam Arg
+         * @tparam Args
+         * @param arg
+         * @param args
+         * @return
+         */
+        template<typename Arg, typename... Args> static std::shared_ptr<misa_description_storage> with(Arg &&arg, Args&&... args) {
+            using arg_type = typename std::remove_reference<Arg>::type;
+            static_assert(std::is_base_of<misa_data_description, arg_type>::value || std::is_base_of<misa_data_pattern_base, arg_type>::value,
+                          "Only patterns and descriptions can be attached!");
+            if constexpr (sizeof...(Args) > 0) {
+                auto storage = misa_description_storage::with(std::forward<Args>(args)...);
+                storage->set(std::forward<Arg>(arg));
+                return storage;
+            }
+            else {
+                auto storage = std::make_shared<misa_description_storage>();
+                storage->set(std::forward<Arg>(arg));
+                return storage;
+            }
         }
 
     private:
