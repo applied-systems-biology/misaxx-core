@@ -141,7 +141,7 @@ namespace misaxx {
          * Returns a description of the current cache
          * @return
          */
-        misa_description_storage describe() {
+        std::shared_ptr<misa_description_storage> describe() {
             return cache->describe();
         }
 
