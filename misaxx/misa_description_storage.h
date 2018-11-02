@@ -138,12 +138,12 @@ namespace misaxx {
         template <class Metadata> Metadata &get() {
             if constexpr (std::is_base_of<misa_data_pattern_base, Metadata>::value) {
                 if(m_instances.find<Metadata>() == m_instances.end()) {
-                    m_instances.access<Metadata>().from_json(m_instances);
+                    m_instances.access<Metadata>().from_json(m_raw_pattern_json);
                 }
             }
             else if constexpr (std::is_base_of<misa_data_description, Metadata>::value) {
                 if(m_instances.find<Metadata>() == m_instances.end()) {
-                    m_instances.access<Metadata>().from_json(m_instances);
+                    m_instances.access<Metadata>().from_json(m_raw_description_json);
                 }
             }
             else {
