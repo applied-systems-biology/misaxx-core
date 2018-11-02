@@ -16,6 +16,10 @@ namespace misaxx {
 
         misa_file_stack_pattern() = default;
 
+        misa_file_stack_pattern(std::vector<boost::filesystem::path> t_extensions) : extensions(std::move(t_extensions)) {
+
+        }
+
         misa_file_stack_description produce(const boost::filesystem::path &t_directory) const {
             misa_file_stack_description result;
             for(const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_directory))) {

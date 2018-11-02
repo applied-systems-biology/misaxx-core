@@ -57,28 +57,55 @@ namespace misaxx {
         }
 
         /**
-         * Links this cache to a filesystem location if not already set
+         * Links this cache to a filesystem location if not already set.
+         * This calls the internal linkage method of the cached data.
+         * If linking with filesystem entries, you can use the other methods
+         * @param t_location
+         * @param t_description
+         */
+        void suggest_link(const boost::filesystem::path &t_location, const std::shared_ptr<misa_filesystem_metadata> &t_description) {
+            if(!cache) {
+                cache = std::make_shared<Cache>();
+                std::cout << "[Cache] Manually linking " << t_location << " into cache of type " << Cache::DATA_TYPE << std::endl;
+                cache->link(t_location, t_description);
+                std::cout << "[Cache] ... success!" << std::endl;
+            }
+        }
+
+        /**
+         * Links this cache to a filesystem location if not already set.
+         * The data is assumed to already exist. Necessary metadata should be contained within the filesystem.
+         * Metadata is not copied during this operation.
          * @param t_location
          */
         void suggest_link(const filesystem::const_entry &t_location) {
             if(!cache) {
                 cache = std::make_shared<Cache>();
                 std::cout << "[Cache] Linking " << t_location->internal_path() << " [" << t_location->external_path() << "] into cache of type " << Cache::DATA_TYPE << std::endl;
-                cache->link(t_location);
-                std::cout << "[Cache] ... success!";
+                cache->link(t_location->external_path(), t_location->metadata);
+                std::cout << "[Cache] ... success!" << std::endl;
             }
         }
 
         /**
-        * Links this cache to a filesystem location if not already set
+        * Links this cache to a filesystem location if not already set.
+        * The data is assumed to not exist. Necessary metadata must be obtained from linked caches or manually set in code.
+        * Metadata is copied if it is not unique
         * @param t_location
         */
-        void suggest_create(const filesystem::const_entry &t_location, const misa_filesystem_metadata &t_description) {
+        void suggest_create(const filesystem::entry &t_location, const std::shared_ptr<misa_filesystem_metadata> &t_description) {
             if(!cache) {
                 cache = std::make_shared<Cache>();
                 std::cout << "[Cache] Creating " << t_location->internal_path() << " [" << t_location->external_path() << "] as cache of type " << Cache::DATA_TYPE << std::endl;
-                cache->create(t_location, t_description);
-                std::cout << "[Cache] ... success!";
+
+                if(t_description.unique()) {
+                    cache->link(t_location->external_path(), t_description);
+                }
+                else {
+                    cache->link(t_location->external_path(), std::make_shared<misa_filesystem_metadata>(*t_description));
+                }
+
+                std::cout << "[Cache] ... success!" << std::endl;
             }
         }
 
@@ -102,7 +129,7 @@ namespace misaxx {
          * @param t_description
          */
         void suggest_export_location(const misa_filesystem &t_filesystem,
-                const boost::filesystem::path &t_path, const misa_filesystem_metadata &t_description) {
+                const boost::filesystem::path &t_path, const std::shared_ptr<misa_filesystem_metadata> &t_description) {
             if(!cache) {
                 if(t_filesystem.exported->has_subpath(t_path))
                     throw std::runtime_error("Suggested export location exported/" + t_path.string() + " is already used!");

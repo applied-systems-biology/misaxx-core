@@ -9,6 +9,7 @@
 #include <cxxh/access/cache.h>
 #include <misaxx/cached_data/descriptions/misa_file_stack_description.h>
 #include <misaxx/cached_data/patterns/misa_file_stack_pattern.h>
+#include <misaxx/cached_data/patterns/misa_image_file_stack_pattern.h>
 #include "misa_cache.h"
 #include "misa_unsafe_image_file.h"
 
@@ -30,26 +31,15 @@ namespace misaxx {
 
         using cxxh::access::memory_cache<misa_unsafe_image_stack_contents<Image>>::cache;
 
-        void link(const filesystem::const_entry &t_location, const std::shared_ptr<misa_filesystem_metadata> &t_alternative_description) override {
-            metadata = t_location->metadata;
-            auto &pattern = get_description<misa_file_stack_pattern>();
-            metadata->describe(pattern.produce(t_location->external_path()));
+        void link(const boost::filesystem::path &t_location, const std::shared_ptr<misa_filesystem_metadata> &t_description) override {
+            metadata = t_description;
+            auto &pattern = get_description<misa_image_file_stack_pattern>();
+            metadata->describe(pattern.produce(t_location));
 
             auto &files = this->get();
             for(const auto &kv : get_description<misa_file_stack_description>().files) {
                 misa_cached_data<misa_unsafe_image_file<Image>> cache;
-                cache.suggest_link() // We temporary reinterpret the data here
-                cache.cache->set(t_location->external_path() / kv.second.filename);
-                files.insert({ kv.first, cache });
-            }
-        }
-
-        void create(const filesystem::entry &t_location, const std::shared_ptr<misa_filesystem_metadata> &t_description) override {
-            auto &files = this->get();
-            for(const auto &kv : get_description<misa_file_stack_description>().files) {
-                misa_cached_data<misa_unsafe_image_file<Image>> cache;
-                cache.suggest
-                cache.cache->set(t_location->external_path() / kv.second.filename);
+                cache.suggest_link(t_location, std::make_shared<misa_filesystem_metadata>(kv.second)); // We link manually with the loaded description
                 files.insert({ kv.first, cache });
             }
         }

@@ -30,26 +30,11 @@ namespace misaxx {
          * @param t_directory
          * @param t_description
          */
-        void manual_link(const boost::filesystem::path &t_directory, const std::shared_ptr<misa_filesystem_metadata> &t_description) {
+        void link(const boost::filesystem::path &t_directory, const std::shared_ptr<misa_filesystem_metadata> &t_description) override {
             metadata = t_description;
             auto &pattern = get_description<misa_file_pattern>();
             metadata->describe(pattern.produce(t_directory));
             this->set(t_directory / get_description<misa_file_description>().filename);
-        }
-
-        /**
-         * Links to filesystem entry
-         * @param t_location
-         */
-        void link(const filesystem::const_entry &t_location) override {
-            manual_link(t_location->external_path(), t_location->metadata);
-        }
-
-        void create(const filesystem::entry &t_location, const std::shared_ptr<misa_filesystem_metadata> &t_description) override {
-            // Update metadata in location
-            t_location->metadata = t_description;
-
-            link(t_location);
         }
 
         std::shared_ptr<misa_filesystem_metadata> describe() const override {
