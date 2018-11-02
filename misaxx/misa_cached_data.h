@@ -98,6 +98,12 @@ namespace misaxx {
                 cache = std::make_shared<Cache>();
                 std::cout << "[Cache] Creating " << t_location->internal_path() << " [" << t_location->external_path() << "] as cache of type " << Cache::DATA_TYPE << std::endl;
 
+                // Create the directory if necessary
+                if(!boost::filesystem::exists(t_location->external_path())) {
+                    std::cout << "[Cache] Creating directory "  << t_location->external_path() << std::endl;
+                    boost::filesystem::create_directories(t_location->external_path());
+                }
+
                 if(t_description.unique()) {
                     cache->link(t_location->external_path(), t_description);
                 }
