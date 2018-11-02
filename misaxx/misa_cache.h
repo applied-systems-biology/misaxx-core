@@ -31,7 +31,7 @@ namespace misaxx {
          * @return
          */
         template<class Description> const Description &get_description() const {
-            return describe()->get_description<Description>();
+            return describe()->get<Description>();
         }
 
         /**
@@ -40,7 +40,7 @@ namespace misaxx {
          * @return
          */
         template<class Description> Description &get_description() {
-            return describe()->get_description<Description>();
+            return describe()->get<Description>();
         }
 
         /**

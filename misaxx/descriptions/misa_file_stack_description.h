@@ -32,6 +32,10 @@ namespace misaxx {
             t_json["files"] = files;
         }
 
+        std::string get_name() const override {
+            return "misa-file-stack";
+        }
+
     };
 
     void to_json(nlohmann::json& j, const misa_file_stack_description& p) {

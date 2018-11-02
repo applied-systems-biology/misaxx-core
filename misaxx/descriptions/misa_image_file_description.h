@@ -10,6 +10,11 @@
 namespace misaxx {
     struct misa_image_file_description : public misa_file_description {
         using misa_file_description::misa_file_description;
+
+        std::string get_name() const override {
+            return "misa-image-file";
+        }
+
     };
 
     void to_json(nlohmann::json& j, const misa_image_file_description& p) {

@@ -84,6 +84,10 @@ namespace misaxx {
             }
             return result;
         }
+
+        std::string get_name() const override {
+            return "misa-file";
+        }
     };
 
     void to_json(nlohmann::json& j, const misa_file_pattern& p) {

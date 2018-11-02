@@ -25,5 +25,9 @@ namespace misaxx {
             if(t_json.find("extensions") != t_json.end())
                 misa_file_stack_pattern::from_json(t_json);
         }
+
+        std::string get_name() const override {
+            return "misa-image-file-stack";
+        }
     };
 }

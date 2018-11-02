@@ -10,7 +10,7 @@
 
 namespace misaxx {
 
-    struct misa_pattern_base {
+    struct misa_data_pattern_base {
     };
 
     /**
@@ -22,16 +22,9 @@ namespace misaxx {
      *
      * @tparam Description
      */
-    template<class Description> struct misa_data_pattern : public misa_serializeable, public misa_pattern_base {
+    template<class Description> struct misa_data_pattern : public misa_serializeable, public misa_data_pattern_base {
 
         using description_type = Description;
 
-        /**
-         * Internally used by the metadata holder to serialize this element.
-         * @return
-         */
-        std::string get_name() const final {
-            return "patterns";
-        }
     };
 }

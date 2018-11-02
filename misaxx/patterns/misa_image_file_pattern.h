@@ -8,12 +8,17 @@
 #include "misa_file_pattern.h"
 
 namespace misaxx {
-    class misa_image_file_pattern : public misa_file_pattern {
+    struct misa_image_file_pattern : public misa_file_pattern {
         misa_image_file_pattern() : misa_file_pattern({ ".tif", ".tiff", ".png",
                                                         ".bmp", ".pbm", ".pgm",
                                                         ".ppm", ".jpeg", ".jpg",
                                                         ".jpe", ".jp2" }) {
 
         }
+
+        std::string get_name() const override {
+            return "misa-image-file";
+        }
+
     };
 }

@@ -13,14 +13,5 @@ namespace misaxx {
      * During importing, it is produced using a pattern.
      */
     struct misa_data_description : public misa_serializeable {
-
-        /**
-         * Internally used by the metadata serialization
-         * @return
-         */
-        std::string get_name() const final {
-            return "descriptions";
-        }
-
     };
 }

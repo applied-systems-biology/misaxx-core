@@ -47,6 +47,10 @@ namespace misaxx {
             }
             t_json["extensions"] = extensions_;
         }
+
+        std::string get_name() const override {
+            return "misa-file-stack";
+        }
     };
 
     void to_json(nlohmann::json& j, const misa_file_stack_pattern& p) {

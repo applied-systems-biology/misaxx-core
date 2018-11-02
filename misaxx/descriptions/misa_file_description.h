@@ -33,6 +33,10 @@ namespace misaxx {
         void to_json(nlohmann::json &t_json) const override {
             t_json["filename"] = filename.string();
         }
+
+        std::string get_name() const override {
+            return "misa-file";
+        }
     };
 
     void to_json(nlohmann::json& j, const misa_file_description& p) {
