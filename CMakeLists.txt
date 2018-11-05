@@ -82,9 +82,63 @@ add_library(misaxx
         misaxx/misa_description_storage.h
         misaxx/misa_cache.h
         misaxx/descriptions/misa_file_description.h
-        misaxx/descriptions/misa_file_stack_description.h misaxx/caches/misa_image_file.h misaxx/patterns/misa_file_pattern.h misaxx/misa_data_pattern.h misaxx/misa_data_description.h misaxx/patterns/misa_file_stack_pattern.h misaxx/patterns/misa_image_file_stack_pattern.h misaxx/descriptions/misa_image_file_description.h misaxx/patterns/misa_image_file_pattern.h)
+        misaxx/descriptions/misa_file_stack_description.h
+        misaxx/caches/misa_image_file.h
+        misaxx/patterns/misa_file_pattern.h
+        misaxx/misa_data_pattern.h
+        misaxx/misa_data_description.h
+        misaxx/patterns/misa_file_stack_pattern.h
+        misaxx/patterns/misa_image_file_stack_pattern.h
+        misaxx/descriptions/misa_image_file_description.h
+        misaxx/patterns/misa_image_file_pattern.h
+        misaxx/misa_module_declaration.cpp
+        misaxx/misa_cached_data.cpp
+        misaxx/misa_submodule.cpp
+        misaxx/misa_cache.cpp
+        misaxx/misa_root_module_base.cpp
+        misaxx/algorithm_node_path.cpp
+        misaxx/misa_module.cpp
+        misaxx/misa_data_description.cpp
+        misaxx/misa_runtime.cpp
+        misaxx/object_node_path.cpp
+        misaxx/misa_multiobject_root.cpp
+        misaxx/misa_module_declaration_base.cpp
+        misaxx/misa_task.cpp
+        misaxx/misa_future_dispatch.cpp
+        misaxx/misa_module_base.cpp
+        misaxx/misa_serializeable.cpp
+        misaxx/misa_description_storage.cpp
+        misaxx/misa_dispatcher.cpp
+        misaxx/misa_data_pattern.cpp
+        misaxx/misa_cli.cpp
+        misaxx/misa_worker.cpp
+        misaxx/attachments/object3d_pixels.cpp
+        misaxx/attachments/object2d_pixels.cpp
+        misaxx/attachments/object3d_voxel_size.cpp
+        misaxx/attachments/object_name.cpp
+        misaxx/attachments/object3d_volume.cpp
+        misaxx/attachments/object3d_voxel_bounds.cpp
+        misaxx/patterns/misa_image_file_stack_pattern.cpp
+        misaxx/patterns/misa_file_pattern.cpp
+        misaxx/patterns/misa_image_file_pattern.cpp
+        misaxx/patterns/misa_file_stack_pattern.cpp
+        misaxx/descriptions/misa_file_stack_description.cpp
+        misaxx/descriptions/misa_image_file_description.cpp
+        misaxx/descriptions/misa_file_description.cpp
+        misaxx/caches/misa_unsafe_image_stack.cpp
+        misaxx/caches/misa_image_file.cpp
+        misaxx/caches/misa_unsafe_json_file.cpp
+        misaxx/caches/misa_unsafe_image_file.cpp
+        misaxx/caches/misa_unsafe_exportable_meta_data.cpp
+        misaxx/caches/misa_unsafe_file.cpp
+        misaxx/filesystem/misa_filesystem_json_importer.cpp
+        misaxx/filesystem/misa_filesystem_entry.cpp
+        misaxx/filesystem/misa_filesystem_directories_importer.cpp
+        misaxx/filesystem/misa_filesystem_empty_importer.cpp
+        misaxx/filesystem/misa_filesystem.cpp)
 
 target_include_directories(misaxx INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(misaxx PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(misaxx PUBLIC
         Boost::filesystem

@@ -7,11 +7,9 @@
 
 #include <misaxx/filesystem/misa_filesystem_entry.h>
 #include <misaxx/misa_serializeable.h>
+#include "misa_data_pattern_base.h"
 
 namespace misaxx {
-
-    struct misa_data_pattern_base {
-    };
 
     /**
      * A pattern consists of externally provided information how to import data.

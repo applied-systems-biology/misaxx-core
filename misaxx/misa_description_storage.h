@@ -9,7 +9,7 @@
 #include <nlohmann/json.hpp>
 #include <pattxx/json/json_schema_builder.h>
 #include <cxxh/containers/dynamic_singleton_map.h>
-#include <misaxx/misa_data_pattern.h>
+#include <misaxx/misa_data_pattern_base.h>
 #include <misaxx/misa_data_description.h>
 #include <misaxx/misa_serializeable.h>
 #include <cxxh/types/static_helpers.h>
