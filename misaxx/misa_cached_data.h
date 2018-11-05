@@ -68,7 +68,6 @@ namespace misaxx {
                 cache = std::make_shared<Cache>();
                 std::cout << "[Cache] Manually linking " << t_location << " into cache of type " << Cache::DATA_TYPE << std::endl;
                 cache->link(t_location, t_description);
-                std::cout << "[Cache] ... success!" << std::endl;
             }
         }
 
@@ -83,7 +82,6 @@ namespace misaxx {
                 cache = std::make_shared<Cache>();
                 std::cout << "[Cache] Linking " << t_location->internal_path() << " [" << t_location->external_path() << "] into cache of type " << Cache::DATA_TYPE << std::endl;
                 cache->link(t_location->external_path(), t_location->metadata);
-                std::cout << "[Cache] ... success!" << std::endl;
             }
         }
 
@@ -110,8 +108,6 @@ namespace misaxx {
                 else {
                     cache->link(t_location->external_path(), std::make_shared<misa_description_storage>(*t_description));
                 }
-
-                std::cout << "[Cache] ... success!" << std::endl;
             }
         }
 
