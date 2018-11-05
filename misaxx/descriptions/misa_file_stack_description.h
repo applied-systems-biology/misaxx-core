@@ -23,8 +23,10 @@ namespace misaxx {
         }
 
         void from_json(const nlohmann::json &t_json) override {
-            for(auto it = t_json.find("files"); it != t_json.end(); ++it) {
-                files[it.key()] = it.value();
+            if(t_json.find("files") != t_json.end()) {
+                for(auto it = t_json["files"].begin(); it != t_json["files"].end(); ++it) {
+                    files[it.key()] = it.value();
+                }
             }
         }
 
