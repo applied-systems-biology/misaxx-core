@@ -9,7 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(Boost_USE_STATIC_LIBS ON)
 
 find_package(Boost 1.63 COMPONENTS REQUIRED filesystem regex program_options)
-find_package(OpenMP)
 
 FetchContent_Declare(
         coixx
@@ -89,13 +88,12 @@ target_include_directories(misaxx BEFORE PUBLIC ${Boost_INCLUDE_DIRS})
 target_include_directories(misaxx INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(misaxx PUBLIC
-        ${Boost_LIBRARIES}
-        ${OpenMP_CXX_LIBRARIES}
+        Boost::filesystem
+        Boost::regex
+        Boost::program_options
         cxx-helpers
         pattxx
         coixx)
-
-target_compile_options(misaxx PUBLIC ${OpenMP_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -pedantic-errors)
 
 add_executable(misaxx_test main.cpp)
 target_link_libraries(misaxx_test misaxx)
