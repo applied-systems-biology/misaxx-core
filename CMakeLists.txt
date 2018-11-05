@@ -148,7 +148,5 @@ target_link_libraries(misaxx PUBLIC
         pattxx
         coixx)
 
-target_compile_options(misaxx PUBLIC ${OpenMP_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -pedantic-errors)
-
 add_executable(misaxx_test main.cpp)
 target_link_libraries(misaxx_test misaxx)
