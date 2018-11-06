@@ -7,7 +7,7 @@
 
 #include <string>
 #include <misaxx/misa_serializeable.h>
-#include "../object_node_path.h"
+#include "misaxx/parameters/object_node_path.h"
 
 namespace misaxx {
 

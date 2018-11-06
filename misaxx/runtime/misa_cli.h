@@ -13,7 +13,7 @@
 #include <misaxx/filesystem/misa_filesystem_empty_importer.h>
 #include <misaxx/filesystem/misa_filesystem_directories_importer.h>
 #include <misaxx/filesystem/misa_filesystem_json_importer.h>
-#include <misaxx/misa_runtime.h>
+#include <misaxx/runtime/misa_runtime.h>
 #include <misaxx/misa_multiobject_root.h>
 
 namespace misaxx {

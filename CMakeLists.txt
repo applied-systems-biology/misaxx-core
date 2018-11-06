@@ -50,24 +50,24 @@ add_library(misaxx
         misaxx/filesystem/misa_filesystem_directories_importer.h
         misaxx/misa_module.h
         misaxx/misa_module_declaration_base.h
-        misaxx/misa_task.h
-        misaxx/misa_worker.h
+        misaxx/workers/misa_task.h
+        misaxx/workers/misa_worker.h
         misaxx/misa_module_base.h
-        misaxx/misa_dispatcher.h
+        misaxx/workers/misa_dispatcher.h
         misaxx/misa_cached_data.h
         misaxx/misa_submodule.h
-        misaxx/misa_runtime.h
+        misaxx/runtime/misa_runtime.h
         misaxx/filesystem/misa_filesystem.h
         misaxx/misa_module_declaration.h
-        misaxx/misa_cli.h
+        misaxx/runtime/misa_cli.h
         misaxx/caches/misa_unsafe_image_stack.h
         misaxx/caches/misa_unsafe_file.h
         misaxx/caches/misa_unsafe_image_file.h
         misaxx/filesystem/misa_filesystem_json_importer.h
         misaxx/misa_multiobject_root.h
-        misaxx/algorithm_node_path.h
+        misaxx/parameters/algorithm_node_path.h
         misaxx/misa_root_module_base.h
-        misaxx/object_node_path.h
+        misaxx/parameters/object_node_path.h
         misaxx/attachments/object2d_pixels.h
         misaxx/attachments/object3d_pixels.h
         misaxx/caches/misa_unsafe_json_file.h
@@ -96,22 +96,22 @@ add_library(misaxx
         misaxx/misa_submodule.cpp
         misaxx/misa_cache.cpp
         misaxx/misa_root_module_base.cpp
-        misaxx/algorithm_node_path.cpp
+        misaxx/parameters/algorithm_node_path.cpp
         misaxx/misa_module.cpp
         misaxx/misa_data_description.cpp
-        misaxx/misa_runtime.cpp
-        misaxx/object_node_path.cpp
+        misaxx/runtime/misa_runtime.cpp
+        misaxx/parameters/object_node_path.cpp
         misaxx/misa_multiobject_root.cpp
         misaxx/misa_module_declaration_base.cpp
-        misaxx/misa_task.cpp
+        misaxx/workers/misa_task.cpp
         misaxx/misa_future_dispatch.cpp
         misaxx/misa_module_base.cpp
         misaxx/misa_serializeable.cpp
         misaxx/misa_description_storage.cpp
-        misaxx/misa_dispatcher.cpp
+        misaxx/workers/misa_dispatcher.cpp
         misaxx/misa_data_pattern.cpp
-        misaxx/misa_cli.cpp
-        misaxx/misa_worker.cpp
+        misaxx/runtime/misa_cli.cpp
+        misaxx/workers/misa_worker.cpp
         misaxx/attachments/object3d_pixels.cpp
         misaxx/attachments/object2d_pixels.cpp
         misaxx/attachments/object3d_voxel_size.cpp

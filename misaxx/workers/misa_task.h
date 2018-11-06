@@ -7,9 +7,9 @@
 
 #include <pattxx/task.h>
 #include "misa_worker.h"
-#include "misa_module_declaration_base.h"
-#include "object_node_path.h"
-#include "algorithm_node_path.h"
+#include "misaxx/misa_module_declaration_base.h"
+#include "misaxx/parameters/object_node_path.h"
+#include "misaxx/parameters/algorithm_node_path.h"
 
 namespace misaxx {
 

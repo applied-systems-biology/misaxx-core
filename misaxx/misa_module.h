@@ -6,12 +6,12 @@
 #pragma once
 
 #include <pattxx/dispatcher.h>
-#include "misa_worker.h"
+#include "misaxx/workers/misa_worker.h"
 #include "misa_module_declaration_base.h"
 #include "misa_module_base.h"
 #include "misa_submodule.h"
-#include "algorithm_node_path.h"
-#include "object_node_path.h"
+#include "misaxx/parameters/algorithm_node_path.h"
+#include "misaxx/parameters/object_node_path.h"
 #include "misa_future_dispatch.h"
 
 namespace misaxx {
