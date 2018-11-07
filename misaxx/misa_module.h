@@ -175,7 +175,7 @@ namespace misaxx {
          */
         template<class Parameter, class InputCheckTag = pattxx::parameters::default_check>
         auto from_parameter() {
-            return from_json<Parameter, typename Parameter::configuration_namespace_type, InputCheckTag>(Parameter().get_name());
+            return from_json<Parameter, typename Parameter::configuration_namespace_type, InputCheckTag>(Parameter().get_serialization_id());
         }
 
         /**
@@ -185,7 +185,7 @@ namespace misaxx {
          */
         template<class Parameter, class InputCheckTag = pattxx::parameters::default_check>
         auto from_parameter_or(Parameter t_default = Parameter()) {
-            return from_json_or<Parameter, typename Parameter::configuration_namespace_type, InputCheckTag>(Parameter().get_name(), std::move(t_default));
+            return from_json_or<Parameter, typename Parameter::configuration_namespace_type, InputCheckTag>(Parameter().get_serialization_id(), std::move(t_default));
         }
 
     public:

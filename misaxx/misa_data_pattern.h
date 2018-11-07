@@ -20,7 +20,7 @@ namespace misaxx {
      *
      * @tparam Description
      */
-    template<class Description> struct misa_data_pattern : public misa_serializeable, public misa_data_pattern_base {
+    template<class Description> struct misa_data_pattern : public misa_data_pattern_base {
 
         using description_type = Description;
 

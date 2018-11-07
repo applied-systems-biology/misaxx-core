@@ -123,7 +123,7 @@ namespace misaxx {
                 pattxx::json::json_schema_builder &schema = m_runtime.parameter_schema;
 
                 // Save filesystem to parameter schema
-                to_json_schema(m_runtime.instance().filesystem, schema);
+                m_runtime.instance().filesystem.to_json_schema(misa_json_schema(schema, { "filesystem", "json-data" }));
                 schema.insert_static<std::string>({"filesystem", "source"}, "json", pattxx::json::json_property<std::string>());
 
                 // Workaround: Due to inflexibility with schema generation, manually put "__OBJECT__" nodes into list builders

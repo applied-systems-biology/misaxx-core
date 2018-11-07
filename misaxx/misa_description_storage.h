@@ -84,12 +84,12 @@ namespace misaxx {
                 if(as_pattern) {
                     auto &j = t_json["pattern"];
                     v->to_json(j);
-                    t_json["pattern"]["pattern-type"] = v->get_name();
+                    t_json["pattern"]["pattern-type"] = v->get_serialization_id();
                 }
                 else if(as_description) {
                     auto &j = t_json["description"];
                     v->to_json(j);
-                    t_json["description"]["description-type"] = v->get_name();
+                    t_json["description"]["description-type"] = v->get_serialization_id();
                 }
                 else {
                     throw std::runtime_error("Cannot serialize unknown description type!");
@@ -97,7 +97,16 @@ namespace misaxx {
             }
         }
 
-        std::string get_name() const override {
+        void to_json_schema(const misa_json_schema &t_schema) const override {
+            if(has_pattern()) {
+                get<misa_data_pattern_base>().to_json_schema(t_schema.resolve("pattern"));
+            }
+            if(has_description()) {
+                get<misa_data_description>().to_json_schema(t_schema.resolve("description"));
+            }
+        }
+
+        std::string get_serialization_id() const override {
             return "misa-description-storage";
         }
 
@@ -258,9 +267,5 @@ namespace misaxx {
 
     void from_json(const nlohmann::json& j, misa_description_storage& p) {
         p.from_json(j);
-    }
-
-    inline void to_json_schema(pattxx::json::json_schema_builder &t_builder, const pattxx::json::path_t &t_path, const misa_description_storage &t_data) {
-        throw std::runtime_error("Not implemented!");
     }
 }

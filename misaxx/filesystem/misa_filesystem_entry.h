@@ -31,7 +31,7 @@ namespace misaxx {
     /**
      * An entry in the MISA++ virtual filesystem
      */
-    struct misa_filesystem_entry : std::enable_shared_from_this<misa_filesystem_entry> {
+    struct misa_filesystem_entry : std::enable_shared_from_this<misa_filesystem_entry>, public misa_serializeable {
 
         using path = boost::filesystem::path;
         using iterator = std::unordered_map<std::string, std::shared_ptr<misa_filesystem_entry>>::iterator;
@@ -257,6 +257,26 @@ namespace misaxx {
             // Create / access the target element
             auto it = current->find(t_segment.filename().string());
             return !(it == end());
+        }
+
+        void from_json(const nlohmann::json &t_json) override {
+            throw std::runtime_error("Not implemented");
+        }
+
+        void to_json(nlohmann::json &t_json) const override {
+            throw std::runtime_error("Not implemented");
+        }
+
+        void to_json_schema(const misa_json_schema &t_schema) const override {
+            t_schema.declare_optional<std::string>("external-path");
+            for(const auto &kv : children) {
+                kv.second->to_json_schema(t_schema.resolve("children", kv.first));
+            }
+            metadata->to_json_schema(t_schema.resolve("metadata"));
+        }
+
+        std::string get_serialization_id() const override {
+            return "misa-filesystem-entry";
         }
 
     private:

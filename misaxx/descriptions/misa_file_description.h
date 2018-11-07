@@ -34,8 +34,12 @@ namespace misaxx {
             t_json["filename"] = filename.string();
         }
 
-        std::string get_name() const override {
-            return "misa-file";
+        void to_json_schema(const misa_json_schema &t_schema) const override {
+            t_schema.declare_required<std::string>("filename");
+        }
+
+        std::string get_serialization_id() const override {
+            return "misa-file-description";
         }
     };
 

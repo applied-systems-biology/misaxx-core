@@ -37,7 +37,7 @@ namespace misaxx {
             max_z = j["max-z"];
         }
 
-        std::string get_name() const override {
+        std::string get_serialization_id() const override {
             return "object3d-voxel-bounds";
         }
 
@@ -53,6 +53,15 @@ namespace misaxx {
             v.y = max_y - min_y;
             v.z = max_z - min_z;
             return v;
+        }
+
+        void to_json_schema(const misa_json_schema &t_schema) const override {
+            t_schema.declare_required<int>("min-x");
+            t_schema.declare_required<int>("min-y");
+            t_schema.declare_required<int>("min-z");
+            t_schema.declare_required<int>("max-x");
+            t_schema.declare_required<int>("max-y");
+            t_schema.declare_required<int>("max-z");
         }
     };
 

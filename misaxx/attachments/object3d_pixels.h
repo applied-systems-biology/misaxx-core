@@ -23,8 +23,12 @@ namespace misaxx {
             pixels = j["pixels"];
         }
 
-        std::string get_name() const override {
+        std::string get_serialization_id() const override {
             return "object3d-pixels";
+        }
+
+        void to_json_schema(const misa_json_schema &t_schema) const override {
+            t_schema.declare_required<int>("pixels");
         }
     };
 

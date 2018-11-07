@@ -54,8 +54,14 @@ namespace misaxx {
             }
         }
 
-        std::string get_name() const override {
+        std::string get_serialization_id() const override {
             return "object3d-voxel-size";
+        }
+
+        void to_json_schema(const misa_json_schema &t_schema) const override {
+            t_schema.declare_required<double>("x");
+            t_schema.declare_required<double>("y");
+            t_schema.declare_required<double>("z");
         }
     };
 

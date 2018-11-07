@@ -23,15 +23,19 @@ namespace misaxx {
         }
 
         void to_json(nlohmann::json &t_json) const override {
-            t_json = name;
+            t_json["name"] = name;
         }
 
         void from_json(const nlohmann::json& j) override {
-            name = j;
+            name = j["name"];
         }
 
-        std::string get_name() const override {
+        std::string get_serialization_id() const override {
             return "object-name";
+        }
+
+        void to_json_schema(const misa_json_schema &t_schema) const override {
+            t_schema.declare_required<std::string>("name");
         }
     };
 

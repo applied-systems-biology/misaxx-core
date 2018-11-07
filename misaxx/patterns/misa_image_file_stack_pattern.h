@@ -26,8 +26,8 @@ namespace misaxx {
                 misa_file_stack_pattern::from_json(t_json);
         }
 
-        std::string get_name() const override {
-            return "misa-image-file-stack";
+        std::string get_serialization_id() const override {
+            return "misa-image-file-stack-pattern";
         }
     };
 }
