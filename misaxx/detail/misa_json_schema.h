@@ -15,7 +15,7 @@ namespace misaxx {
     class misa_json_schema {
     public:
         misa_json_schema(pattxx::json::json_schema_builder &t_builder, pattxx::json::path_t t_path) :
-        m_builder(&t_builder), m_path(std::move(t_path)) {
+                m_builder(&t_builder), m_path(std::move(t_path)) {
 
         }
 
@@ -25,7 +25,7 @@ namespace misaxx {
 
         template<class... Args> misa_json_schema resolve(const Args&... t_segment) const {
             pattxx::json::path_t new_path = m_path;
-            for(const std::string &segment :  { t_segment... }) {
+            for(const std::string &segment : std::initializer_list<std::string>({ t_segment... })) {
                 new_path.push_back(segment);
             }
             return misa_json_schema(get_builder(), std::move(new_path));
