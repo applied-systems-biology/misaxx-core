@@ -23,7 +23,7 @@ FetchContent_Declare(
 FetchContent_Declare(
         pattxx
         GIT_REPOSITORY https://asb-git.hki-jena.de/RGerst/pattxx.git
-        GIT_TAG origin/master
+        GIT_TAG origin/rework
 )
 
 FetchContent_GetProperties(coixx)

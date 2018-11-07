@@ -199,7 +199,7 @@ namespace misaxx {
         }
 
         void init() override {
-            if (get_node().get_runtime().is_building_schema())
+            if (pattxx::runtime::simulation_mode)
                 misa_simulate();
             else
                 misa_init();

@@ -61,14 +61,14 @@ namespace misaxx {
                 return 1;
             }
             if(vm.count("write-parameter-schema")) {
-                m_runtime.build_schema = true;
-                m_runtime.simulation_mode = true;
+                pattxx::runtime::simulation_mode = true;
+                pattxx::runtime::parameter_schema_mode = true;
                 m_parameter_schema_path = vm["write-parameter-schema"].as<std::string>();
                 if(!m_parameter_schema_path.parent_path().empty())
                     boost::filesystem::create_directories(m_parameter_schema_path.parent_path());
             }
             if(vm.count("threads")) {
-                if(!m_runtime.build_schema) {
+                if(!pattxx::runtime::simulation_mode) {
                     m_runtime.num_threads = vm["threads"].as<int>();
                 }
                 else {
@@ -77,7 +77,7 @@ namespace misaxx {
                 }
             }
             if(vm.count("no-skip")) {
-                if(!m_runtime.build_schema) {
+                if(!pattxx::runtime::simulation_mode) {
                     m_runtime.enable_skipping = false;
                 }
             }
@@ -86,15 +86,15 @@ namespace misaxx {
                 std::ifstream in(vm["parameters"].as<std::string>());
                 in >> m_runtime.parameters;
             }
-            else if(!m_runtime.build_schema) {
+            else if(!pattxx::runtime::simulation_mode) {
                 throw std::runtime_error("You have to provide a parameter file!");
             }
 
             // Load runtime parameters that are not from CLI
-            if(!vm.count("threads") && !m_runtime.build_schema) {
+            if(!vm.count("threads") && !pattxx::runtime::simulation_mode) {
                 m_runtime.num_threads = m_runtime.template get_json_or<int>({ "runtime", "num-threads" }, 1, pattxx::json::json_property<int>());
             }
-            if(!vm.count("no-skip") && !m_runtime.build_schema) {
+            if(!vm.count("no-skip") && !pattxx::runtime::simulation_mode) {
                 m_runtime.enable_skipping = !m_runtime.template get_json_or<bool>({ "runtime", "no-skip" }, false, pattxx::json::json_property<bool>());
             }
 
@@ -114,11 +114,11 @@ namespace misaxx {
             else {
                 std::cout << "<#> <#> Skipping is disabled" << std::endl;
             }
-            if(m_runtime.build_schema) {
+            if(pattxx::runtime::simulation_mode) {
                 std::cout << "<#> <#> RUNNING IN SIMULATION MODE. This will build a parameter schema, but no real work is done!" << std::endl;
             }
             m_runtime.run();
-            if(m_runtime.build_schema) {
+            if(pattxx::runtime::simulation_mode) {
 
                 pattxx::json::json_schema_builder &schema = m_runtime.parameter_schema;
 
@@ -195,7 +195,7 @@ namespace misaxx {
         void load_filesystem() {
 
             // Do no importing if we build a schema
-            if(m_runtime.build_schema) {
+            if(pattxx::runtime::simulation_mode) {
                 misa_filesystem_empty_importer importer;
                 get_runtime().get_filesystem() = importer.import();
                 return;

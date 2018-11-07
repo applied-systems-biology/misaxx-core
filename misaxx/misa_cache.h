@@ -5,6 +5,7 @@
 
 #pragma once
 #include <misaxx/filesystem/misa_filesystem.h>
+#include <pattxx/runtime.h>
 
 namespace misaxx {
     /**
@@ -24,5 +25,14 @@ namespace misaxx {
          * @return
          */
         virtual std::shared_ptr<misa_description_storage> describe() const = 0;
+
+        /**
+         * Returns true if the runtime is in simulation mode and no valid locations are passed.
+         * @return
+         */
+        static bool is_simulating() {
+            return pattxx::runtime::simulation_mode;
+        }
+
     };
 }

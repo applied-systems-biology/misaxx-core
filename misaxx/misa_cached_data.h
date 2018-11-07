@@ -102,12 +102,15 @@ namespace misaxx {
                     boost::filesystem::create_directories(t_location->external_path());
                 }
 
+                // Metadata is copied into the export location
                 if(t_description.unique()) {
-                    cache->link(t_location->external_path(), t_description);
+                    t_location->metadata = t_description;
                 }
                 else {
-                    cache->link(t_location->external_path(), std::make_shared<misa_description_storage>(*t_description));
+                    t_location->metadata = std::make_shared<misa_description_storage>(*t_description);
                 }
+
+                cache->link(t_location->external_path(), t_location->metadata);
             }
         }
 
