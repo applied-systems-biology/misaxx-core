@@ -80,6 +80,14 @@ namespace misaxx {
         void suggest_link(const filesystem::const_entry &t_location) {
             if(!cache) {
                 cache = std::make_shared<Cache>();
+
+                // Special case simulation mode
+                if(pattxx::runtime::simulation_mode) {
+                    std::cout << "[Cache] Linking " << t_location->internal_path() << " into cache of type " << Cache::DATA_TYPE << std::endl;
+                    cache->link("", t_location->metadata);
+                    return;
+                }
+
                 std::cout << "[Cache] Linking " << t_location->internal_path() << " [" << t_location->external_path() << "] into cache of type " << Cache::DATA_TYPE << std::endl;
                 cache->link(t_location->external_path(), t_location->metadata);
             }
@@ -94,6 +102,21 @@ namespace misaxx {
         void suggest_create(const filesystem::entry &t_location, const std::shared_ptr<misa_description_storage> &t_description) {
             if(!cache) {
                 cache = std::make_shared<Cache>();
+
+                if(pattxx::runtime::simulation_mode) {
+                    std::cout << "[Cache] Creating " << t_location->internal_path() << " as cache of type " << Cache::DATA_TYPE << std::endl;
+                    // Metadata is copied into the export location
+                    if(t_description.unique()) {
+                        t_location->metadata = t_description;
+                    }
+                    else {
+                        t_location->metadata = std::make_shared<misa_description_storage>(*t_description);
+                    }
+
+                    cache->link("", t_location->metadata);
+                    return;
+                }
+
                 std::cout << "[Cache] Creating " << t_location->internal_path() << " [" << t_location->external_path() << "] as cache of type " << Cache::DATA_TYPE << std::endl;
 
                 // Create the directory if necessary
@@ -134,7 +157,7 @@ namespace misaxx {
          * @param t_description
          */
         void suggest_export_location(const misa_filesystem &t_filesystem,
-                const boost::filesystem::path &t_path, const std::shared_ptr<misa_description_storage> &t_description) {
+                                     const boost::filesystem::path &t_path, const std::shared_ptr<misa_description_storage> &t_description) {
             if(!cache) {
                 if(t_filesystem.exported->has_subpath(t_path))
                     throw std::runtime_error("Suggested export location exported/" + t_path.string() + " is already used!");
