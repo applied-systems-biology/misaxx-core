@@ -78,7 +78,7 @@ namespace misaxx {
 
     private:
         Image m_value;
-        bool m_has_value;
+        bool m_has_value = false;
         boost::filesystem::path m_path;
         std::shared_ptr<misa_description_storage> m_description;
     };
