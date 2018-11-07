@@ -99,9 +99,11 @@ namespace misaxx {
 
         void to_json_schema(const misa_json_schema &t_schema) const override {
             if(has_pattern()) {
+                t_schema.resolve("pattern").define("pattern-type", get<misa_data_pattern_base>().get_serialization_id());
                 get<misa_data_pattern_base>().to_json_schema(t_schema.resolve("pattern"));
             }
             if(has_description()) {
+                t_schema.resolve("description").define("description-type", get<misa_data_description>().get_serialization_id());
                 get<misa_data_description>().to_json_schema(t_schema.resolve("description"));
             }
         }
