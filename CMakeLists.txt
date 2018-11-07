@@ -135,7 +135,7 @@ add_library(misaxx
         misaxx/filesystem/misa_filesystem_entry.cpp
         misaxx/filesystem/misa_filesystem_directories_importer.cpp
         misaxx/filesystem/misa_filesystem_empty_importer.cpp
-        misaxx/filesystem/misa_filesystem.cpp misaxx/detail/misa_json_schema.h)
+        misaxx/filesystem/misa_filesystem.cpp misaxx/detail/misa_json_schema.h misaxx/detail/misa_json_schema.cpp)
 
 target_include_directories(misaxx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
