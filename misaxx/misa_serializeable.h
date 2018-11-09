@@ -6,7 +6,7 @@
 #pragma once
 
 #include <nlohmann/json.hpp>
-#include <misaxx/detail/misa_json_schema.h>
+#include <misaxx/json/misa_json_schema.h>
 
 namespace misaxx {
     /**

@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include <pattxx/dispatcher.h>
 #include <misaxx/filesystem/misa_filesystem.h>
 #include <misaxx/misa_module_declaration_base.h>
 

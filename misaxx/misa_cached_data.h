@@ -82,7 +82,7 @@ namespace misaxx {
                 cache = std::make_shared<Cache>();
 
                 // Special case simulation mode
-                if(pattxx::runtime::simulation_mode) {
+                if(misaxx::misa_runtime_base::instance().is_simulating()) {
                     std::cout << "[Cache] Linking " << t_location->internal_path() << " into cache of type " << Cache::DATA_TYPE << std::endl;
                     cache->link("", t_location->metadata);
                     return;
@@ -103,7 +103,7 @@ namespace misaxx {
             if(!cache) {
                 cache = std::make_shared<Cache>();
 
-                if(pattxx::runtime::simulation_mode) {
+                if(misaxx::misa_runtime_base::instance().is_simulating()) {
                     std::cout << "[Cache] Creating " << t_location->internal_path() << " as cache of type " << Cache::DATA_TYPE << std::endl;
                     // Metadata is copied into the export location
                     if(t_description.unique()) {

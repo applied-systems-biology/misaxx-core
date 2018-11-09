@@ -5,11 +5,11 @@
 
 #pragma once
 
-#include <pattxx/task.h>
 #include "misa_worker.h"
 #include "misaxx/misa_module_declaration_base.h"
-#include "misaxx/parameters/object_node_path.h"
-#include "misaxx/parameters/algorithm_node_path.h"
+#include "misaxx/workers/paths/object_node_path.h"
+#include "misaxx/workers/paths/algorithm_node_path.h"
+#include <misaxx/workers/paths/full_node_path.h>
 
 namespace misaxx {
 
@@ -17,89 +17,21 @@ namespace misaxx {
      * Base class for a MISA++ task
      * @tparam ModuleDeclaration
      */
-    template<class ModuleDeclaration> struct misa_task : public pattxx::task, public misa_worker<ModuleDeclaration> {
+    template<class ModuleDeclaration> struct misa_task : public misa_worker<ModuleDeclaration> {
+
+        /**
+        * Indicates that the task can be run in parallel context. Defaults to true.
+        */
+        bool m_is_parallelizeable = misa_worker<ModuleDeclaration>::template from_json_or<bool, full_node_path>("task::is_parallelizeable", false, misa_json_property<bool>("Enable parallelization", "If false, the task will always be scheduled in the main thread."));
+
+        /**
+       * Indicates that the task can be skipped. Defaults to true.
+       */
+        bool m_is_skippable = misa_worker<ModuleDeclaration>::template from_json_or<bool, full_node_path>("task::is_skippable", true, misa_json_property<bool>("Enable skipping", "If false, the task will not be skipped."));
 
         static_assert(std::is_base_of<misa_module_declaration_base, ModuleDeclaration>::value, "Template argument must be a module definition!");
 
-        explicit misa_task(pattxx::nodes::node *t_node, ModuleDeclaration *t_module) : pattxx::task(t_node), m_module(t_module) {
-
-        }
-
-        /**
-         * Returns the module definition
-         * @return
-         */
-        ModuleDeclaration &module() override {
-            return *m_module;
-        }
-
-        /**
-         * Loads a parameter from the object namespace. Global in the whole subtree of the object.
-         * @tparam T
-         * @tparam InputCheckTag
-         * @param t_name
-         * @param t_metadata
-         * @return
-         */
-        template<typename T, class InputCheckTag = pattxx::parameters::default_check> auto from_object_json(const std::string &t_name, const metadata<T> &t_metadata = metadata<T>()) {
-            return from_json<T, object_node_path, InputCheckTag>(t_name, t_metadata);
-        }
-
-        /**
-         * Loads a parameter from the object namespace. Global in the whole subtree of the object.
-         * @tparam T
-         * @tparam InputCheckTag
-         * @param t_name
-         * @param t_default
-         * @param t_metadata
-         * @return
-         */
-        template<typename T, class InputCheckTag = pattxx::parameters::default_check> auto from_object_json_or(const std::string &t_name, T t_default = T(), const metadata<T> &t_metadata = metadata<T>()) {
-            return from_json_or<T, object_node_path, InputCheckTag>(t_name, std::move(t_default), t_metadata);
-        }
-
-        /**
-         * Loads a parameter from the algorithm namespace. The path ignores the object.
-         * @tparam T
-         * @tparam InputCheckTag
-         * @param t_name
-         * @param t_metadata
-         * @return
-         */
-        template<typename T, class InputCheckTag = pattxx::parameters::default_check> auto from_algorithm_json(const std::string &t_name, const metadata<T> &t_metadata = metadata<T>()) {
-            return from_json<T, algorithm_node_path, InputCheckTag>(t_name, t_metadata);
-        }
-
-        /**
-         * Loads a parameter from the algorithm namespace. The path ignores the object.
-         * @tparam T
-         * @tparam InputCheckTag
-         * @param t_name
-         * @param t_default
-         * @param t_metadata
-         * @return
-         */
-        template<typename T, class InputCheckTag = pattxx::parameters::default_check> auto from_algorithm_json_or(const std::string &t_name, T t_default = T(), const metadata<T> &t_metadata = metadata<T>()) {
-            return from_json_or<T, algorithm_node_path, InputCheckTag>(t_name, std::move(t_default), t_metadata);
-        }
-
-        /**
-         * Loads a parameter from an auto-parameter
-         * @tparam Parameter
-         * @return
-         */
-        template<class Parameter, class InputCheckTag = pattxx::parameters::default_check> auto from_parameter() {
-            return from_json<Parameter, typename Parameter::configuration_namespace_type, InputCheckTag> (Parameter().get_serialization_id());
-        }
-
-        /**
-         * Loads a parameter from an auto-parameter
-         * @tparam Parameter
-         * @return
-         */
-        template<class Parameter, class InputCheckTag = pattxx::parameters::default_check> auto from_parameter_or(Parameter t_default = Parameter()) {
-            return from_json_or<Parameter, typename Parameter::configuration_namespace_type, InputCheckTag> (Parameter().get_serialization_id(), std::move(t_default));
-        }
+        using misa_worker<ModuleDeclaration>::misa_worker;
 
     public:
 
@@ -109,15 +41,15 @@ namespace misaxx {
         }
 
         void work() override {
-            if(pattxx::runtime::simulation_mode)
+            if(misaxx::misa_runtime_base::instance().is_simulating())
                 misa_simulate();
             else
                 misa_work();
         }
 
-    private:
-
-        ModuleDeclaration *m_module;
+        bool is_parallelizeable() const override {
+            return m_is_parallelizeable;
+        }
 
     };
 }

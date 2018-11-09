@@ -5,7 +5,7 @@
 
 #pragma once
 #include <misaxx/filesystem/misa_filesystem.h>
-#include <pattxx/runtime.h>
+#include <misaxx/runtime/misa_runtime_base.h>
 
 namespace misaxx {
     /**
@@ -31,7 +31,7 @@ namespace misaxx {
          * @return
          */
         static bool is_simulating() {
-            return pattxx::runtime::simulation_mode;
+            return misaxx::misa_runtime_base::instance().is_simulating();
         }
 
     };

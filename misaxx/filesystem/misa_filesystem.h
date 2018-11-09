@@ -6,7 +6,6 @@
 #pragma once
 
 #include "misa_filesystem_entry.h"
-#include <pattxx/json/json_schema_builder.h>
 
 namespace misaxx {
     /**
