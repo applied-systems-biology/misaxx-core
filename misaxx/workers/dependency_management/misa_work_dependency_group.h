@@ -94,7 +94,7 @@ namespace misaxx::dependencies {
          */
         template<class InstanceOrSegment> misa_work_dependency_group &operator << (InstanceOrSegment &t_instance) {
             if constexpr (std::is_base_of<misa_worker_base, InstanceOrSegment>::value) {
-                assign(t_instance.get_node().self());
+                assign(t_instance.get_node());
             }
             else if constexpr (std::is_base_of<misa_work_dependency_segment, InstanceOrSegment>::value) {
                 add_dependency(t_instance);
