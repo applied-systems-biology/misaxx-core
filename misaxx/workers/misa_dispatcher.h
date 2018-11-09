@@ -52,7 +52,7 @@ namespace misaxx {
                 return t_worker.template dispatch<Instance>(t_name, t_worker.module());
             };
             if(misa_runtime_base::instance().is_simulating())
-                m_future_dispatched.push_back(std::make_unique<dispatched <Instance>>(result));
+                m_future_dispatched.push_back(result);
             return result;
         }
 
@@ -70,7 +70,7 @@ namespace misaxx {
                 return instance;
             };
             if(misa_runtime_base::instance().is_simulating())
-                m_future_dispatched.push_back(std::make_unique<dispatched <Module>>(result));
+                m_future_dispatched.push_back(result);
             return result;
         }
 
@@ -112,7 +112,7 @@ namespace misaxx {
 
         virtual void misa_simulate() {
             for(const auto &f : m_future_dispatched) {
-                f->dispatch(*this);
+                f.dispatch(*this);
             }
         }
 
@@ -130,9 +130,10 @@ namespace misaxx {
     private:
 
         /**
-         * Lists all future dispatched entries for later use in misa_simulate()
+         * Lists all future dispatched entries for later use in misa_simulate().
+         * We can do without a pointer because misa_future_dispatch can convert internally
          */
-        std::vector<std::unique_ptr<misa_future_dispatch_base<misa_dispatcher<ModuleDeclaration>>>> m_future_dispatched;
+        std::vector<dispatched<misa_worker_base>> m_future_dispatched;
 
         /**
         * Creates a pattxx::functional_task that runs a function

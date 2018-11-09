@@ -26,6 +26,11 @@ namespace misaxx {
 
         misa_future_dispatch() = default;
 
+        /**
+         * This constructor is needed to allow internal dynamic casting of the function
+         * @tparam HigherOrderInstace
+         * @param t_src
+         */
         template<class HigherOrderInstace>
         misa_future_dispatch(const misa_future_dispatch<Worker, HigherOrderInstace> &t_src)
                 : name(t_src.name), function(t_src.function) {
