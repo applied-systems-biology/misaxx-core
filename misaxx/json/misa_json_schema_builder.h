@@ -102,7 +102,7 @@ namespace misaxx {
 
             // If we have a default value, write it
             if(t_json_metadata.default_value) {
-                json_helper::access_json_path(data, property_base_path, "defaut") = t_json_metadata.default_value.value();
+                json_helper::access_json_path(data, property_base_path, "default") = t_json_metadata.default_value.value();
             }
         }
 
