@@ -78,6 +78,8 @@ namespace misaxx {
             const auto property_base_path = schema_property_path(t_parameter_path);
             const auto property_parent_base_path = schema_property_path(t_parameter_path);
 
+            json_helper::access_json_path(data, property_base_path, "type") = as_json.type_name();
+
             // If the property is required, update the required list
             if(t_json_metadata.required) {
                 nlohmann::json &required_list = json_helper::access_json_path(data, property_parent_base_path, "required");
