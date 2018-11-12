@@ -179,7 +179,7 @@ namespace misaxx {
          * @return
          */
         template<class Parameter, class InputCheckTag = misaxx::parameters::default_check> auto from_parameter() {
-            return from_json<Parameter, typename Parameter::configuration_namespace_type, InputCheckTag> (Parameter().get_serialization_id());
+            return from_json<Parameter, typename Parameter::configuration_namespace_type, InputCheckTag> (Parameter().get_serialization_id().get_id());
         }
 
         /**
@@ -188,7 +188,7 @@ namespace misaxx {
          * @return
          */
         template<class Parameter, class InputCheckTag = misaxx::parameters::default_check> auto from_parameter_or(Parameter t_default = Parameter()) {
-            return from_json_or<Parameter, typename Parameter::configuration_namespace_type, InputCheckTag> (Parameter().get_serialization_id(), std::move(t_default));
+            return from_json_or<Parameter, typename Parameter::configuration_namespace_type, InputCheckTag> (Parameter().get_serialization_id().get_id(), std::move(t_default));
         }
 
     private:
