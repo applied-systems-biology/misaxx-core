@@ -11,6 +11,7 @@
 #include <boost/filesystem.hpp>
 #include <nlohmann/json.hpp>
 #include <misaxx/json/misa_json_property.h>
+#include <misaxx/json/misa_json_helper.h>
 
 namespace misaxx {
 
@@ -20,10 +21,6 @@ namespace misaxx {
     struct misa_json_schema_builder {
 
         using path_t = std::vector<std::string>;
-
-        static nlohmann::json::json_pointer to_json_pointer(const path_t &t_path, const std::string &after = "") {
-            return nlohmann::json::json_pointer("/" + boost::algorithm::join(t_path, "/") + after);
-        }
 
         /**
          * Returns the path to the JSON schema definition property of given parameter
@@ -64,7 +61,7 @@ namespace misaxx {
                 base_path.push_back(t_parameter_path[i]);
 
                 // Set the pointer accordingly
-                data[to_json_pointer(base_path, "/type")] = "object";
+                json_helper::access_json_path(data, base_path, "type") = "object";
             }
         }
 
@@ -81,14 +78,14 @@ namespace misaxx {
                 base_path.push_back(t_path[i]);
 
                 // Set the pointer accordingly
-                data[to_json_pointer(base_path, "/type")] = "object";
+                json_helper::access_json_path(data, base_path, "type") = "object";
             }
 
             if(!t_metadata.title.empty()) {
-                data[to_json_pointer(base_path, "/title")] = t_metadata.title;
+                json_helper::access_json_path(data, base_path, "title") = t_metadata.title;
             }
             if(!t_metadata.description.empty()) {
-                data[to_json_pointer(base_path, "/description")] = t_metadata.description;
+                json_helper::access_json_path(data, base_path, "description") = t_metadata.description;
             }
         }
 
@@ -106,7 +103,7 @@ namespace misaxx {
 
             // If we have enumerated values, use them
             if(!t_json_metadata.allowed_values.empty()) {
-                data[to_json_pointer(base_path)]["enum"] = t_json_metadata.allowed_values;
+                json_helper::access_json_path(data, base_path, "enum") = t_json_metadata.allowed_values;
             }
         }
 
@@ -119,18 +116,18 @@ namespace misaxx {
         template<typename T> void insert_required(const path_t &t_parameter_path, const misa_json_property<T> &t_json_metadata) {
             insert<T>(t_parameter_path, t_json_metadata);
             const auto base_path = schema_parent_path(t_parameter_path);
-            const auto ptr = to_json_pointer(base_path, "/required");
+            nlohmann::json &required_list = json_helper::access_json_path(data, base_path, "required");
 
-            if(data[ptr].empty()) {
-                data[ptr] = { t_parameter_path[t_parameter_path.size() - 1] };
+            if(required_list.empty()) {
+                required_list = { t_parameter_path[t_parameter_path.size() - 1] };
             }
             else {
                 const auto &item = t_parameter_path[t_parameter_path.size() - 1];
-                for(const auto &v : data[ptr]) {
+                for(const auto &v : required_list) {
                     if(v == item)
                         return;
                 }
-                data[ptr].push_back(item);
+                required_list.push_back(item);
             }
         }
 
@@ -144,7 +141,7 @@ namespace misaxx {
         template<typename T> void insert_optional(const path_t &t_parameter_path, const T& t_default, const misa_json_property<T> &t_json_metadata) {
             insert<T>(t_parameter_path, t_json_metadata);
             const auto base_path = schema_property_path(t_parameter_path);
-            data[to_json_pointer(base_path, "/default")] = nlohmann::json(t_default);
+            json_helper::access_json_path(data, base_path, "default") = nlohmann::json(t_default);
         }
 
         /**
@@ -155,19 +152,9 @@ namespace misaxx {
          * @param t_json_metadata
          */
         template<typename T> void insert_static(const path_t &t_parameter_path, const T& t_value, const misa_json_property<T> &t_json_metadata) {
-            insert<T>(t_parameter_path, t_json_metadata);
-            const auto base_path = schema_parent_path(t_parameter_path);
-            const auto ptr = to_json_pointer(base_path, "/required");
-
+            insert_required<T>(t_parameter_path, t_json_metadata);
             const auto base_path2 = schema_property_path(t_parameter_path);
-            data[to_json_pointer(base_path2, "/default")] = nlohmann::json(t_value);
-
-            if(data[ptr].empty()) {
-                data[ptr] = { t_parameter_path[t_parameter_path.size() - 1] };
-            }
-            else {
-                data[ptr].push_back(t_parameter_path[t_parameter_path.size() - 1]);
-            }
+            json_helper::access_json_path(data, base_path2, "default") = nlohmann::json(t_value);
         }
 
         /**

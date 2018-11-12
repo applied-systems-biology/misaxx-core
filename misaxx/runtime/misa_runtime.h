@@ -12,6 +12,7 @@
 #include <misaxx/workers/task_tree/misa_work_node.h>
 #include <misaxx/misa_root_module_base.h>
 #include <omp.h>
+#include <misaxx/json/misa_json_helper.h>
 
 namespace misaxx {
 
@@ -75,8 +76,7 @@ namespace misaxx {
         }
 
         nlohmann::json get_json_raw(const std::vector<std::string> &t_path) override {
-            auto join = "/" + boost::join(t_path, "/");
-            return parameters[nlohmann::json::json_pointer(join)];
+            return misaxx::json_helper::access_json_path(parameters, t_path);
         }
 
         /**
