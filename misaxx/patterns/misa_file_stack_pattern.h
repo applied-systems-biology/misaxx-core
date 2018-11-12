@@ -53,11 +53,11 @@ namespace misaxx {
             for(const auto &extension : extensions) {
                 extensions_.emplace_back(extension.string());
             }
-            t_schema.declare_optional<std::vector<std::string>>("extensions", extensions_);
+            t_schema.resolve("extensions").declare_optional<std::vector<std::string>>(extensions_);
         }
 
-        std::string get_serialization_id() const override {
-            return "misa-file-stack-pattern";
+        misa_serialization_id get_serialization_id() const override {
+            return misa_serialization_id("misa", "patterns/file-stack");
         }
     };
 

@@ -56,8 +56,8 @@ namespace misaxx {
             exported->to_json_schema(t_schema.resolve("exported"));
         }
 
-        std::string get_serialization_id() const override {
-            return "misa-filesystem";
+        misa_serialization_id get_serialization_id() const override {
+            return misa_serialization_id("misa", "filesystem");
         }
     };
 }

@@ -11,8 +11,8 @@ namespace misaxx {
     struct misa_image_file_description : public misa_file_description {
         using misa_file_description::misa_file_description;
 
-        std::string get_serialization_id() const override {
-            return "misa-image-file-description";
+        misa_serialization_id get_serialization_id() const override {
+            return misa_serialization_id("misa", "descriptions/image-file");
         }
 
     };

@@ -35,7 +35,7 @@ namespace misaxx {
             nlohmann::json json;
             for(const auto &kv : user_metadata) {
                 const misa_serializeable *md = kv.second.get();
-                md->to_json(json[md->get_serialization_id()]);
+                md->to_json(json[md->get_serialization_id().get_id()]);
             }
 
             std::ofstream sw;

@@ -275,8 +275,8 @@ namespace misaxx {
             metadata->to_json_schema(t_schema.resolve("metadata"));
         }
 
-        std::string get_serialization_id() const override {
-            return "misa-filesystem-entry";
+        misa_serialization_id get_serialization_id() const override {
+            return misa_serialization_id("misa", "filesystem/entry");
         }
 
     private:

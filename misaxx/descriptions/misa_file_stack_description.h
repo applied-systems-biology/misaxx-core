@@ -40,8 +40,8 @@ namespace misaxx {
             }
         }
 
-        std::string get_serialization_id() const override {
-            return "misa-file-stack-description";
+        misa_serialization_id get_serialization_id() const override {
+            return misa_serialization_id("misa", "descriptions/file-stack");
         }
 
     };

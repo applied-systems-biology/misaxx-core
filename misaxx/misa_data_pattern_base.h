@@ -18,8 +18,8 @@ namespace misaxx {
         void to_json_schema(const misa_json_schema &t_schema) const override {
         }
 
-        std::string get_serialization_id() const override {
-            return "misa-data-pattern-base";
+        misa_serialization_id get_serialization_id() const override {
+            return misa_serialization_id("misa", "patterns/base");
         }
     };
 }

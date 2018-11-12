@@ -97,17 +97,17 @@ namespace misaxx {
 
         void to_json_schema(const misa_json_schema &t_schema) const override {
             if(has_pattern()) {
-                t_schema.resolve("pattern").define("pattern-type", get<misa_data_pattern_base>().get_serialization_id());
+                t_schema.resolve("pattern", "pattern-type").define(get<misa_data_pattern_base>().get_serialization_id());
                 get<misa_data_pattern_base>().to_json_schema(t_schema.resolve("pattern"));
             }
             if(has_description()) {
-                t_schema.resolve("description").define("description-type", get<misa_data_description>().get_serialization_id());
+                t_schema.resolve("description", "description-type").define(get<misa_data_description>().get_serialization_id());
                 get<misa_data_description>().to_json_schema(t_schema.resolve("description"));
             }
         }
 
-        std::string get_serialization_id() const override {
-            return "misa-description-storage";
+        misa_serialization_id get_serialization_id() const override {
+            return misa_serialization_id("misa", "description-storage");
         }
 
         /**

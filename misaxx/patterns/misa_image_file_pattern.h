@@ -16,8 +16,8 @@ namespace misaxx {
 
         }
 
-        std::string get_serialization_id() const override {
-            return "misa-image-file-pattern";
+        misa_serialization_id get_serialization_id() const override {
+            return misa_serialization_id("misa", "patterns/image-file");
         }
 
     };

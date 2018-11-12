@@ -35,11 +35,11 @@ namespace misaxx {
         }
 
         void to_json_schema(const misa_json_schema &t_schema) const override {
-            t_schema.declare_required<std::string>("filename");
+            t_schema.resolve("filename").declare_required<std::string>();
         }
 
-        std::string get_serialization_id() const override {
-            return "misa-file-description";
+        misa_serialization_id get_serialization_id() const override {
+            return misa_serialization_id("misa", "descriptions/file");
         }
     };
 

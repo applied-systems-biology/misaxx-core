@@ -48,12 +48,12 @@ namespace misaxx {
         }
 
         void to_json_schema(const misa_json_schema &t_schema) const override {
-            t_schema.declare_optional<std::string>("filename", filename.string());
+            t_schema.resolve("filename").declare_optional<std::string>(filename.string());
             std::vector<std::string> extensions_;
             for(const auto &extension : extensions) {
                 extensions_.emplace_back(extension.string());
             }
-            t_schema.declare_optional<std::vector<std::string>>("extensions", extensions_);
+            t_schema.resolve("extensions").declare_optional<std::vector<std::string>>(extensions_);
         }
 
         bool has_filename() const {
@@ -94,8 +94,8 @@ namespace misaxx {
             return result;
         }
 
-        std::string get_serialization_id() const override {
-            return "misa-file-pattern";
+        misa_serialization_id get_serialization_id() const override {
+            return misa_serialization_id("misa", "patterns/file");
         }
     };
 

@@ -30,12 +30,12 @@ namespace misaxx {
             name = j["name"];
         }
 
-        std::string get_serialization_id() const override {
-            return "object-name";
+        misa_serialization_id get_serialization_id() const override {
+            return misa_serialization_id("misa", "attachments/object-name");
         }
 
         void to_json_schema(const misa_json_schema &t_schema) const override {
-            t_schema.declare_required<std::string>("name");
+            t_schema.resolve("name").declare_required<std::string>();
         }
     };
 
