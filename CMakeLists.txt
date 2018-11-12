@@ -80,7 +80,6 @@ add_library(misaxx
         misaxx/json/misa_json_schema_builder.h
         misaxx/json/misa_json_schema.h
         misaxx/json/misa_json_property.h
-        misaxx/json/misa_json_schema_converter.h
         misaxx/json/misa_json_property_base.h
         misaxx/caches/misa_unsafe_image_stack.h
         misaxx/caches/misa_image_file.h
@@ -149,7 +148,6 @@ add_library(misaxx
         misaxx/json/misa_json_schema_builder.cpp
         misaxx/json/misa_json_schema.cpp
         misaxx/json/misa_json_property.cpp
-        misaxx/json/misa_json_schema_converter.cpp
         misaxx/json/misa_json_property_base.cpp
         misaxx/caches/misa_unsafe_image_stack.cpp
         misaxx/caches/misa_image_file.cpp

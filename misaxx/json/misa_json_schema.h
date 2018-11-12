@@ -15,7 +15,7 @@ namespace misaxx {
      */
     class misa_json_schema {
     public:
-        misa_json_schema(misa_json_schema_builder &t_builder, misaxx::path_t t_path) :
+        misa_json_schema(misa_json_schema_builder &t_builder, std::vector<std::string> t_path) :
                 m_builder(&t_builder), m_path(std::move(t_path)) {
 
         }
@@ -25,7 +25,7 @@ namespace misaxx {
         }
 
         template<class... Args> misa_json_schema resolve(const Args&... t_segment) const {
-            misaxx::path_t new_path = m_path;
+            std::vector<std::string> new_path = m_path;
             for(const std::string &segment : std::initializer_list<std::string>({ t_segment... })) {
                 new_path.push_back(segment);
             }
@@ -35,7 +35,7 @@ namespace misaxx {
         misa_json_schema parent() const {
             if(m_path.empty())
                 throw std::runtime_error("JSON schema is already parent!");
-            misaxx::path_t new_path = m_path;
+            std::vector<std::string> new_path = m_path;
             if(new_path.size() > 1) {
                 std::swap(new_path[0], new_path[new_path.size() - 1]);
                 new_path.erase(new_path.end() - 1);
@@ -76,6 +76,6 @@ namespace misaxx {
 
     private:
         misa_json_schema_builder *m_builder;
-        misaxx::path_t m_path;
+        std::vector<std::string> m_path;
     };
 }

@@ -6,10 +6,11 @@
 #pragma once
 
 #include <boost/algorithm/string/join.hpp>
-#include "misa_json_schema_converter.h"
 #include <fstream>
 #include <iostream>
 #include <boost/filesystem.hpp>
+#include <nlohmann/json.hpp>
+#include <misaxx/json/misa_json_property.h>
 
 namespace misaxx {
 
@@ -102,7 +103,11 @@ namespace misaxx {
             auto as_json = nlohmann::json(T());
 
             const auto base_path = schema_property_path(t_parameter_path);
-            data[to_json_pointer(base_path)] = schema_converter<T>::as_property(t_json_metadata);
+
+            // If we have enumerated values, use them
+            if(!t_json_metadata.allowed_values.empty()) {
+                data[to_json_pointer(base_path)]["enum"] = t_json_metadata.allowed_values;
+            }
         }
 
         /**
