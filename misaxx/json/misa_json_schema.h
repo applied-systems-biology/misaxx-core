@@ -64,7 +64,7 @@ namespace misaxx {
         template<typename T> void declare_optional(const T &t_default = T(), misa_json_property<T> t_json_metadata = misa_json_property<T>()) const  {
             t_json_metadata.default_value = t_default;
             t_json_metadata.required = false;
-            declare<T>(t_default, std::move(t_json_metadata));
+            declare<T>(std::move(t_json_metadata));
         }
 
         /**
