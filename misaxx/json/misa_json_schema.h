@@ -51,9 +51,20 @@ namespace misaxx {
          * @param t_default
          * @param t_json_metadata
          */
+        template<typename T> void declare(misa_json_property<T> t_json_metadata = misa_json_property<T>()) const  {
+            m_builder->insert<T>(m_path, std::move(t_json_metadata));
+        }
+
+        /**
+         * Declares this path as optional value with default
+         * @tparam T
+         * @param t_default
+         * @param t_json_metadata
+         */
         template<typename T> void declare_optional(const T &t_default = T(), misa_json_property<T> t_json_metadata = misa_json_property<T>()) const  {
             t_json_metadata.default_value = t_default;
-            m_builder->insert<T>(m_path, std::move(t_json_metadata));
+            t_json_metadata.required = false;
+            declare<T>(t_default, std::move(t_json_metadata));
         }
 
         /**
@@ -63,7 +74,7 @@ namespace misaxx {
          */
         template<typename T> void declare_required(misa_json_property<T> t_json_metadata = misa_json_property<T>()) const {
             t_json_metadata.required = true;
-            m_builder->insert<T>(m_path, std::move(t_json_metadata));
+            declare<T>(std::move(t_json_metadata));
         }
 
         /**
@@ -75,7 +86,7 @@ namespace misaxx {
         template<typename T> void define(const T &t_value, misa_json_property<T> t_json_metadata = misa_json_property<T>()) const {
             t_json_metadata.default_value = t_value;
             t_json_metadata.required = true;
-            m_builder->insert<T>(m_path, std::move(t_json_metadata));
+            declare<T>(std::move(t_json_metadata));
         }
 
     private:

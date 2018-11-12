@@ -13,7 +13,7 @@ namespace misaxx {
      * @tparam T Must be compile-type serializeable by nlohmann::json
      */
     template<typename T> struct misa_primitive : public misa_serializeable {
-        T value;
+        T value = T();
         misa_json_property<T> metadata;
 
         misa_primitive() = default;
@@ -35,7 +35,7 @@ namespace misaxx {
         }
 
         void to_json_schema(const misa_json_schema &t_schema) const override {
-            t_schema.declare_optional(value, metadata);
+            t_schema.declare(metadata);
         }
 
         misa_serialization_id get_serialization_id() const override {
