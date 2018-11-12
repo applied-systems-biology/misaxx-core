@@ -55,7 +55,7 @@ namespace misaxx {
             if(is_simulating()) {
                 get_schema_builder().insert_required<T>(t_path, t_json_metadata);
                 if constexpr (std::is_base_of<misa_serializeable, T>::value) {
-                    T().t_json_schema(misa_json_schema(get_schema_builder(), t_path));
+                    T().to_json_schema(misa_json_schema(get_schema_builder(), t_path));
                 }
                 else {
                     misa_primitive<T>().to_json_schema(misa_json_schema(get_schema_builder(), t_path));
@@ -87,7 +87,7 @@ namespace misaxx {
             if(is_simulating()) {
                 get_schema_builder().insert_optional<T>(t_path, t_default, t_json_metadata);
                 if constexpr (std::is_base_of<misa_serializeable, T>::value) {
-                    T().t_json_schema(misa_json_schema(get_schema_builder(), t_path));
+                    T().to_json_schema(misa_json_schema(get_schema_builder(), t_path));
                 }
                 else {
                     misa_primitive<T>().to_json_schema(misa_json_schema(get_schema_builder(), t_path));
