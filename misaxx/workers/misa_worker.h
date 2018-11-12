@@ -84,10 +84,11 @@ namespace misaxx {
          * @return
          */
         template<typename T, class Namespace, class InputCheckTag = parameters::default_check>
-        input<T, InputCheckTag> from_json_or(const std::string &t_name, T t_default = T(), const misa_json_property <T> &t_metadata = misa_json_property<T>()) {
+        input<T, InputCheckTag> from_json_or(const std::string &t_name, T t_default = T(), misa_json_property <T> t_metadata = misa_json_property<T>()) {
+            t_metadata.default_value = std::move(t_default);
             auto path = get_node()->template get_custom_path<Namespace>();
             path.push_back(t_name);
-            return get_node()->template make_parameter<input<T, InputCheckTag>>(misa_runtime_base::instance().get_json_or<T>(path, std::move(t_default), t_metadata));
+            return get_node()->template make_parameter<input<T, InputCheckTag>>(misa_runtime_base::instance().get_json<T>(path, t_metadata));
         }
 
         /**

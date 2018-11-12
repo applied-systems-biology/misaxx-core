@@ -91,11 +91,11 @@ namespace misaxx {
 
             // Load runtime parameters that are not from CLI
             if(!vm.count("threads") && !m_runtime->is_simulating()) {
-                m_runtime->num_threads = m_runtime->template get_json_or<int>({ "runtime", "num-threads" }, 1, misa_json_property<int>());
+                m_runtime->num_threads = m_runtime->template get_json<int>({ "runtime", "num-threads" }, misa_json_property<int>().with_default_value(1));
             }
-            if(!vm.count("no-skip") && !m_runtime->is_simulating()) {
-                m_runtime->enable_skipping = !m_runtime->template get_json_or<bool>({ "runtime", "no-skip" }, false, misa_json_property<bool>());
-            }
+//            if(!vm.count("no-skip") && !m_runtime->is_simulating()) {
+//                m_runtime->enable_skipping = !m_runtime->template get_json<bool>({ "runtime", "no-skip" }, false, misa_json_property<bool>());
+//            }
 
             load_filesystem();
 
@@ -123,7 +123,7 @@ namespace misaxx {
 
                 // Save filesystem to parameter schema
                 m_runtime->instance().filesystem.to_json_schema(misa_json_schema(schema, { "filesystem", "json-data" }));
-                schema.insert_static<std::string>({"filesystem", "source"}, "json", misa_json_property<std::string>());
+                schema.insert<std::string>({"filesystem", "source"}, misa_json_property<std::string>().with_default_value("json").make_required());
 
                 // Workaround: Due to inflexibility with schema generation, manually put "__OBJECT__" nodes into list builders
                 // /properties/algorithm -> nothing to do
@@ -147,8 +147,8 @@ namespace misaxx {
                 }
 
                 // Write runtime parameters
-                schema.insert_optional<int>({"runtime", "num-threads"}, 1, misa_json_property<int>("Number of threads", ""));
-                schema.insert_optional<bool>({"runtime", "no-skip"}, false, misa_json_property<bool>("Disable skipping", ""));
+                schema.insert<int>({"runtime", "num-threads"}, misa_json_property<int>().with_title("Number of threads").with_default_value(1).make_optional());
+//                schema.insert<bool>({"runtime", "no-skip"}, misa_json_property<bool>("Disable skipping", ""));
 
                 std::cout << "<#> <#> Writing parameter schema to " << m_parameter_schema_path.string() << std::endl;
                 m_runtime->parameter_schema.write(m_parameter_schema_path);

@@ -22,12 +22,12 @@ namespace misaxx {
         /**
         * Indicates that the task can be run in parallel context. Defaults to true.
         */
-        bool m_is_parallelizeable = misa_worker<ModuleDeclaration>::template from_json_or<bool, full_node_path>("task::is_parallelizeable", false, misa_json_property<bool>("Enable parallelization", "If false, the task will always be scheduled in the main thread."));
+        bool m_is_parallelizeable = misa_worker<ModuleDeclaration>::template from_json_or<bool, full_node_path>("task::is_parallelizeable", false, misa_json_property<bool>().with_title("Is parallelizeable"));
 
-        /**
-       * Indicates that the task can be skipped. Defaults to true.
-       */
-        bool m_is_skippable = misa_worker<ModuleDeclaration>::template from_json_or<bool, full_node_path>("task::is_skippable", true, misa_json_property<bool>("Enable skipping", "If false, the task will not be skipped."));
+//        /**
+//       * Indicates that the task can be skipped. Defaults to true.
+//       */
+//        bool m_is_skippable = misa_worker<ModuleDeclaration>::template from_json_or<bool, full_node_path>("task::is_skippable", true, misa_json_property<bool>("Enable skipping", "If false, the task will not be skipped."));
 
         static_assert(std::is_base_of<misa_module_declaration_base, ModuleDeclaration>::value, "Template argument must be a module definition!");
 

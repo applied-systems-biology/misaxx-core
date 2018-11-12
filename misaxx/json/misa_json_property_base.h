@@ -16,9 +16,8 @@ namespace misaxx {
 
         std::string description;
 
-        misa_json_property_base() = default;
+        bool required = false;
 
-        explicit misa_json_property_base(std::string t_title, std::string t_description = "") : title(std::move(t_title)), description(std::move(t_description)) {
-        }
+        misa_json_property_base() = default;
     };
 }

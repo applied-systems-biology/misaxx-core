@@ -53,7 +53,7 @@ namespace misaxx {
         template<typename T> T get_json(const std::vector<std::string> &t_path, const misa_json_property<T> &t_json_metadata) {
 
             if(is_simulating()) {
-                get_schema_builder().insert_required<T>(t_path, t_json_metadata);
+                get_schema_builder().insert<T>(t_path, t_json_metadata);
                 if constexpr (std::is_base_of<misa_serializeable, T>::value) {
                     T().to_json_schema(misa_json_schema(get_schema_builder(), t_path));
                 }
@@ -66,39 +66,15 @@ namespace misaxx {
 
             auto json = get_json_raw(t_path);
             if(json.empty()) {
-                if(!is_simulating())
-                    throw std::runtime_error(boost::algorithm::join(t_path, " / ") + " does not exist!");
-                else
+                if(t_json_metadata.default_value) {
+                    return t_json_metadata.default_value.value();
+                }
+                else if(is_simulating()) {
                     return T();
-            }
-            else {
-                return json.get<T>();
-            }
-        }
-
-        /**
-         * Gets the converted JSON value of given path. If the value is not defined in JSON, return the default value.
-         * @tparam T
-         * @tparam Converter Converter that should be used
-         * @param t_path
-         * @param t_default
-         * @return
-         */
-        template<typename T> T get_json_or(const std::vector<std::string> &t_path, T t_default, const misa_json_property<T> &t_json_metadata) {
-
-            if(is_simulating()) {
-                get_schema_builder().insert_optional<T>(t_path, t_default, t_json_metadata);
-                if constexpr (std::is_base_of<misa_serializeable, T>::value) {
-                    T().to_json_schema(misa_json_schema(get_schema_builder(), t_path));
                 }
                 else {
-                    misa_primitive<T>().to_json_schema(misa_json_schema(get_schema_builder(), t_path));
+                    throw std::runtime_error(boost::algorithm::join(t_path, " / ") + " does not exist!");
                 }
-            }
-
-            auto json = get_json_raw(t_path);
-            if(json.empty()) {
-                return std::move(t_default);
             }
             else {
                 return json.get<T>();
