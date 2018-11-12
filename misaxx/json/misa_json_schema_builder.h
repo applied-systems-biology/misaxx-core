@@ -76,7 +76,7 @@ namespace misaxx {
             auto as_json = nlohmann::json(T());
 
             const auto property_base_path = schema_property_path(t_parameter_path);
-            const auto property_parent_base_path = schema_property_path(t_parameter_path);
+            const auto property_parent_base_path = schema_parent_path(t_parameter_path);
 
             json_helper::access_json_path(data, property_base_path, "type") = as_json.type_name();
 
