@@ -52,22 +52,5 @@ namespace misaxx {
             return std::enable_shared_from_this<ModuleDeclaration>::shared_from_this();
         }
 
-    public:
-
-        virtual void misa_init() = 0;
-
-        virtual void misa_simulate() {
-            for (const auto &f : m_future_dispatched) {
-                misa_dispatch(f);
-            }
-        }
-
-    private:
-
-        /**
-         * Lists all future dispatched entries for later use in misa_simulate()
-         */
-        std::vector<dispatched < misaxx::misa_worker_base>> m_future_dispatched;
-
     };
 }
