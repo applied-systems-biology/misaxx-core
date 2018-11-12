@@ -58,7 +58,9 @@ namespace misaxx {
                     T().to_json_schema(misa_json_schema(get_schema_builder(), t_path));
                 }
                 else {
-                    misa_primitive<T>().to_json_schema(misa_json_schema(get_schema_builder(), t_path));
+                    misa_primitive<T> v;
+                    v.metadata = t_json_metadata;
+                    v.to_json_schema(misa_json_schema(get_schema_builder(), t_path));
                 }
             }
 
