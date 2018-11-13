@@ -19,7 +19,7 @@
 #include <misaxx/misa_default_cache.h>
 
 namespace misaxx {
-    struct [[deprecated]] misa_unsafe_file : public misa_default_cache<boost::filesystem::path> {
+    struct [[deprecated]] misa_unsafe_file : public misa_default_cache<cxxh::access::memory_cache<boost::filesystem::path>> {
 
         void simulate_link() override {
             describe()->access<misa_file_pattern>();

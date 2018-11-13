@@ -21,7 +21,7 @@ namespace misaxx {
      * A standard cached 2D image file.
      * @tparam Image Image loadable by coixx::toolbox::auto_load() / coixx::toolbox::load() and saveable by coixx::toolbox::save()
      */
-    template<class Image> class misa_image_file : public misa_default_cache<Image> {
+    template<class Image> class misa_image_file : public misa_default_cache<cxxh::access::cache<Image>> {
     public:
         Image &get() override {
             return m_value;
