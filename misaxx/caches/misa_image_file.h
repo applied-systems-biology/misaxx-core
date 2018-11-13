@@ -58,6 +58,7 @@ namespace misaxx {
 
         void link(const boost::filesystem::path &t_location, const std::shared_ptr<misa_description_storage> &t_description) override {
             m_description = t_description;
+            m_location = t_location;
 
             // If we simulate, just announce the existence of pattern & description
             if(is_simulating()) {
@@ -76,10 +77,15 @@ namespace misaxx {
             return m_description;
         }
 
+        boost::filesystem::path get_location() const override {
+            return m_location;
+        }
+
     private:
         Image m_value;
         bool m_has_value = false;
         boost::filesystem::path m_path;
+        boost::filesystem::path m_location;
         std::shared_ptr<misa_description_storage> m_description;
     };
 }

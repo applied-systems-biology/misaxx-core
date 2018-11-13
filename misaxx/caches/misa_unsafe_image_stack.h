@@ -33,6 +33,7 @@ namespace misaxx {
 
         void link(const boost::filesystem::path &t_location, const std::shared_ptr<misa_description_storage> &t_description) override {
             metadata = t_description;
+            m_location = t_location;
 
             if(is_simulating()) {
                 metadata->access<misa_file_stack_pattern>();
@@ -55,5 +56,12 @@ namespace misaxx {
         std::shared_ptr<misa_description_storage> describe() const override {
             return metadata;
         }
+
+        boost::filesystem::path get_location() const override {
+            return m_location;
+        }
+
+    private:
+        boost::filesystem::path m_location;
     };
 }

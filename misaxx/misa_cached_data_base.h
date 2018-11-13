@@ -12,6 +12,7 @@
 #include <cxxh/access/memory_cache.h>
 #include "misa_serializeable.h"
 #include "misa_description_storage.h"
+#include "misa_cache.h"
 
 namespace misaxx {
 
@@ -26,14 +27,13 @@ namespace misaxx {
         using attachment_type = cxxh::containers::dynamic_singleton_map<misa_serializeable>;
         using attachment_cache_type = cxxh::access::memory_cache<attachment_type>;
 
-        /**
-         * Attachments to this cache. Can be used by algorithms to communicate results.
-         */
-        std::shared_ptr<attachment_cache_type> attachments;
+        misa_cached_data_base() = default;
 
-        misa_cached_data_base() {
-            attachments = std::make_shared<attachment_cache_type>();
-        }
+        /**
+         * Returns the cache stored within this cache storage
+         * @return
+         */
+        virtual const std::shared_ptr<misa_cache> &get_cache_base() const = 0;
 
         /**
         * Attaches data
@@ -41,7 +41,7 @@ namespace misaxx {
         * @param attachment
         */
         template<class Attachment> void attach(Attachment attachment) {
-            readwrite_access <attachment_type > access(*attachments);
+            readwrite_access <attachment_type > access(get_cache_base()->attachments);
             access.get().insert(std::move(attachment));
         }
 
@@ -52,7 +52,7 @@ namespace misaxx {
          * @return
          */
         template<class Attachment> Attachment get_attachment() const {
-            readwrite_access <attachment_type > access(*attachments);
+            readwrite_access <attachment_type > access(get_cache_base()->attachments);
             return access.get().at<Attachment>();
         }
 
@@ -63,7 +63,7 @@ namespace misaxx {
         * @return
         */
         template<class Attachment> bool has_attachment() const {
-            readonly_access <attachment_type > access(*attachments);
+            readonly_access <attachment_type > access(get_cache_base()->attachments);
             return access.get().has<Attachment>();
         }
 

@@ -44,6 +44,10 @@ namespace misaxx {
             return cache;
         }
 
+        const std::shared_ptr<misa_cache> &get_cache_base() const override {
+            return cache;
+        }
+
         /**
          * Links this cache to a filesystem location if not already set.
          * This calls the internal linkage method of the cached data.
