@@ -31,7 +31,7 @@ namespace misaxx {
                 describe()->set(describe()->get<misa_file_pattern>().produce(get_location()));
             }
             this->set(get_location() / describe()->get<misa_file_description>().filename);
-            set_unique_location(get());
+            this->set_unique_location(get());
         }
     };
 }

@@ -40,7 +40,7 @@ namespace misaxx {
                 files.insert({ kv.first, cache });
             }
 
-            set_unique_location(this->get_location());
+            this->set_unique_location(this->get_location());
         }
     };
 }
