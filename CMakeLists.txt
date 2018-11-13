@@ -181,7 +181,7 @@ add_library(misaxx
         misaxx/workers/dependency_management/misa_work_dependency_segment.cpp
         misaxx/workers/misa_dispatcher.cpp
         misaxx/workers/misa_worker.cpp
-        misaxx/misa_data_pattern.cpp misaxx/misa_primitive.h misaxx/misa_serialization_id.h misaxx/json/misa_json_helper.h)
+        misaxx/misa_data_pattern.cpp misaxx/misa_primitive.h misaxx/misa_serialization_id.h misaxx/json/misa_json_helper.h misaxx/misa_cached_data_base.cpp misaxx/misa_cached_data_base.h)
 
 target_include_directories(misaxx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
