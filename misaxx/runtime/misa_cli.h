@@ -227,11 +227,16 @@ namespace misaxx {
          * Saves / sets parameter schemata of cache attachments
          */
         void process_cache_attachments() {
+
+            std::cout << "[Attachments] Post-processing attachments ..." << std::endl;
+
             const std::vector<std::shared_ptr<misa_cache>> &caches = m_runtime->get_registered_caches();
             for(const auto &ptr : caches) {
 
                 if(ptr->get_unique_location().empty())
                     continue;
+
+                std::cout << "[Attachments] " << ptr->get_location() << " (" << ptr->get_unique_location() << ")" << std::endl;
 
                 readonly_access<typename misa_cached_data_base::attachment_type> access(ptr->attachments); // Open the cache
 
