@@ -22,7 +22,7 @@ namespace misaxx {
         /**
         * Indicates that the task can be run in parallel context. Defaults to true.
         */
-        bool m_is_parallelizeable = misa_worker<ModuleDeclaration>::template from_json_or<bool, full_node_path>("task::is_parallelizeable", false, misa_json_property<bool>().with_title("Is parallelizeable"));
+        bool m_is_parallelizeable = misa_worker<ModuleDeclaration>::template from_algorithm_json_or<bool>("task::is_parallelizeable", true, misa_json_property<bool>().with_title("Is parallelizeable"));
 
 //        /**
 //       * Indicates that the task can be skipped. Defaults to true.

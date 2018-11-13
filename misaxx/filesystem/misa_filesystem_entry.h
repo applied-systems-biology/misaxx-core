@@ -268,7 +268,7 @@ namespace misaxx {
         }
 
         void to_json_schema(const misa_json_schema &t_schema) const override {
-            t_schema.declare_optional<std::string>("external-path");
+            t_schema.resolve("external-path").declare_optional<std::string>();
             for(const auto &kv : children) {
                 kv.second->to_json_schema(t_schema.resolve("children", kv.first));
             }
