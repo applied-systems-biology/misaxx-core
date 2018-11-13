@@ -51,7 +51,7 @@ namespace misaxx {
             return m_unique_location;
         }
 
-        boost::filesystem::path set_unique_location(boost::filesystem::path t_path) {
+        void set_unique_location(boost::filesystem::path t_path) {
             m_unique_location = std::move(t_path);
         }
 
