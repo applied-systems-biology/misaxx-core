@@ -15,6 +15,7 @@
 #include <misaxx/filesystem/misa_filesystem_json_importer.h>
 #include <misaxx/runtime/misa_runtime.h>
 #include <misaxx/misa_multiobject_root.h>
+#include <misaxx/misa_cached_data_base.h>
 
 namespace misaxx {
 
@@ -116,7 +117,11 @@ namespace misaxx {
             if(m_runtime->is_simulating()) {
                 std::cout << "<#> <#> RUNNING IN SIMULATION MODE. This will build a parameter schema, but no real work is done!" << std::endl;
             }
+
             m_runtime->run();
+            process_cache_attachments();
+
+
             if(m_runtime->is_simulating()) {
 
                 misa_json_schema_builder &schema = m_runtime->parameter_schema;
@@ -215,6 +220,33 @@ namespace misaxx {
             }
             else {
                 throw std::runtime_error("Unknown filesystem type " + params["source"].get<std::string>());
+            }
+        }
+
+        /**
+         * Saves / sets parameter schemata of cache attachments
+         */
+        void process_cache_attachments() {
+            const std::vector<std::shared_ptr<misa_cache>> &caches = m_runtime->get_registered_caches();
+            for(const auto &ptr : caches) {
+                readonly_access<typename misa_cached_data_base::attachment_type> access(ptr->attachments); // Open the cache
+                for(const auto &kv : access.get()) {
+                    const std::unique_ptr<misa_serializeable> &attachment_ptr = kv.second;
+
+                    if(m_runtime->is_simulating()) {
+                        // TODO: Create parameter schema
+                    }
+                    else {
+                        // Export the attachment
+                        const boost::filesystem::path filesystem_import_path = m_runtime->instance().filesystem.imported->external_path();
+                        const boost::filesystem::path filesystem_export_path = m_runtime->instance().filesystem.exported->external_path();
+                        const boost::filesystem::path cache_path = ptr->get_location();
+
+                        boost::filesystem::path relative_to_import = boost::filesystem::relative(cache_path, filesystem_import_path);
+                        boost::filesystem::path relative_to_export = boost::filesystem::relative(cache_path, filesystem_export_path);
+                        std::cout << "test" << std::endl;
+                    }
+                }
             }
         }
 

@@ -5,7 +5,6 @@
 
 #pragma once
 #include <misaxx/filesystem/misa_filesystem.h>
-#include <misaxx/runtime/misa_runtime_base.h>
 #include <cxxh/containers/dynamic_singleton_map.h>
 #include <cxxh/access/memory_cache.h>
 
@@ -41,14 +40,6 @@ namespace misaxx {
          * @return
          */
         virtual boost::filesystem::path get_location() const = 0;
-
-        /**
-         * Returns true if the runtime is in simulation mode and no valid locations are passed.
-         * @return
-         */
-        static bool is_simulating() {
-            return misaxx::misa_runtime_base::instance().is_simulating();
-        }
 
     };
 }

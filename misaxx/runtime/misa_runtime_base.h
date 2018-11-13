@@ -13,6 +13,7 @@
 #include <misaxx/json/misa_json_schema_builder.h>
 #include <misaxx/misa_serializeable.h>
 #include <misaxx/misa_primitive.h>
+#include <misaxx/misa_cache.h>
 
 namespace misaxx {
 
@@ -22,6 +23,12 @@ namespace misaxx {
      * This is the interface containing common functions for different runtime implementations.
      */
     struct misa_runtime_base {
+
+        /**
+         * Registers a cache into this runtime (e.g. used for attachment export)
+         * @param t_cache
+         */
+        virtual void register_cache(std::shared_ptr<misa_cache> t_cache) = 0;
 
         /**
          * Returns the JSON that contains the parameters

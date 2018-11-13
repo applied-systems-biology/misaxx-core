@@ -36,7 +36,7 @@ namespace misaxx {
         virtual const std::shared_ptr<misa_cache> &get_cache_base() const = 0;
 
         /**
-        * Attaches data
+        * Attaches data to this cache
         * @tparam Attachment
         * @param attachment
         */

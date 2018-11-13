@@ -58,6 +58,7 @@ namespace misaxx {
         void suggest_link(const boost::filesystem::path &t_location, const std::shared_ptr<misa_description_storage> &t_description) {
             if(!cache) {
                 cache = std::make_shared<Cache>();
+                misa_runtime_base::instance().register_cache(cache);
                 std::cout << "[Cache] Manually linking " << t_location << " into cache of type " << Cache::DATA_TYPE << std::endl;
                 cache->link(t_location, t_description);
             }
@@ -72,6 +73,7 @@ namespace misaxx {
         void suggest_link(const filesystem::const_entry &t_location) {
             if(!cache) {
                 cache = std::make_shared<Cache>();
+                misa_runtime_base::instance().register_cache(cache);
 
                 // Special case simulation mode
                 if(misaxx::misa_runtime_base::instance().is_simulating()) {
@@ -94,6 +96,7 @@ namespace misaxx {
         void suggest_create(const filesystem::entry &t_location, const std::shared_ptr<misa_description_storage> &t_description) {
             if(!cache) {
                 cache = std::make_shared<Cache>();
+                misa_runtime_base::instance().register_cache(cache);
 
                 if(misaxx::misa_runtime_base::instance().is_simulating()) {
                     std::cout << "[Cache] Creating " << t_location->internal_path() << " as cache of type " << Cache::DATA_TYPE << std::endl;

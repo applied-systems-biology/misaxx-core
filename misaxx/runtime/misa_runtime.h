@@ -91,6 +91,18 @@ namespace misaxx {
             m_root_declaration.filesystem = std::move(t_filesystem);
         }
 
+        void register_cache(std::shared_ptr<misa_cache> t_cache) override {
+            m_registered_caches.emplace_back(std::move(t_cache));
+        }
+
+        /**
+        * Returns the list of registered caches
+        * @return
+        */
+        const std::vector<std::shared_ptr<misa_cache>> &get_registered_caches() const {
+            return m_registered_caches;
+        }
+
         /**
          * Starts the actual work of the runtime.
          */
@@ -251,6 +263,8 @@ namespace misaxx {
     private:
 
         std::shared_ptr<nodes::misa_work_node> m_root;
+
+        std::vector<std::shared_ptr<misa_cache>> m_registered_caches;
 
         size_t m_known_nodes_count = 0;
 

@@ -13,6 +13,7 @@
 #include <misaxx/misa_cache.h>
 #include <misaxx/patterns/misa_image_file_pattern.h>
 #include <misaxx/patterns/misa_image_file_stack_pattern.h>
+#include <misaxx/runtime/misa_runtime_base.h>
 
 namespace misaxx {
     /**
@@ -61,7 +62,7 @@ namespace misaxx {
             m_location = t_location;
 
             // If we simulate, just announce the existence of pattern & description
-            if(is_simulating()) {
+            if(misa_runtime_base::instance().is_simulating()) {
                 m_description->access<misa_file_stack_pattern>();
                 m_description->access<misa_image_file_description>();
                 return;

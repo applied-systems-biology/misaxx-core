@@ -15,6 +15,7 @@
 #include <cxxh/access/memory_cache.h>
 #include <misaxx/patterns/misa_file_pattern.h>
 #include <misaxx/misa_cache.h>
+#include <misaxx/runtime/misa_runtime_base.h>
 
 namespace misaxx {
     struct [[deprecated]] misa_unsafe_file : public cxxh::access::memory_cache<boost::filesystem::path>, public misa_cache {
@@ -35,7 +36,7 @@ namespace misaxx {
             m_location = t_directory;
 
             // If we simulate, just announce the existence of pattern & description
-            if(is_simulating()) {
+            if(misa_runtime_base::instance().is_simulating()) {
                 metadata->access<misa_file_pattern>();
                 metadata->access<misa_file_description>();
                 return;

@@ -35,7 +35,7 @@ namespace misaxx {
             metadata = t_description;
             m_location = t_location;
 
-            if(is_simulating()) {
+            if(misa_runtime_base::instance().is_simulating()) {
                 metadata->access<misa_file_stack_pattern>();
                 metadata->access<misa_file_stack_description>();
                 return;
