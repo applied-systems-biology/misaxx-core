@@ -12,7 +12,7 @@ namespace misaxx {
     /**
      * Common implementation of misa_cache that automates lots of required functions
      */
-    template<typename Data> class misa_default_cache : public cxxh::access::cache<Data>, public misa_cache {
+    template<typename Data, class Cache = cxxh::access::cache<Data>> class misa_default_cache : public Cache, public misa_cache {
     public:
         misa_default_cache() = default;
 

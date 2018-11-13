@@ -232,7 +232,7 @@ namespace misaxx {
 
                 if(ptr->get_unique_location().empty())
                     continue;
-                
+
                 readonly_access<typename misa_cached_data_base::attachment_type> access(ptr->attachments); // Open the cache
 
                 boost::filesystem::path cache_attachment_path;

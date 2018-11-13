@@ -17,7 +17,8 @@ namespace misaxx {
 
     template<class Image> using misa_unsafe_image_stack_contents = std::unordered_map<std::string, misa_cached_data<misa_unsafe_image_file<Image>>>;
 
-    template<class Image> struct [[deprecated]] misa_unsafe_image_stack : public misa_default_cache<misa_unsafe_image_stack_contents<Image>> {
+    template<class Image> struct [[deprecated]] misa_unsafe_image_stack : public misa_default_cache<misa_unsafe_image_stack_contents<Image>,
+            cxxh::access::memory_cache<misa_unsafe_image_stack_contents<Image>>> {
 
         std::shared_ptr<misa_description_storage> metadata;
 
