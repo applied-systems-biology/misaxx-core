@@ -19,18 +19,16 @@ namespace misaxx {
 
     template<class Image> struct [[deprecated]] misa_unsafe_image_stack : public misa_default_cache<cxxh::access::memory_cache<misa_unsafe_image_stack_contents<Image>>> {
 
-        std::shared_ptr<misa_description_storage> metadata;
-
         using image_type = Image;
 
         void simulate_link() override {
-            metadata->access<misa_file_stack_pattern>();
-            metadata->access<misa_file_stack_description>();
+            this->describe()->template access<misa_file_stack_pattern>();
+            this->describe()->template access<misa_file_stack_description>();
         }
 
         void do_link() override {
             if(!this->describe()->has_description()) {
-                metadata->set(this->describe()->template get<misa_image_file_stack_pattern>().produce(this->get_location()));
+                this->describe()->set(this->describe()->template get<misa_image_file_stack_pattern>().produce(this->get_location()));
             }
 
             auto &files = this->get();
