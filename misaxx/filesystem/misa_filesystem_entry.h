@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <boost/filesystem.hpp>
 #include <misaxx/misa_description_storage.h>
+#include <boost/algorithm/string.hpp>
 
 namespace misaxx {
 
@@ -277,6 +278,28 @@ namespace misaxx {
 
         misa_serialization_id get_serialization_id() const override {
             return misa_serialization_id("misa", "filesystem/entry");
+        }
+
+        /**
+        * Given an external_path(), return the path relative to this entries' external_path()
+        * If it is not a child path, return an empty path
+        * @param t_path
+        * @return
+        */
+        boost::filesystem::path child_external_path(const boost::filesystem::path &t_path) {
+            if(t_path == external_path()) {
+                return "/";
+            }
+            else {
+                boost::filesystem::path absolute_path = boost::filesystem::absolute(t_path, boost::filesystem::current_path());
+                boost::filesystem::path absolute_external_path = boost::filesystem::absolute(external_path(), boost::filesystem::current_path());
+                if(boost::starts_with(absolute_path, absolute_external_path)) {
+                    return boost::filesystem::relative(absolute_path, absolute_external_path);
+                }
+                else {
+                    return "";
+                }
+            }
         }
 
     private:

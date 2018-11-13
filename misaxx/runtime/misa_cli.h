@@ -238,12 +238,9 @@ namespace misaxx {
                     }
                     else {
                         // Export the attachment
-                        const boost::filesystem::path filesystem_import_path = m_runtime->instance().filesystem.imported->external_path();
-                        const boost::filesystem::path filesystem_export_path = m_runtime->instance().filesystem.exported->external_path();
-                        const boost::filesystem::path cache_path = ptr->get_location();
+                        const boost::filesystem::path filesystem_import_path = m_runtime->instance().filesystem.imported->child_external_path(ptr->get_location());
+                        const boost::filesystem::path filesystem_export_path = m_runtime->instance().filesystem.exported->child_external_path(ptr->get_location());
 
-                        boost::filesystem::path relative_to_import = boost::filesystem::relative(cache_path, filesystem_import_path);
-                        boost::filesystem::path relative_to_export = boost::filesystem::relative(cache_path, filesystem_export_path);
                         std::cout << "test" << std::endl;
                     }
                 }
