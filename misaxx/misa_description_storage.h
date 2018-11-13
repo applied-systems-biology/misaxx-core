@@ -182,6 +182,14 @@ namespace misaxx {
          * @return
          */
         template <class Metadata> Metadata &access(Metadata t_description) {
+
+            if constexpr (std::is_base_of<misa_data_pattern_base, Metadata>::value) {
+                m_has_pattern = true;
+            }
+            else if constexpr (std::is_base_of<misa_data_description, Metadata>::value) {
+                m_has_description = true;
+            }
+
             if(!m_instances.has<Metadata>())
                 return set(std::move(t_description));
             else
