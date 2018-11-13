@@ -264,7 +264,7 @@ namespace misaxx {
                 }
 
                 // Replace extension with JSON
-                cache_attachment_path.replace_extension(".json");
+                cache_attachment_path = cache_attachment_path.string() + ".json";
                 boost::filesystem::create_directories(cache_attachment_path.parent_path());
 
                 nlohmann::json exported_json = nlohmann::json(nlohmann::json::object());
