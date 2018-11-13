@@ -47,5 +47,12 @@ namespace misaxx {
          */
         virtual boost::filesystem::path get_unique_location() const = 0;
 
+        /**
+         * Applies postprocessing (e.g. saving data) after analysis
+         */
+        virtual void postprocess() {
+
+        }
+
     };
 }

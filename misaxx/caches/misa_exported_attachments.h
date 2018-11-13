@@ -35,5 +35,9 @@ namespace misaxx {
             sw.open(get().string());
             sw << std::setw(4) << json;
         }
+
+        void postprocess() override {
+            save();
+        }
     };
 }

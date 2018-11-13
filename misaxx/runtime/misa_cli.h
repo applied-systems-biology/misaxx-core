@@ -119,8 +119,8 @@ namespace misaxx {
             }
 
             m_runtime->run();
+            postprocess_caches();
             process_cache_attachments();
-
 
             if(m_runtime->is_simulating()) {
 
@@ -220,6 +220,15 @@ namespace misaxx {
             }
             else {
                 throw std::runtime_error("Unknown filesystem type " + params["source"].get<std::string>());
+            }
+        }
+
+        void postprocess_caches() {
+            std::cout << "[Caches] Post-processing caches ..." << std::endl;
+            const std::vector<std::shared_ptr<misa_cache>> &caches = m_runtime->get_registered_caches();
+            for(const auto &ptr : caches) {
+                std::cout << "[Caches] " << ptr->get_location() << " (" << ptr->get_unique_location() << ")" << std::endl;
+                ptr->postprocess();
             }
         }
 
