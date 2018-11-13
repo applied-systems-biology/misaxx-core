@@ -22,7 +22,7 @@ namespace misaxx {
         using image_type = Image;
 
         void simulate_link() override {
-            this->describe()->template access<misa_file_stack_pattern>();
+            this->describe()->template access<misa_image_file_stack_pattern>();
             this->describe()->template access<misa_file_stack_description>();
         }
 
