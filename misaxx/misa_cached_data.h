@@ -41,10 +41,10 @@ namespace misaxx {
         }
 
         bool has_cache() const override {
-            return cache;
+            return static_cast<bool>(cache);
         }
 
-        const std::shared_ptr<misa_cache> &get_cache_base() const override {
+        std::shared_ptr<misa_cache> get_cache_base() const override {
             return cache;
         }
 

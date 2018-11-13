@@ -33,7 +33,7 @@ namespace misaxx {
          * Returns the cache stored within this cache storage
          * @return
          */
-        virtual const std::shared_ptr<misa_cache> &get_cache_base() const = 0;
+        virtual std::shared_ptr<misa_cache> get_cache_base() const = 0;
 
         /**
         * Attaches data to this cache
