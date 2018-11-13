@@ -229,13 +229,17 @@ namespace misaxx {
         void process_cache_attachments() {
             const std::vector<std::shared_ptr<misa_cache>> &caches = m_runtime->get_registered_caches();
             for(const auto &ptr : caches) {
+
+                if(ptr->get_unique_location().empty())
+                    continue;
+                
                 readonly_access<typename misa_cached_data_base::attachment_type> access(ptr->attachments); // Open the cache
 
                 boost::filesystem::path cache_attachment_path;
 
                 if(!m_runtime->is_simulating()) {
-                    const boost::filesystem::path filesystem_import_path = m_runtime->instance().filesystem.imported->child_external_path(ptr->get_location());
-                    const boost::filesystem::path filesystem_export_path = m_runtime->instance().filesystem.exported->child_external_path(ptr->get_location());
+                    const boost::filesystem::path filesystem_import_path = m_runtime->instance().filesystem.imported->child_external_path(ptr->get_unique_location());
+                    const boost::filesystem::path filesystem_export_path = m_runtime->instance().filesystem.exported->child_external_path(ptr->get_unique_location());
 
                     if(!filesystem_import_path.empty()) {
                         cache_attachment_path = m_runtime->instance().filesystem.imported->external_path() / "attachments" / "imported" / filesystem_import_path;
