@@ -41,5 +41,11 @@ namespace misaxx {
          */
         virtual boost::filesystem::path get_location() const = 0;
 
+        /**
+         * Unique location of this cache, which should be not equal with get_location() if a cache contains sub-caches
+         * @return
+         */
+        virtual boost::filesystem::path get_unique_location() const = 0;
+
     };
 }

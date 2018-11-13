@@ -293,7 +293,7 @@ namespace misaxx {
             else {
                 boost::filesystem::path absolute_path = boost::filesystem::absolute(t_path, boost::filesystem::current_path());
                 boost::filesystem::path absolute_external_path = boost::filesystem::absolute(external_path(), boost::filesystem::current_path());
-                if(boost::starts_with(absolute_path, absolute_external_path)) {
+                if(boost::starts_with(absolute_path.string(), absolute_external_path.string())) {
                     return boost::filesystem::relative(absolute_path, absolute_external_path);
                 }
                 else {

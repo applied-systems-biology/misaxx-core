@@ -230,19 +230,43 @@ namespace misaxx {
             const std::vector<std::shared_ptr<misa_cache>> &caches = m_runtime->get_registered_caches();
             for(const auto &ptr : caches) {
                 readonly_access<typename misa_cached_data_base::attachment_type> access(ptr->attachments); // Open the cache
+
+                boost::filesystem::path cache_attachment_path;
+
+                if(!m_runtime->is_simulating()) {
+                    const boost::filesystem::path filesystem_import_path = m_runtime->instance().filesystem.imported->child_external_path(ptr->get_location());
+                    const boost::filesystem::path filesystem_export_path = m_runtime->instance().filesystem.exported->child_external_path(ptr->get_location());
+
+                    if(!filesystem_import_path.empty()) {
+                        cache_attachment_path = m_runtime->instance().filesystem.imported->external_path() / "attachments" / "imported" / filesystem_import_path;
+                    }
+                    else if(!filesystem_export_path.empty()) {
+                        cache_attachment_path = m_runtime->instance().filesystem.exported->external_path() / "attachments" / "exported" / filesystem_export_path;
+                    }
+                }
+
+                // Replace extension with JSON
+                cache_attachment_path.replace_extension(".json");
+                boost::filesystem::create_directories(cache_attachment_path.parent_path());
+
+                nlohmann::json exported_json = nlohmann::json(nlohmann::json::object());
+
                 for(const auto &kv : access.get()) {
                     const std::unique_ptr<misa_serializeable> &attachment_ptr = kv.second;
 
                     if(m_runtime->is_simulating()) {
                         // TODO: Create parameter schema
                     }
-                    else {
-                        // Export the attachment
-                        const boost::filesystem::path filesystem_import_path = m_runtime->instance().filesystem.imported->child_external_path(ptr->get_location());
-                        const boost::filesystem::path filesystem_export_path = m_runtime->instance().filesystem.exported->child_external_path(ptr->get_location());
-
-                        std::cout << "test" << std::endl;
+                    else if(!cache_attachment_path.empty()) {
+                        // Export the attachment as JSON
+                        attachment_ptr->to_json(exported_json[attachment_ptr->get_serialization_id().get_id()]);
                     }
+                }
+
+                if(!m_runtime->is_simulating()) {
+                    std::ofstream sw;
+                    sw.open(cache_attachment_path.string());
+                    sw << std::setw(4) << exported_json;
                 }
             }
         }
