@@ -16,47 +16,22 @@
 #include <misaxx/patterns/misa_file_pattern.h>
 #include <misaxx/misa_cache.h>
 #include <misaxx/runtime/misa_runtime_base.h>
+#include <misaxx/misa_default_cache.h>
 
 namespace misaxx {
-    struct [[deprecated]] misa_unsafe_file : public cxxh::access::memory_cache<boost::filesystem::path>, public misa_cache {
+    struct [[deprecated]] misa_unsafe_file : public misa_default_cache<boost::filesystem::path> {
 
-        static inline const std::string DATA_TYPE = "unsafe-file";
+        void simulate_link() override {
+            describe()->access<misa_file_pattern>();
+            describe()->access<misa_file_description>();
+        }
 
-        std::shared_ptr<misa_description_storage> metadata;
-
-        using cxxh::access::memory_cache<boost::filesystem::path>::memory_cache;
-
-        /**
-         * Links the file to any folder using the description
-         * @param t_directory
-         * @param t_description
-         */
-        void link(const boost::filesystem::path &t_directory, const std::shared_ptr<misa_description_storage> &t_description) override {
-            metadata = t_description;
-            m_location = t_directory;
-
-            // If we simulate, just announce the existence of pattern & description
-            if(misa_runtime_base::instance().is_simulating()) {
-                metadata->access<misa_file_pattern>();
-                metadata->access<misa_file_description>();
-                return;
-            }
-
+        void do_link() override {
             if(!describe()->has_description()) {
-                metadata->set(describe()->get<misa_file_pattern>().produce(t_directory));
+                describe()->set(describe()->get<misa_file_pattern>().produce(get_location()));
             }
-            this->set(t_directory / describe()->get<misa_file_description>().filename);
+            this->set(get_location() / describe()->get<misa_file_description>().filename);
+            set_unique_location(get());
         }
-
-        std::shared_ptr<misa_description_storage> describe() const override {
-            return metadata;
-        }
-
-        boost::filesystem::path get_location() const override {
-            return m_location;
-        }
-
-    private:
-        boost::filesystem::path m_location;
     };
 }

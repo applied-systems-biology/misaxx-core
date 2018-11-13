@@ -16,11 +16,6 @@ namespace misaxx {
      */
     template<class Image> struct [[deprecated]] misa_unsafe_image_file : public misa_unsafe_file {
 
-        /**
-        * Used by the misa_cache_registry
-        */
-        static inline const std::string DATA_TYPE = "unsafe-image-file";
-
         using image_type = Image;
 
         using misa_unsafe_file::misa_unsafe_file;

@@ -16,11 +16,6 @@ namespace misaxx {
      */
     struct [[deprecated]] misa_unsafe_exportable_meta_data : public misa_unsafe_file {
 
-        /**
-        * Used by the misa_cache_registry
-        */
-        static inline const std::string DATA_TYPE = "unsafe-exportable-metadata";
-
         using misa_unsafe_file::misa_unsafe_file;
 
         /**

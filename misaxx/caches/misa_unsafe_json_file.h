@@ -16,11 +16,6 @@ namespace misaxx {
      */
     struct [[deprecated]] misa_unsafe_json_file : public misa_unsafe_file {
 
-        /**
-        * Used by the misa_cache_registry
-        */
-        static inline const std::string DATA_TYPE = "unsafe-json-file";
-
         using misa_unsafe_file::misa_unsafe_file;
 
         void load (const nlohmann::json &json) {

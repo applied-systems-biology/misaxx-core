@@ -17,51 +17,30 @@ namespace misaxx {
 
     template<class Image> using misa_unsafe_image_stack_contents = std::unordered_map<std::string, misa_cached_data<misa_unsafe_image_file<Image>>>;
 
-    template<class Image> struct [[deprecated]] misa_unsafe_image_stack :
-    public cxxh::access::memory_cache<misa_unsafe_image_stack_contents<Image>>, public misa_cache {
-
-        /**
-        * Used by the misa_cache_registry
-        */
-        static inline const std::string DATA_TYPE = "unsafe-image-stack";
+    template<class Image> struct [[deprecated]] misa_unsafe_image_stack : public misa_default_cache<misa_unsafe_image_stack_contents<Image>> {
 
         std::shared_ptr<misa_description_storage> metadata;
 
         using image_type = Image;
 
-        using cxxh::access::memory_cache<misa_unsafe_image_stack_contents<Image>>::cache;
+        void simulate_link() override {
+            metadata->access<misa_file_stack_pattern>();
+            metadata->access<misa_file_stack_description>();
+        }
 
-        void link(const boost::filesystem::path &t_location, const std::shared_ptr<misa_description_storage> &t_description) override {
-            metadata = t_description;
-            m_location = t_location;
-
-            if(misa_runtime_base::instance().is_simulating()) {
-                metadata->access<misa_file_stack_pattern>();
-                metadata->access<misa_file_stack_description>();
-                return;
-            }
-
-            if(!t_description->has_description()) {
-                metadata->set(t_description->get<misa_image_file_stack_pattern>().produce(t_location));
+        void do_link() override {
+            if(!this->describe()->has_description()) {
+                metadata->set(this->describe()->template get<misa_image_file_stack_pattern>().produce(this->get_location()));
             }
 
             auto &files = this->get();
-            for(const auto &kv : t_description->get<misa_file_stack_description>().files) {
+            for(const auto &kv : this->describe()->template get<misa_file_stack_description>().files) {
                 misa_cached_data<misa_unsafe_image_file<Image>> cache;
-                cache.suggest_link(t_location, misa_description_storage::with(kv.second)); // We link manually with the loaded description
+                cache.suggest_link(this->get_location(), misa_description_storage::with(kv.second)); // We link manually with the loaded description
                 files.insert({ kv.first, cache });
             }
-        }
 
-        std::shared_ptr<misa_description_storage> describe() const override {
-            return metadata;
+            set_unique_location(this->get_location());
         }
-
-        boost::filesystem::path get_location() const override {
-            return m_location;
-        }
-
-    private:
-        boost::filesystem::path m_location;
     };
 }

@@ -14,13 +14,14 @@
 #include <misaxx/patterns/misa_image_file_pattern.h>
 #include <misaxx/patterns/misa_image_file_stack_pattern.h>
 #include <misaxx/runtime/misa_runtime_base.h>
+#include <misaxx/misa_default_cache.h>
 
 namespace misaxx {
     /**
      * A standard cached 2D image file.
      * @tparam Image Image loadable by coixx::toolbox::auto_load() / coixx::toolbox::load() and saveable by coixx::toolbox::save()
      */
-    template<class Image> class misa_image_file : public cxxh::access::cache<Image>, public misa_cache {
+    template<class Image> class misa_image_file : public misa_default_cache<Image> {
     public:
         Image &get() override {
             return m_value;
@@ -57,36 +58,22 @@ namespace misaxx {
             stash();
         }
 
-        void link(const boost::filesystem::path &t_location, const std::shared_ptr<misa_description_storage> &t_description) override {
-            m_description = t_description;
-            m_location = t_location;
-
-            // If we simulate, just announce the existence of pattern & description
-            if(misa_runtime_base::instance().is_simulating()) {
-                m_description->access<misa_file_stack_pattern>();
-                m_description->access<misa_image_file_description>();
-                return;
-            }
-
-            if(!describe()->has_description()) {
-                m_description->set(m_description->get<misa_image_file_stack_pattern>().produce(t_location));
-            }
-            m_path = t_location / m_description->get<misa_image_file_description>().filename;
+        void simulate_link() override {
+            this->describe()->template access<misa_file_stack_pattern>();
+            this->describe()->template access<misa_image_file_description>();
         }
 
-        std::shared_ptr<misa_description_storage> describe() override {
-            return m_description;
-        }
-
-        boost::filesystem::path get_location() const override {
-            return m_location;
+        void do_link() override {
+            if(!this->describe()->has_description()) {
+                this->describe()->set(this->describe()->template get<misa_image_file_stack_pattern>().produce(this->get_location()));
+            }
+            m_path = this->get_location() / this->describe()->template get<misa_image_file_description>().filename;
+            this->set_unique_location(m_path);
         }
 
     private:
         Image m_value;
         bool m_has_value = false;
         boost::filesystem::path m_path;
-        boost::filesystem::path m_location;
-        std::shared_ptr<misa_description_storage> m_description;
     };
 }
