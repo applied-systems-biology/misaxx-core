@@ -224,11 +224,13 @@ namespace misaxx {
         }
 
         void postprocess_caches() {
-            std::cout << "[Caches] Post-processing caches ..." << std::endl;
-            const std::vector<std::shared_ptr<misa_cache>> &caches = m_runtime->get_registered_caches();
-            for(const auto &ptr : caches) {
-                std::cout << "[Caches] " << ptr->get_location() << " (" << ptr->get_unique_location() << ")" << std::endl;
-                ptr->postprocess();
+            if(!m_runtime->is_simulating()) {
+                std::cout << "[Caches] Post-processing caches ..." << std::endl;
+                const std::vector<std::shared_ptr<misa_cache>> &caches = m_runtime->get_registered_caches();
+                for (const auto &ptr : caches) {
+                    std::cout << "[Caches] " << ptr->get_location() << " (" << ptr->get_unique_location() << ")" << std::endl;
+                    ptr->postprocess();
+                }
             }
         }
 
