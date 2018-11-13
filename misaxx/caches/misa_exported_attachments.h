@@ -14,21 +14,19 @@ namespace misaxx {
      * Module data class that only stores metadata.
      * This is legacy. Don't use
      */
-    struct [[deprecated]] misa_unsafe_exportable_meta_data : public misa_unsafe_file {
+    struct misa_exported_attachments : public misa_unsafe_file {
 
         using misa_unsafe_file::misa_unsafe_file;
-
-        /**
-         * Metadata
-         */
-        cxxh::containers::dynamic_singleton_map<misa_serializeable> user_metadata;
 
         /**
          * Saves the metadata included in this instance to the target JSON file
          */
         void save() {
+
+            cxxh::access::readonly_access<attachment_type > access(attachments);
+
             nlohmann::json json;
-            for(const auto &kv : user_metadata) {
+            for(const auto &kv : access.get()) {
                 const misa_serializeable *md = kv.second.get();
                 md->to_json(json[md->get_serialization_id().get_id()]);
             }

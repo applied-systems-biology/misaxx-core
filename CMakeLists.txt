@@ -85,7 +85,7 @@ add_library(misaxx
         misaxx/caches/misa_image_file.h
         misaxx/caches/misa_unsafe_json_file.h
         misaxx/caches/misa_unsafe_image_file.h
-        misaxx/caches/misa_unsafe_exportable_meta_data.h
+        misaxx/caches/misa_exported_attachments.h
         misaxx/caches/misa_unsafe_file.h
         misaxx/filesystem/misa_filesystem_json_importer.h
         misaxx/filesystem/misa_filesystem_entry.h
@@ -153,7 +153,7 @@ add_library(misaxx
         misaxx/caches/misa_image_file.cpp
         misaxx/caches/misa_unsafe_json_file.cpp
         misaxx/caches/misa_unsafe_image_file.cpp
-        misaxx/caches/misa_unsafe_exportable_meta_data.cpp
+        misaxx/caches/misa_exported_attachments.cpp
         misaxx/caches/misa_unsafe_file.cpp
         misaxx/filesystem/misa_filesystem_json_importer.cpp
         misaxx/filesystem/misa_filesystem_entry.cpp
