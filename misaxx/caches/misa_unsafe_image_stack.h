@@ -37,6 +37,7 @@ namespace misaxx {
             for(const auto &kv : this->describe()->template get<misa_file_stack_description>().files) {
                 misa_cached_data<misa_unsafe_image_file<Image>> cache;
                 cache.suggest_link(this->get_location(), misa_description_storage::with(kv.second)); // We link manually with the loaded description
+                cache.cache->set_unique_location(this->get_location() / cache.cache->get().filename()); // Put the attachment into a subdir
                 files.insert({ kv.first, cache });
             }
 
