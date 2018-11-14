@@ -258,7 +258,7 @@ namespace misaxx {
                     const boost::filesystem::path filesystem_export_path = m_runtime->instance().filesystem.exported->child_external_path(ptr->get_unique_location());
 
                     if(!filesystem_import_path.empty()) {
-                        cache_attachment_path = m_runtime->instance().filesystem.imported->external_path() / "attachments" / "imported" / filesystem_import_path;
+                        cache_attachment_path = m_runtime->instance().filesystem.exported->external_path() / "attachments" / "imported" / filesystem_import_path;
                     }
                     else if(!filesystem_export_path.empty()) {
                         cache_attachment_path = m_runtime->instance().filesystem.exported->external_path() / "attachments" / "exported" / filesystem_export_path;
