@@ -202,6 +202,14 @@ namespace misaxx {
         * @return
         */
         template <class Metadata> Metadata &access() {
+
+            if constexpr (std::is_base_of<misa_data_pattern_base, Metadata>::value) {
+                m_has_pattern = true;
+            }
+            else if constexpr (std::is_base_of<misa_data_description, Metadata>::value) {
+                m_has_description = true;
+            }
+
             return m_instances.access<Metadata>();
         }
 
