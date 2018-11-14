@@ -252,25 +252,30 @@ namespace misaxx {
 
                 readonly_access<typename misa_cached_data_base::attachment_type> access(ptr->attachments); // Open the cache
 
-                boost::filesystem::path filesystem_link_path;
+                boost::filesystem::path filesystem_unique_link_path;
+                boost::filesystem::path filesystem_generic_link_path;
 
                 if(!m_runtime->is_simulating()) {
-                    const boost::filesystem::path filesystem_import_path = m_runtime->instance().filesystem.imported->child_external_path(ptr->get_unique_location());
-                    const boost::filesystem::path filesystem_export_path = m_runtime->instance().filesystem.exported->child_external_path(ptr->get_unique_location());
-                    const boost::filesystem::path filesystem_export_base_path =  m_runtime->instance().filesystem.exported->external_path();
+                    const boost::filesystem::path filesystem_unique_import_path = m_runtime->instance().filesystem.imported->child_external_path(ptr->get_unique_location());
+                    const boost::filesystem::path filesystem_unique_export_path = m_runtime->instance().filesystem.exported->child_external_path(ptr->get_unique_location());
+                    const boost::filesystem::path filesystem_generic_import_path = m_runtime->instance().filesystem.imported->child_external_path(ptr->get_location());
+                    const boost::filesystem::path filesystem_generic_export_path = m_runtime->instance().filesystem.exported->child_external_path(ptr->get_location());
 
-                    if(!filesystem_import_path.empty()) {
-                        filesystem_link_path = boost::filesystem::path("imported") / filesystem_import_path;
+                    if(!filesystem_unique_import_path.empty()) {
+                        filesystem_unique_link_path = boost::filesystem::path("imported") / filesystem_unique_import_path;
+                        filesystem_generic_link_path = boost::filesystem::path("imported") / filesystem_generic_import_path;
                     }
-                    else if(!filesystem_export_path.empty()) {
-                        filesystem_link_path = boost::filesystem::path("exported") / filesystem_export_path;
+                    else if(!filesystem_unique_export_path.empty()) {
+                        filesystem_unique_link_path = boost::filesystem::path("exported") / filesystem_unique_export_path;
+                        filesystem_generic_link_path = boost::filesystem::path("exported") / filesystem_generic_export_path;
                     }
                     else {
                         continue;
                     }
 
                     // Replace extension with JSON
-                    boost::filesystem::path cache_attachment_path = (filesystem_export_base_path / "attachments" / filesystem_link_path).string() + ".json";
+                    const boost::filesystem::path filesystem_export_base_path =  m_runtime->instance().filesystem.exported->external_path();
+                    boost::filesystem::path cache_attachment_path = (filesystem_export_base_path / "attachments" / filesystem_unique_link_path).string() + ".json";
                     boost::filesystem::create_directories(cache_attachment_path.parent_path());
 
                     nlohmann::json exported_json = nlohmann::json(nlohmann::json::object());
@@ -287,7 +292,7 @@ namespace misaxx {
                     // Attach filesystem_link if needed
                     if(!access.get().has<filesystem_link>()) {
                         filesystem_link link;
-                        link.internal_path = filesystem_link_path;
+                        link.internal_path = filesystem_generic_link_path;
                         link.to_json(exported_json[link.get_serialization_id().get_id()]);
                     }
 
