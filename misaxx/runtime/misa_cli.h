@@ -16,6 +16,7 @@
 #include <misaxx/runtime/misa_runtime.h>
 #include <misaxx/misa_multiobject_root.h>
 #include <misaxx/misa_cached_data_base.h>
+#include <misaxx/attachments/filesystem_link.h>
 
 namespace misaxx {
 
@@ -228,7 +229,7 @@ namespace misaxx {
                 std::cout << "[Caches] Post-processing caches ..." << std::endl;
                 const std::vector<std::shared_ptr<misa_cache>> &caches = m_runtime->get_registered_caches();
                 for (const auto &ptr : caches) {
-                    std::cout << "[Caches] " << ptr->get_location() << " (" << ptr->get_unique_location() << ")" << std::endl;
+                    std::cout << "[Caches] Post-processing cache " << ptr->get_location() << " (" << ptr->get_unique_location() << ")" << std::endl;
                     ptr->postprocess();
                 }
             }
@@ -247,46 +248,54 @@ namespace misaxx {
                 if(ptr->get_unique_location().empty())
                     continue;
 
-                std::cout << "[Attachments] " << ptr->get_location() << " (" << ptr->get_unique_location() << ")" << std::endl;
+                std::cout << "[Attachments] Post-processing attachment " << ptr->get_location() << " (" << ptr->get_unique_location() << ")" << std::endl;
 
                 readonly_access<typename misa_cached_data_base::attachment_type> access(ptr->attachments); // Open the cache
 
-                boost::filesystem::path cache_attachment_path;
+                boost::filesystem::path filesystem_link_path;
 
                 if(!m_runtime->is_simulating()) {
                     const boost::filesystem::path filesystem_import_path = m_runtime->instance().filesystem.imported->child_external_path(ptr->get_unique_location());
                     const boost::filesystem::path filesystem_export_path = m_runtime->instance().filesystem.exported->child_external_path(ptr->get_unique_location());
+                    const boost::filesystem::path filesystem_export_base_path =  m_runtime->instance().filesystem.exported->external_path();
 
                     if(!filesystem_import_path.empty()) {
-                        cache_attachment_path = m_runtime->instance().filesystem.exported->external_path() / "attachments" / "imported" / filesystem_import_path;
+                        filesystem_link_path = boost::filesystem::path("imported") / filesystem_import_path;
                     }
                     else if(!filesystem_export_path.empty()) {
-                        cache_attachment_path = m_runtime->instance().filesystem.exported->external_path() / "attachments" / "exported" / filesystem_export_path;
+                        filesystem_link_path = boost::filesystem::path("exported") / filesystem_export_path;
                     }
-                }
-
-                // Replace extension with JSON
-                cache_attachment_path = cache_attachment_path.string() + ".json";
-                boost::filesystem::create_directories(cache_attachment_path.parent_path());
-
-                nlohmann::json exported_json = nlohmann::json(nlohmann::json::object());
-
-                for(const auto &kv : access.get()) {
-                    const std::unique_ptr<misa_serializeable> &attachment_ptr = kv.second;
-
-                    if(m_runtime->is_simulating()) {
-                        // TODO: Create parameter schema
+                    else {
+                        continue;
                     }
-                    else if(!cache_attachment_path.empty()) {
-                        // Export the attachment as JSON
-                        attachment_ptr->to_json(exported_json[attachment_ptr->get_serialization_id().get_id()]);
-                    }
-                }
 
-                if(!m_runtime->is_simulating()) {
-                    std::ofstream sw;
-                    sw.open(cache_attachment_path.string());
-                    sw << std::setw(4) << exported_json;
+                    // Replace extension with JSON
+                    boost::filesystem::path cache_attachment_path = (filesystem_export_base_path / filesystem_link_path).string() + ".json";
+                    boost::filesystem::create_directories(cache_attachment_path.parent_path());
+
+                    nlohmann::json exported_json = nlohmann::json(nlohmann::json::object());
+
+                    for(const auto &kv : access.get()) {
+                        const std::unique_ptr<misa_serializeable> &attachment_ptr = kv.second;
+
+                        if(!cache_attachment_path.empty()) {
+                            // Export the attachment as JSON
+                            attachment_ptr->to_json(exported_json[attachment_ptr->get_serialization_id().get_id()]);
+                        }
+                    }
+
+                    // Attach filesystem_link if needed
+                    if(!access.get().has<filesystem_link>()) {
+                        filesystem_link link;
+                        link.internal_path = filesystem_link_path;
+                        link.to_json(exported_json[link.get_serialization_id().get_id()]);
+                    }
+
+                    if(!m_runtime->is_simulating()) {
+                        std::ofstream sw;
+                        sw.open(cache_attachment_path.string());
+                        sw << std::setw(4) << exported_json;
+                    }
                 }
             }
         }
