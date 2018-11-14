@@ -34,7 +34,7 @@ namespace misaxx {
         }
 
     protected:
-        
+
         misa_file_stack_description produce_description(const boost::filesystem::path &t_location, const misa_image_file_stack_pattern &t_pattern) override {
             return t_pattern.produce(t_location);
         }
