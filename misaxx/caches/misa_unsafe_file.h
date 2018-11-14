@@ -19,19 +19,18 @@
 #include <misaxx/misa_default_cache.h>
 
 namespace misaxx {
-    struct [[deprecated]] misa_unsafe_file : public misa_default_cache<cxxh::access::memory_cache<boost::filesystem::path>> {
+    struct [[deprecated]] misa_unsafe_file : public misa_default_cache<cxxh::access::memory_cache<boost::filesystem::path>, misa_file_pattern, misa_file_description> {
 
-        void simulate_link() override {
-            describe()->access<misa_file_pattern>();
-            describe()->access<misa_file_description>();
-        }
-
-        void do_link() override {
-            if(!describe()->has_description()) {
-                describe()->set(describe()->get<misa_file_pattern>().produce(get_location()));
-            }
-            this->set(get_location() / describe()->get<misa_file_description>().filename);
+        void do_link(const misa_file_description &t_description) override {
+            this->set(get_location() / t_description.filename);
             this->set_unique_location(get());
         }
+
+    protected:
+
+        misa_file_description produce_description(const boost::filesystem::path &t_location, const misa_file_pattern &t_pattern) override {
+            return t_pattern.produce(t_location);
+        }
+
     };
 }

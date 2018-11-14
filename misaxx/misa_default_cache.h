@@ -9,23 +9,38 @@
 #include "misa_cache.h"
 
 namespace misaxx {
+
     /**
-     * Common implementation of misa_cache that automates lots of required functions
+     * Automates tasks required by misa_cache
+     * @tparam Cache The cxxh::access::cache implementation
+     * @tparam Pattern The pattern that this cache is is using to create a pattern
+     * @tparam Description Description type of this cache
      */
-    template<class Cache> class misa_default_cache : public Cache, public misa_cache {
+    template<class Cache, class Pattern, class Description> class misa_default_cache : public Cache, public misa_cache {
     public:
+
+        using default_cache_type = misa_default_cache<Cache, Pattern, Description>;
+        using cache_type = Cache;
+        using pattern_type = Pattern;
+        using description_type = Description;
+
         misa_default_cache() = default;
 
         /**
          * Called when a link is simulated.
          * Just call describe()->access<PATTERN>() and describe()->access<DESCRIPTION>() in this function
          */
-        virtual void simulate_link() = 0;
+        virtual void simulate_link() {
+            m_description->access<Pattern>();
+            m_description->access<Description>();
+        }
+
 
         /**
          * Applies the actual link operation
+         * @param t_description same as describe()->get<Description>()
          */
-        virtual void do_link() = 0;
+        virtual void do_link(const Description &t_description) = 0;
 
         void link(const boost::filesystem::path &t_location, const std::shared_ptr<misa_description_storage> &t_description) final {
             m_description = t_description;
@@ -36,7 +51,12 @@ namespace misaxx {
                 return;
             }
 
-            do_link();
+            // Create the description
+            if(!m_description->has<Description>()) {
+                m_description->set(produce_description(m_location, m_description->get<Pattern>()));
+            }
+
+            do_link(m_description->get<Description>());
         }
 
         std::shared_ptr<misa_description_storage> describe() const override {
@@ -54,6 +74,16 @@ namespace misaxx {
         void set_unique_location(boost::filesystem::path t_path) {
             m_unique_location = std::move(t_path);
         }
+
+    protected:
+
+        /**
+         * Instantiates a description from the underlying pattern
+         * @param t_location same as get_location()
+         * @param t_pattern same as describe()->get<Pattern>()
+         * @return
+         */
+        virtual Description produce_description(const boost::filesystem::path &t_location, const Pattern &t_pattern) = 0;
 
     private:
         std::shared_ptr<misa_description_storage> m_description;

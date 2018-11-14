@@ -17,22 +17,13 @@ namespace misaxx {
 
     template<class Image> using misa_unsafe_image_stack_contents = std::unordered_map<std::string, misa_cached_data<misa_unsafe_image_file<Image>>>;
 
-    template<class Image> struct [[deprecated]] misa_unsafe_image_stack : public misa_default_cache<cxxh::access::memory_cache<misa_unsafe_image_stack_contents<Image>>> {
+    template<class Image> struct [[deprecated]] misa_unsafe_image_stack : public misa_default_cache<cxxh::access::memory_cache<misa_unsafe_image_stack_contents<Image>>, misa_image_file_stack_pattern, misa_file_stack_description> {
 
         using image_type = Image;
 
-        void simulate_link() override {
-            this->describe()->template access<misa_image_file_stack_pattern>();
-            this->describe()->template access<misa_file_stack_description>();
-        }
-
-        void do_link() override {
-            if(!this->describe()->has_description()) {
-                this->describe()->set(this->describe()->template get<misa_image_file_stack_pattern>().produce(this->get_location()));
-            }
-
+        void do_link(const misa_file_stack_description &t_description) override {
             auto &files = this->get();
-            for(const auto &kv : this->describe()->template get<misa_file_stack_description>().files) {
+            for(const auto &kv : t_description.files) {
                 misa_cached_data<misa_unsafe_image_file<Image>> cache;
                 cache.suggest_link(this->get_location(), misa_description_storage::with(kv.second)); // We link manually with the loaded description
                 cache.cache->set_unique_location(this->get_location() / cache.cache->get().filename()); // Put the attachment into a subdir
@@ -41,5 +32,12 @@ namespace misaxx {
 
             this->set_unique_location(this->get_location());
         }
+
+    protected:
+        
+        misa_file_stack_description produce_description(const boost::filesystem::path &t_location, const misa_image_file_stack_pattern &t_pattern) override {
+            return t_pattern.produce(t_location);
+        }
+
     };
 }

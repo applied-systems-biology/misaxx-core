@@ -21,8 +21,9 @@ namespace misaxx {
      * A standard cached 2D image file.
      * @tparam Image Image loadable by coixx::toolbox::auto_load() / coixx::toolbox::load() and saveable by coixx::toolbox::save()
      */
-    template<class Image> class misa_image_file : public misa_default_cache<cxxh::access::cache<Image>> {
+    template<class Image> class misa_image_file : public misa_default_cache<cxxh::access::cache<Image>, misa_image_file_pattern, misa_file_description> {
     public:
+
         Image &get() override {
             return m_value;
         }
@@ -58,17 +59,15 @@ namespace misaxx {
             stash();
         }
 
-        void simulate_link() override {
-            this->describe()->template access<misa_file_stack_pattern>();
-            this->describe()->template access<misa_image_file_description>();
+        void do_link(const misa_file_description &t_description) override {
+            m_path = this->get_location() / t_description.filename;
+            this->set_unique_location(m_path);
         }
 
-        void do_link() override {
-            if(!this->describe()->has_description()) {
-                this->describe()->set(this->describe()->template get<misa_image_file_stack_pattern>().produce(this->get_location()));
-            }
-            m_path = this->get_location() / this->describe()->template get<misa_image_file_description>().filename;
-            this->set_unique_location(m_path);
+    protected:
+
+        misa_file_description produce_description(const boost::filesystem::path &t_location, const misa_image_file_pattern &t_pattern) override {
+            return t_pattern.produce(t_location);
         }
 
     private:
