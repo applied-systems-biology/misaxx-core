@@ -18,12 +18,12 @@ FetchContent_Declare(
 FetchContent_Declare(
         coixx
         GIT_REPOSITORY https://asb-git.hki-jena.de/RGerst/coixx.git
-        GIT_TAG origin/master
+        GIT_TAG origin/rework2
 )
 FetchContent_Declare(
         cxxh
         GIT_REPOSITORY https://asb-git.hki-jena.de/RGerst/cxx-helpers.git
-        GIT_TAG origin/master
+        GIT_TAG origin/rework
 )
 
 FetchContent_GetProperties(nlohmann_json)
