@@ -5,13 +5,13 @@
 
 #pragma once
 
-#include "misaxx/workers/misa_worker.h"
-#include "misa_module_declaration_base.h"
-#include "misa_module_base.h"
-#include "misa_submodule.h"
-#include "misaxx/workers/paths/algorithm_node_path.h"
-#include "misaxx/workers/paths/object_node_path.h"
-#include "misa_future_dispatch.h"
+#include <misaxx/workers/misa_worker.h>
+#include <misaxx/misa_module_declaration_base.h>
+#include <misaxx/misa_module_base.h>
+#include <misaxx/misa_submodule.h>
+#include <misaxx/workers/paths/algorithm_node_path.h>
+#include <misaxx/workers/paths/object_node_path.h>
+#include <misaxx/misa_future_dispatch.h>
 #include <misaxx/workers/misa_dispatcher.h>
 
 namespace misaxx {

@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "misa_module_declaration_base.h"
-#include "misa_submodule.h"
+#include <misaxx/misa_module_declaration_base.h>
+#include <misaxx/misa_submodule.h>
 
 namespace misaxx {
 

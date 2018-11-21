@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "misa_file_description.h"
+#include <misaxx/descriptions/misa_file_description.h>
 
 namespace misaxx {
     struct misa_image_file_description : public misa_file_description {

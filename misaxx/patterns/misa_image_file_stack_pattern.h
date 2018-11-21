@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "misa_file_pattern.h"
-#include "misa_file_stack_pattern.h"
+#include <misaxx/patterns/misa_file_pattern.h>
+#include <misaxx/patterns/misa_file_stack_pattern.h>
 
 namespace misaxx {
     /**

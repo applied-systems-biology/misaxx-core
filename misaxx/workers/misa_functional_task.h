@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "misa_task.h"
+#include <misaxx/workers/misa_task.h>
 
 namespace misaxx {
 

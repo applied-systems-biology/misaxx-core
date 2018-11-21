@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include "misa_worker.h"
-#include "misaxx/misa_module_declaration_base.h"
-#include "misaxx/workers/paths/object_node_path.h"
-#include "misaxx/workers/paths/algorithm_node_path.h"
+#include <misaxx/workers/misa_worker.h>
+#include <misaxx/misa_module_declaration_base.h>
+#include <misaxx/workers/paths/object_node_path.h>
+#include <misaxx/workers/paths/algorithm_node_path.h>
 #include <misaxx/workers/paths/full_node_path.h>
 
 namespace misaxx {

@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "parameter_checks.h"
+#include <misaxx/parameters/parameter_checks.h>
 
 namespace misaxx::parameters {
 

@@ -7,7 +7,7 @@
 
 #include <misaxx/workers/misa_worker_base.h>
 #include <misaxx/workers/task_tree/misa_work_node.h>
-#include "misa_work_dependency_segment.h"
+#include <misaxx/workers/dependency_management/misa_work_dependency_segment.h>
 #include <cxxh/types/static_helpers.h>
 
 namespace misaxx::dependencies {

@@ -7,7 +7,7 @@
 
 #include <nlohmann/json.hpp>
 #include <misaxx/misa_serializeable.h>
-#include "object3d_voxel_size.h"
+#include <misaxx/attachments/object3d_voxel_size.h>
 
 namespace misaxx {
     struct object3d_voxel_bounds : public misa_serializeable {

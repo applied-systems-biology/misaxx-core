@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "parameter_prepare.h"
+#include <misaxx/parameters/parameter_prepare.h>
 
 /**
  * Contains the type for default preparation functions.

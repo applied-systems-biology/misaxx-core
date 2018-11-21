@@ -7,7 +7,7 @@
 
 #include <nlohmann/json.hpp>
 #include <misaxx/json/misa_json_schema.h>
-#include "misa_serialization_id.h"
+#include <misaxx/misa_serialization_id.h>
 
 namespace misaxx {
     /**

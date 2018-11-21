@@ -8,12 +8,12 @@
 #include <misaxx/workers/misa_dispatcher.h>
 #include <misaxx/workers/dependency_management/misa_work_dependency_chain.h>
 #include <misaxx/workers/dependency_management/misa_work_dependency_group.h>
-#include "misaxx/misa_module_declaration_base.h"
-#include "misa_worker.h"
-#include "misaxx/misa_module_base.h"
-#include "misaxx/workers/paths/algorithm_node_path.h"
-#include "misaxx/workers/paths/object_node_path.h"
-#include "misaxx/misa_future_dispatch.h"
+#include <misaxx/misa_module_declaration_base.h>
+#include <misaxx/workers/misa_worker.h>
+#include <misaxx/misa_module_base.h>
+#include <misaxx/workers/paths/algorithm_node_path.h>
+#include <misaxx/workers/paths/object_node_path.h>
+#include <misaxx/misa_future_dispatch.h>
 #include <misaxx/workers/misa_functional_task.h>
 #include <misaxx/workers/task_tree/misa_work_node.h>
 

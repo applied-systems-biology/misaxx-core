@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "misa_worker_base.h"
+#include <misaxx/workers/misa_worker_base.h>
 #include <misaxx/workers/task_tree/misa_work_node.h>
 #include <misaxx/workers/paths/object_node_path.h>
 #include <misaxx/workers/paths/algorithm_node_path.h>

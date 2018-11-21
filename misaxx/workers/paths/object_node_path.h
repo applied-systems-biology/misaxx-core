@@ -4,8 +4,8 @@
 
 
 #pragma once
-#include "misaxx/misa_root_module_base.h"
-#include "guarded_node_path.h"
+#include <misaxx/misa_root_module_base.h>
+#include <misaxx/workers/paths/guarded_node_path.h>
 #include <misaxx/workers/task_tree/misa_work_node.h>
 
 namespace misaxx {

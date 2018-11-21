@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "misa_serializeable.h"
+#include <misaxx/misa_serializeable.h>
 
 namespace misaxx {
     /**

@@ -7,7 +7,7 @@
 
 #include <misaxx/filesystem/misa_filesystem_entry.h>
 #include <misaxx/misa_serializeable.h>
-#include "misa_data_pattern_base.h"
+#include <misaxx/misa_data_pattern_base.h>
 
 namespace misaxx {
 

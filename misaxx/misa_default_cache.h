@@ -6,7 +6,7 @@
 #pragma once
 
 #include <misaxx/runtime/misa_runtime_base.h>
-#include "misa_cache.h"
+#include <misaxx/misa_cache.h>
 
 namespace misaxx {
 

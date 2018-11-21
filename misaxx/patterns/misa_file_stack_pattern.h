@@ -6,7 +6,7 @@
 #pragma once
 
 #include <misaxx/descriptions/misa_file_stack_description.h>
-#include "misa_file_pattern.h"
+#include <misaxx/patterns/misa_file_pattern.h>
 #include <misaxx/misa_data_pattern.h>
 
 namespace misaxx {

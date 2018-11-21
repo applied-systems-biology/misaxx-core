@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "misa_filesystem_entry.h"
+#include <misaxx/filesystem/misa_filesystem_entry.h>
 
 namespace misaxx {
     /**

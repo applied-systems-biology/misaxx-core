@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include "misa_json_schema_builder.h"
-#include "misa_json_property.h"
+#include <misaxx/json/misa_json_schema_builder.h>
+#include <misaxx/json/misa_json_property.h>
 
 namespace misaxx {
     /**

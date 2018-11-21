@@ -11,7 +11,7 @@
 #include <misaxx/patterns/misa_file_stack_pattern.h>
 #include <misaxx/patterns/misa_image_file_stack_pattern.h>
 #include <misaxx/misa_cache.h>
-#include "misa_unsafe_image_file.h"
+#include <misaxx/caches/misa_unsafe_image_file.h>
 
 namespace misaxx {
 

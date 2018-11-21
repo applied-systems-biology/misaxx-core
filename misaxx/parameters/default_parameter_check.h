@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "parameter_checks.h"
+#include <misaxx/parameters/parameter_checks.h>
 
 /**
  * Contains the actual types for the parameter_default_check

@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "misa_file_pattern.h"
+#include <misaxx/patterns/misa_file_pattern.h>
 
 namespace misaxx {
     struct misa_image_file_pattern : public misa_file_pattern {

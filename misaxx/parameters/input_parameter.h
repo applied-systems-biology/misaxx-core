@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include "parameter_checks.h"
-#include "default_parameter_check.h"
-#include "parameter_base.h"
+#include <misaxx/parameters/parameter_checks.h>
+#include <misaxx/parameters/default_parameter_check.h>
+#include <misaxx/parameters/parameter_base.h>
 #include <misaxx/workers/task_tree/misa_work_node.h>
 
 namespace misaxx::parameters {

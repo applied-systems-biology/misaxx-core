@@ -6,8 +6,8 @@
 #pragma once
 
 #include <nlohmann/json.hpp>
-#include "object3d_voxel_size.h"
-#include "object3d_pixels.h"
+#include <misaxx/attachments/object3d_voxel_size.h>
+#include <misaxx/attachments/object3d_pixels.h>
 
 namespace misaxx {
     struct object3d_volume : public misa_serializeable {

@@ -6,8 +6,8 @@
 #pragma once
 
 #include <boost/filesystem/path.hpp>
-#include "misa_filesystem_entry.h"
-#include "misa_filesystem.h"
+#include <misaxx/filesystem/misa_filesystem_entry.h>
+#include <misaxx/filesystem/misa_filesystem.h>
 
 namespace misaxx {
 
