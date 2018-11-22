@@ -18,7 +18,7 @@ FetchContent_Declare(
 FetchContent_Declare(
         coixx
         GIT_REPOSITORY https://asb-git.hki-jena.de/RGerst/coixx.git
-        GIT_TAG origin/rework2
+        GIT_TAG origin/master
 )
 FetchContent_Declare(
         cxxh
