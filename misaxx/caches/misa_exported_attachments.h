@@ -45,7 +45,7 @@ namespace misaxx {
         }
 
         void stash() override {
-            m_json = nlohmann::json();
+            m_json = nlohmann::json::object();
         }
 
         void push() override {
@@ -64,11 +64,9 @@ namespace misaxx {
          */
         void save_attachments() {
             cxxh::access::readonly_access<attachment_type > access(attachments);
-
-            nlohmann::json json;
             for(const auto &kv : access.get()) {
                 const misa_serializeable *md = kv.second.get();
-                md->to_json(json[md->get_serialization_id().get_id()]);
+                md->to_json(m_json[md->get_serialization_id().get_id()]);
             }
         }
 
@@ -92,6 +90,6 @@ namespace misaxx {
     private:
 
         boost::filesystem::path m_path;
-        nlohmann::json m_json;
+        nlohmann::json m_json = nlohmann::json::object();
     };
 }
