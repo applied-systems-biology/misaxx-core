@@ -5,8 +5,10 @@
 
 #pragma once
 
-#include <misaxx/misa_cached_data.h>
-#include <misaxx/caches/misa_unsafe_json_file.h>
+#include <misaxx/misa_default_cache.h>
+#include <misaxx/descriptions/misa_file_description.h>
+#include <misaxx/patterns/misa_file_pattern.h>
+#include <cxxh/access/readonly_access.h>
 
 namespace misaxx {
 
