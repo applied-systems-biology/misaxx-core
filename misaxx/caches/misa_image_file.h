@@ -17,9 +17,10 @@
 #include <misaxx/misa_default_cache.h>
 
 namespace misaxx {
+
     /**
-     * A standard cached 2D image file.
-     * @tparam Image Image loadable by coixx::toolbox::auto_load() / coixx::toolbox::load() and saveable by coixx::toolbox::save()
+     * A cache that holds an OpenCV cv::Mat or a coixx::image
+     * @tparam Image
      */
     template<class Image> class misa_image_file : public misa_default_cache<cxxh::access::cache<Image>, misa_image_file_pattern, misa_file_description> {
     public:
@@ -46,7 +47,14 @@ namespace misaxx {
         }
 
         void pull() override {
-            m_value = coixx::toolbox::auto_load<Image>(m_path);
+            if constexpr (std::is_same<cv::Mat, Image>::value) {
+                // Load it as cv::Mat
+                m_value = cv::imread(m_path.string(), cv::IMREAD_UNCHANGED);
+            }
+            else {
+                // Assume it's a coixx::image
+                m_value = coixx::toolbox::auto_load<Image>(m_path);
+            }
         }
 
         void stash() override {
@@ -54,9 +62,13 @@ namespace misaxx {
         }
 
         void push() override {
-            using namespace coixx::toolbox;
-            m_value << save(m_path);
-            stash();
+            if constexpr (std::is_same<cv::Mat, Image>::value) {
+                cv::imwrite(m_path.string(), m_value);
+            }
+            else {
+                using namespace coixx::toolbox;
+                m_value << save(m_path);
+            }
         }
 
         void do_link(const misa_file_description &t_description) override {

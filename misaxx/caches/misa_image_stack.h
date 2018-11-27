@@ -11,20 +11,21 @@
 #include <misaxx/patterns/misa_file_stack_pattern.h>
 #include <misaxx/patterns/misa_image_file_stack_pattern.h>
 #include <misaxx/misa_cache.h>
-#include <misaxx/caches/misa_unsafe_image_file.h>
+#include <misaxx/misa_cached_data.h>
+#include <misaxx/caches/misa_image_file.h>
 
 namespace misaxx {
 
-    template<class Image> using misa_unsafe_image_stack_contents = std::unordered_map<std::string, misa_cached_data<misa_unsafe_image_file<Image>>>;
+    template<class Image> using misa_unsafe_image_stack_contents = std::unordered_map<std::string, misa_cached_data<misa_image_file<Image>>>;
 
-    template<class Image> struct [[deprecated]] misa_unsafe_image_stack : public misa_default_cache<cxxh::access::memory_cache<misa_unsafe_image_stack_contents<Image>>, misa_image_file_stack_pattern, misa_file_stack_description> {
+    template<class Image> struct [[deprecated]] misa_image_stack : public misa_default_cache<cxxh::access::memory_cache<misa_unsafe_image_stack_contents<Image>>, misa_image_file_stack_pattern, misa_file_stack_description> {
 
         using image_type = Image;
 
         void do_link(const misa_file_stack_description &t_description) override {
             auto &files = this->get();
             for(const auto &kv : t_description.files) {
-                misa_cached_data<misa_unsafe_image_file<Image>> cache;
+                misa_cached_data<misa_image_file<Image>> cache;
                 cache.suggest_link(this->get_location(), misa_description_storage::with(kv.second)); // We link manually with the loaded description
                 cache.cache->set_unique_location(this->get_location() / cache.cache->get().filename()); // Put the attachment into a subdir
                 files.insert({ kv.first, cache });

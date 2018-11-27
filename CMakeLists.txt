@@ -81,12 +81,9 @@ add_library(misaxx
         misaxx/json/misa_json_schema.h
         misaxx/json/misa_json_property.h
         misaxx/json/misa_json_property_base.h
-        misaxx/caches/misa_unsafe_image_stack.h
+        misaxx/caches/misa_image_stack.h
         misaxx/caches/misa_image_file.h
-        misaxx/caches/misa_unsafe_json_file.h
-        misaxx/caches/misa_unsafe_image_file.h
         misaxx/caches/misa_exported_attachments.h
-        misaxx/caches/misa_unsafe_file.h
         misaxx/filesystem/misa_filesystem_json_importer.h
         misaxx/filesystem/misa_filesystem_entry.h
         misaxx/filesystem/misa_filesystem_directories_importer.h
@@ -149,12 +146,9 @@ add_library(misaxx
         misaxx/json/misa_json_schema.cpp
         misaxx/json/misa_json_property.cpp
         misaxx/json/misa_json_property_base.cpp
-        misaxx/caches/misa_unsafe_image_stack.cpp
+        misaxx/caches/misa_image_stack.cpp
         misaxx/caches/misa_image_file.cpp
-        misaxx/caches/misa_unsafe_json_file.cpp
-        misaxx/caches/misa_unsafe_image_file.cpp
         misaxx/caches/misa_exported_attachments.cpp
-        misaxx/caches/misa_unsafe_file.cpp
         misaxx/filesystem/misa_filesystem_json_importer.cpp
         misaxx/filesystem/misa_filesystem_entry.cpp
         misaxx/filesystem/misa_filesystem_directories_importer.cpp
