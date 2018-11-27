@@ -194,5 +194,26 @@ namespace misaxx {
             return write_access<value_type >(*cache);
         }
 
+        /**
+         * Returns the location of the cache.
+         * This is the folder that contains the data. Please note that
+         * this location might not be unique for different caches, as multiple caches might be created
+         * on the same location.
+         * Use get_unique_location() to find the actual file instead.
+         * @return
+         */
+        boost::filesystem::path get_location() const {
+            return cache->get_location();
+        }
+
+        /**
+         * Returns the unique location of the cache.
+         * This usually points to the actual file containing the data
+         * @return
+         */
+        boost::filesystem::path get_unique_location() const {
+            return cache->get_unique_location();
+        }
+
     };
 }
