@@ -11,7 +11,7 @@
 namespace misaxx {
 
     /**
-     * Automates tasks required by misa_cache
+     * Automates some implementation details required by misa_cache
      * @tparam Cache The cxxh::access::cache implementation
      * @tparam Pattern The pattern that this cache is is using to create a pattern
      * @tparam Description Description type of this cache
