@@ -74,6 +74,7 @@ namespace misaxx {
 
         void postprocess() override {
             save_attachments();
+            push();
         }
 
         void simulate_link() override {
