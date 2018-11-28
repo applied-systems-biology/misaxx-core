@@ -86,5 +86,15 @@ namespace misaxx {
         Image m_value;
         bool m_has_value = false;
         boost::filesystem::path m_path;
+
+    public:
+
+        static cv::Mat read_image(const misa_cached_data<misa_image_file<Image>> &t_cache) {
+            return t_cache.access_readonly().get().clone();
+        }
+
+        static void write_image(misa_cached_data<misa_image_file<Image>> &t_cache, cv::Mat t_data) {
+            t_cache.access_write().set(std::move(t_data));
+        }
     };
 }

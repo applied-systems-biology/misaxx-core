@@ -213,7 +213,7 @@ namespace misaxx {
          * Returns a description of the current cache
          * @return
          */
-        std::shared_ptr<misa_description_storage> describe() override {
+        std::shared_ptr<misa_description_storage> describe() const override {
             return data->describe();
         }
 

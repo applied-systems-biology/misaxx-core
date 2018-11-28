@@ -73,7 +73,7 @@ namespace misaxx {
         * Returns a description of the current cache
         * @return
         */
-        virtual std::shared_ptr<misa_description_storage> describe() = 0;
+        virtual std::shared_ptr<misa_description_storage> describe() const = 0;
 
         /**
          * Returns true if this cached data has an actual cache assigned to it
