@@ -13,7 +13,7 @@ namespace misaxx {
      * @tparam Image cv::Mat or any of coixx::image<C>
      */
     template<class Image>
-    class misa_image_stack : public misa_cached_data<misa_image_stack_cache<Image>>,
+    struct misa_image_stack : public misa_cached_data<misa_image_stack_cache<Image>>,
                              public misa_description_accessors_from_cache<misa_image_stack_cache<Image>, misa_image_stack<Image>> {
 
         using iterator = typename misa_image_stack_t<Image>::iterator;
