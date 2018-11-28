@@ -16,9 +16,16 @@
 
 namespace misaxx {
 
-    template<class Image> using misa_unsafe_image_stack_contents = std::unordered_map<std::string, misa_cached_data<misa_image_file<Image>>>;
+    /**
+     * Stack of images stored in a misa_image_stack
+     */
+    template<class Image> using misa_image_stack_t = std::unordered_map<std::string, misa_cached_data<misa_image_file<Image>>>;
 
-    template<class Image> struct misa_image_stack : public misa_default_cache<cxxh::memory_cache<misa_unsafe_image_stack_contents<Image>>, misa_image_file_stack_pattern, misa_file_stack_description> {
+    /**
+     * Simple stack of images of cv::Mat or any of coixx::image<T>
+     * @tparam Image
+     */
+    template<class Image> struct misa_image_stack : public misa_default_cache<cxxh::memory_cache<misa_image_stack_t<Image>>, misa_image_file_stack_pattern, misa_file_stack_description> {
 
         using image_type = Image;
 
@@ -27,7 +34,6 @@ namespace misaxx {
             for(const auto &kv : t_description.files) {
                 misa_cached_data<misa_image_file<Image>> cache;
                 cache.suggest_link(this->get_location(), misa_description_storage::with(kv.second)); // We link manually with the loaded description
-//                cache.cache->set_unique_location(this->get_location() / cache.cache->get().filename()); // Put the attachment into a subdir
                 files.insert({ kv.first, cache });
             }
 
@@ -38,6 +44,26 @@ namespace misaxx {
 
         misa_file_stack_description produce_description(const boost::filesystem::path &t_location, const misa_image_file_stack_pattern &t_pattern) override {
             return t_pattern.produce(t_location);
+        }
+
+    public:
+
+        /**
+         * Convenience function that returns the image stack contents
+         * @param t_cache
+         * @return
+         */
+        static misa_image_stack_t<Image> get_images(const misa_cached_data<misa_image_stack<Image>> &t_cache) {
+            return t_cache.access_readonly().get();
+        }
+
+        /**
+         * Convenience function that returns true if the image stack is empty
+         * @param t_cache
+         * @return
+         */
+        static bool is_empty(const misa_cached_data<misa_image_stack<Image>> &t_cache) {
+            return t_cache.access_readonly().get().empty();
         }
 
     };
