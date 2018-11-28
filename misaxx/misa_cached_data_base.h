@@ -79,7 +79,7 @@ namespace misaxx {
          * Returns true if this cached data has an actual cache assigned to it
          * @return
          */
-        virtual bool has_cache() const = 0;
+        virtual bool has_data() const = 0;
     };
 
 }
