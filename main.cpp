@@ -18,7 +18,7 @@
 #include <misaxx/misa_cache.h>
 #include <misaxx/misa_cached_data.h>
 #include <misaxx/caches/misa_image_stack.h>
-#include <cxxh/containers/drilldown_singleton_map.h>
+#include <cxxh/drilldown_singleton_map.h>
 
 using namespace misaxx;
 

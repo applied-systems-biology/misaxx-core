@@ -4,28 +4,24 @@
 
 #pragma once
 
-#include <cxxh/containers/dynamic_singleton_map.h>
-#include <cxxh/access/memory_cache.h>
-#include <cxxh/access/readonly_access.h>
-#include <cxxh/access/readwrite_access.h>
-#include <cxxh/access/write_access.h>
-#include <cxxh/access/memory_cache.h>
+#include <cxxh/dynamic_singleton_map.h>
+#include <cxxh/cache.h>
 #include <misaxx/misa_serializeable.h>
 #include <misaxx/misa_description_storage.h>
 #include <misaxx/misa_cache.h>
 
 namespace misaxx {
 
-    template<typename Value> using readonly_access = cxxh::access::readonly_access<Value>;
-    template<typename Value> using readwrite_access = cxxh::access::readwrite_access<Value>;
-    template<typename Value> using write_access = cxxh::access::write_access<Value>;
+    template<typename Value> using readonly_access = cxxh::readonly_access<Value>;
+    template<typename Value> using readwrite_access = cxxh::readwrite_access<Value>;
+    template<typename Value> using write_access = cxxh::write_access<Value>;
 
     /**
      * Base class for cached data
      */
     struct misa_cached_data_base {
-        using attachment_type = cxxh::containers::dynamic_singleton_map<misa_serializeable>;
-        using attachment_cache_type = cxxh::access::memory_cache<attachment_type>;
+        using attachment_type = cxxh::dynamic_singleton_map<misa_serializeable>;
+        using attachment_cache_type = cxxh::memory_cache<attachment_type>;
 
         misa_cached_data_base() = default;
 

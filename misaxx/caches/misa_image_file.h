@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <cxxh/access/cache.h>
+#include <cxxh/cache.h>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <coixx/toolbox/toolbox_io.h>
@@ -22,7 +22,7 @@ namespace misaxx {
      * A cache that holds an OpenCV cv::Mat or a coixx::image
      * @tparam Image
      */
-    template<class Image> class misa_image_file : public misa_default_cache<cxxh::access::cache<Image>, misa_image_file_pattern, misa_file_description> {
+    template<class Image> class misa_image_file : public misa_default_cache<cxxh::cache<Image>, misa_image_file_pattern, misa_file_description> {
     public:
 
         Image &get() override {

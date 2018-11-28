@@ -6,7 +6,7 @@
 #pragma once
 
 #include <coixx/image.h>
-#include <cxxh/access/cache.h>
+#include <cxxh/cache.h>
 #include <misaxx/descriptions/misa_file_stack_description.h>
 #include <misaxx/patterns/misa_file_stack_pattern.h>
 #include <misaxx/patterns/misa_image_file_stack_pattern.h>
@@ -18,7 +18,7 @@ namespace misaxx {
 
     template<class Image> using misa_unsafe_image_stack_contents = std::unordered_map<std::string, misa_cached_data<misa_image_file<Image>>>;
 
-    template<class Image> struct misa_image_stack : public misa_default_cache<cxxh::access::memory_cache<misa_unsafe_image_stack_contents<Image>>, misa_image_file_stack_pattern, misa_file_stack_description> {
+    template<class Image> struct misa_image_stack : public misa_default_cache<cxxh::memory_cache<misa_unsafe_image_stack_contents<Image>>, misa_image_file_stack_pattern, misa_file_stack_description> {
 
         using image_type = Image;
 

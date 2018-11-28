@@ -8,7 +8,7 @@
 #include <misaxx/misa_default_cache.h>
 #include <misaxx/descriptions/misa_file_description.h>
 #include <misaxx/patterns/misa_file_pattern.h>
-#include <cxxh/access/readonly_access.h>
+#include <cxxh/cache.h>
 
 namespace misaxx {
 
@@ -16,7 +16,7 @@ namespace misaxx {
      * Cache that stores its attachments in a JSON file.
      * The unique location
      */
-    struct misa_exported_attachments : public misa_default_cache<cxxh::access::cache<nlohmann::json>, misa_file_pattern, misa_file_description> {
+    struct misa_exported_attachments : public misa_default_cache<cxxh::cache<nlohmann::json>, misa_file_pattern, misa_file_description> {
 
         nlohmann::json &get() override {
             return m_json;
@@ -63,7 +63,7 @@ namespace misaxx {
          * Saves the metadata included in this instance to the target JSON file
          */
         void save_attachments() {
-            cxxh::access::readonly_access<attachment_type > access(attachments);
+            cxxh::readonly_access<attachment_type > access(attachments);
             for(const auto &kv : access.get()) {
                 const misa_serializeable *md = kv.second.get();
                 md->to_json(m_json[md->get_serialization_id().get_id()]);

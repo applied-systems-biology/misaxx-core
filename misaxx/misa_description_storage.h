@@ -10,8 +10,8 @@
 #include <misaxx/misa_data_pattern_base.h>
 #include <misaxx/misa_data_description.h>
 #include <misaxx/misa_serializeable.h>
-#include <cxxh/types/static_helpers.h>
-#include <cxxh/containers/drilldown_singleton_map.h>
+#include <cxxh/type_traits.h>
+#include <cxxh/drilldown_singleton_map.h>
 
 namespace misaxx {
     /**
@@ -128,7 +128,7 @@ namespace misaxx {
                 }
             }
             else {
-                static_assert(cxxh::types::template always_false<Metadata>::value, "Only patterns and descriptions are supported!");
+                static_assert(cxxh::template always_false<Metadata>::value, "Only patterns and descriptions are supported!");
             }
 
             return m_instances.at<Metadata>();
@@ -152,7 +152,7 @@ namespace misaxx {
                 }
             }
             else {
-                static_assert(cxxh::types::template always_false<Metadata>::value, "Only patterns and descriptions are supported!");
+                static_assert(cxxh::template always_false<Metadata>::value, "Only patterns and descriptions are supported!");
             }
 
             return m_instances.at<Metadata>();
@@ -269,7 +269,7 @@ namespace misaxx {
         /**
          * The drilldown implements all necessary methods of virtual access
          */
-        mutable cxxh::containers::drilldown_singleton_map<misa_serializeable> m_instances;
+        mutable cxxh::drilldown_singleton_map<misa_serializeable> m_instances;
 
         bool m_has_pattern = false;
 

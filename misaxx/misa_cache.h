@@ -5,8 +5,8 @@
 
 #pragma once
 #include <misaxx/filesystem/misa_filesystem.h>
-#include <cxxh/containers/dynamic_singleton_map.h>
-#include <cxxh/access/memory_cache.h>
+#include <cxxh/dynamic_singleton_map.h>
+#include <cxxh/cache.h>
 
 namespace misaxx {
     /**
@@ -14,8 +14,8 @@ namespace misaxx {
      */
     struct misa_cache {
 
-        using attachment_type = cxxh::containers::dynamic_singleton_map<misa_serializeable>;
-        using attachment_cache_type = cxxh::access::memory_cache<attachment_type>;
+        using attachment_type = cxxh::dynamic_singleton_map<misa_serializeable>;
+        using attachment_cache_type = cxxh::memory_cache<attachment_type>;
 
         /**
          * Objects that are attached to this cache

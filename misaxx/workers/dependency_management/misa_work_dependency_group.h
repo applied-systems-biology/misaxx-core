@@ -8,7 +8,7 @@
 #include <misaxx/workers/misa_worker_base.h>
 #include <misaxx/workers/task_tree/misa_work_node.h>
 #include <misaxx/workers/dependency_management/misa_work_dependency_segment.h>
-#include <cxxh/types/static_helpers.h>
+#include <cxxh/type_traits.h>
 
 namespace misaxx::dependencies {
 
@@ -100,7 +100,7 @@ namespace misaxx::dependencies {
                 add_dependency(t_instance);
             }
             else {
-                static_assert(cxxh::types::always_false<InstanceOrSegment>::value, "Invalid type!");
+                static_assert(cxxh::always_false<InstanceOrSegment>::value, "Invalid type!");
             }
             return *this;
         }

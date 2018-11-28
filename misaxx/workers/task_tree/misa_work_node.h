@@ -11,7 +11,7 @@
 #include <misaxx/workers/task_tree/misa_worker_status.h>
 #include <unordered_set>
 #include <any>
-#include <cxxh/containers/singleton_map.h>
+#include <cxxh/singleton_map.h>
 #include <misaxx/workers/task_tree/misa_work_subtree_status.h>
 #include <misaxx/runtime/misa_runtime_base.h>
 #include <misaxx/workers/paths/full_node_path.h>
@@ -220,7 +220,7 @@ namespace misaxx::nodes {
         std::weak_ptr<misa_work_node> m_parent;
         full_node_path m_path;
         std::string m_json_path;
-        mutable cxxh::containers::singleton_map m_custom_paths;
+        mutable cxxh::singleton_map m_custom_paths;
         std::vector<std::shared_ptr<misa_work_node>> m_children;
         std::unordered_set<std::shared_ptr<misa_work_node>> m_dependencies;
 
