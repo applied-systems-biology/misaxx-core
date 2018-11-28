@@ -81,9 +81,9 @@ add_library(misaxx
         misaxx/json/misa_json_schema.h
         misaxx/json/misa_json_property.h
         misaxx/json/misa_json_property_base.h
-        misaxx/caches/misa_image_stack.h
-        misaxx/caches/misa_image_file.h
-        misaxx/caches/misa_exported_attachments.h
+        misaxx/caches/misa_image_stack_cache.h
+        misaxx/caches/misa_image_file_cache.h
+        misaxx/caches/misa_exported_attachments_cache.h
         misaxx/filesystem/misa_filesystem_json_importer.h
         misaxx/filesystem/misa_filesystem_entry.h
         misaxx/filesystem/misa_filesystem_directories_importer.h
@@ -146,9 +146,9 @@ add_library(misaxx
         misaxx/json/misa_json_schema.cpp
         misaxx/json/misa_json_property.cpp
         misaxx/json/misa_json_property_base.cpp
-        misaxx/caches/misa_image_stack.cpp
-        misaxx/caches/misa_image_file.cpp
-        misaxx/caches/misa_exported_attachments.cpp
+        misaxx/caches/misa_image_stack_cache.cpp
+        misaxx/caches/misa_image_file_cache.cpp
+        misaxx/caches/misa_exported_attachments_cache.cpp
         misaxx/filesystem/misa_filesystem_json_importer.cpp
         misaxx/filesystem/misa_filesystem_entry.cpp
         misaxx/filesystem/misa_filesystem_directories_importer.cpp
@@ -175,7 +175,7 @@ add_library(misaxx
         misaxx/workers/dependency_management/misa_work_dependency_segment.cpp
         misaxx/workers/misa_dispatcher.cpp
         misaxx/workers/misa_worker.cpp
-        misaxx/misa_data_pattern.cpp misaxx/misa_primitive.h misaxx/misa_serialization_id.h misaxx/json/misa_json_helper.h misaxx/misa_cached_data_base.cpp misaxx/misa_cached_data_base.h misaxx/misa_default_cache.h misaxx/attachments/filesystem_link.cpp misaxx/attachments/filesystem_link.h misaxx/patterns/misa_dummy_pattern.cpp misaxx/patterns/misa_dummy_pattern.h misaxx/misa_manual_cache.h)
+        misaxx/misa_data_pattern.cpp misaxx/misa_primitive.h misaxx/misa_serialization_id.h misaxx/json/misa_json_helper.h misaxx/misa_cached_data_base.cpp misaxx/misa_cached_data_base.h misaxx/misa_default_cache.h misaxx/attachments/filesystem_link.cpp misaxx/attachments/filesystem_link.h misaxx/patterns/misa_dummy_pattern.cpp misaxx/patterns/misa_dummy_pattern.h misaxx/misa_manual_cache.h misaxx/accessors/misa_exported_attachments.cpp misaxx/accessors/misa_exported_attachments.h misaxx/accessors/misa_image_file.cpp misaxx/accessors/misa_image_file.h misaxx/accessors/misa_image_stack.cpp misaxx/accessors/misa_image_stack.h)
 
 target_include_directories(misaxx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 

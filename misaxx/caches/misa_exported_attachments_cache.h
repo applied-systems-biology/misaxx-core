@@ -16,7 +16,7 @@ namespace misaxx {
      * Cache that stores its attachments in a JSON file.
      * The unique location
      */
-    struct misa_exported_attachments : public misa_default_cache<cxxh::cache<nlohmann::json>, misa_file_pattern, misa_file_description> {
+    struct misa_exported_attachments_cache : public misa_default_cache<cxxh::cache<nlohmann::json>, misa_file_pattern, misa_file_description> {
 
         nlohmann::json &get() override {
             return m_json;

@@ -17,7 +17,7 @@
 #include <misaxx/attachments/object_name.h>
 #include <misaxx/misa_cache.h>
 #include <misaxx/misa_cached_data.h>
-#include <misaxx/caches/misa_image_stack.h>
+#include <misaxx/caches/misa_image_stack_cache.h>
 #include <cxxh/drilldown_singleton_map.h>
 
 using namespace misaxx;
@@ -54,9 +54,9 @@ struct other_module : public misa_module<other_module_def> {
 
 
 struct my_module_declaration : public misa_module_declaration {
-//    misa_cached_data<misa_image_stack> my_stack;
+//    misa_cached_data<misa_image_stack_cache> my_stack;
 //    misa_cached_data<misa_unsafe_file> test_file1;
-//    misa_cached_data<misa_image_stack<coixx::images::grayscale_float >> example_stack;
+//    misa_cached_data<misa_image_stack_cache<coixx::images::grayscale_float >> example_stack;
     submodule <other_module> other;
 
     void init_data() override {

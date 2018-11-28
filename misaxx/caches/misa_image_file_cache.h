@@ -15,7 +15,6 @@
 #include <misaxx/patterns/misa_image_file_stack_pattern.h>
 #include <misaxx/runtime/misa_runtime_base.h>
 #include <misaxx/misa_default_cache.h>
-#include <misaxx/misa_cached_data.h>
 
 namespace misaxx {
 
@@ -23,7 +22,7 @@ namespace misaxx {
      * A cache that holds an OpenCV cv::Mat or a coixx::image
      * @tparam Image
      */
-    template<class Image> class misa_image_file : public misa_default_cache<cxxh::cache<Image>, misa_image_file_pattern, misa_file_description> {
+    template<class Image> class misa_image_file_cache : public misa_default_cache<cxxh::cache<Image>, misa_image_file_pattern, misa_file_description> {
     public:
 
         Image &get() override {
@@ -87,15 +86,5 @@ namespace misaxx {
         Image m_value;
         bool m_has_value = false;
         boost::filesystem::path m_path;
-
-    public:
-
-        static cv::Mat read_image(const misa_cached_data<misa_image_file<Image>> &t_cache) {
-            return t_cache.access_readonly().get().clone();
-        }
-
-        static void write_image(misa_cached_data<misa_image_file<Image>> &t_cache, cv::Mat t_data) {
-            t_cache.access_write().set(std::move(t_data));
-        }
     };
 }
