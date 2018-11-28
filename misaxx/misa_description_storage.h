@@ -222,30 +222,6 @@ namespace misaxx {
             return m_instances.has<Metadata>();
         }
 
-        /**
-         * Creates a description storage that already includes data
-         * @tparam Arg
-         * @tparam Args
-         * @param arg
-         * @param args
-         * @return
-         */
-        template<typename Arg, typename... Args> static std::shared_ptr<misa_description_storage> with(Arg &&arg, Args&&... args) {
-            using arg_type = typename std::remove_reference<Arg>::type;
-            static_assert(std::is_base_of<misa_data_description, arg_type>::value || std::is_base_of<misa_data_pattern_base, arg_type>::value,
-                          "Only patterns and descriptions can be attached!");
-            if constexpr (sizeof...(Args) > 0) {
-                auto storage = misa_description_storage::with(std::forward<Args>(args)...);
-                storage->set(std::forward<Arg>(arg));
-                return storage;
-            }
-            else {
-                auto storage = std::make_shared<misa_description_storage>();
-                storage->set(std::forward<Arg>(arg));
-                return storage;
-            }
-        }
-
         bool has_pattern() const {
             return m_has_pattern;
         }
@@ -274,6 +250,32 @@ namespace misaxx {
         bool m_has_pattern = false;
 
         bool m_has_description = false;
+
+    public:
+
+       /**
+        * Convenience function that creates a description storage initialized with the provided values
+        * @tparam Arg
+        * @tparam Args
+        * @param arg
+        * @param args
+        * @return
+        */
+        template<typename Arg, typename... Args> static std::shared_ptr<misa_description_storage> with(Arg &&arg, Args&&... args) {
+            using arg_type = typename std::remove_reference<Arg>::type;
+            static_assert(std::is_base_of<misa_data_description, arg_type>::value || std::is_base_of<misa_data_pattern_base, arg_type>::value,
+                          "Only patterns and descriptions can be attached!");
+            if constexpr (sizeof...(Args) > 0) {
+                auto storage = misa_description_storage::with(std::forward<Args>(args)...);
+                storage->set(std::forward<Arg>(arg));
+                return storage;
+            }
+            else {
+                auto storage = std::make_shared<misa_description_storage>();
+                storage->set(std::forward<Arg>(arg));
+                return storage;
+            }
+        }
 
     };
 
