@@ -9,11 +9,19 @@
 
 namespace misaxx {
     template<class Image> struct misa_image_file : public misa_cached_data<misa_image_file_cache<Image>>{
-        Image read_image() const {
+        /**
+         * Clones the image content read from access_readonly()
+         * @return
+         */
+        Image clone() const {
             return this->access_readonly().get().clone();
         }
 
-        void write_image(Image t_data) {
+        /**
+         * Writes image data into the current file
+         * @param t_data
+         */
+        void write(Image t_data) {
             this->access_write().set(std::move(t_data));
         }
     };
