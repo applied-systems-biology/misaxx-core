@@ -13,6 +13,9 @@ namespace misaxx {
      * @tparam T Must be compile-type serializeable by nlohmann::json
      */
     template<typename T> struct misa_primitive : public misa_serializeable {
+
+        using value_type = T;
+
         T value = T();
         misa_json_property<T> metadata;
 
