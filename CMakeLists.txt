@@ -47,12 +47,6 @@ if(NOT cxxh_POPULATED)
 endif()
 
 add_library(misaxx
-        misaxx/attachments/object3d_pixels.h
-        misaxx/attachments/object2d_pixels.h
-        misaxx/attachments/object3d_voxel_size.h
-        misaxx/attachments/object_name.h
-        misaxx/attachments/object3d_volume.h
-        misaxx/attachments/object3d_voxel_bounds.h
         misaxx/patterns/misa_image_file_stack_pattern.h
         misaxx/patterns/misa_file_pattern.h
         misaxx/patterns/misa_image_file_pattern.h
@@ -112,12 +106,6 @@ add_library(misaxx
         misaxx/workers/misa_dispatcher.h
         misaxx/workers/misa_worker.h
         misaxx/misa_data_pattern.h
-        misaxx/attachments/object3d_pixels.cpp
-        misaxx/attachments/object2d_pixels.cpp
-        misaxx/attachments/object3d_voxel_size.cpp
-        misaxx/attachments/object_name.cpp
-        misaxx/attachments/object3d_volume.cpp
-        misaxx/attachments/object3d_voxel_bounds.cpp
         misaxx/patterns/misa_image_file_stack_pattern.cpp
         misaxx/patterns/misa_file_pattern.cpp
         misaxx/patterns/misa_image_file_pattern.cpp

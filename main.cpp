@@ -13,8 +13,6 @@
 #include <misaxx/runtime/misa_cli.h>
 #include <misaxx/workers/paths/algorithm_node_path.h>
 #include <misaxx/workers/paths/object_node_path.h>
-#include <misaxx/attachments/object3d_voxel_size.h>
-#include <misaxx/attachments/object_name.h>
 #include <misaxx/misa_cache.h>
 #include <misaxx/misa_cached_data.h>
 #include <misaxx/caches/misa_image_stack_cache.h>
