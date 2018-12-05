@@ -9,6 +9,7 @@
 #include <exception>
 #include <stdexcept>
 #include <nlohmann/json.hpp>
+#include <boost/filesystem.hpp>
 
 namespace misaxx {
 
