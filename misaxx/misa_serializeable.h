@@ -25,7 +25,10 @@ namespace misaxx {
          * Serializes the JSON data
          * @param t_json
          */
-        virtual void to_json(nlohmann::json &t_json) const = 0;
+        virtual void to_json(nlohmann::json &t_json) const {
+            misa_serializeable::to_json(t_json);
+            t_json["misa:serialization-hierarchy"] = get_serialization_id_hierarchy();
+        }
 
         /**
          * Describes the structure of the data as JSON schema
@@ -55,13 +58,6 @@ namespace misaxx {
          * @return
          */
         static std::vector<misa_serialization_id> create_serialization_id_hierarchy(const misa_serializeable &self,
-                const std::vector<std::vector<misa_serialization_id>> &bases) {
-            std::vector<misa_serialization_id> result;
-            result.push_back(self.get_serialization_id());
-            for(const auto &v : bases) {
-                std::copy(v.begin(), v.end(), std::back_inserter(result));
-            }
-            return result;
-        }
+                const std::vector<std::vector<misa_serialization_id>> &bases);
     };
 }

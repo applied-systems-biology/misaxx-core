@@ -71,6 +71,7 @@ namespace misaxx {
         }
 
         void to_json(nlohmann::json &t_json) const override {
+            misa_serializeable::to_json(t_json);
             t_json["pattern"] = m_raw_pattern_json; // Pass along the raw metadata. This is very important!
             t_json["description"] = m_raw_description_json;
 

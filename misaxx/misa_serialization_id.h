@@ -21,7 +21,7 @@ namespace misaxx {
 
         }
 
-        explicit misa_serialization_id(const std::string &t_module, const std::string &t_path) : id(t_module + ":" + t_path) {
+        explicit misa_serialization_id(const std::string &t_module, const boost::filesystem::path &t_path) : id(t_module + ":" + t_path.string()) {
 
         }
 

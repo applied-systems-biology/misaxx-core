@@ -265,6 +265,7 @@ namespace misaxx {
         }
 
         void to_json(nlohmann::json &t_json) const override {
+            misa_serializeable::to_json(t_json);
             throw std::runtime_error("Not implemented");
         }
 

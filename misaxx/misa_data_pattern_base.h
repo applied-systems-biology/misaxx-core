@@ -13,6 +13,7 @@ namespace misaxx {
         }
 
         void to_json(nlohmann::json &t_json) const override {
+            misa_serializeable::to_json(t_json);
         }
 
         void to_json_schema(const misa_json_schema &t_schema) const override {
