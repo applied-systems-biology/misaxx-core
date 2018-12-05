@@ -9,12 +9,19 @@
 namespace misaxx {
 
     /**
-     * A range of values
+     * A range of values [from, to)
      * @tparam T
      */
     template<typename T> struct misa_range : public misa_serializeable {
 
+        /**
+         * Start value
+         */
         T from = T();
+
+        /**
+         * Non-exclusive end value
+         */
         T to = T();
 
         misa_range() = default;
@@ -45,6 +52,14 @@ namespace misaxx {
 
         std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
             return { get_serialization_id() };
+        }
+
+        /**
+         * Calculates the length of the values
+         * @return
+         */
+        T get_length() const {
+            return to - from;
         }
     };
 }
