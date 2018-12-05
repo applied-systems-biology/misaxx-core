@@ -33,11 +33,11 @@ namespace misaxx {
     template<typename T> struct misa_scalar : public misa_primitive<T>, public scalar_operators<misa_scalar<T>, T> {
         using misa_primitive<T>::misa_primitive;
 
-        bool operator==(const misa_scalar &rhs) const {
+        bool operator==(const misa_scalar<T> &rhs) const {
             return this->value == rhs.value;
         }
 
-        bool operator<(const misa_scalar &rhs) const {
+        bool operator<(const misa_scalar<T> &rhs) const {
             return this->value < rhs.value;
         }
 
