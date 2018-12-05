@@ -17,7 +17,7 @@ namespace misaxx {
         }
 
         std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
-            return create_serialization_id_hierarchy(*this, { misa_data_pattern<T>::get_serialization_id_hierarchy() });
+            return misa_serializeable::create_serialization_id_hierarchy(*this, { misa_data_pattern<T>::get_serialization_id_hierarchy() });
         }
     };
 }
