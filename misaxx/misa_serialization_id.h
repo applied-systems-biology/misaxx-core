@@ -59,11 +59,11 @@ namespace misaxx {
         std::string id;
     };
 
-    void to_json(nlohmann::json& j, const misa_serialization_id& p) {
+    inline void to_json(nlohmann::json& j, const misa_serialization_id& p) {
         j = p.get_id();
     }
 
-    void from_json(const nlohmann::json& j, misa_serialization_id& p) {
+    inline void from_json(const nlohmann::json& j, misa_serialization_id& p) {
         p = misa_serialization_id(j.get<std::string>());
     }
 
