@@ -54,5 +54,17 @@ namespace misaxx {
 
         }
 
+        /**
+         * Returns the location of this cache as internal filesystem path
+         * @return
+         */
+        boost::filesystem::path get_location_in_filesystem() const;
+
+        /**
+         * Returns the unique location of this cache as internal filesystem path
+         * @return
+         */
+        boost::filesystem::path get_unique_location_in_filesystem() const;
+
     };
 }

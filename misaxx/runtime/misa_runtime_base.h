@@ -51,6 +51,12 @@ namespace misaxx {
         virtual misa_json_schema_builder &get_schema_builder() = 0;
 
         /**
+         * Returns the current filesystem
+         * @return
+         */
+        virtual misa_filesystem get_filesystem() = 0;
+
+        /**
          * Gets the converted JSON value of given path. If the value is not defined in JSON, an exception is thrown.
          * @tparam T
          * @tparam Converter Converter that should be used

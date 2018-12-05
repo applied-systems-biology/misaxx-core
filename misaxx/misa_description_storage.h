@@ -284,11 +284,11 @@ namespace misaxx {
 
     };
 
-    void to_json(nlohmann::json& j, const misa_description_storage& p) {
+    inline void to_json(nlohmann::json& j, const misa_description_storage& p) {
         p.to_json(j);
     }
 
-    void from_json(const nlohmann::json& j, misa_description_storage& p) {
+    inline void from_json(const nlohmann::json& j, misa_description_storage& p) {
         p.from_json(j);
     }
 }

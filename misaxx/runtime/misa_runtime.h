@@ -71,6 +71,10 @@ namespace misaxx {
            return parameter_schema;
         }
 
+        misa_filesystem get_filesystem() override {
+            return instance().filesystem;
+        }
+
         nlohmann::json &get_parameter_json() override {
             return parameters;
         }
