@@ -16,7 +16,7 @@
 #include <misaxx/runtime/misa_runtime.h>
 #include <misaxx/misa_multiobject_root.h>
 #include <misaxx/misa_cached_data_base.h>
-#include <misaxx/attachments/filesystem_link.h>
+#include <misaxx/attachments/misa_filesystem_link.h>
 
 namespace misaxx {
 
@@ -289,9 +289,9 @@ namespace misaxx {
                         }
                     }
 
-                    // Attach filesystem_link if needed
-                    if(!access.get().has<filesystem_link>()) {
-                        filesystem_link link;
+                    // Attach misa_filesystem_link if needed
+                    if(!access.get().has<misa_filesystem_link>()) {
+                        misa_filesystem_link link;
                         link.internal_path = filesystem_generic_link_path;
                         link.to_json(exported_json[link.get_serialization_id().get_id()]);
                     }
