@@ -68,7 +68,6 @@ add_library(misaxx
         misaxx/misa_data_description.h
         misaxx/misa_multiobject_root.h
         misaxx/descriptions/misa_file_stack_description.h
-        misaxx/descriptions/misa_image_file_description.h
         misaxx/descriptions/misa_file_description.h
         misaxx/misa_module_declaration_base.h
         misaxx/json/misa_json_schema_builder.h
@@ -127,7 +126,6 @@ add_library(misaxx
         misaxx/misa_data_description.cpp
         misaxx/misa_multiobject_root.cpp
         misaxx/descriptions/misa_file_stack_description.cpp
-        misaxx/descriptions/misa_image_file_description.cpp
         misaxx/descriptions/misa_file_description.cpp
         misaxx/misa_module_declaration_base.cpp
         misaxx/json/misa_json_schema_builder.cpp

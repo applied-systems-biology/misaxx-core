@@ -30,6 +30,10 @@ namespace misaxx {
         misa_serialization_id get_serialization_id() const override {
             return misa_serialization_id("misa", "filesystem-link");
         }
+
+        std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
+            return { get_serialization_id() };
+        }
     };
 
     void to_json(nlohmann::json& j, const misa_filesystem_link& p) {

@@ -41,6 +41,10 @@ namespace misaxx {
         misa_serialization_id get_serialization_id() const override {
             return misa_serialization_id("misa", std::string("primitive/") + typeid(T).name());
         }
+
+        std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
+            return { get_serialization_id() };
+        }
     };
 
     /**

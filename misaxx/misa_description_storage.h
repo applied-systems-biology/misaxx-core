@@ -110,6 +110,10 @@ namespace misaxx {
             return misa_serialization_id("misa", "description-storage");
         }
 
+        std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
+            return { get_serialization_id() };
+        }
+
         /**
          * Gets a description from this metadata instance. It is deserialized from the
          * internal JSON if needed.

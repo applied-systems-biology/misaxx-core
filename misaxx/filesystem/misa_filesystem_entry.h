@@ -276,10 +276,6 @@ namespace misaxx {
             metadata->to_json_schema(t_schema.resolve("metadata"));
         }
 
-        misa_serialization_id get_serialization_id() const override {
-            return misa_serialization_id("misa", "filesystem/entry");
-        }
-
         /**
         * Given an external_path(), return the path relative to this entries' external_path()
         * If it is not a child path, return an empty path
@@ -300,6 +296,14 @@ namespace misaxx {
                     return "";
                 }
             }
+        }
+
+        misa_serialization_id get_serialization_id() const override {
+            return misa_serialization_id("misa", "filesystem/entry");
+        }
+
+        std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
+            return { get_serialization_id() };
         }
 
     private:

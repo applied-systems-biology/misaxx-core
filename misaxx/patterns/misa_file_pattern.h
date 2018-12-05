@@ -97,6 +97,10 @@ namespace misaxx {
         misa_serialization_id get_serialization_id() const override {
             return misa_serialization_id("misa", "patterns/file");
         }
+
+        std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
+            return create_serialization_id_hierarchy(*this, { misa_data_pattern<misa_file_description>::get_serialization_id_hierarchy() });
+        }
     };
 
     void to_json(nlohmann::json& j, const misa_file_pattern& p) {

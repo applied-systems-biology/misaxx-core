@@ -44,6 +44,10 @@ namespace misaxx {
             return misa_serialization_id("misa", "descriptions/file-stack");
         }
 
+        std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
+            return create_serialization_id_hierarchy(*this, { misa_data_description::get_serialization_id_hierarchy() });
+        }
+
     };
 
     void to_json(nlohmann::json& j, const misa_file_stack_description& p) {

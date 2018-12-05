@@ -9,7 +9,6 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <coixx/toolbox/toolbox_io.h>
-#include <misaxx/descriptions/misa_image_file_description.h>
 #include <misaxx/misa_cache.h>
 #include <misaxx/patterns/misa_image_file_pattern.h>
 #include <misaxx/patterns/misa_image_file_stack_pattern.h>

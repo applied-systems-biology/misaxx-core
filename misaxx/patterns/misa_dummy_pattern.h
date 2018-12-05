@@ -15,6 +15,10 @@ namespace misaxx {
         misa_serialization_id get_serialization_id() const override {
             return misa_serialization_id("misa", "patterns/dummy");
         }
+
+        std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
+            return create_serialization_id_hierarchy(*this, { misa_data_pattern<T>::get_serialization_id_hierarchy() });
+        }
     };
 }
 
