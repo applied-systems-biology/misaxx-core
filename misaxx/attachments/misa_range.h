@@ -55,11 +55,31 @@ namespace misaxx {
         }
 
         /**
-         * Calculates the length of the values
+         * Calculates the size of the range
          * @return
          */
-        T get_length() const {
+        T size() const {
             return to - from;
+        }
+
+        /**
+         * Returns true if the range contains the value
+         * @param value
+         * @return
+         */
+        bool contains(const T& value) const {
+            return value >= from && value < to;
+        }
+
+        /**
+         * Updates the range, so it includes the value
+         * @param value
+         */
+        void include(const T &value) {
+            if(from < value)
+                from = value;
+            if(to >= value)
+                to = value;
         }
     };
 }
