@@ -1,4 +1,6 @@
 #include <misaxx/misa_serializeable.h>
+#include "misa_serializeable.h"
+
 
 std::vector<misaxx::misa_serialization_id>
 misaxx::misa_serializeable::create_serialization_id_hierarchy(const misaxx::misa_serializeable &self,

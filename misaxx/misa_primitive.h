@@ -30,12 +30,12 @@ namespace misaxx {
         }
 
         void from_json(const nlohmann::json &t_json) override {
-            value = t_json;
+            value = misa_serializeable::deserialize_wrapped<T>(t_json);
         }
 
         void to_json(nlohmann::json &t_json) const override {
             misa_serializeable::to_json(t_json);
-            t_json = nlohmann::json(value);
+            misa_serializeable::serialize_wrapped(value, t_json);
         }
 
         void to_json_schema(const misa_json_schema &t_schema) const override {
