@@ -41,6 +41,7 @@ namespace misaxx {
         }
 
         void to_json(nlohmann::json &t_json) const override {
+            misa_serializeable::to_json(t_json);
             range_x.to_json(t_json["x"]);
             range_y.to_json(t_json["y"]);
             range_z.to_json(t_json["z"]);

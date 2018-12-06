@@ -49,6 +49,7 @@ namespace misaxx {
         }
 
         void to_json(nlohmann::json &t_json) const override {
+            misa_serializeable::to_json(t_json);
             t_json["filesystem-location"] = filesystem_location.string();
             t_json["filesystem-unique-location"] = filesystem_unique_location.string();
         }
