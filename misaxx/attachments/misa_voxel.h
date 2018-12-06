@@ -27,10 +27,10 @@ namespace misaxx {
          * Initializes the voxel with X = [0, x); Y = [0, y); Z = [0, z)
          * @param x
          * @param y
-         * @param z 
+         * @param z
          */
         explicit misa_voxel(T x, T y, T z) :
-        X(misa_range<T>(0, x)), Y(misa_range<T>(0, y)), Z(misa_range<T>(0, z)) {
+        X(misa_range<T>(T(), x)), Y(misa_range<T>(T(), y)), Z(misa_range<T>(T(), z)) {
 
         }
 
