@@ -23,6 +23,17 @@ namespace misaxx {
 
         }
 
+        /**
+         * Initializes the voxel with X = [0, x); Y = [0, y); Z = [0, z)
+         * @param x
+         * @param y
+         * @param z 
+         */
+        explicit misa_voxel(T x, T y, T z) :
+        X(misa_range<T>(0, x)), Y(misa_range<T>(0, y)), Z(misa_range<T>(0, z)) {
+
+        }
+
         void from_json(const nlohmann::json &t_json) override {
             X.from_json(t_json["x"]);
             Y.from_json(t_json["y"]);
