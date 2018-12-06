@@ -26,8 +26,8 @@ namespace misaxx {
          * @param t_json
          */
         virtual void to_json(nlohmann::json &t_json) const {
-            misa_serializeable::to_json(t_json);
             t_json["misa:serialization-hierarchy"] = get_serialization_id_hierarchy();
+            t_json["misa:serialization-id"] = get_serialization_id().get_id();
         }
 
         /**
