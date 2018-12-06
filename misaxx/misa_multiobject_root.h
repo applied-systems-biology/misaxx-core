@@ -5,9 +5,10 @@
 
 #pragma once
 
-#include "misaxx/misa_module_declaration.h"
-#include "misaxx/misa_module.h"
-#include "misa_root_module_base.h"
+#include <misaxx/misa_module_declaration.h>
+#include <misaxx/misa_module.h>
+#include <misaxx/misa_root_module_base.h>
+#include <misaxx/runtime/misa_runtime_base.h>
 
 namespace misaxx {
 
@@ -32,7 +33,7 @@ namespace misaxx {
 
             // Only consider objects defined in the "objects" parameters
             std::cout << "[multiobject_root] Dispatching root module for all input objects ..." << std::endl;
-            const nlohmann::json &object_json = get_node().get_runtime().get_parameter_json()["objects"];
+            const nlohmann::json &object_json = misa_runtime_base::instance().get_parameter_json()["objects"];
             for(nlohmann::json::const_iterator it = object_json.begin(); it != object_json.end(); ++it){
                 const std::string &name = it.key();
                 filesystem::entry e = filesystem.imported->access(name);
