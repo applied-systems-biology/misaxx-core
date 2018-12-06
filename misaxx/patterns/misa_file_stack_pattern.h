@@ -41,6 +41,7 @@ namespace misaxx {
         }
 
         void to_json(nlohmann::json &t_json) const override {
+            misa_data_pattern<misa_file_stack_description>::to_json(t_json);
             std::vector<std::string> extensions_;
             for(const auto &extension : extensions) {
                 extensions_.emplace_back(extension.string());

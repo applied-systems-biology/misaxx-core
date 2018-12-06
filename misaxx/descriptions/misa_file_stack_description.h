@@ -31,7 +31,7 @@ namespace misaxx {
         }
 
         void to_json(nlohmann::json &t_json) const override {
-            misa_serializeable::to_json(t_json);
+            misa_data_description::to_json(t_json);
             t_json["files"] = files;
         }
 
