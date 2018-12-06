@@ -59,5 +59,37 @@ namespace misaxx {
          */
         static std::vector<misa_serialization_id> create_serialization_id_hierarchy(const misa_serializeable &self,
                 const std::vector<std::vector<misa_serialization_id>> &bases);
+
+        /**
+         * Deserializes a wrapped value from the JSON
+         * @tparam T
+         * @param t_json
+         * @return
+         */
+        template<typename T> static T deserialize_wrapped(const nlohmann::json &t_json) {
+            if(t_json.is_object() && t_json.find("misa:serializeable/value") != t_json.end()) {
+                return t_json["misa:serializeable/value"].get<T>();
+            }
+            else {
+                t_json.get<T>();
+            }
+        }
+
+        /**
+         * Serializes objects as-is, but other JSON types wrapped into an misa:serializeable/value attibute.
+         * This is required, so misa_serializeable can attach type information
+         * @tparam T
+         * @param value
+         * @param t_json
+         */
+        template<typename T> static void serialize_wrapped(const T &value, nlohmann::json &t_json) {
+            nlohmann::json v = value;
+            if(v.is_object()) {
+                t_json = std::move(v);
+            }
+            else {
+                t_json["misa:serializeable/value"] = std::move(v);
+            }
+        }
     };
 }
