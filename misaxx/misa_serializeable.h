@@ -85,7 +85,9 @@ namespace misaxx {
         template<typename T> static void serialize_wrapped(const T &value, nlohmann::json &t_json) {
             nlohmann::json v = value;
             if(v.is_object()) {
-                t_json = std::move(v);
+                for(auto it = v.begin(); it != v.end(); ++it) {
+                    t_json[it.key()] = it.value();
+                }
             }
             else {
                 t_json["misa:serializeable/value"] = std::move(v);
