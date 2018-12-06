@@ -41,7 +41,10 @@ namespace misaxx {
          * Gets the serialization ID of the object
          * @return
          */
-        virtual misa_serialization_id get_serialization_id() const = 0;
+        misa_serialization_id get_serialization_id() const {
+            const auto h = get_serialization_id_hierarchy();
+            return h[h.size() - 1];
+        }
 
         /**
          * Gets a hierarchy of serialization IDs that is consistent with the inheritance hierarchy.
@@ -49,15 +52,16 @@ namespace misaxx {
          * current id is the last entry
          * @return
          */
-        virtual std::vector<misa_serialization_id> get_serialization_id_hierarchy() const = 0;
-
+        virtual std::vector<misa_serialization_id> get_serialization_id_hierarchy() const {
+            return { misa_serialization_id("misa", "serializeable") };
+        }
         /**
          * Creates a serialization id hierarchy from the current object and the inherited serialization ids         *
          * @param self
          * @param bases
          * @return
          */
-        static std::vector<misa_serialization_id> create_serialization_id_hierarchy(const misa_serializeable &self,
+        static std::vector<misa_serialization_id> create_serialization_id_hierarchy(misa_serialization_id self,
                 const std::vector<std::vector<misa_serialization_id>> &bases);
 
         /**

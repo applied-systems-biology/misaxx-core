@@ -41,12 +41,10 @@ namespace misaxx {
             }
         }
 
-        misa_serialization_id get_serialization_id() const override {
-            return misa_serialization_id("misa", "descriptions/file-stack");
-        }
-
         std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
-            return create_serialization_id_hierarchy(*this, { misa_data_description::get_serialization_id_hierarchy() });
+            return misa_serializeable::create_serialization_id_hierarchy(misa_serialization_id("misa", "descriptions/file-stack"), {
+                    misa_data_description::get_serialization_id_hierarchy()
+            });
         }
 
     };

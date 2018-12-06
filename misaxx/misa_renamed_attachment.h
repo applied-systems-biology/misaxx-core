@@ -19,12 +19,10 @@ namespace misaxx {
 
         }
 
-        misa_serialization_id get_serialization_id() const override {
-            return m_new_id;
-        }
-
         std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
-            return misa_serializeable::create_serialization_id_hierarchy(*this, { Wrapped::get_serialization_id_hierarchy() });
+            return misa_serializeable::create_serialization_id_hierarchy(m_new_id, {
+                    Wrapped::get_serialization_id_hierarchy()
+            });
         }
 
     private:

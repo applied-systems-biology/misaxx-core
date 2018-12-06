@@ -46,12 +46,10 @@ namespace misaxx {
             t_schema.resolve("to").declare_required<T>();
         }
 
-        misa_serialization_id get_serialization_id() const override {
-            return misa_serialization_id("misa", std::string("attachments/range/") + typeid(T).name());
-        }
-
         std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
-            return { get_serialization_id() };
+            return misa_serializeable::create_serialization_id_hierarchy(misa_serialization_id("misa", std::string("attachments/range/") + typeid(T).name()), {
+                    misa_serializeable::get_serialization_id_hierarchy()
+            });
         }
 
         /**

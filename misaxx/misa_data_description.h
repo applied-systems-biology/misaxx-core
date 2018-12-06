@@ -23,12 +23,10 @@ namespace misaxx {
         void to_json_schema(const misa_json_schema &t_schema) const override {
         }
 
-        misa_serialization_id get_serialization_id() const override {
-            return misa_serialization_id("misa", "descriptions/base");
-        }
-
         std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
-            return { get_serialization_id() };
+            return misa_serializeable::create_serialization_id_hierarchy(misa_serialization_id("misa", "descriptions/base"), {
+                    misa_serializeable::get_serialization_id_hierarchy()
+            });
         }
     };
 }

@@ -16,12 +16,10 @@ namespace misaxx {
 
         }
 
-        misa_serialization_id get_serialization_id() const override {
-            return misa_serialization_id("misa", "patterns/image-file");
-        }
-
         std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
-            return create_serialization_id_hierarchy(*this, { misa_file_pattern::get_serialization_id_hierarchy() });
+            return misa_serializeable::create_serialization_id_hierarchy(misa_serialization_id("misa", "patterns/image-file"), {
+                    misa_file_pattern::get_serialization_id_hierarchy()
+            });
         }
     };
 

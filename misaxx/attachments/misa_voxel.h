@@ -53,12 +53,10 @@ namespace misaxx {
             range_z.to_json_schema(t_schema.resolve("z"));
         }
 
-        misa_serialization_id get_serialization_id() const override {
-            return misa_serialization_id("misa_ome", "attachments/cube");
-        }
-
         std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
-            return {get_serialization_id()};
+            return misa_serializeable::create_serialization_id_hierarchy(misa_serialization_id("misa", "attachments/cube"), {
+                    misa_serializeable::get_serialization_id_hierarchy()
+            });
         }
 
         /**

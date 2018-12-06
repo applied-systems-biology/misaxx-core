@@ -59,12 +59,10 @@ namespace misaxx {
             t_schema.resolve("filesystem-unique-location").declare<std::string>();
         }
 
-        misa_serialization_id get_serialization_id() const override {
-            return misa_serialization_id("misa", "attachments/location");
-        }
-
         std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
-            return { get_serialization_id() };
+            return misa_serializeable::create_serialization_id_hierarchy(misa_serialization_id("misa", "attachments/location"), {
+                    misa_serializeable::get_serialization_id_hierarchy()
+            });
         }
     };
 

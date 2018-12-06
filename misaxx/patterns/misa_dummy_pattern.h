@@ -12,12 +12,10 @@ namespace misaxx {
      * @tparam T
      */
     template<typename T> struct misa_dummy_pattern : public misa_data_pattern<T> {
-        misa_serialization_id get_serialization_id() const override {
-            return misa_serialization_id("misa", "patterns/dummy");
-        }
-
         std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
-            return misa_serializeable::create_serialization_id_hierarchy(*this, { misa_data_pattern<T>::get_serialization_id_hierarchy() });
+            return misa_serializeable::create_serialization_id_hierarchy(misa_serialization_id("misa", "patterns/dummy"), {
+                    misa_data_pattern<T>::get_serialization_id_hierarchy()
+            });
         }
     };
 }
