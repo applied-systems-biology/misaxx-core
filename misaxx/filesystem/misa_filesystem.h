@@ -5,13 +5,13 @@
 
 #pragma once
 
-#include "misa_filesystem_entry.h"
+#include <misaxx/filesystem/misa_filesystem_entry.h>
 
 namespace misaxx {
     /**
      * Filesystem of a MISA++ module. The filesystem has 3 folders, "imported", "exported" and "modules".
      */
-    struct misa_filesystem {
+    struct misa_filesystem : public misa_serializeable {
         /**
          * Contains all imported data
          */
@@ -41,6 +41,28 @@ namespace misaxx {
             result.imported = imported->access(t_name);
             result.exported = exported->access(t_name);
             return result;
+        }
+
+        void from_json(const nlohmann::json &t_json) override {
+            throw std::runtime_error("Not implemented");
+        }
+
+        void to_json(nlohmann::json &t_json) const override {
+            misa_serializeable::to_json(t_json);
+            throw std::runtime_error("Not implemented");
+        }
+
+        void to_json_schema(const misa_json_schema &t_schema) const override {
+            imported->to_json_schema(t_schema.resolve("imported"));
+            exported->to_json_schema(t_schema.resolve("exported"));
+        }
+
+        misa_serialization_id get_serialization_id() const override {
+            return misa_serialization_id("misa", "filesystem");
+        }
+
+        std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
+            return { get_serialization_id() };
         }
     };
 }

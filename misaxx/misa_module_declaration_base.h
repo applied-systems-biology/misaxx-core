@@ -5,20 +5,17 @@
 
 #pragma once
 #include <memory>
-#include <pattxx/nodes/node.h>
-#include "misaxx/filesystem/misa_filesystem.h"
+#include <misaxx/filesystem/misa_filesystem.h>
+#include <misaxx/runtime/misa_runtime_base.h>
 
 namespace misaxx {
-
-    struct misa_pdata;
-
 
     struct misa_module_declaration_base {
 
         /**
          * The current runtime
          */
-        pattxx::runtime *m_runtime = nullptr;
+        misa_runtime_base *m_runtime = nullptr;
 
         /**
          * Filesystem of this module
