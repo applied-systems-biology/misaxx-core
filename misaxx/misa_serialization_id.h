@@ -10,13 +10,14 @@
 #include <stdexcept>
 #include <nlohmann/json.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/operators.hpp>
 
 namespace misaxx {
 
     /**
      * Well defined way to communicate the origin of serialization
      */
-    struct misa_serialization_id {
+    struct misa_serialization_id : public boost::equality_comparable<misa_serialization_id> {
 
         explicit misa_serialization_id() : id("misa:unknown") {
 
@@ -52,6 +53,14 @@ namespace misaxx {
 
         const std::string &get_id() const {
             return id;
+        }
+
+        bool empty() const {
+            return id.empty();
+        }
+
+        bool operator==(const misa_serialization_id &rhs) const {
+            return id == rhs.id;
         }
 
     private:

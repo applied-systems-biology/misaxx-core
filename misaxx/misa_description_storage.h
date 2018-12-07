@@ -49,7 +49,6 @@ namespace misaxx {
             }
             else {
                 m_raw_pattern_json = t_json;
-                m_has_pattern = !m_raw_pattern_json.empty();
             }
         }
 
@@ -58,14 +57,12 @@ namespace misaxx {
                 auto it = t_json.find("pattern");
                 if(it != t_json.end()) {
                     m_raw_pattern_json = it.value();
-                    m_has_pattern = true;
                 }
             }
             {
                 auto it = t_json.find("description");
                 if(it != t_json.end()) {
                     m_raw_description_json = it.value();
-                    m_has_description = true;
                 }
             }
         }
@@ -75,24 +72,13 @@ namespace misaxx {
             t_json["pattern"] = m_raw_pattern_json; // Pass along the raw metadata. This is very important!
             t_json["description"] = m_raw_description_json;
 
-            // Serialize any instances
-            for(const auto &v : m_instances) {
-                const auto *as_pattern = dynamic_cast<const misa_data_pattern_base*>(v.get());
-                const auto *as_description = dynamic_cast<const misa_data_description*>(v.get());
-
-                if(as_pattern) {
-                    auto &j = t_json["pattern"];
-                    v->to_json(j);
-                    t_json["pattern"]["pattern-type"] = v->get_serialization_id();
-                }
-                else if(as_description) {
-                    auto &j = t_json["description"];
-                    v->to_json(j);
-                    t_json["description"]["description-type"] = v->get_serialization_id();
-                }
-                else {
-                    throw std::runtime_error("Cannot serialize unknown description type!");
-                }
+            if(static_cast<bool>(m_pattern)) {
+                auto &j = t_json["pattern"];
+                m_pattern->to_json(j);
+            }
+            if(static_cast<bool>(m_description)) {
+                auto &j = t_json["description"];
+                m_pattern->to_json(j);
             }
         }
 
@@ -121,20 +107,34 @@ namespace misaxx {
          */
         template <class Metadata> const Metadata &get() const {
             if constexpr (std::is_base_of<misa_data_pattern_base, Metadata>::value) {
-                if(m_instances.find<Metadata>() == m_instances.end()) {
-                    m_instances.access<Metadata>().from_json(m_raw_pattern_json);
+                if (static_cast<bool>(std::dynamic_pointer_cast<Metadata>(m_pattern))) {
+                    return *std::dynamic_pointer_cast<Metadata>(m_pattern);
+                } else if (misa_serializeable::type_is_deserializeable_from_json<Metadata>(m_raw_pattern_json)) {
+                    Metadata m;
+                    m.from_json(m_raw_pattern_json);
+                    m_pattern = std::make_shared<Metadata>(std::move(m));
+                    return *std::dynamic_pointer_cast<Metadata>(m_pattern);
+                }
+                else {
+                    throw std::runtime_error(std::string("The description storage does not contain ") + typeid(Metadata).name());
                 }
             }
             else if constexpr (std::is_base_of<misa_data_description, Metadata>::value) {
-                if(m_instances.find<Metadata>() == m_instances.end()) {
-                    m_instances.access<Metadata>().from_json(m_raw_description_json);
+                if (static_cast<bool>(std::dynamic_pointer_cast<Metadata>(m_description))) {
+                    return *std::dynamic_pointer_cast<Metadata>(m_description);
+                } else if (misa_serializeable::type_is_deserializeable_from_json<Metadata>(m_raw_description_json)) {
+                    Metadata m;
+                    m.from_json(m_raw_description_json);
+                    m_description = std::make_shared<Metadata>(std::move(m));
+                    return *std::dynamic_pointer_cast<Metadata>(m_description);
+                }
+                else {
+                    throw std::runtime_error(std::string("The description storage does not contain ") + typeid(Metadata).name());
                 }
             }
             else {
-                static_assert(cxxh::template always_false<Metadata>::value, "Only patterns and descriptions are supported!");
+                static_assert(cxxh::always_false<Metadata>::value, "Only patterns and descriptions are supported!");
             }
-
-            return m_instances.at<Metadata>();
         }
 
         /**
@@ -144,21 +144,12 @@ namespace misaxx {
         * @return
         */
         template <class Metadata> Metadata &get() {
-            if constexpr (std::is_base_of<misa_data_pattern_base, Metadata>::value) {
-                if(m_instances.find<Metadata>() == m_instances.end()) {
-                    m_instances.access<Metadata>().from_json(m_raw_pattern_json);
-                }
-            }
-            else if constexpr (std::is_base_of<misa_data_description, Metadata>::value) {
-                if(m_instances.find<Metadata>() == m_instances.end()) {
-                    m_instances.access<Metadata>().from_json(m_raw_description_json);
-                }
+            if(has<Metadata>()) {
+                return access<Metadata>();
             }
             else {
-                static_assert(cxxh::template always_false<Metadata>::value, "Only patterns and descriptions are supported!");
-            }
-
-            return m_instances.at<Metadata>();
+                throw std::runtime_error(std::string("The description storage does not contain ") + typeid(Metadata).name());
+            };
         }
 
         /**
@@ -167,70 +158,101 @@ namespace misaxx {
          * @return
          */
         template <class Metadata> Metadata &set(Metadata t_description) {
-            m_instances.insert(std::move(t_description));
-
             if constexpr (std::is_base_of<misa_data_pattern_base, Metadata>::value) {
-                m_has_pattern = true;
+                m_pattern = std::make_shared<Metadata>(std::move(t_description));
+                return *std::dynamic_pointer_cast<Metadata>(m_pattern);
             }
             else if constexpr (std::is_base_of<misa_data_description, Metadata>::value) {
-                m_has_description = true;
+                m_description = std::make_shared<Metadata>(std::move(t_description));
+                return *std::dynamic_pointer_cast<Metadata>(m_description);
             }
-
-            return m_instances.access<Metadata>();
+            else {
+                static_assert(cxxh::always_false<Metadata>::value, "Only patterns and descriptions are supported!");
+            }
         }
 
         /**
-         * Sets a description. Existing descriptions are NOT overwritten.
-         * @tparam Metadata
-         * @return
-         */
-        template <class Metadata> Metadata &access(Metadata t_description) {
-
-            if constexpr (std::is_base_of<misa_data_pattern_base, Metadata>::value) {
-                m_has_pattern = true;
-            }
-            else if constexpr (std::is_base_of<misa_data_description, Metadata>::value) {
-                m_has_description = true;
-            }
-
-            if(!m_instances.has<Metadata>())
-                return set(std::move(t_description));
-            else
-                return m_instances.access<Metadata>();
-        }
-
-        /**
-        * Sets a description. Existing descriptions are NOT overwritten.
+        * Returns the pattern or description. If necessary, create it.
+        * If there is already an existing pattern or description with a differnt type hierarchy, the stored value is overwritten
         * @tparam Metadata
         * @return
         */
         template <class Metadata> Metadata &access() {
 
+            std::vector<misa_serialization_id> serialization_hierarchy = Metadata().get_serialization_id_hierarchy();
+
             if constexpr (std::is_base_of<misa_data_pattern_base, Metadata>::value) {
-                m_has_pattern = true;
+                if (static_cast<bool>(std::dynamic_pointer_cast<Metadata>(m_pattern))) {
+                    return *std::dynamic_pointer_cast<Metadata>(m_pattern);
+                } else {
+                    Metadata m;
+                    if (misa_serializeable::type_is_deserializeable_from_json<Metadata>(m_raw_pattern_json)) {
+                        m.from_json(m_raw_pattern_json);
+                    }
+                    m_pattern = std::make_shared<Metadata>(std::move(m));
+                    return *std::dynamic_pointer_cast<Metadata>(m_pattern);
+                }
             }
             else if constexpr (std::is_base_of<misa_data_description, Metadata>::value) {
-                m_has_description = true;
+                if (static_cast<bool>(std::dynamic_pointer_cast<Metadata>(m_description))) {
+                    return *std::dynamic_pointer_cast<Metadata>(m_description);
+                } else {
+                    Metadata m;
+                    if (misa_serializeable::type_is_deserializeable_from_json<Metadata>(m_raw_description_json)) {
+                        m.from_json(m_raw_description_json);
+                    }
+                    m_description = std::make_shared<Metadata>(std::move(m));
+                    return *std::dynamic_pointer_cast<Metadata>(m_description);
+                }
             }
-
-            return m_instances.access<Metadata>();
+            else {
+                static_assert(cxxh::always_false<Metadata>::value, "Only patterns and descriptions are supported!");
+            }
         }
 
         /**
-        * Sets a description. Existing descriptions are overwritten
+        * Returns true if the storage or the underlying JSON data contains a specific pattern or description
         * @tparam Metadata
         * @return
         */
-        template <class Metadata> bool has() {
-            return m_instances.has<Metadata>();
+        template <class Metadata> bool has() const {
+            if constexpr (std::is_base_of<misa_data_pattern_base, Metadata>::value) {
+                if(static_cast<bool>(std::dynamic_pointer_cast<Metadata>(m_pattern))) {
+                    return true;
+                }
+                else {
+                    return misa_serializeable::type_is_deserializeable_from_json<Metadata>(m_raw_pattern_json);
+                }
+            }
+            else if constexpr (std::is_base_of<misa_data_description, Metadata>::value) {
+                if(static_cast<bool>(std::dynamic_pointer_cast<Metadata>(m_description))) {
+                    return true;
+                }
+                else {
+                    return misa_serializeable::type_is_deserializeable_from_json<Metadata>(m_raw_description_json);
+                }
+            }
+            else {
+                static_assert(cxxh::always_false<Metadata>::value, "Only patterns and descriptions are supported!");
+            }
         }
 
+        /**
+         * Returns true if the description storage has a pattern
+         * @return
+         */
         bool has_pattern() const {
-            return m_has_pattern;
+            return static_cast<bool>(m_pattern) ||
+            misa_serializeable::type_is_deserializeable_from_json<misa_data_pattern_base>(m_raw_pattern_json);
         }
 
+        /**
+         * Returns true if the description storage has a description
+         * @return
+         */
         bool has_description() const {
-            return m_has_description;
+            return static_cast<bool>(m_description) ||
+            misa_serializeable::type_is_deserializeable_from_json<misa_data_description>(m_raw_description_json);
         }
 
     private:
@@ -245,14 +267,9 @@ namespace misaxx {
         */
         nlohmann::json m_raw_description_json;
 
-        /**
-         * The drilldown implements all necessary methods of virtual access
-         */
-        mutable cxxh::drilldown_singleton_map<misa_serializeable> m_instances;
+        mutable std::shared_ptr<misa_data_pattern_base> m_pattern;
 
-        bool m_has_pattern = false;
-
-        bool m_has_description = false;
+        mutable std::shared_ptr<misa_data_description> m_description;
 
     public:
 
