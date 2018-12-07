@@ -71,6 +71,8 @@ namespace misaxx {
         }
 
         void do_link(const misa_file_description &t_description) override {
+            if(t_description.filename.empty())
+                throw std::runtime_error("Cannot link to file description with empty file name!");
             m_path = this->get_location() / t_description.filename;
             this->set_unique_location(m_path);
         }
