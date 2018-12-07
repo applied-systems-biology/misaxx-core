@@ -53,7 +53,7 @@ namespace misaxx {
 
             // Create the description if needed
             if(!m_description->has_description()) {
-                m_description->set(produce_description(m_location, m_description->get<Pattern>()));
+                m_description->set(produce_description(m_location, m_description->access<Pattern>()));
             }
 
             do_link(m_description->get<Description>());
