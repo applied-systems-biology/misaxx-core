@@ -11,53 +11,74 @@
 #include <nlohmann/json.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/operators.hpp>
+#include <c++/7/bits/basic_string.h>
 
 namespace misaxx {
 
     /**
-     * Well defined way to communicate the origin of serialization
+     * Contains an unique id that identifies a serializes class
      */
     struct misa_serialization_id : public boost::equality_comparable<misa_serialization_id> {
 
-        explicit misa_serialization_id() : id("misa:unknown") {
+        /**
+         * Creates an empty serialization ID
+         */
+        explicit misa_serialization_id();
 
-        }
+        /**
+         * Creates a serialization ID from a module ID and a path
+         * @param t_module
+         * @param t_path
+         */
+        explicit misa_serialization_id(const std::string &t_module, const boost::filesystem::path &t_path);
 
-        explicit misa_serialization_id(const std::string &t_module, const boost::filesystem::path &t_path) : id(t_module + ":" + t_path.string()) {
+        /**
+         * Creates a serialization ID
+         * @param t_id must have the form <module>:<path>
+         */
+        explicit misa_serialization_id(std::string t_id);
 
-        }
-
-        explicit misa_serialization_id(std::string t_id) : id(std::move(t_id)) {
-            auto colon_it = id.find(':');
-            if(colon_it == std::string::npos)
-                throw std::runtime_error("Invalid ID " + id);
-        }
-
+        /**
+         * Returns the operator as string
+         * @return
+         */
         explicit operator std::string() const {
             return id;
         }
 
-        std::string get_module() const {
-            auto colon_it = id.find(':');
-            if(colon_it == std::string::npos)
-                throw std::runtime_error("Invalid ID " + id);
-            return id.substr(colon_it);
-        }
+        /**
+         * Returns the module string
+         * @return
+         */
+        std::string get_module() const;
 
-        std::string get_path() const {
-            auto colon_it = id.find(':');
-            if(colon_it == std::string::npos)
-                throw std::runtime_error("Invalid ID " + id);
-            return id.substr(0, colon_it - 1);
-        }
+        /**
+         * Returns the path within the module
+         * @return
+         */
+        boost::filesystem::path get_path() const;
 
-        const std::string &get_id() const {
-            return id;
-        }
+        /**
+         * Sets the module of the serialization ID
+         * @param module
+         */
+        void set_module(const std::string &module);
 
-        bool empty() const {
-            return id.empty();
-        }
+        /**
+         * Sets the path of the serialization ID
+         * @param t_path
+         */
+        void set_path(const boost::filesystem::path &t_path);
+
+        /**
+         * Returns the ID as string
+         * @return
+         */
+        const std::string &get_id() const;
+
+        void set_id(std::string t_id);
+
+        bool empty() const;
 
         bool operator==(const misa_serialization_id &rhs) const {
             return id == rhs.id;

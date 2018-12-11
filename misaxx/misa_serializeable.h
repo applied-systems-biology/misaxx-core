@@ -75,7 +75,7 @@ namespace misaxx {
                 return t_json["misa:serializeable/value"].get<T>();
             }
             else {
-                t_json.get<T>();
+                return t_json.get<T>();
             }
         }
 

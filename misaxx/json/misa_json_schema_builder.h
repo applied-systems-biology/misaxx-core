@@ -15,6 +15,8 @@
 
 namespace misaxx {
 
+    struct misa_serializeable;
+
     /**
      * Encapsulates writing a JSON schema
      */
@@ -73,7 +75,17 @@ namespace misaxx {
          */
         template<typename T> void insert(const path_t &t_parameter_path, const misa_json_property<T> &t_json_metadata) {
             ensure_schema_property_path(t_parameter_path);
-            auto as_json = nlohmann::json(T());
+
+            nlohmann::json as_json;
+
+            // If we have a serializeable, prefer the dynamic method
+            if constexpr (std::is_base_of<misa_serializeable, T>::value) {
+                T v;
+                v.to_json(as_json);
+            }
+            else {
+                as_json = nlohmann::json(T());
+            }
 
             const auto property_base_path = schema_property_path(t_parameter_path);
             const auto property_parent_base_path = schema_parent_path(t_parameter_path);

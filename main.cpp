@@ -17,6 +17,8 @@
 #include <misaxx/misa_cached_data.h>
 #include <misaxx/caches/misa_image_stack_cache.h>
 #include <cxxh/drilldown_singleton_map.h>
+#include <misaxx/attachments/misa_quantity.h>
+#include <misaxx/attachments/misa_unit_numeric.h>
 
 using namespace misaxx;
 
@@ -107,6 +109,15 @@ struct my_module : public misa_module<my_module_declaration> {
 };
 
 int main(int argc, const char** argv) {
+
+    misa_quantity<int, misa_unit_numeric> x(5);
+    misa_quantity<int, misa_unit_numeric> y(5);
+
+    auto area = x * y;
+
+    std::cout << area << std::endl;
+    std::cout << nlohmann::json(area) << std::endl;
+
     misa_cli<misa_multiobject_root<my_module>> cli("my_module");
     return cli.prepare_and_run(argc, argv);
 }

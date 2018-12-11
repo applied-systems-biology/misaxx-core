@@ -63,7 +63,7 @@ namespace misaxx {
 
         }
 
-        bool set_is_simulating(bool value) {
+        void set_is_simulating(bool value) {
             m_is_simulating = value;
         }
 
