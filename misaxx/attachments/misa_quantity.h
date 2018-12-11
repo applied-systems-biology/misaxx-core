@@ -91,7 +91,7 @@ namespace misaxx {
 
         std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
             misa_serialization_id self = m_unit.get_serialization_id();
-            self.set_path(self.get_path() / typeid(Value).name());
+            self.set_path(self.get_path() / std::string(typeid(Value).name()));
             return misa_serializeable::create_serialization_id_hierarchy(std::move(self), {
                     misa_serializeable::get_serialization_id_hierarchy()
             });
@@ -161,7 +161,21 @@ namespace misaxx {
          */
         friend misa_quantity<Value, typename Unit::higher_order_type> operator *(const misa_quantity<Value, Unit> &lhs, const misa_quantity<Value, Unit> &rhs) {
             misa_quantity<Value, typename Unit::higher_order_type> result;
-            result.m_value = lhs.m_value * rhs.m_value; // TODO: Proper unit multiplication, conversion
+            Value r = Unit::convert(rhs.m_value, rhs.m_unit, lhs.m_unit); // Convert rhs to the unit of lhs
+            result.m_value = lhs.m_value * r;
+            return result;
+        }
+
+        /**
+         * Division that will decrease the order of the result
+         * @param lhs
+         * @param rhs
+         * @return
+         */
+        friend misa_quantity<Value, typename Unit::lower_order_type> operator /(const misa_quantity<Value, Unit> &lhs, const misa_quantity<Value, Unit> &rhs) {
+            misa_quantity<Value, typename Unit::lower_order_type> result;
+            Value r = Unit::convert(rhs.m_value, rhs.m_unit, lhs.m_unit); // Convert rhs to the unit of lhs
+            result.m_value = lhs.m_value / r;
             return result;
         }
 

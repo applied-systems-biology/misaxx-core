@@ -45,6 +45,19 @@ namespace misaxx {
         bool operator!=(const misa_unit_numeric &rhs) const {
             return false;
         }
+
+        /**
+         * Allows intra-unit conversion
+         * Automatically called by misa_quantity
+         * @tparam T
+         * @param t_value
+         * @param t_src
+         * @param t_dst
+         * @return
+         */
+        template<typename T> static T convert(T t_value, const misa_unit_numeric &t_src, const misa_unit_numeric &t_dst) {
+            return t_value;
+        }
     };
 
     inline void to_json(nlohmann::json& j, const misa_unit_numeric& p) {

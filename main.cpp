@@ -115,6 +115,7 @@ int main(int argc, const char** argv) {
 
     auto area = x * y;
 
+    std::cout << typeid(int).name() << std::endl;
     std::cout << area << std::endl;
     std::cout << nlohmann::json(area) << std::endl;
 
