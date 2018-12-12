@@ -24,8 +24,13 @@ namespace misaxx {
     boost::incrementable<Quantity,
     boost::decrementable<Quantity>>>>>>>>;
 
+    struct misa_quantity_base {
+
+    };
+
     template<typename Value, class Unit>
     struct misa_quantity :
+            public misa_quantity_base,
             public misa_serializeable,
             private misa_quantity_operators_t <misa_quantity<Value, Unit>, Value>{
 
