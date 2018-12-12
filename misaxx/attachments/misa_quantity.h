@@ -25,7 +25,6 @@ namespace misaxx {
     boost::decrementable<Quantity>>>>>>>>;
 
     struct misa_quantity_base {
-
     };
 
     template<typename Value, class Unit>
@@ -44,7 +43,7 @@ namespace misaxx {
 
         }
 
-        misa_quantity(unit_type t_unit = unit_type()) :
+        misa_quantity(unit_type t_unit) :
                 m_value(Value()), m_unit(std::move(t_unit)) {
 
         }
