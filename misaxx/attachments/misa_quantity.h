@@ -40,9 +40,22 @@ namespace misaxx {
         misa_quantity() = default;
 
         misa_quantity(value_type t_value, unit_type t_unit = unit_type()) :
-
         m_value(std::move(t_value)), m_unit(std::move(t_unit)) {
 
+        }
+
+        misa_quantity(unit_type t_unit = unit_type()) :
+                m_value(Value()), m_unit(std::move(t_unit)) {
+
+        }
+
+        /**
+         * Factory function that creates a new quantity with a different value, but the same unit
+         * @param t_value
+         * @return
+         */
+        misa_quantity<Value, Unit> make(value_type t_value) const {
+            return misa_quantity<Value, Unit>(std::move(t_value), m_unit);
         }
 
         /**
