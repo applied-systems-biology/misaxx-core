@@ -21,15 +21,6 @@ namespace misaxx {
 
         misa_unit_numeric() = default;
 
-        /**
-         * Any unit can be converted into misa_unit_numeric
-         * @tparam O
-         * @param src
-         */
-        template<size_t O> explicit misa_unit_numeric(const misa_unit<O> &src) {
-
-        }
-
         void from_json(const nlohmann::json &t_json) override {
         }
 
@@ -57,6 +48,10 @@ namespace misaxx {
 
         bool operator!=(const misa_unit_numeric &rhs) const {
             return false;
+        }
+
+        template<size_t O> misa_unit_numeric cast_order() const {
+            return misa_unit_numeric();
         }
 
         /**
