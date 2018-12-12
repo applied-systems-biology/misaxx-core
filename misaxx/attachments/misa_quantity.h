@@ -91,7 +91,7 @@ namespace misaxx {
          * @tparam T
          * @return
          */
-        template<typename T> misa_quantity<T, Unit> cast_value() {
+        template<typename T> misa_quantity<T, Unit> cast_value() const {
             return misa_quantity<T, Unit>(static_cast<T>(m_value), m_unit);
         }
 
@@ -100,7 +100,7 @@ namespace misaxx {
          * @param unit
          * @return
          */
-        misa_quantity<Value, Unit> cast_unit(Unit unit) {
+        misa_quantity<Value, Unit> cast_unit(Unit unit) const {
             Value v = Unit::convert(m_value, m_unit, unit);
             return misa_quantity<Value, Unit>(std::move(v), std::move(unit));
         }
@@ -109,7 +109,7 @@ namespace misaxx {
          * Casts this quantity to a numeric quantity
          * @return
          */
-        misa_quantity<Value, misa_unit_numeric> to_numeric() {
+        misa_quantity<Value, misa_unit_numeric> to_numeric() const {
             return misa_quantity<Value, misa_unit_numeric>(m_value);
         }
 
