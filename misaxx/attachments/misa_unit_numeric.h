@@ -19,6 +19,17 @@ namespace misaxx {
          */
         template<size_t O> using select_order_type = misa_unit_numeric;
 
+        misa_unit_numeric() = default;
+
+        /**
+         * Any unit can be converted into misa_unit_numeric
+         * @tparam O
+         * @param src
+         */
+        template<size_t O> explicit misa_unit_numeric(const misa_unit<O> &src) {
+
+        }
+
         void from_json(const nlohmann::json &t_json) override {
         }
 

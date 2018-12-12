@@ -19,6 +19,8 @@ namespace misaxx {
      * Additionally, a unit must have a static function convert(T src, unit src_unit, unit dst_unit)
      * that converts between the internal unit modes
      *
+     * A unit with order o1 should be convertible from an unit with order o2
+     *
      * @tparam Order Order of the unit. Must be at least 1
      */
     template<size_t Order> struct misa_unit : public misa_serializeable {
