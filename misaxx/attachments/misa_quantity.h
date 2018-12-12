@@ -188,6 +188,7 @@ namespace misaxx {
             misa_quantity<Value, misa_unit_higher_order<Unit>> result;
             Value r = Unit::convert(rhs.m_value, rhs.m_unit, lhs.m_unit); // Convert rhs to the unit of lhs
             result.m_value = lhs.m_value * r;
+            result.m_unit = lhs.m_unit;
             return result;
         }
 
@@ -201,6 +202,7 @@ namespace misaxx {
             misa_quantity<Value, misa_unit_lower_order<Unit>> result;
             Value r = Unit::convert(rhs.m_value, rhs.m_unit, lhs.m_unit); // Convert rhs to the unit of lhs
             result.m_value = lhs.m_value / r;
+            result.m_unit = lhs.m_unit;
             return result;
         }
 
