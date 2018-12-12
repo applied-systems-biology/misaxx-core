@@ -13,7 +13,7 @@ namespace misaxx {
      * related and convertible units (e.g. unit_length) where the mode is stored inside of
      * the object.
      *
-     * A unit must have a typedef 'of_order_type<size_t Order>' that returns the unit for given order
+     * A unit must have a typedef 'select_order_type<size_t Order>' that returns the unit for given order
      * order 0 or lower should be misa_unit_numeric
      *
      * Additionally, a unit must have a static function convert(T src, unit src_unit, unit dst_unit)
