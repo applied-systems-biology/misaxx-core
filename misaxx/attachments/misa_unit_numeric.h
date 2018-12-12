@@ -14,8 +14,10 @@ namespace misaxx {
      */
     struct misa_unit_numeric : public misa_unit<1> {
 
-        using higher_order_type = misa_unit_numeric;
-        using lower_order_type = misa_unit_numeric;
+        /**
+         * This will always return misa_unit_numeric
+         */
+        template<size_t O> using select_order_type = misa_unit_numeric;
 
         void from_json(const nlohmann::json &t_json) override {
         }

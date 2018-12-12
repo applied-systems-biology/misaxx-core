@@ -13,9 +13,8 @@ namespace misaxx {
      * related and convertible units (e.g. unit_length) where the mode is stored inside of
      * the object.
      *
-     * A unit must have two typedefs higher_order_type, which is the type with 1 order higher
-     * and lower_order_type, which reduces the order.
-     * lower_order_type for an unit with order 1 should be misa_unit_numeric
+     * A unit must have a typedef 'of_order_type<size_t Order>' that returns the unit for given order
+     * order 0 or lower should be misa_unit_numeric
      *
      * Additionally, a unit must have a static function convert(T src, unit src_unit, unit dst_unit)
      * that converts between the internal unit modes
@@ -32,6 +31,17 @@ namespace misaxx {
          */
         virtual std::string get_literal() const = 0;
     };
+
+    /**
+     * Selects the higher order of given unit
+     */
+    template<class Unit> using misa_unit_higher_order = typename Unit::template select_order_type<Unit::order + 1>;
+
+    /**
+     * Selects the higher order of given unit
+     * If the order of Unit is 1, it will decay to misa_unit_numeric
+     */
+    template<class Unit> using misa_unit_lower_order = typename Unit::template select_order_type<Unit::order - 1>;
 }
 
 

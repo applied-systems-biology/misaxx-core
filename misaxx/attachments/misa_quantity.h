@@ -69,8 +69,31 @@ namespace misaxx {
             return m_unit;
         }
 
+        /**
+         * Returns a new quantity with the same unit, but casts the numeric value
+         * @tparam T
+         * @return
+         */
         template<typename T> misa_quantity<T, Unit> cast_value() {
             return misa_quantity<T, Unit>(static_cast<T>(m_value), m_unit);
+        }
+
+        /**
+         * Casts this quantity to a new unit
+         * @param unit
+         * @return
+         */
+        misa_quantity<Value, Unit> cast_unit(Unit unit) {
+            Value v = Unit::convert(m_value, m_unit, unit);
+            return misa_quantity<Value, Unit>(std::move(v), std::move(unit));
+        }
+
+        /**
+         * Casts this quantity to a numeric quantity
+         * @return
+         */
+        misa_quantity<Value, misa_unit_numeric> to_numeric() {
+            return misa_quantity<Value, misa_unit_numeric>(m_value);
         }
 
         void from_json(const nlohmann::json &t_json) override {
@@ -105,7 +128,7 @@ namespace misaxx {
             if (rhs.m_unit == m_unit) {
                 return m_value < rhs.m_value;
             } else {
-                const auto conv = this->as(rhs.m_unit);
+                const auto conv = rhs.cast_unit(m_unit);
                 return conv < rhs;
             }
         }
@@ -114,18 +137,20 @@ namespace misaxx {
             if (rhs.m_unit == m_unit) {
                 m_value += rhs.m_value;
             } else {
-                const auto conv = rhs.as(m_unit);
+                const auto conv = rhs.cast_unit(m_unit);
                 *this += conv;
             }
+            return *this;
         }
 
         misa_quantity<Value, Unit> &operator-=(const misa_quantity<Value, Unit> &rhs) {
             if (rhs.m_unit == m_unit) {
                 m_value -= rhs.m_value;
             } else {
-                const auto conv = rhs.as(m_unit);
+                const auto conv = rhs.cast_unit(m_unit);
                 *this -= conv;
             }
+            return *this;
         }
 
         misa_quantity<Value, Unit> &operator*=(const value_type &value) {
@@ -159,8 +184,8 @@ namespace misaxx {
          * @param rhs
          * @return
          */
-        friend misa_quantity<Value, typename Unit::higher_order_type> operator *(const misa_quantity<Value, Unit> &lhs, const misa_quantity<Value, Unit> &rhs) {
-            misa_quantity<Value, typename Unit::higher_order_type> result;
+        friend misa_quantity<Value, misa_unit_higher_order<Unit> > operator *(const misa_quantity<Value, Unit> &lhs, const misa_quantity<Value, Unit> &rhs) {
+            misa_quantity<Value, misa_unit_higher_order<Unit>> result;
             Value r = Unit::convert(rhs.m_value, rhs.m_unit, lhs.m_unit); // Convert rhs to the unit of lhs
             result.m_value = lhs.m_value * r;
             return result;
@@ -172,8 +197,8 @@ namespace misaxx {
          * @param rhs
          * @return
          */
-        friend misa_quantity<Value, typename Unit::lower_order_type> operator /(const misa_quantity<Value, Unit> &lhs, const misa_quantity<Value, Unit> &rhs) {
-            misa_quantity<Value, typename Unit::lower_order_type> result;
+        friend misa_quantity<Value, misa_unit_lower_order<Unit>> operator /(const misa_quantity<Value, Unit> &lhs, const misa_quantity<Value, Unit> &rhs) {
+            misa_quantity<Value, misa_unit_lower_order<Unit>> result;
             Value r = Unit::convert(rhs.m_value, rhs.m_unit, lhs.m_unit); // Convert rhs to the unit of lhs
             result.m_value = lhs.m_value / r;
             return result;
