@@ -7,6 +7,14 @@
 #include <misaxx/misa_serializeable.h>
 
 namespace misaxx {
+
+    /**
+     * Base type for units
+     */
+    struct misa_unit_base {
+
+    };
+
     /**
      * Base class for a unit supported by the MISA++ math types.
      * A unit can be one specific unit (e.g. unit_millimeters) or a group of
@@ -21,7 +29,7 @@ namespace misaxx {
      *
      * @tparam Order Order of the unit. Must be at least 1
      */
-    template<size_t Order> struct misa_unit : public misa_serializeable {
+    template<size_t Order> struct misa_unit : public misa_serializeable, public misa_unit_base {
         static constexpr size_t order = Order;
         static_assert(Order >= 1, "The order must be at least 1");
 
