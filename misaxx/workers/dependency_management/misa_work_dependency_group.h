@@ -23,61 +23,27 @@ namespace misaxx::dependencies {
 
         misa_work_dependency_group(const misa_work_dependency_group&t_other) = delete;
 
-        misa_work_dependency_group(const std::initializer_list<std::reference_wrapper<misa_work_dependency_segment>> &t_segments) {
-            for(const auto &seg : t_segments) {
-                for(auto &nd : seg.get().to_dependencies()) {
-                    m_dependencies.insert(nd);
-                }
-            }
-            m_as_dependencies = m_dependencies;
-        }
+        misa_work_dependency_group(const std::initializer_list<std::reference_wrapper<misa_work_dependency_segment>> &t_segments);
 
         /**
          * Creates a singleton group from a worker instance.
          * The worker is assumed to have no additional dependencies.
          * @param t_worker
          */
-        explicit misa_work_dependency_group(misa_worker_base &t_worker) : m_as_dependencies( { t_worker.get_node() } ) {
+        explicit misa_work_dependency_group(misa_worker_base &t_worker);
 
-        }
+        depencencies_t dependencies() const override;
 
-        depencencies_t dependencies() const override {
-            return m_dependencies;
-        }
+        depencencies_t to_dependencies() override;
 
-        depencencies_t to_dependencies() override {
-            m_locked = true;
-            return m_as_dependencies;
-        }
-
-        void assign(std::shared_ptr<nodes::misa_work_node> t_node) {
-            if(m_locked) {
-                throw std::runtime_error("Cannot assign nodes to this group after it has been used as dependency!");
-            }
-            auto &nd = *t_node;
-            m_as_dependencies.insert(std::move(t_node));
-            nd.get_dependencies() = m_dependencies;
-            m_dependency_locked = true;
-        }
+        void assign(std::shared_ptr<nodes::misa_work_node> t_node);
 
         /**
          * Adds another chain/group as dependency. Please note that if any node was assigned to this group,
          * the method will throw an exception.
          * @param t_segment
          */
-        void add_dependency(misa_work_dependency_segment &t_segment) {
-            if(m_locked) {
-                throw std::runtime_error("Cannot assign dependencies to this group after it has been used as dependency!");
-            }
-            if(m_dependency_locked) {
-                throw std::runtime_error("Cannot assign dependencies to this group after it was assigned worker nodes!");
-            }
-
-            for(auto &nd : t_segment.to_dependencies()) {
-                m_dependencies.insert(nd);
-                m_as_dependencies.insert(nd);
-            }
-        }
+        void add_dependency(misa_work_dependency_segment &t_segment);
 
         /**
          * Either inserts a worker or another group/chain into the group.

@@ -27,33 +27,13 @@ namespace misaxx::dependencies {
 
         misa_work_dependency_chain(const misa_work_dependency_chain &t_other) = delete;
 
-        misa_work_dependency_chain(const std::initializer_list<std::reference_wrapper<misa_work_dependency_segment>> &t_segments) {
-            for (const auto &seg : t_segments) {
-                for (auto &nd : seg.get().to_dependencies()) {
-                    m_dependencies.insert(nd);
-                }
-            }
-            m_as_dependencies = m_dependencies;
-            m_consecutive_dependencies = m_dependencies;
-        }
+        misa_work_dependency_chain(const std::initializer_list<std::reference_wrapper<misa_work_dependency_segment>> &t_segments);
 
-        depencencies_t dependencies() const override {
-            return m_dependencies;
-        }
+        depencencies_t dependencies() const override;
 
-        depencencies_t to_dependencies() override {
-            m_locked = true;
-            return m_as_dependencies;
-        }
+        depencencies_t to_dependencies() override;
 
-        void assign(std::shared_ptr<nodes::misa_work_node> t_node) {
-            if (m_locked) {
-                throw std::runtime_error("Cannot assign nodes to this chain after it has been used as dependency!");
-            }
-            m_as_dependencies.insert(t_node);
-            t_node->get_dependencies() = m_consecutive_dependencies;
-            m_consecutive_dependencies.insert(std::move(t_node));
-        }
+        void assign(std::shared_ptr<nodes::misa_work_node> t_node);
 
         /**
          * Inserts the dependencies of given segment into the chain.
@@ -61,11 +41,7 @@ namespace misaxx::dependencies {
          * In contrast to a misaxx::dependencies::group, there are no restrictions.
          * @param t_segment
          */
-        void add_dependency(misa_work_dependency_segment &t_segment) {
-            for (auto &nd : t_segment.to_dependencies()) {
-                m_consecutive_dependencies.insert(nd);
-            }
-        }
+        void add_dependency(misa_work_dependency_segment &t_segment);
 
         template<class InstanceOrSegment>
         misa_work_dependency_chain &operator>>(InstanceOrSegment &t_instance) {

@@ -142,12 +142,11 @@ namespace misaxx {
         * @param t_name Name of the task
         * @return
         */
-        misa_functional_task<ModuleDeclaration> &run_function(typename misa_functional_task<ModuleDeclaration>::function_type t_function, bool t_parallelized = false, const std::string &t_name = "functional_task") {
+        misa_functional_task<ModuleDeclaration> &run_function(typename misa_functional_task<ModuleDeclaration>::function_type t_function, const std::string &t_name = "functional_task") {
             // We can call everything by reference as we will instantiate directly afterwards anyways
             auto nd = this->get_node()->make_child(t_name, [&](const std::shared_ptr<nodes::misa_work_node> &t_node) {
                 auto task = std::make_shared<misa_functional_task>(t_node, this->module());
                 task->m_function = std::move(t_function);
-                task->is_parallelizeable = t_parallelized;
                 return task;
             });
 

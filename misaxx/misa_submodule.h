@@ -7,13 +7,11 @@
 
 #include <misaxx/filesystem/misa_filesystem.h>
 #include <misaxx/misa_module_declaration_base.h>
+#include "misa_submodule_base.h"
 
 namespace misaxx {
 
     struct misa_module_declaration_base;
-
-    struct misa_submodule_base {
-    };
 
     /**
      * Wraps around a module that can be dispatched later.
@@ -24,7 +22,6 @@ namespace misaxx {
     public:
 
         Module *m_module = nullptr;
-        std::string name;
 
         using module_type = Module;
         using module_declaration_type = ModuleDeclaration;
@@ -49,11 +46,11 @@ namespace misaxx {
                 return m_module_declaration;
         }
 
-        misa_filesystem &get_filesystem() {
+        misa_filesystem &get_filesystem() override {
             return m_module_declaration.filesystem;
         }
 
-        bool has_instance() const {
+        bool has_instance() const override {
             return m_module != nullptr;
         }
 

@@ -32,20 +32,11 @@ namespace misaxx::nodes {
         using instance_ptr_type = std::shared_ptr<misa_worker_base>;
         using instantiator_type = std::function<instance_ptr_type(const std::shared_ptr<misa_work_node>&)>;
 
-        explicit misa_work_node(const std::string &t_name, const std::shared_ptr<misa_work_node> &t_parent, instantiator_type t_instantiator) : m_name(t_name),
-                                                                         m_parent(t_parent),
-                                                                         m_path(t_parent ? full_node_path(t_parent->m_path, t_name) : full_node_path(t_name)),
-                                                                         m_json_path(m_path.to_string()),
-                                                                         m_instantiator(std::move(t_instantiator)) {
-        }
+        explicit misa_work_node(const std::string &t_name, const std::shared_ptr<misa_work_node> &t_parent, instantiator_type t_instantiator);
 
-        const std::string &get_name() const {
-            return m_name;
-        }
+        const std::string &get_name() const;
 
-        const std::weak_ptr<misa_work_node> get_parent() const {
-            return m_parent;
-        }
+        const std::weak_ptr<misa_work_node> get_parent() const;
 
         /**
          * Gets a path from a custom path provider
@@ -68,76 +59,48 @@ namespace misaxx::nodes {
          * Gets the full path of this node
          * @return
          */
-        const std::vector<std::string> &get_path() const {
-            return m_path.get_path();
-        }
+        const std::vector<std::string> &get_path() const;
 
-        const std::string &get_json_path() const {
-            return m_json_path;
-        }
+        const std::string &get_json_path() const;
 
         /**
          * Returns true if this node's work can be parallelized
          * @return
          */
-        bool is_parallelizeable() {
-            return get_or_create_instance()->is_parallelizeable();
-        }
+        bool is_parallelizeable();
 
         /**
          * Returns true if this node has all children. This means that the node iterator can stop watching this node for changes.
          * @return
          */
-        misa_work_subtree_status get_subtree_status() const {
-            return m_status == misa_worker_status::done ? misa_work_subtree_status ::complete : misa_work_subtree_status ::incomplete;
-        }
+        misa_work_subtree_status get_subtree_status() const;
 
         /**
          * Returns true if the node has no work to do
          * @return
          */
-        misa_worker_status get_worker_status() const {
-            return m_status;
-        }
+        misa_worker_status get_worker_status() const;
 
         /**
          * Allows the worker instance to reject work.
          */
-        void reject_work() {
-            m_status = misa_worker_status ::rejected;
-        }
+        void reject_work();
 
         /**
          * Allows the runtime to skip the work (will be set to done)
          */
-        void skip_work() {
-            m_status = misa_worker_status ::done;
-        }
+        void skip_work();
 
         /**
          * Starts the actual work of this node
          */
-        void work() {
-            if(m_status == misa_worker_status::undone || m_status == misa_worker_status::rejected) {
-                m_status = misa_worker_status ::working;
-                get_or_create_instance()->work();
-                if(m_status != misa_worker_status::rejected) {
-                    m_status = misa_worker_status ::done;
-                }
-            }
-        }
+        void work();
 
         /**
          * Returns a pointer to the instance.
          * @return
          */
-        std::shared_ptr<misa_worker_base> get_or_create_instance() {
-            std::lock_guard<std::mutex> lock(m_instantiator_mutex);
-            if(!m_instance) {
-                m_instance = m_instantiator(self());
-            }
-            return m_instance;
-        }
+        std::shared_ptr<misa_worker_base> get_or_create_instance();
 
         std::shared_ptr<misa_worker_base> get_instance() const {
             return m_instance;
@@ -156,63 +119,43 @@ namespace misaxx::nodes {
         }
 
 
-        std::shared_ptr<misa_work_node> make_child(const std::string &t_name, instantiator_type t_instantiator) {
-            auto ptr = std::make_shared<misa_work_node>(t_name, self(), std::move(t_instantiator));
-            m_children.push_back(ptr);
-            return ptr;
-        }
+        std::shared_ptr<misa_work_node> make_child(const std::string &t_name, instantiator_type t_instantiator);
 
         /**
          * Returns the list of children
          * @return
          */
-        std::vector<std::shared_ptr<misa_work_node>> &get_children() {
-            return m_children;
-        }
+        std::vector<std::shared_ptr<misa_work_node>> &get_children();
 
         /**
          * Returns the list of children
          * @return
          */
-        const std::vector<std::shared_ptr<misa_work_node>> &get_children() const {
-            return m_children;
-        }
+        const std::vector<std::shared_ptr<misa_work_node>> &get_children() const;
 
         /**
          * Returns the list of dependencies this node has
          * @return
          */
-        std::unordered_set<std::shared_ptr<misa_work_node>> &get_dependencies() {
-            return m_dependencies;
-        }
+        std::unordered_set<std::shared_ptr<misa_work_node>> &get_dependencies();
 
         /**
          * Returns true if all dependencies are satisfied
          * @return
          */
-        bool dependencies_satisfied() {
-            for(auto &dep : m_dependencies) {
-                if(dep->get_worker_status() != misa_worker_status::done)
-                    return false;
-            }
-            return true;
-        }
+        bool dependencies_satisfied();
 
         /**
         * Returns a managed pointer to this node
         * @return
         */
-        std::shared_ptr<misa_work_node> self() {
-            return shared_from_this();
-        }
+        std::shared_ptr<misa_work_node> self();
 
         /**
         * Returns a managed pointer to this node
         * @return
         */
-        std::shared_ptr<const misa_work_node> self() const {
-            return shared_from_this();
-        }
+        std::shared_ptr<const misa_work_node> self() const;
 
     private:
 
