@@ -25,42 +25,23 @@ namespace misaxx {
          * Returns true if this filesystem is valid
          * @return
          */
-        bool is_valid() const {
-            return imported && exported;
-        }
+        bool is_valid() const;
 
         /**
          * Creates a sub-filesystem
          * @param t_name
          * @return
          */
-        misa_filesystem create_subsystem(const std::string &t_name) {
-            if(!is_valid())
-                throw std::runtime_error("Cannot create sub-filesystem from invalid filesystem!");
-            misa_filesystem result;
-            result.imported = imported->access(t_name);
-            result.exported = exported->access(t_name);
-            return result;
-        }
+        misa_filesystem create_subsystem(const std::string &t_name);
 
-        void from_json(const nlohmann::json &t_json) override {
-            throw std::runtime_error("Not implemented");
-        }
+        void from_json(const nlohmann::json &t_json) override;
 
-        void to_json(nlohmann::json &t_json) const override {
-            misa_serializeable::to_json(t_json);
-            throw std::runtime_error("Not implemented");
-        }
+        void to_json(nlohmann::json &t_json) const override;
 
-        void to_json_schema(const misa_json_schema &t_schema) const override {
-            imported->to_json_schema(t_schema.resolve("imported"));
-            exported->to_json_schema(t_schema.resolve("exported"));
-        }
+        void to_json_schema(const misa_json_schema &t_schema) const override;
 
-        std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
-            return misa_serializeable::create_serialization_id_hierarchy(misa_serialization_id("misa", "filesystem"), {
-                    misa_serializeable::get_serialization_id_hierarchy()
-            });
-        }
+    protected:
+
+        void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;
     };
 }

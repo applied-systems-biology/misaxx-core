@@ -31,34 +31,17 @@ namespace misaxx {
 
         }
 
-        void from_json(const nlohmann::json &t_json) override {
-        }
+        void from_json(const nlohmann::json &t_json) override;
 
-        void to_json(nlohmann::json &t_json) const override {
-            misa_serializeable::to_json(t_json);
-        }
+        void to_json(nlohmann::json &t_json) const override;
 
-        void to_json_schema(const misa_json_schema &t_schema) const override {
-        }
+        void to_json_schema(const misa_json_schema &t_schema) const override;
 
-        std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
-            misa_serialization_id self("misa", "attachments/quantities/numeric");
-            return misa_serializeable::create_serialization_id_hierarchy(std::move(self), {
-                    misa_unit<1>::get_serialization_id_hierarchy()
-            });
-        }
+        std::string get_literal() const override;
 
-        std::string get_literal() const override {
-            return ""; // No literal
-        }
+        bool operator==(const misa_unit_numeric &rhs) const;
 
-        bool operator==(const misa_unit_numeric &rhs) const {
-            return true;
-        }
-
-        bool operator!=(const misa_unit_numeric &rhs) const {
-            return false;
-        }
+        bool operator!=(const misa_unit_numeric &rhs) const;
 
         /**
          * Allows intra-unit conversion
@@ -72,6 +55,9 @@ namespace misaxx {
         template<typename T> static T convert(T t_value, const misa_unit_numeric &t_src, const misa_unit_numeric &t_dst) {
             return t_value;
         }
+
+    protected:
+        void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;
     };
 
     inline void to_json(nlohmann::json& j, const misa_unit_numeric& p) {

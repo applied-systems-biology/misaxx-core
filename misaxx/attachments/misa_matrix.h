@@ -90,13 +90,16 @@ namespace misaxx {
             m_unit.to_json_schema(t_schema.resolve("unit"));
         }
 
-        std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
+    protected:
+
+        void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override {
+            misa_serializeable::build_serialization_id_hierarchy(result);
             misa_serialization_id self = m_unit.get_serialization_id();
             self.set_path(self.get_path() / (std::string("matrix") + cxxh::to_string(Rows) + "x" + cxxh::to_string(Cols)));
-            return misa_serializeable::create_serialization_id_hierarchy(std::move(self), {
-                    misa_serializeable::get_serialization_id_hierarchy()
-            });
+            result.emplace_back(std::move(self));
         }
+
+    public:
 
         constexpr size_t size() const {
             return Rows * Cols;

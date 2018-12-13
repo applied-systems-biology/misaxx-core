@@ -14,23 +14,12 @@ namespace misaxx {
      */
     struct misa_image_file_stack_pattern : public misa_file_stack_pattern {
 
-        misa_image_file_stack_pattern() : misa_file_stack_pattern({ ".tif", ".tiff", ".png",
-                                                                    ".bmp", ".pbm", ".pgm",
-                                                                    ".ppm", ".jpeg", ".jpg",
-                                                                    ".jpe", ".jp2" }) {
+        misa_image_file_stack_pattern();
 
-        }
+        void from_json(const nlohmann::json &t_json) override;
 
-        void from_json(const nlohmann::json &t_json) override {
-            if(t_json.find("extensions") != t_json.end())
-                misa_file_stack_pattern::from_json(t_json);
-        }
-
-        std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
-            return misa_serializeable::create_serialization_id_hierarchy(misa_serialization_id("misa", "patterns/image-file-stack"), {
-                    misa_file_stack_pattern::get_serialization_id_hierarchy()
-            });
-        }
+    protected:
+        void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;
     };
 
     inline void to_json(nlohmann::json& j, const misa_image_file_stack_pattern& p) {

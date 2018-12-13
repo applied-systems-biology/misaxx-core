@@ -25,10 +25,7 @@ namespace misaxx {
          * Serializes the JSON data
          * @param t_json
          */
-        virtual void to_json(nlohmann::json &t_json) const {
-            t_json["misa:serialization-hierarchy"] = get_serialization_id_hierarchy();
-            t_json["misa:serialization-id"] = get_serialization_id().get_id();
-        }
+        virtual void to_json(nlohmann::json &t_json) const;
 
         /**
          * Describes the structure of the data as JSON schema
@@ -41,10 +38,7 @@ namespace misaxx {
          * Gets the serialization ID of the object
          * @return
          */
-        misa_serialization_id get_serialization_id() const {
-            const auto h = get_serialization_id_hierarchy();
-            return h[h.size() - 1];
-        }
+        misa_serialization_id get_serialization_id() const;
 
         /**
          * Gets a hierarchy of serialization IDs that is consistent with the inheritance hierarchy.
@@ -52,17 +46,7 @@ namespace misaxx {
          * current id is the last entry
          * @return
          */
-        virtual std::vector<misa_serialization_id> get_serialization_id_hierarchy() const {
-            return { misa_serialization_id("misa", "serializeable") };
-        }
-        /**
-         * Creates a serialization id hierarchy from the current object and the inherited serialization ids         *
-         * @param self
-         * @param bases
-         * @return
-         */
-        static std::vector<misa_serialization_id> create_serialization_id_hierarchy(misa_serialization_id self,
-                const std::vector<std::vector<misa_serialization_id>> &bases);
+        std::vector<misa_serialization_id> get_serialization_id_hierarchy() const;
 
         /**
          * Deserializes a wrapped value from the JSON
@@ -103,60 +87,35 @@ namespace misaxx {
          * @param t_json
          * @return
          */
-        static misa_serialization_id get_serialization_id_from_json(const nlohmann::json &t_json) {
-            return misa_serialization_id(t_json["misa:serialization-id"].get<std::string>());
-        }
+        static misa_serialization_id get_serialization_id_from_json(const nlohmann::json &t_json);
 
         /**
          * Returns the serialization ID from a JSON object or an alternative
          * @param t_json
          * @return
          */
-        static misa_serialization_id get_serialization_id_from_json_or(const nlohmann::json &t_json, misa_serialization_id t_default) {
-            if(t_json.is_object() && t_json.find("misa:serialization-id") != t_json.end()) {
-                return get_serialization_id_from_json(t_json);
-            }
-            else {
-                return t_default;
-            }
-        }
+        static misa_serialization_id get_serialization_id_from_json_or(const nlohmann::json &t_json, misa_serialization_id t_default);
 
         /**
          * Returns the serialization ID hierarchy from a JSON object
          * @param t_json
          * @return
          */
-        static std::vector<misa_serialization_id> get_serialization_hierarchy_from_json(const nlohmann::json &t_json) {
-            return t_json["misa:serialization-hierarchy"].get<std::vector<misa_serialization_id>>();
-        }
+        static std::vector<misa_serialization_id> get_serialization_hierarchy_from_json(const nlohmann::json &t_json);
 
         /**
          * Returns the serialization ID hierarchy from a JSON object or an alternative
          * @param t_json
          * @return
          */
-        static std::vector<misa_serialization_id> get_serialization_hierarchy_from_json_or(const nlohmann::json &t_json, std::vector<misa_serialization_id> t_default) {
-            if(t_json.is_object() && t_json.find("misa:serialization-id") != t_json.end()) {
-                return get_serialization_hierarchy_from_json(t_json);
-            }
-            else {
-                return t_default;
-            }
-        }
+        static std::vector<misa_serialization_id> get_serialization_hierarchy_from_json_or(const nlohmann::json &t_json, std::vector<misa_serialization_id> t_default);
 
         /**
          * Returns true if the JSON object indicates via JSON hierarchy that it can be deserialized into the target id
          * @param t_json
          * @return
          */
-        static bool is_deserializeable_from_json(const misa_serialization_id &target_id, const nlohmann::json &t_json) {
-            if(!t_json.is_object())
-                return false;
-            const std::vector<misa_serialization_id> json_hierarchy = get_serialization_hierarchy_from_json_or(t_json, { });
-            if(json_hierarchy.empty())
-                return false;
-            return std::find(json_hierarchy.begin(), json_hierarchy.end(), target_id) != json_hierarchy.end();
-        }
+        static bool is_deserializeable_from_json(const misa_serialization_id &target_id, const nlohmann::json &t_json);
 
         /**
          * Returns true if the JSON object indicates via JSON hierarchy that it can be deserialized into the target type
@@ -166,6 +125,16 @@ namespace misaxx {
          */
         template<class Target> static bool type_is_deserializeable_from_json(const nlohmann::json &t_json) {
             return is_deserializeable_from_json(Target().get_serialization_id(), t_json);
+        }
+
+    protected:
+
+        /**
+         * Override this function and add the serialization ID of the current instance as last element
+         * @param result
+         */
+        virtual void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {
+            result.emplace_back(misa_serialization_id("misa", "serializeable"));
         }
     };
 }

@@ -65,9 +65,7 @@ namespace misaxx {
          */
         std::shared_ptr<misa_description_storage> metadata = std::make_shared<misa_description_storage>();
 
-        explicit misa_filesystem_entry(std::string t_name, misa_filesystem_entry_type t_type, path t_custom_external = path()) :
-                name(std::move(t_name)), type(t_type), custom_external(std::move(t_custom_external)) {
-        }
+        explicit misa_filesystem_entry(std::string t_name, misa_filesystem_entry_type t_type, path t_custom_external = path());
 
         misa_filesystem_entry(const misa_filesystem_entry &value) = delete;
 
@@ -77,95 +75,51 @@ namespace misaxx {
          * Returns the internal path inside this filesystem
          * @return
          */
-        path internal_path() const {
-            if (parent.expired()) {
-                return name;
-            } else {
-                return parent.lock()->internal_path() / name;
-            }
-        }
+        path internal_path() const;
 
         /**
          * Returns true if this entry is associated to an external path
          * @return
          */
-        bool has_external_path() const {
-            return !external_path().empty();
-        }
+        bool has_external_path() const;
 
         /**
          * Returns the external path of this node.
          * @return
          */
-        path external_path() const {
-            if (!custom_external.empty())
-                return custom_external;
-            else if (!parent.expired())
-                return parent.lock()->external_path() / name;
-            else
-                throw std::runtime_error("Path " + internal_path().string() + " has no external path!");
-        }
+        path external_path() const;
 
         /**
          * Returns a managed pointer to this entry
          * @return
          */
-        filesystem::entry self() {
-            return shared_from_this();
-        }
+        filesystem::entry self();
 
-        filesystem::const_entry self() const {
-            return shared_from_this();
-        }
+        filesystem::const_entry self() const;
 
-        filesystem::entry create(std::string t_name, path t_custom_external = path()) {
-            return insert(std::make_shared<misa_filesystem_entry>(std::move(t_name), type, std::move(t_custom_external)));
-        }
+        filesystem::entry create(std::string t_name, path t_custom_external = path());
 
-        filesystem::entry insert(filesystem::entry ptr) {
-            ptr->parent = self();
-            children.insert({ptr->name, ptr});
-            return ptr;
-        }
+        filesystem::entry insert(filesystem::entry ptr);
 
-        iterator begin() {
-            return children.begin();
-        }
+        iterator begin();
 
-        const_iterator begin() const {
-            return children.begin();
-        }
+        const_iterator begin() const;
 
-        iterator end() {
-            return children.end();
-        }
+        iterator end();
 
-        const_iterator end() const {
-            return children.end();
-        }
+        const_iterator end() const;
 
-        iterator find(const std::string &t_name) {
-            return children.find(t_name);
-        }
+        iterator find(const std::string &t_name);
 
-        const_iterator find(const std::string &t_name) const {
-            return children.find(t_name);
-        }
+        const_iterator find(const std::string &t_name) const;
 
-        bool empty() const {
-            return children.empty();
-        }
+        bool empty() const;
 
         /**
          * Ensures that the external folder path exists if it is set.
          * Throws an exception if there is no external path.
          */
-        void ensure_external_path_exists() const {
-            if (!has_external_path())
-                throw std::runtime_error("This VFS folder has no external path!");
-            if (!boost::filesystem::exists(external_path()))
-                boost::filesystem::create_directories(external_path());
-        }
+        void ensure_external_path_exists() const;
 
         /**
          * Accesses (which includes creating an entry if necessary)
@@ -173,31 +127,7 @@ namespace misaxx {
          * @param t_segment
          * @return
          */
-        filesystem::entry access(boost::filesystem::path t_segment) {
-            t_segment.remove_trailing_separator();
-            if (t_segment.empty())
-                return self();
-
-            misa_filesystem_entry *current = this;
-
-            // Navigate to subfolders if needed
-            for (const auto &seg : t_segment.parent_path()) {
-                auto it = current->find(seg.string());
-                if (it == end()) {
-                    current = create(seg.string()).get();
-                } else {
-                    current = it->second.get();
-                }
-            }
-
-            // Create / access the target element
-            auto it = current->find(t_segment.filename().string());
-            if (it == end()) {
-                return create(t_segment.filename().string());
-            } else {
-                return it->second;
-            }
-        }
+        filesystem::entry access(boost::filesystem::path t_segment);
 
         /**
          * Accesses (which includes creating an entry if necessary)
@@ -205,77 +135,20 @@ namespace misaxx {
          * @param t_segment
          * @return
          */
-        filesystem::const_entry at(boost::filesystem::path t_segment) const {
-            t_segment.remove_trailing_separator();
-            if (t_segment.empty())
-                return self();
-
-            const misa_filesystem_entry *current = this;
-            auto current_segment_it = t_segment.begin();
-
-            // Navigate to subfolders if needed
-            for (const auto &seg : t_segment.parent_path()) {
-                auto it = current->find(seg.string());
-                if (it == end()) {
-                    throw std::runtime_error("Cannot access path " + (internal_path() / t_segment).string());
-                } else {
-                    current = it->second.get();
-                }
-            }
-
-            // Create / access the target element
-            auto it = current->find(t_segment.filename().string());
-            if (it == end()) {
-                throw std::runtime_error("Cannot access path " + (internal_path() / t_segment).string());
-            } else {
-                return it->second;
-            }
-        }
+        filesystem::const_entry at(boost::filesystem::path t_segment) const;
 
         /**
          * Returns true if this filesystem has given subpath
          * @param t_segment
          * @return
          */
-        bool has_subpath(boost::filesystem::path t_segment) const {
-            t_segment.remove_trailing_separator();
-            if (t_segment.empty())
-                return true;
+        bool has_subpath(boost::filesystem::path t_segment) const;
 
-            const misa_filesystem_entry *current = this;
-            auto current_segment_it = t_segment.begin();
+        void from_json(const nlohmann::json &t_json) override;
 
-            // Navigate to subfolders if needed
-            for (const auto &seg : t_segment.parent_path()) {
-                auto it = current->find(seg.string());
-                if (it == end()) {
-                    return false;
-                } else {
-                    current = it->second.get();
-                }
-            }
+        void to_json(nlohmann::json &t_json) const override;
 
-            // Create / access the target element
-            auto it = current->find(t_segment.filename().string());
-            return !(it == end());
-        }
-
-        void from_json(const nlohmann::json &t_json) override {
-            throw std::runtime_error("Not implemented");
-        }
-
-        void to_json(nlohmann::json &t_json) const override {
-            misa_serializeable::to_json(t_json);
-            throw std::runtime_error("Not implemented");
-        }
-
-        void to_json_schema(const misa_json_schema &t_schema) const override {
-            t_schema.resolve("external-path").declare_optional<std::string>();
-            for(const auto &kv : children) {
-                kv.second->to_json_schema(t_schema.resolve("children", kv.first));
-            }
-            metadata->to_json_schema(t_schema.resolve("metadata"));
-        }
+        void to_json_schema(const misa_json_schema &t_schema) const override;
 
         /**
         * Given an external_path(), return the path relative to this entries' external_path()
@@ -283,27 +156,11 @@ namespace misaxx {
         * @param t_path
         * @return
         */
-        boost::filesystem::path child_external_path(const boost::filesystem::path &t_path) {
-            if(t_path == external_path()) {
-                return "/";
-            }
-            else {
-                boost::filesystem::path absolute_path = boost::filesystem::absolute(t_path, boost::filesystem::current_path());
-                boost::filesystem::path absolute_external_path = boost::filesystem::absolute(external_path(), boost::filesystem::current_path());
-                if(boost::starts_with(absolute_path.string(), absolute_external_path.string())) {
-                    return boost::filesystem::relative(absolute_path, absolute_external_path);
-                }
-                else {
-                    return "";
-                }
-            }
-        }
+        boost::filesystem::path child_external_path(const boost::filesystem::path &t_path);
 
-        std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
-            return misa_serializeable::create_serialization_id_hierarchy(misa_serialization_id("misa", "filesystem/entry"), {
-                    misa_serializeable::get_serialization_id_hierarchy()
-            });
-        }
+    protected:
+
+        void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;
 
     private:
 

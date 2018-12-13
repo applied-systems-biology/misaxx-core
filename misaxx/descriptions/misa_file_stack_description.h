@@ -18,34 +18,17 @@ namespace misaxx {
 
         misa_file_stack_description() = default;
 
-        explicit misa_file_stack_description(files_type t_files) : files(std::move(t_files)) {
+        explicit misa_file_stack_description(files_type t_files);
 
-        }
+        void from_json(const nlohmann::json &t_json) override;
 
-        void from_json(const nlohmann::json &t_json) override {
-            if(t_json.find("files") != t_json.end()) {
-                for(auto it = t_json["files"].begin(); it != t_json["files"].end(); ++it) {
-                    files[it.key()] = it.value();
-                }
-            }
-        }
+        void to_json(nlohmann::json &t_json) const override;
 
-        void to_json(nlohmann::json &t_json) const override {
-            misa_data_description::to_json(t_json);
-            t_json["files"] = files;
-        }
+        void to_json_schema(const misa_json_schema &t_schema) const override;
 
-        void to_json_schema(const misa_json_schema &t_schema) const override {
-            for(const auto &kv : files) {
-                kv.second.to_json_schema(t_schema.resolve("files", kv.first));
-            }
-        }
+    protected:
 
-        std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
-            return misa_serializeable::create_serialization_id_hierarchy(misa_serialization_id("misa", "descriptions/file-stack"), {
-                    misa_data_description::get_serialization_id_hierarchy()
-            });
-        }
+        void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;
 
     };
 

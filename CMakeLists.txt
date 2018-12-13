@@ -178,8 +178,6 @@ add_library(misaxx
         misaxx/accessors/misa_image_stack.cpp
         misaxx/accessors/misa_image_stack.h
         misaxx/misa_default_description_accessors.h
-        misaxx/misa_renamed_attachment.cpp
-        misaxx/misa_renamed_attachment.h
         misaxx/attachments/misa_location.cpp
         misaxx/attachments/misa_location.h
         misaxx/attachments/misa_unit.cpp

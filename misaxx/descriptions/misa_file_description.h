@@ -22,28 +22,17 @@ namespace misaxx {
 
         misa_file_description() = default;
 
-        explicit misa_file_description(const boost::filesystem::path &t_path) : filename(t_path.filename()) {
+        explicit misa_file_description(const boost::filesystem::path &t_path);
 
-        }
+        void from_json(const nlohmann::json &t_json) override;
 
-        void from_json(const nlohmann::json &t_json) override {
-            filename = t_json["filename"].get<std::string>();
-        }
+        void to_json(nlohmann::json &t_json) const override;
 
-        void to_json(nlohmann::json &t_json) const override {
-            misa_data_description::to_json(t_json);
-            t_json["filename"] = filename.string();
-        }
+        void to_json_schema(const misa_json_schema &t_schema) const override;
 
-        void to_json_schema(const misa_json_schema &t_schema) const override {
-            t_schema.resolve("filename").declare_required<std::string>();
-        }
+    protected:
 
-        std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
-            return misa_serializeable::create_serialization_id_hierarchy(misa_serialization_id("misa", "descriptions/file"), {
-                    misa_data_description::get_serialization_id_hierarchy()
-            });
-        }
+        void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;
     };
 
     inline void to_json(nlohmann::json& j, const misa_file_description& p) {
