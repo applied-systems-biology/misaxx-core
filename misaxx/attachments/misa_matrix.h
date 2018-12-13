@@ -194,6 +194,24 @@ namespace misaxx {
             return misa_matrix<Value, Unit, Rows, Cols>(std::move(arr), m_unit);
         }
 
+        /**
+         * Returns the product of all values in this matrix as quantity
+         * The order of the output quantity is order * rows * columns
+         * @return
+         */
+        auto get_element_product() const {
+            using output_unit = typename Unit::template select_order_type<Unit::order * Rows * Cols>;
+            return misa_quantity<Value, output_unit>(std::accumulate(m_values.begin(), m_values.end(), 1, std::multiplies<Value>()), output_unit(m_unit));
+        }
+
+        /**
+         * Returns the sum of all values in this matrix as quantity
+         * @return
+         */
+        auto get_element_sum() const {
+            return misa_quantity<Value, Unit>(std::accumulate(m_values.begin(), m_values.end(), 0), m_unit);
+        }
+
         bool operator==(const misa_matrix<Value, misa_unit_numeric, Rows, Cols> &rhs) const {
             return m_values == rhs.m_values && m_unit == rhs.m_unit;
         }

@@ -121,6 +121,7 @@ int main(int argc, const char** argv) {
                                                    0, 1,
                                                    4, 0}};
     auto w = m1 % m2;
+    auto p = w.get_element_product();
 
     std::cout << nlohmann::json(w) << std::endl;
 
