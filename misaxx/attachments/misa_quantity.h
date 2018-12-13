@@ -126,12 +126,12 @@ namespace misaxx {
 
         void to_json_schema(const misa_json_schema &t_schema) const override {
             t_schema.resolve("value").declare_required<Value>();
-            t_schema.resolve("unit").declare_required<Unit>();
+            m_unit.to_json_schema(t_schema.resolve("unit"));
         }
 
         std::vector<misa_serialization_id> get_serialization_id_hierarchy() const override {
             misa_serialization_id self = m_unit.get_serialization_id();
-            self.set_path(self.get_path() / std::string(typeid(Value).name()));
+            self.set_path(self.get_path() / "quantity");
             return misa_serializeable::create_serialization_id_hierarchy(std::move(self), {
                     misa_serializeable::get_serialization_id_hierarchy()
             });
@@ -201,11 +201,11 @@ namespace misaxx {
          * @param rhs
          * @return
          */
-        friend misa_quantity<Value, misa_unit_higher_order<Unit> > operator *(const misa_quantity<Value, Unit> &lhs, const misa_quantity<Value, Unit> &rhs) {
+        misa_quantity<Value, misa_unit_higher_order<Unit> > operator *(const misa_quantity<Value, Unit> &rhs) {
             misa_quantity<Value, misa_unit_higher_order<Unit>> result;
-            Value r = Unit::convert(rhs.m_value, rhs.m_unit, lhs.m_unit); // Convert rhs to the unit of lhs
-            result.m_value = lhs.m_value * r;
-            result.m_unit = misa_unit_higher_order<Unit>(lhs.m_unit);
+            Value r = Unit::convert(rhs.m_value, rhs.m_unit, m_unit); // Convert rhs to the unit of lhs
+            result.m_value = m_value * r;
+            result.m_unit = misa_unit_higher_order<Unit>(m_unit);
             return result;
         }
 
@@ -215,11 +215,11 @@ namespace misaxx {
          * @param rhs
          * @return
          */
-        friend misa_quantity<Value, misa_unit_lower_order<Unit>> operator /(const misa_quantity<Value, Unit> &lhs, const misa_quantity<Value, Unit> &rhs) {
+        misa_quantity<Value, misa_unit_lower_order<Unit>> operator /(const misa_quantity<Value, Unit> &rhs) {
             misa_quantity<Value, misa_unit_lower_order<Unit>> result;
-            Value r = Unit::convert(rhs.m_value, rhs.m_unit, lhs.m_unit); // Convert rhs to the unit of lhs
-            result.m_value = lhs.m_value / r;
-            result.m_unit = misa_unit_lower_order<Unit>(lhs.m_unit);
+            Value r = Unit::convert(rhs.m_value, rhs.m_unit, m_unit); // Convert rhs to the unit of lhs
+            result.m_value = m_value / r;
+            result.m_unit = misa_unit_lower_order<Unit>(m_unit);
             return result;
         }
 

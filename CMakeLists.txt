@@ -161,7 +161,36 @@ add_library(misaxx
         misaxx/workers/dependency_management/misa_work_dependency_segment.cpp
         misaxx/workers/misa_dispatcher.cpp
         misaxx/workers/misa_worker.cpp
-        misaxx/misa_data_pattern.cpp misaxx/misa_primitive.h misaxx/misa_serialization_id.h misaxx/json/misa_json_helper.h misaxx/misa_cached_data_base.cpp misaxx/misa_cached_data_base.h misaxx/misa_default_cache.h misaxx/patterns/misa_dummy_pattern.cpp misaxx/patterns/misa_dummy_pattern.h misaxx/misa_manual_cache.h misaxx/accessors/misa_exported_attachments.cpp misaxx/accessors/misa_exported_attachments.h misaxx/accessors/misa_image_file.cpp misaxx/accessors/misa_image_file.h misaxx/accessors/misa_image_stack.cpp misaxx/accessors/misa_image_stack.h misaxx/misa_default_description_accessors.h misaxx/attachments/misa_range.cpp misaxx/attachments/misa_range.h misaxx/misa_renamed_attachment.cpp misaxx/misa_renamed_attachment.h misaxx/attachments/misa_location.cpp misaxx/attachments/misa_location.h misaxx/attachments/misa_unit.cpp misaxx/attachments/misa_unit.h misaxx/attachments/misa_unit_numeric.cpp misaxx/attachments/misa_unit_numeric.h misaxx/attachments/misa_quantity.cpp misaxx/attachments/misa_quantity.h misaxx/misa_serialization_id.cpp misaxx/attachments/misa_matrix.cpp misaxx/attachments/misa_matrix.h)
+        misaxx/misa_data_pattern.cpp
+        misaxx/misa_primitive.h
+        misaxx/misa_serialization_id.h
+        misaxx/json/misa_json_helper.h
+        misaxx/misa_cached_data_base.cpp
+        misaxx/misa_cached_data_base.h
+        misaxx/misa_default_cache.h
+        misaxx/patterns/misa_dummy_pattern.cpp
+        misaxx/patterns/misa_dummy_pattern.h
+        misaxx/misa_manual_cache.h
+        misaxx/accessors/misa_exported_attachments.cpp
+        misaxx/accessors/misa_exported_attachments.h
+        misaxx/accessors/misa_image_file.cpp
+        misaxx/accessors/misa_image_file.h
+        misaxx/accessors/misa_image_stack.cpp
+        misaxx/accessors/misa_image_stack.h
+        misaxx/misa_default_description_accessors.h
+        misaxx/misa_renamed_attachment.cpp
+        misaxx/misa_renamed_attachment.h
+        misaxx/attachments/misa_location.cpp
+        misaxx/attachments/misa_location.h
+        misaxx/attachments/misa_unit.cpp
+        misaxx/attachments/misa_unit.h
+        misaxx/attachments/misa_unit_numeric.cpp
+        misaxx/attachments/misa_unit_numeric.h
+        misaxx/attachments/misa_quantity.cpp
+        misaxx/attachments/misa_quantity.h
+        misaxx/misa_serialization_id.cpp
+        misaxx/attachments/misa_matrix.cpp
+        misaxx/attachments/misa_matrix.h)
 
 target_include_directories(misaxx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 

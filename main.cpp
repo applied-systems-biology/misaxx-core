@@ -16,7 +16,7 @@
 #include <misaxx/misa_cache.h>
 #include <misaxx/misa_cached_data.h>
 #include <misaxx/caches/misa_image_stack_cache.h>
-#include <cxxh/drilldown_singleton_map.h>
+#include <misaxx/attachments/misa_matrix.h>
 #include <misaxx/attachments/misa_quantity.h>
 #include <misaxx/attachments/misa_unit_numeric.h>
 
@@ -115,9 +115,14 @@ int main(int argc, const char** argv) {
 
     auto area = x * y;
 
-    std::cout << typeid(int).name() << std::endl;
-    std::cout << area << std::endl;
-    std::cout << nlohmann::json(area) << std::endl;
+    misa_matrix<int, misa_unit_numeric, 2, 3> m1 {{ 3, 2, 1,
+                                                   1, 0, 2}};
+    misa_matrix<int, misa_unit_numeric, 3, 2> m2 {{1, 2,
+                                                   0, 1,
+                                                   4, 0}};
+    auto w = m1 % m2;
+
+    std::cout << nlohmann::json(w) << std::endl;
 
     misa_cli<misa_multiobject_root<my_module>> cli("my_module");
     return cli.prepare_and_run(argc, argv);
