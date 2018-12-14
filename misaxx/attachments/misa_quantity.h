@@ -38,12 +38,12 @@ namespace misaxx {
 
         misa_quantity() = default;
 
-        misa_quantity(value_type t_value, unit_type t_unit = unit_type()) :
+        explicit misa_quantity(value_type t_value, unit_type t_unit = unit_type()) :
         m_value(std::move(t_value)), m_unit(std::move(t_unit)) {
 
         }
 
-        misa_quantity(unit_type t_unit) :
+        explicit misa_quantity(unit_type t_unit) :
                 m_value(Value()), m_unit(std::move(t_unit)) {
 
         }
