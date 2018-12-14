@@ -188,7 +188,7 @@ add_library(misaxx
         misaxx/attachments/misa_quantity.h
         misaxx/misa_serialization_id.cpp
         misaxx/attachments/misa_matrix.cpp
-        misaxx/attachments/misa_matrix.h misaxx/misa_submodule_base.cpp misaxx/misa_submodule_base.h)
+        misaxx/attachments/misa_matrix.h misaxx/misa_submodule_base.cpp misaxx/misa_submodule_base.h misaxx/runtime/misa_cli_base.cpp misaxx/runtime/misa_cli_base.h)
 
 target_include_directories(misaxx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
