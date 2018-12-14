@@ -186,7 +186,7 @@ namespace misaxx {
          * Returns the transposed matrix of this matrix
          * @return
          */
-        misa_matrix<Value, misa_unit_numeric, Cols, Rows> transpose() const {
+        misa_matrix<Value, Unit, Cols, Rows> transpose() const {
             std::array<Value, Rows * Cols> arr;
             for(size_t i = 0; i < arr.size(); ++i) {
                 size_t y = i / Cols;
@@ -215,11 +215,11 @@ namespace misaxx {
             return misa_quantity<Value, Unit>(std::accumulate(m_values.begin(), m_values.end(), 0), m_unit);
         }
 
-        bool operator==(const misa_matrix<Value, misa_unit_numeric, Rows, Cols> &rhs) const {
+        bool operator==(const misa_matrix<Value, Unit, Rows, Cols> &rhs) const {
             return m_values == rhs.m_values && m_unit == rhs.m_unit;
         }
 
-        misa_matrix<Value, misa_unit_numeric, Rows, Cols> &operator+=(const misa_matrix<Value, misa_unit_numeric, Rows, Cols> &rhs) {
+        misa_matrix<Value, Unit, Rows, Cols> &operator+=(const misa_matrix<Value, Unit, Rows, Cols> &rhs) {
             if (rhs.m_unit == m_unit) {
                 for(size_t i = 0; i < size(); ++i) {
                     m_values[i] += rhs.m_values[i];
@@ -231,7 +231,7 @@ namespace misaxx {
             return *this;
         }
 
-        misa_matrix<Value, misa_unit_numeric, Rows, Cols> &operator-=(const misa_matrix<Value, misa_unit_numeric, Rows, Cols> &rhs) {
+        misa_matrix<Value, Unit, Rows, Cols> &operator-=(const misa_matrix<Value, Unit, Rows, Cols> &rhs) {
             if (rhs.m_unit == m_unit) {
                 for(size_t i = 0; i < size(); ++i) {
                     m_values[i] -= rhs.m_values[i];
@@ -243,49 +243,49 @@ namespace misaxx {
             return *this;
         }
 
-        misa_matrix<Value, misa_unit_numeric, Rows, Cols> &operator+=(const value_type &value) {
+        misa_matrix<Value, Unit, Rows, Cols> &operator+=(const value_type &value) {
             for(auto& v : m_values) {
                 v += value;
             }
             return *this;
         }
 
-        misa_matrix<Value, misa_unit_numeric, Rows, Cols> &operator-=(const value_type &value) {
+        misa_matrix<Value, Unit, Rows, Cols> &operator-=(const value_type &value) {
             for(auto& v : m_values) {
                 v -= value;
             }
             return *this;
         }
 
-        misa_matrix<Value, misa_unit_numeric, Rows, Cols> &operator*=(const value_type &value) {
+        misa_matrix<Value, Unit, Rows, Cols> &operator*=(const value_type &value) {
             for(auto& v : m_values) {
                 v *= value;
             }
             return *this;
         }
 
-        misa_matrix<Value, misa_unit_numeric, Rows, Cols> &operator/=(const value_type &value) {
+        misa_matrix<Value, Unit, Rows, Cols> &operator/=(const value_type &value) {
             for(auto& v : m_values) {
                 v /= value;
             }
             return *this;
         }
 
-        misa_matrix<Value, misa_unit_numeric, Rows, Cols> &operator%=(const value_type &value) {
+        misa_matrix<Value, Unit, Rows, Cols> &operator%=(const value_type &value) {
             for(auto& v : m_values) {
                 v %= value;
             }
             return *this;
         }
 
-        misa_matrix<Value, misa_unit_numeric, Rows, Cols> &operator++() {
+        misa_matrix<Value, Unit, Rows, Cols> &operator++() {
             for(auto& v : m_values) {
                 ++v;
             }
             return *this;
         }
 
-        misa_matrix<Value, misa_unit_numeric, Rows, Cols> &operator--() {
+        misa_matrix<Value, Unit, Rows, Cols> &operator--() {
             for(auto& v : m_values) {
                 --v;
             }
