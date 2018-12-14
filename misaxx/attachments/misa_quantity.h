@@ -204,11 +204,8 @@ namespace misaxx {
          * @return
          */
         misa_quantity<Value, misa_unit_higher_order<Unit> > operator *(const misa_quantity<Value, Unit> &rhs) {
-            misa_quantity<Value, misa_unit_higher_order<Unit>> result;
             Value r = Unit::convert(rhs.m_value, rhs.m_unit, m_unit); // Convert rhs to the unit of lhs
-            result.m_value = m_value * r;
-            result.m_unit = misa_unit_higher_order<Unit>(m_unit);
-            return result;
+            return misa_quantity<Value, misa_unit_higher_order<Unit>>(get_value() * r, misa_unit_higher_order<Unit>(get_unit()));
         }
 
         /**
@@ -218,11 +215,8 @@ namespace misaxx {
          * @return
          */
         misa_quantity<Value, misa_unit_lower_order<Unit>> operator /(const misa_quantity<Value, Unit> &rhs) {
-            misa_quantity<Value, misa_unit_lower_order<Unit>> result;
             Value r = Unit::convert(rhs.m_value, rhs.m_unit, m_unit); // Convert rhs to the unit of lhs
-            result.m_value = m_value / r;
-            result.m_unit = misa_unit_lower_order<Unit>(m_unit);
-            return result;
+            return misa_quantity<Value, misa_unit_higher_order<Unit>>(get_value() / r, misa_unit_higher_order<Unit>(get_unit()));
         }
 
         friend std::ostream &operator<<(std::ostream &os, const misa_quantity &quantity) {
