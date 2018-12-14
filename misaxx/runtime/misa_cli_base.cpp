@@ -8,6 +8,7 @@
 #include <misaxx/filesystem/misa_filesystem_json_importer.h>
 #include <misaxx/misa_cached_data_base.h>
 #include <misaxx/attachments/misa_location.h>
+#include <cxxh/measurement/manual_stopwatch.h>
 #include "misa_cli_base.h"
 
 using namespace misaxx;
@@ -184,6 +185,9 @@ void misa_cli_base::run() {
     }
 
     m_runtime->run();
+
+    manual_stopwatch sw("Postprocessing");
+    sw.start();
     postprocess_caches();
     process_cache_attachments();
 
@@ -223,6 +227,7 @@ void misa_cli_base::run() {
         std::cout << "<#> <#> Writing parameter schema to " << m_parameter_schema_path.string() << std::endl;
         m_runtime->get_schema_builder().write(m_parameter_schema_path);
     }
+    sw.stop();
 }
 
 int misa_cli_base::prepare_and_run(const int argc, const char **argv) {
