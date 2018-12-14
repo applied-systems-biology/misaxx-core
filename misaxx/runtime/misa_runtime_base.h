@@ -220,6 +220,12 @@ namespace misaxx {
 
         void progress(const nodes::misa_work_node &t_node, const std::string &t_text);
 
+        void postprocess_caches();
+
+        void postprocess_cache_attachments();
+
+        void postprocess_parameter_schema();
+
     protected:
 
         /**

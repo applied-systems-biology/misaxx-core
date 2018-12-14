@@ -4,6 +4,8 @@
 #include <misaxx/workers/task_tree/misa_work_subtree_status.h>
 #include <misaxx/workers/task_tree/misa_worker_status.h>
 #include <misaxx/workers/task_tree/misa_work_node.h>
+#include <misaxx/misa_cached_data_base.h>
+#include <misaxx/attachments/misa_location.h>
 #include "misa_runtime_base.h"
 
 
@@ -27,8 +29,8 @@ void misa_runtime_base::run() {
     if (enable_threading)
         omp_set_num_threads(this->m_num_threads);
 
-    #pragma omp parallel if (enable_threading)
-    #pragma omp single
+#pragma omp parallel if (enable_threading)
+#pragma omp single
     while (!m_nodes_todo.empty()) {
 
         size_t missing_dependency = 0;
@@ -65,7 +67,7 @@ void misa_runtime_base::run() {
                         progress(*nd, "Starting parallelized work on");
                     }
 
-                    #pragma omp task shared(nd)
+#pragma omp task shared(nd)
                     {
                         nd->work();
                     }
@@ -114,6 +116,13 @@ void misa_runtime_base::run() {
         if (rejected > 0) {
             progress("Info: " + std::to_string(rejected) + " workers are rejecting to work");
         }
+    }
+
+    // Postprocessing steps
+    postprocess_caches();
+    postprocess_cache_attachments();
+    if(is_simulating()) {
+        postprocess_parameter_schema();
     }
 
     sw.stop();
@@ -214,4 +223,102 @@ void misa_runtime_base::set_parameter_json(nlohmann::json t_json) {
 
 int misa_runtime_base::get_num_threads() const {
     return m_num_threads;
+}
+
+void misa_runtime_base::postprocess_caches() {
+    if (!is_simulating()) {
+        std::cout << "[Caches] Post-processing caches ..." << std::endl;
+        const std::vector<std::shared_ptr<misa_cache>> &caches = get_registered_caches();
+        for (const auto &ptr : caches) {
+            std::cout << "[Caches] Post-processing cache " << ptr->get_location() << " (" << ptr->get_unique_location()
+                      << ")" << std::endl;
+            ptr->postprocess();
+        }
+    }
+}
+
+void misa_runtime_base::postprocess_cache_attachments() {
+    std::cout << "[Attachments] Post-processing attachments ..." << std::endl;
+
+    const std::vector<std::shared_ptr<misa_cache>> &caches = get_registered_caches();
+    for (const auto &ptr : caches) {
+
+        if (ptr->get_unique_location().empty())
+            continue;
+
+        std::cout << "[Attachments] Post-processing attachment " << ptr->get_location() << " ("
+                  << ptr->get_unique_location() << ")" << std::endl;
+
+        readonly_access<typename misa_cached_data_base::attachment_type> access(ptr->attachments); // Open the cache
+
+        if (!is_simulating()) {
+            boost::filesystem::path filesystem_unique_link_path = ptr->get_unique_location_in_filesystem();
+            boost::filesystem::path filesystem_generic_link_path = ptr->get_location_in_filesystem();
+
+            // Replace extension with JSON
+            const boost::filesystem::path filesystem_export_base_path = get_filesystem().exported->external_path();
+            boost::filesystem::path cache_attachment_path =
+                    (filesystem_export_base_path / "attachments" / filesystem_unique_link_path).string() + ".json";
+            boost::filesystem::create_directories(cache_attachment_path.parent_path());
+
+            nlohmann::json exported_json = nlohmann::json(nlohmann::json::object());
+
+            for (const auto &kv : access.get()) {
+                const std::unique_ptr<misa_serializeable> &attachment_ptr = kv.second;
+
+                if (!cache_attachment_path.empty()) {
+                    // Export the attachment as JSON
+                    attachment_ptr->to_json(exported_json[attachment_ptr->get_serialization_id().get_id()]);
+                }
+            }
+
+            // Attach misa_filesystem_link if needed
+            if (!access.get().has<misa_location>()) {
+                misa_location link(filesystem_generic_link_path, filesystem_unique_link_path);
+                link.to_json(exported_json[link.get_serialization_id().get_id()]);
+            }
+
+            if (!is_simulating()) {
+                std::ofstream sw;
+                sw.open(cache_attachment_path.string());
+                sw << std::setw(4) << exported_json;
+            }
+        }
+    }
+}
+
+void misa_runtime_base::postprocess_parameter_schema() {
+    misa_json_schema_builder &schema = get_schema_builder();
+
+    // Save filesystem to parameter schema
+    get_filesystem().to_json_schema(misa_json_schema(schema, {"filesystem", "json-data"}));
+    schema.insert<std::string>({"filesystem", "source"},
+                               misa_json_property<std::string>().with_default_value("json").make_required());
+
+    // Workaround: Due to inflexibility with schema generation, manually put "__OBJECT__" nodes into list builders
+    // /properties/algorithm -> nothing to do
+    // /properties/objects/properties/__OBJECT__ -> /properties/objects/additionalProperties
+    {
+        auto &base = schema.data["properties"]["objects"];
+        base["additionalProperties"] = std::move(base["properties"]["__OBJECT__"]);
+        base["properties"].erase(base["properties"].find("__OBJECT__"));
+    }
+
+    // /properties/runtime::filesystem/properties/json-data/properties/imported/properties/children/properties/__OBJECT__ -> /properties/runtime::filesystem/properties/json-data/properties/imported/properties/children/additionalProperties
+    {
+        auto &base = schema.data["properties"]["filesystem"]["properties"]["json-data"]["properties"]["imported"]["properties"]["children"];
+        base["additionalProperties"] = std::move(base["properties"]["__OBJECT__"]);
+        base["properties"].erase(base["properties"].find("__OBJECT__"));
+    }
+    {
+        auto &base = schema.data["properties"]["filesystem"]["properties"]["json-data"]["properties"]["exported"]["properties"]["children"];
+        base["additionalProperties"] = std::move(base["properties"]["__OBJECT__"]);
+        base["properties"].erase(base["properties"].find("__OBJECT__"));
+    }
+
+    // Write runtime parameters
+    schema.insert<int>({"runtime", "num-threads"},
+                       misa_json_property<int>().with_title("Number of threads").with_default_value(1).make_optional());
+//                schema.insert<bool>({"runtime", "no-skip"}, misa_json_property<bool>("Disable skipping", ""));
+
 }

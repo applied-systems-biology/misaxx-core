@@ -53,13 +53,6 @@ namespace misaxx {
 
         void load_filesystem();
 
-        void postprocess_caches();
-
-        /**
-         * Saves / sets parameter schemata of cache attachments
-         */
-        void process_cache_attachments();
-
     };
 }
 
