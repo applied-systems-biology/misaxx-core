@@ -59,7 +59,7 @@ namespace misaxx {
          * @param t_values
          * @param t_unit
          */
-        misa_matrix(std::array<value_type, Rows * Cols> t_values, unit_type t_unit = unit_type()) : m_values(std::move(t_values)),
+        explicit misa_matrix(std::array<value_type, Rows * Cols> t_values, unit_type t_unit = unit_type()) : m_values(std::move(t_values)),
         m_unit(std::move(t_unit)) {
 
         }
@@ -68,7 +68,7 @@ namespace misaxx {
          * Initializes the matrix with an unit
          * @param t_unit
          */
-        misa_matrix(unit_type t_unit) : m_unit(std::move(t_unit)) {
+        explicit misa_matrix(unit_type t_unit) : m_unit(std::move(t_unit)) {
             std::fill(m_values.begin(), m_values.end(), Value());
         }
 
