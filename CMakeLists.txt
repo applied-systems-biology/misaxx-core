@@ -20,155 +20,155 @@ feature_summary(WHAT ALL)
 
 # Setting up the library
 add_library(misaxx-core
-        misaxx/patterns/misa_image_file_stack_pattern.h
-        misaxx/patterns/misa_file_pattern.h
-        misaxx/patterns/misa_image_file_pattern.h
-        misaxx/patterns/misa_file_stack_pattern.h
-        misaxx/misa_module_declaration.h
-        misaxx/misa_cached_data.h
-        misaxx/misa_submodule.h
-        misaxx/misa_cache.h
-        misaxx/misa_root_module_base.h
-        misaxx/parameters/parameter_prepare.h
-        misaxx/parameters/parameter_base.h
-        misaxx/parameters/default_parameter_check.h
-        misaxx/parameters/default_parameter_prepare.h
-        misaxx/parameters/input_parameter.h
-        misaxx/parameters/output_parameter.h
-        misaxx/parameters/parameter_checks.h
-        misaxx/misa_module.h
-        misaxx/misa_data_pattern_base.h
-        misaxx/misa_data_description.h
-        misaxx/misa_multiobject_root.h
-        misaxx/descriptions/misa_file_stack_description.h
-        misaxx/descriptions/misa_file_description.h
-        misaxx/misa_module_declaration_base.h
-        misaxx/json/misa_json_schema_builder.h
-        misaxx/json/misa_json_schema.h
-        misaxx/json/misa_json_property.h
-        misaxx/json/misa_json_property_base.h
-        misaxx/caches/misa_image_stack_cache.h
-        misaxx/caches/misa_image_file_cache.h
-        misaxx/caches/misa_exported_attachments_cache.h
-        misaxx/filesystem/misa_filesystem_json_importer.h
-        misaxx/filesystem/misa_filesystem_entry.h
-        misaxx/filesystem/misa_filesystem_directories_importer.h
-        misaxx/filesystem/misa_filesystem_empty_importer.h
-        misaxx/filesystem/misa_filesystem.h
-        misaxx/misa_future_dispatch.h
-        misaxx/misa_module_base.h
-        misaxx/runtime/misa_runtime_base.h
-        misaxx/runtime/misa_runtime.h
-        misaxx/runtime/misa_cli.h
-        misaxx/misa_serializeable.h
-        misaxx/misa_description_storage.h
-        misaxx/workers/paths/algorithm_node_path.h
-        misaxx/workers/paths/object_node_path.h
-        misaxx/workers/paths/guarded_node_path.h
-        misaxx/workers/paths/full_node_path.h
-        misaxx/workers/misa_worker_base.h
-        misaxx/workers/task_tree/misa_work_node.h
-        misaxx/workers/task_tree/misa_work_subtree_status.h
-        misaxx/workers/task_tree/misa_worker_status.h
-        misaxx/workers/misa_task.h
-        misaxx/workers/misa_functional_task.h
-        misaxx/workers/dependency_management/misa_work_dependency_group.h
-        misaxx/workers/dependency_management/misa_work_dependency_chain.h
-        misaxx/workers/dependency_management/misa_work_dependency_segment.h
-        misaxx/workers/misa_dispatcher.h
-        misaxx/workers/misa_worker.h
-        misaxx/misa_data_pattern.h
-        misaxx/patterns/misa_image_file_stack_pattern.cpp
-        misaxx/patterns/misa_file_pattern.cpp
-        misaxx/patterns/misa_image_file_pattern.cpp
-        misaxx/patterns/misa_file_stack_pattern.cpp
-        misaxx/misa_module_declaration.cpp
-        misaxx/misa_cached_data.cpp
-        misaxx/misa_submodule.cpp
-        misaxx/misa_cache.cpp
-        misaxx/misa_root_module_base.cpp
-        misaxx/parameters/parameter_prepare.cpp
-        misaxx/parameters/parameter_base.cpp
-        misaxx/parameters/default_parameter_check.cpp
-        misaxx/parameters/default_parameter_prepare.cpp
-        misaxx/parameters/input_parameter.cpp
-        misaxx/parameters/output_parameter.cpp
-        misaxx/parameters/parameter_checks.cpp
-        misaxx/misa_module.cpp
-        misaxx/misa_data_pattern_base.cpp
-        misaxx/misa_data_description.cpp
-        misaxx/misa_multiobject_root.cpp
-        misaxx/descriptions/misa_file_stack_description.cpp
-        misaxx/descriptions/misa_file_description.cpp
-        misaxx/misa_module_declaration_base.cpp
-        misaxx/json/misa_json_schema_builder.cpp
-        misaxx/json/misa_json_schema.cpp
-        misaxx/json/misa_json_property.cpp
-        misaxx/json/misa_json_property_base.cpp
-        misaxx/caches/misa_image_stack_cache.cpp
-        misaxx/caches/misa_image_file_cache.cpp
-        misaxx/caches/misa_exported_attachments_cache.cpp
-        misaxx/filesystem/misa_filesystem_json_importer.cpp
-        misaxx/filesystem/misa_filesystem_entry.cpp
-        misaxx/filesystem/misa_filesystem_directories_importer.cpp
-        misaxx/filesystem/misa_filesystem_empty_importer.cpp
-        misaxx/filesystem/misa_filesystem.cpp
-        misaxx/misa_future_dispatch.cpp
-        misaxx/misa_module_base.cpp
-        misaxx/runtime/misa_runtime_base.cpp
-        misaxx/runtime/misa_runtime.cpp
-        misaxx/runtime/misa_cli.cpp
-        misaxx/misa_serializeable.cpp
-        misaxx/misa_description_storage.cpp
-        misaxx/workers/paths/algorithm_node_path.cpp
-        misaxx/workers/paths/object_node_path.cpp
-        misaxx/workers/paths/guarded_node_path.cpp
-        misaxx/workers/paths/full_node_path.cpp
-        misaxx/workers/misa_worker_base.cpp
-        misaxx/workers/task_tree/misa_work_node.cpp
-        misaxx/workers/task_tree/misa_work_subtree_status.cpp
-        misaxx/workers/task_tree/misa_worker_status.cpp
-        misaxx/workers/misa_task.cpp
-        misaxx/workers/dependency_management/misa_work_dependency_group.cpp
-        misaxx/workers/dependency_management/misa_work_dependency_chain.cpp
-        misaxx/workers/dependency_management/misa_work_dependency_segment.cpp
-        misaxx/workers/misa_dispatcher.cpp
-        misaxx/workers/misa_worker.cpp
-        misaxx/misa_data_pattern.cpp
-        misaxx/misa_primitive.h
-        misaxx/misa_serialization_id.h
-        misaxx/json/misa_json_helper.h
-        misaxx/misa_cached_data_base.cpp
-        misaxx/misa_cached_data_base.h
-        misaxx/misa_default_cache.h
-        misaxx/patterns/misa_dummy_pattern.cpp
-        misaxx/patterns/misa_dummy_pattern.h
-        misaxx/misa_manual_cache.h
-        misaxx/accessors/misa_exported_attachments.cpp
-        misaxx/accessors/misa_exported_attachments.h
-        misaxx/accessors/misa_image_file.cpp
-        misaxx/accessors/misa_image_file.h
-        misaxx/accessors/misa_image_stack.cpp
-        misaxx/accessors/misa_image_stack.h
-        misaxx/misa_default_description_accessors.h
-        misaxx/attachments/misa_location.cpp
-        misaxx/attachments/misa_location.h
-        misaxx/attachments/misa_unit.cpp
-        misaxx/attachments/misa_unit.h
-        misaxx/attachments/misa_unit_numeric.cpp
-        misaxx/attachments/misa_unit_numeric.h
-        misaxx/attachments/misa_quantity.cpp
-        misaxx/attachments/misa_quantity.h
-        misaxx/misa_serialization_id.cpp
-        misaxx/attachments/misa_matrix.cpp
-        misaxx/attachments/misa_matrix.h
-        misaxx/misa_submodule_base.cpp
-        misaxx/misa_submodule_base.h
-        misaxx/runtime/misa_cli_base.cpp
-        misaxx/runtime/misa_cli_base.h)
+        include/misaxx/patterns/misa_image_file_stack_pattern.h
+        include/misaxx/patterns/misa_file_pattern.h
+        include/misaxx/patterns/misa_image_file_pattern.h
+        include/misaxx/patterns/misa_file_stack_pattern.h
+        include/misaxx/misa_module_declaration.h
+        include/misaxx/misa_cached_data.h
+        include/misaxx/misa_submodule.h
+        include/misaxx/misa_cache.h
+        include/misaxx/misa_root_module_base.h
+        include/misaxx/parameters/parameter_prepare.h
+        include/misaxx/parameters/parameter_base.h
+        include/misaxx/parameters/default_parameter_check.h
+        include/misaxx/parameters/default_parameter_prepare.h
+        include/misaxx/parameters/input_parameter.h
+        include/misaxx/parameters/output_parameter.h
+        include/misaxx/parameters/parameter_checks.h
+        include/misaxx/misa_module.h
+        include/misaxx/misa_data_pattern_base.h
+        include/misaxx/misa_data_description.h
+        include/misaxx/misa_multiobject_root.h
+        include/misaxx/descriptions/misa_file_stack_description.h
+        include/misaxx/descriptions/misa_file_description.h
+        include/misaxx/misa_module_declaration_base.h
+        include/misaxx/json/misa_json_schema_builder.h
+        include/misaxx/json/misa_json_schema.h
+        include/misaxx/json/misa_json_property.h
+        include/misaxx/json/misa_json_property_base.h
+        include/misaxx/caches/misa_image_stack_cache.h
+        include/misaxx/caches/misa_image_file_cache.h
+        include/misaxx/caches/misa_exported_attachments_cache.h
+        include/misaxx/filesystem/misa_filesystem_json_importer.h
+        include/misaxx/filesystem/misa_filesystem_entry.h
+        include/misaxx/filesystem/misa_filesystem_directories_importer.h
+        include/misaxx/filesystem/misa_filesystem_empty_importer.h
+        include/misaxx/filesystem/misa_filesystem.h
+        include/misaxx/misa_future_dispatch.h
+        include/misaxx/misa_module_base.h
+        include/misaxx/runtime/misa_runtime_base.h
+        include/misaxx/runtime/misa_runtime.h
+        include/misaxx/runtime/misa_cli.h
+        include/misaxx/misa_serializeable.h
+        include/misaxx/misa_description_storage.h
+        include/misaxx/workers/paths/algorithm_node_path.h
+        include/misaxx/workers/paths/object_node_path.h
+        include/misaxx/workers/paths/guarded_node_path.h
+        include/misaxx/workers/paths/full_node_path.h
+        include/misaxx/workers/misa_worker_base.h
+        include/misaxx/workers/task_tree/misa_work_node.h
+        include/misaxx/workers/task_tree/misa_work_subtree_status.h
+        include/misaxx/workers/task_tree/misa_worker_status.h
+        include/misaxx/workers/misa_task.h
+        include/misaxx/workers/misa_functional_task.h
+        include/misaxx/workers/dependency_management/misa_work_dependency_group.h
+        include/misaxx/workers/dependency_management/misa_work_dependency_chain.h
+        include/misaxx/workers/dependency_management/misa_work_dependency_segment.h
+        include/misaxx/workers/misa_dispatcher.h
+        include/misaxx/workers/misa_worker.h
+        include/misaxx/misa_data_pattern.h
+        src/misaxx/patterns/misa_image_file_stack_pattern.cpp
+        src/misaxx/patterns/misa_file_pattern.cpp
+        src/misaxx/patterns/misa_image_file_pattern.cpp
+        src/misaxx/patterns/misa_file_stack_pattern.cpp
+        src/misaxx/misa_module_declaration.cpp
+        src/misaxx/misa_cached_data.cpp
+        src/misaxx/misa_submodule.cpp
+        src/misaxx/misa_cache.cpp
+        src/misaxx/misa_root_module_base.cpp
+        src/misaxx/parameters/parameter_prepare.cpp
+        src/misaxx/parameters/parameter_base.cpp
+        src/misaxx/parameters/default_parameter_check.cpp
+        src/misaxx/parameters/default_parameter_prepare.cpp
+        src/misaxx/parameters/input_parameter.cpp
+        src/misaxx/parameters/output_parameter.cpp
+        src/misaxx/parameters/parameter_checks.cpp
+        src/misaxx/misa_module.cpp
+        src/misaxx/misa_data_pattern_base.cpp
+        src/misaxx/misa_data_description.cpp
+        src/misaxx/misa_multiobject_root.cpp
+        src/misaxx/descriptions/misa_file_stack_description.cpp
+        src/misaxx/descriptions/misa_file_description.cpp
+        src/misaxx/misa_module_declaration_base.cpp
+        src/misaxx/json/misa_json_schema_builder.cpp
+        src/misaxx/json/misa_json_schema.cpp
+        src/misaxx/json/misa_json_property.cpp
+        src/misaxx/json/misa_json_property_base.cpp
+        src/misaxx/caches/misa_image_stack_cache.cpp
+        src/misaxx/caches/misa_image_file_cache.cpp
+        src/misaxx/caches/misa_exported_attachments_cache.cpp
+        src/misaxx/filesystem/misa_filesystem_json_importer.cpp
+        src/misaxx/filesystem/misa_filesystem_entry.cpp
+        src/misaxx/filesystem/misa_filesystem_directories_importer.cpp
+        src/misaxx/filesystem/misa_filesystem_empty_importer.cpp
+        src/misaxx/filesystem/misa_filesystem.cpp
+        src/misaxx/misa_future_dispatch.cpp
+        src/misaxx/misa_module_base.cpp
+        src/misaxx/runtime/misa_runtime_base.cpp
+        src/misaxx/runtime/misa_runtime.cpp
+        src/misaxx/runtime/misa_cli.cpp
+        src/misaxx/misa_serializeable.cpp
+        src/misaxx/misa_description_storage.cpp
+        src/misaxx/workers/paths/algorithm_node_path.cpp
+        src/misaxx/workers/paths/object_node_path.cpp
+        src/misaxx/workers/paths/guarded_node_path.cpp
+        src/misaxx/workers/paths/full_node_path.cpp
+        src/misaxx/workers/misa_worker_base.cpp
+        src/misaxx/workers/task_tree/misa_work_node.cpp
+        src/misaxx/workers/task_tree/misa_work_subtree_status.cpp
+        src/misaxx/workers/task_tree/misa_worker_status.cpp
+        src/misaxx/workers/misa_task.cpp
+        src/misaxx/workers/dependency_management/misa_work_dependency_group.cpp
+        src/misaxx/workers/dependency_management/misa_work_dependency_chain.cpp
+        src/misaxx/workers/dependency_management/misa_work_dependency_segment.cpp
+        src/misaxx/workers/misa_dispatcher.cpp
+        src/misaxx/workers/misa_worker.cpp
+        src/misaxx/misa_data_pattern.cpp
+        include/misaxx/misa_primitive.h
+        include/misaxx/misa_serialization_id.h
+        include/misaxx/json/misa_json_helper.h
+        src/misaxx/misa_cached_data_base.cpp
+        include/misaxx/misa_cached_data_base.h
+        include/misaxx/misa_default_cache.h
+        src/misaxx/patterns/misa_dummy_pattern.cpp
+        include/misaxx/patterns/misa_dummy_pattern.h
+        include/misaxx/misa_manual_cache.h
+        src/misaxx/accessors/misa_exported_attachments.cpp
+        include/misaxx/accessors/misa_exported_attachments.h
+        src/misaxx/accessors/misa_image_file.cpp
+        include/misaxx/accessors/misa_image_file.h
+        src/misaxx/accessors/misa_image_stack.cpp
+        include/misaxx/accessors/misa_image_stack.h
+        include/misaxx/misa_default_description_accessors.h
+        src/misaxx/attachments/misa_location.cpp
+        include/misaxx/attachments/misa_location.h
+        src/misaxx/attachments/misa_unit.cpp
+        include/misaxx/attachments/misa_unit.h
+        src/misaxx/attachments/misa_unit_numeric.cpp
+        include/misaxx/attachments/misa_unit_numeric.h
+        src/misaxx/attachments/misa_quantity.cpp
+        include/misaxx/attachments/misa_quantity.h
+        src/misaxx/misa_serialization_id.cpp
+        src/misaxx/attachments/misa_matrix.cpp
+        include/misaxx/attachments/misa_matrix.h
+        src/misaxx/misa_submodule_base.cpp
+        include/misaxx/misa_submodule_base.h
+        src/misaxx/runtime/misa_cli_base.cpp
+        include/misaxx/runtime/misa_cli_base.h)
 
 target_compile_features(misaxx-core PUBLIC cxx_std_17)
-add_library(misaxx::core ALIAS misaxx-core)
+add_library(misaxx::misaxx-core ALIAS misaxx-core)
 
 generate_export_header(misaxx-core
         EXPORT_MACRO_NAME COIXX_API
@@ -194,3 +194,39 @@ target_link_libraries(misaxx-core PUBLIC
         misaxx::misaxx-coixx)
 
 # Installation
+set_target_properties(misaxx-core PROPERTIES
+        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+        )
+install(TARGETS misaxx-core
+        EXPORT misaxx-core-targets
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        INCLUDES DESTINATION ${LIBLEGACY_INCLUDE_DIRS}
+        )
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/core
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        )
+install(EXPORT misaxx-core-targets
+        FILE misaxx-core-targets.cmake
+        NAMESPACE misaxx::
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/misaxx-core
+        )
+configure_package_config_file(
+        ${CMAKE_SOURCE_DIR}/cmake/misaxx-core-config.cmake.in
+        ${CMAKE_BINARY_DIR}/cmake/misaxx-core-config.cmake
+        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/misaxx-core
+)
+write_basic_package_version_file(
+        ${CMAKE_BINARY_DIR}/cmake/misaxx-core-config-version.cmake
+        VERSION ${misaxx_helpers_VERSION}
+        COMPATIBILITY AnyNewerVersion
+)
+install(
+        FILES
+        ${CMAKE_BINARY_DIR}/cmake/misaxx-core-config.cmake
+        ${CMAKE_BINARY_DIR}/cmake/misaxx-core-config-version.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/misaxx-core
+)
