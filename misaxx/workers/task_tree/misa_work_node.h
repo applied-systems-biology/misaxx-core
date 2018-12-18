@@ -11,7 +11,7 @@
 #include <misaxx/workers/task_tree/misa_worker_status.h>
 #include <unordered_set>
 #include <any>
-#include <cxxh/singleton_map.h>
+#include <misaxx-helpers/singleton_map.h>
 #include <misaxx/workers/task_tree/misa_work_subtree_status.h>
 #include <misaxx/runtime/misa_runtime_base.h>
 #include <misaxx/workers/paths/full_node_path.h>

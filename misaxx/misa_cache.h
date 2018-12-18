@@ -5,8 +5,8 @@
 
 #pragma once
 #include <misaxx/filesystem/misa_filesystem.h>
-#include <cxxh/dynamic_singleton_map.h>
-#include <cxxh/cache.h>
+#include <misaxx-helpers/dynamic_singleton_map.h>
+#include <misaxx-helpers/cache.h>
 
 namespace misaxx {
     /**

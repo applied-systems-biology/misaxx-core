@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <cxxh/cache.h>
+#include <misaxx-helpers/cache.h>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <coixx/toolbox/toolbox_io.h>

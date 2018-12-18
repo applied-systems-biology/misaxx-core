@@ -1,52 +1,25 @@
 cmake_minimum_required(VERSION 3.11)
-project(misaxx)
+project(misaxx_core LANGUAGES CXX VERSION 0.1.0)
 
 include(FetchContent)
+include(FeatureSummary)
+include(GenerateExportHeader)
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# Build options
+option(BUILD_SHARED_LIBS "Build shared library" ON)
 
-set(Boost_USE_STATIC_LIBS ON)
-
+# Dependencies
+find_package(misaxx-helpers REQUIRED)
+find_package(misaxx-coixx REQUIRED)
+find_package(nlohmann_json REQUIRED)
 find_package(Boost 1.63 COMPONENTS REQUIRED filesystem regex program_options)
-find_package(OpenMP)
+find_package(OpenMP REQUIRED)
+feature_summary(WHAT ALL)
 
-FetchContent_Declare(
-        nlohmann_json
-        URL https://github.com/nlohmann/json/releases/download/v3.1.2/include.zip
-)
-FetchContent_Declare(
-        coixx
-        GIT_REPOSITORY https://asb-git.hki-jena.de/RGerst/coixx.git
-        GIT_TAG origin/master
-)
-FetchContent_Declare(
-        cxxh
-        GIT_REPOSITORY https://asb-git.hki-jena.de/RGerst/cxx-helpers.git
-        GIT_TAG origin/rework
-)
-
-FetchContent_GetProperties(nlohmann_json)
-if(NOT nlohmann_json_POPULATED)
-    message("-- Fetching dependency nlohmann_json ...")
-    FetchContent_Populate(nlohmann_json)
-    add_library(nlohmann_json INTERFACE)
-    target_include_directories(nlohmann_json INTERFACE ${nlohmann_json_SOURCE_DIR})
-endif()
-FetchContent_GetProperties(coixx)
-if(NOT coixx_POPULATED)
-    message("-- Fetching dependency coixx ...")
-    FetchContent_Populate(coixx)
-    add_subdirectory(${coixx_SOURCE_DIR} ${coixx_BINARY_DIR})
-endif()
-FetchContent_GetProperties(cxxh)
-if(NOT cxxh_POPULATED)
-    message("-- Fetching dependency cxxh ...")
-    FetchContent_Populate(cxxh)
-    add_subdirectory(${cxxh_SOURCE_DIR} ${cxxh_BINARY_DIR})
-endif()
-
-add_library(misaxx
+# Setting up the library
+add_library(misaxx-core
         misaxx/patterns/misa_image_file_stack_pattern.h
         misaxx/patterns/misa_file_pattern.h
         misaxx/patterns/misa_image_file_pattern.h
@@ -188,18 +161,36 @@ add_library(misaxx
         misaxx/attachments/misa_quantity.h
         misaxx/misa_serialization_id.cpp
         misaxx/attachments/misa_matrix.cpp
-        misaxx/attachments/misa_matrix.h misaxx/misa_submodule_base.cpp misaxx/misa_submodule_base.h misaxx/runtime/misa_cli_base.cpp misaxx/runtime/misa_cli_base.h)
+        misaxx/attachments/misa_matrix.h
+        misaxx/misa_submodule_base.cpp
+        misaxx/misa_submodule_base.h
+        misaxx/runtime/misa_cli_base.cpp
+        misaxx/runtime/misa_cli_base.h)
 
-target_include_directories(misaxx PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_features(misaxx-core PUBLIC cxx_std_17)
+add_library(misaxx::core ALIAS misaxx-core)
 
-target_link_libraries(misaxx PUBLIC
+generate_export_header(misaxx-core
+        EXPORT_MACRO_NAME COIXX_API
+        EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/include/misaxx/common.h
+        )
+target_include_directories(misaxx-core
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+        PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        )
+
+# Include dependencies
+target_link_libraries(misaxx-core PUBLIC
         Boost::filesystem
         Boost::regex
         Boost::program_options
         OpenMP::OpenMP_CXX
         nlohmann_json
-        cxx-helpers
-        coixx)
+        misaxx::misaxx-helpers
+        misaxx::misaxx-coixx)
 
-add_executable(misaxx_test main.cpp)
-target_link_libraries(misaxx_test misaxx)
+# Installation

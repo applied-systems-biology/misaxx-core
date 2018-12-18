@@ -8,7 +8,7 @@
 #include <misaxx/misa_default_cache.h>
 #include <misaxx/descriptions/misa_file_description.h>
 #include <misaxx/patterns/misa_file_pattern.h>
-#include <cxxh/cache.h>
+#include <misaxx-helpers/cache.h>
 
 namespace misaxx {
 

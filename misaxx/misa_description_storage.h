@@ -10,8 +10,8 @@
 #include <misaxx/misa_data_pattern_base.h>
 #include <misaxx/misa_data_description.h>
 #include <misaxx/misa_serializeable.h>
-#include <cxxh/type_traits.h>
-#include <cxxh/drilldown_singleton_map.h>
+#include <misaxx-helpers/type_traits.h>
+#include <misaxx-helpers/drilldown_singleton_map.h>
 
 namespace misaxx {
     /**

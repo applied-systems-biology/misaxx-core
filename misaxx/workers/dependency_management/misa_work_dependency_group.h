@@ -8,7 +8,7 @@
 #include <misaxx/workers/misa_worker_base.h>
 #include <misaxx/workers/task_tree/misa_work_node.h>
 #include <misaxx/workers/dependency_management/misa_work_dependency_segment.h>
-#include <cxxh/type_traits.h>
+#include <misaxx-helpers/type_traits.h>
 
 namespace misaxx::dependencies {
 

@@ -1,5 +1,5 @@
 #include <misaxx/runtime/misa_runtime_base.h>
-#include <cxxh/measurement/manual_stopwatch.h>
+#include <misaxx-helpers/measurement/manual_stopwatch.h>
 #include <omp.h>
 #include <misaxx/workers/task_tree/misa_work_subtree_status.h>
 #include <misaxx/workers/task_tree/misa_worker_status.h>
@@ -15,7 +15,7 @@ std::weak_ptr<misa_runtime_base> misa_runtime_base::singleton_instance = std::sh
 
 void misa_runtime_base::run() {
 
-    manual_stopwatch sw("Runtime");
+    cxxh::manual_stopwatch sw("Runtime");
     sw.start();
 
     m_root = create_root_node();

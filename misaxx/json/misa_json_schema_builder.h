@@ -12,6 +12,7 @@
 #include <nlohmann/json.hpp>
 #include <misaxx/json/misa_json_property.h>
 #include <misaxx/json/misa_json_helper.h>
+#include <iomanip>
 
 namespace misaxx {
 
@@ -29,43 +30,20 @@ namespace misaxx {
          * @param t_parameter_path
          * @return
          */
-        path_t schema_property_path(const path_t &t_parameter_path) {
-            path_t base_path;
-            for(size_t i = 0; i < t_parameter_path.size(); ++i) {
-                base_path.emplace_back("properties");
-                base_path.push_back(t_parameter_path[i]);
-            }           
-            return base_path;
-        }
+        path_t schema_property_path(const path_t &t_parameter_path);
 
         /**
          * Returns the path to the JSON schema definition property of given parameter
          * @param t_parameter_path
          * @return
          */
-        path_t schema_parent_path(const path_t &t_parameter_path) {
-            path_t base_path;
-            for(size_t i = 0; i < t_parameter_path.size() - 1; ++i) {
-                base_path.emplace_back("properties");
-                base_path.push_back(t_parameter_path[i]);
-            }
-            return base_path;
-        }
+        path_t schema_parent_path(const path_t &t_parameter_path);
 
         /**
          * Ensures that the necessary property paths for a parameter exist and "type" : "object" is set
          * @param t_parameter_path
          */
-        void ensure_schema_property_path(const path_t &t_parameter_path) {
-            path_t base_path;
-            for(size_t i = 0; i < t_parameter_path.size() - 1; ++i) {
-                base_path.emplace_back("properties");
-                base_path.push_back(t_parameter_path[i]);
-
-                // Set the pointer accordingly
-                json_helper::access_json_path(data, base_path, "type") = "object";
-            }
-        }
+        void ensure_schema_property_path(const path_t &t_parameter_path);
 
         /**
          * Inserts a schema definition for given path
@@ -129,12 +107,7 @@ namespace misaxx {
          * Saves the parameter schema to a file.
          * @param t_path
          */
-        void write(const boost::filesystem::path &t_path) {
-            std::ofstream out;
-            out.open(t_path.string());
-            out << std::setw(4) << data;
-            out.close();
-        }
+        void write(const boost::filesystem::path &t_path);
 
     };
 
