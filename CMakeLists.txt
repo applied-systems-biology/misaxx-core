@@ -206,7 +206,7 @@ install(TARGETS misaxx-core
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         INCLUDES DESTINATION ${LIBLEGACY_INCLUDE_DIRS}
         )
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/core
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/misaxx
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
         )
 install(EXPORT misaxx-core-targets
