@@ -8,15 +8,17 @@ include(CMakePackageConfigHelpers)
 # Adds a default executable '<library>-bin' for the MISA++ library
 # The executable creates an installable target
 function(misaxx_add_default_executable library)
-    message("Adding default executable for ${library}")
+    message("-- Adding default executable for ${library}")
     # If necessary, create the default executable path
     if(EXISTS ${CMAKE_SOURCE_DIR}/src/main.cpp)
-        message("Using existing main.cpp")
+        message("--   Using existing main.cpp")
     else()
         file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/src/)
 
         # Auto-gen the name for the module
         string(REPLACE "-" "_" module_name "${library}")
+
+        message("--   Creating ${CMAKE_SOURCE_DIR}/src/main.cpp based on module name ${module_name}")
         file(WRITE ${CMAKE_SOURCE_DIR}/src/main.cpp "\#include <${module_name}/${module_name}_module.h>\n\
 \#include <misaxx/runtime/misa_cli.h>\n\
 \n\
@@ -27,6 +29,7 @@ int main(int argc, const char** argv) {\n\
     misa_cli<misa_multiobject_root<${module_name}_module>> cli(\"${library}\");\n\
     return cli.prepare_and_run(argc, argv);\n\
 }")
+        message(WARNING "Please make sure that ${CMAKE_SOURCE_DIR}/src/main.cpp is correct")
     endif()
 
     # Module executable
@@ -40,18 +43,23 @@ endfunction()
 
 # Creates a shared library from the input library
 function(misaxx_make_shared namespace library)
+
+    message("-- ${library} is configured to be a shared library ${namespace}::${library}")
+
     # Option for shared library
     option(BUILD_SHARED_LIBS "Build shared library" ON)
 
     # If necessary, create the *.in file for library configuration
     if(EXISTS ${CMAKE_SOURCE_DIR}/cmake/${library}-config.cmake.in)
-        message("Using existing library configuration file")
+        message("--   Using existing library configuration file ${CMAKE_SOURCE_DIR}/cmake/${library}-config.cmake.in")
     else()
+        message("--   Creating configuration file ${CMAKE_SOURCE_DIR}/cmake/${library}-config.cmake.in")
+        message(WARNING "Please make sure that the package dependencies in ${CMAKE_SOURCE_DIR}/cmake/${library}-config.cmake.in are consistent with the dependencies in CMakeLists.txt")
         file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/cmake/)
-        file(WRITE ${CMAKE_SOURCE_DIR}/cmake/${library}-config.cmake.in "\@PACKAGE_INIT\@\n\
-find_package(misaxx-core REQUIRED)\n\
+        file(WRITE ${CMAKE_SOURCE_DIR}/cmake/${library}-config.cmake.in "\@PACKAGE_INIT\@\n\n\
+find_package(misaxx-core REQUIRED)\n\n\
 if(NOT TARGET ${library})\n\
-include(${CMAKE_CURRENT_LIST_DIR}/${library}-targets.cmake)\n\
+include(\${CMAKE_CURRENT_LIST_DIR}/${library}-targets.cmake)\n\
 endif()")
     endif()
 
@@ -75,6 +83,7 @@ endif()")
             )
 
     # Install targets
+    message("--   Creating default install operations")
     set_target_properties(${library} PROPERTIES
             ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
             LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
