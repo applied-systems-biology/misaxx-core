@@ -58,6 +58,22 @@ endif()")
     # Internal alias
     add_library("${namespace}::${library}" ALIAS ${library})
 
+    # Setup include directories
+    string(REPLACE "-" "_" module_name "${library}")
+    string(TOUPPER ${module_name} module_name_upper)
+    generate_export_header(${library}
+            EXPORT_MACRO_NAME "${module_name_upper}_API"
+            EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/include/${library}/common.h
+            )
+    target_include_directories(${library}
+            PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+            $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/include>
+            $<INSTALL_INTERFACE:include>
+            PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}
+            )
+
     # Install targets
     set_target_properties(${library} PROPERTIES
             ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
