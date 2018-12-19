@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <coixx/image.h>
+#include <misaxx-coixx/image.h>
 #include <misaxx-helpers/cache.h>
 #include <misaxx/descriptions/misa_file_stack_description.h>
 #include <misaxx/patterns/misa_file_stack_pattern.h>
