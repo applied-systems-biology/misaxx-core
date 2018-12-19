@@ -19,7 +19,7 @@ function(misaxx_add_default_executable library)
         string(REPLACE "-" "_" module_name "${library}")
 
         message("--   Creating ${CMAKE_SOURCE_DIR}/src/main.cpp based on module name ${module_name}")
-        file(WRITE ${CMAKE_SOURCE_DIR}/src/main.cpp "\#include <${module_name}/${module_name}_module.h>\n\
+        file(WRITE ${CMAKE_SOURCE_DIR}/src/main.cpp "\#include <${library}/${module_name}_module.h>\n\
 \#include <misaxx/runtime/misa_cli.h>\n\
 \n\
 using namespace misaxx;\n\
