@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.11)
-project(misaxx_core LANGUAGES CXX VERSION 0.1.0)
+project(misaxx-core LANGUAGES CXX VERSION 0.1.0)
 
 include(FetchContent)
 include(FeatureSummary)
@@ -221,12 +221,13 @@ configure_package_config_file(
 )
 write_basic_package_version_file(
         ${CMAKE_BINARY_DIR}/cmake/misaxx-core-config-version.cmake
-        VERSION ${misaxx_helpers_VERSION}
+        VERSION ${misaxx-core_VERSION}
         COMPATIBILITY AnyNewerVersion
 )
 install(
         FILES
         ${CMAKE_BINARY_DIR}/cmake/misaxx-core-config.cmake
         ${CMAKE_BINARY_DIR}/cmake/misaxx-core-config-version.cmake
+        ${CMAKE_SOURCE_DIR}/cmake/misaxx-module-template.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/misaxx-core
 )
