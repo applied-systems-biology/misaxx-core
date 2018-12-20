@@ -26,7 +26,11 @@ namespace misaxx::nodes {
          * The worker rejected the work (e.g. via worker::input<>::exists).
          * Work must be retried later
          */
-        rejected
+        rejected,
+        /**
+         * The worker is waiting for sub-workers
+         */
+        waiting
     };
 
 }

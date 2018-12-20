@@ -36,6 +36,20 @@ misa_work_subtree_status misa_work_node::get_subtree_status() const {
 }
 
 misa_worker_status misa_work_node::get_worker_status() const {
+    // Check the status of the worker if it is waiting for subworkers
+    if(m_status == misa_worker_status::waiting) {
+        if(!static_cast<bool>(m_instance)) {
+            throw std::logic_error("The worker is working without an instance!");
+        }
+
+        for(const auto &child : m_instance->get_node()->get_children()) {
+            if(child->get_worker_status() != misa_worker_status::done) {
+                return misa_worker_status::working;
+            }
+        }
+
+        m_status = misa_worker_status::done;
+    }
     return m_status;
 }
 
@@ -49,10 +63,15 @@ void misa_work_node::skip_work() {
 
 void misa_work_node::work() {
     if(m_status == misa_worker_status::undone || m_status == misa_worker_status::rejected) {
+        auto instance = get_or_create_instance();
         m_status = misa_worker_status ::working;
-        get_or_create_instance()->work();
+        instance->work();
         if(m_status != misa_worker_status::rejected) {
-            m_status = misa_worker_status ::done;
+            // If the worker has no children, we can already declare that it is finished
+            if(instance->get_node()->get_children().empty())
+                m_status = misa_worker_status ::done;
+            else
+                m_status = misa_worker_status ::waiting;
         }
     }
 }
