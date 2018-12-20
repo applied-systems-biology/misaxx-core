@@ -32,7 +32,20 @@ bool misa_work_node::is_parallelizeable() {
 }
 
 misa_work_subtree_status misa_work_node::get_subtree_status() const {
-    return m_status == misa_worker_status::done ? misa_work_subtree_status ::complete : misa_work_subtree_status ::incomplete;
+    if(m_status == misa_worker_status::done) {
+        return misa_work_subtree_status ::complete;
+    }
+    else if(m_status == misa_worker_status::waiting) {
+        for(const auto &child : m_instance->get_node()->get_children()) {
+            if(child->get_subtree_status() != misa_work_subtree_status ::complete) {
+                return misa_work_subtree_status::incomplete;
+            }
+        }
+        return misa_work_subtree_status ::complete;
+    }
+    else {
+        return misa_work_subtree_status::incomplete;
+    }
 }
 
 misa_worker_status misa_work_node::get_worker_status() const {
@@ -48,7 +61,7 @@ misa_worker_status misa_work_node::get_worker_status() const {
             }
         }
 
-        m_status = misa_worker_status::done;
+        return misa_worker_status::done;
     }
     return m_status;
 }
