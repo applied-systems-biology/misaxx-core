@@ -24,24 +24,24 @@ namespace misaxx {
         }
 
         void from_json(const nlohmann::json &t_json) override {
-            misa_locatable::from_json(t_json);
+            misa_locatable<Location>::from_json(t_json);
             value = t_json["value"].template get<Value>();
         }
 
         void to_json(nlohmann::json &t_json) const override {
-            misa_locatable::to_json(t_json);
+            misa_locatable<Location>::to_json(t_json);
             t_json["value"] = value;
         }
 
         void to_json_schema(const misa_json_schema &t_schema) const override {
-            misa_locatable::to_json_schema(t_schema);
+            misa_locatable<Location>::to_json_schema(t_schema);
             value.to_json_schema(t_schema.resolve("value"));
         }
 
     protected:
 
         void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override {
-            misa_locatable::build_serialization_id_hierarchy(result);
+            misa_locatable<Location>::build_serialization_id_hierarchy(result);
             misa_serialization_id self = value.get_serialization_id();
             self.set_path(self.get_path() / "locatable");
             result.emplace_back(std::move(self));
