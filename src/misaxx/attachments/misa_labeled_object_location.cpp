@@ -6,10 +6,10 @@
 
 using namespace misaxx;
 
-misa_labeled_object_location::misa_labeled_object_location(int t_label) : label(t_label) {
+misa_labeled_object_location::misa_labeled_object_location(const misa_cached_data_base &t_cache, int t_label) :
+misa_location(t_cache), label(t_label) {
 
 }
-
 
 void misa_labeled_object_location::from_json(const nlohmann::json &t_json) {
     misa_location::from_json(t_json);
@@ -30,4 +30,5 @@ void misa_labeled_object_location::build_serialization_id_hierarchy(std::vector<
     misa_location::build_serialization_id_hierarchy(result);
     result.emplace_back(misa_serialization_id("misa", "attachments/labeled-object-location"));
 }
+
 

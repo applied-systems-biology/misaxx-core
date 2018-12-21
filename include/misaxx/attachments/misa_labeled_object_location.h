@@ -19,9 +19,9 @@ namespace misaxx {
          */
         int label = 0;
 
-        misa_labeled_object_location() = default;
+        using misa_location::misa_location;
 
-        explicit misa_labeled_object_location(int t_label);
+        misa_labeled_object_location(const misa_cached_data_base &t_cache, int t_label);
 
         void from_json(const nlohmann::json &t_json) override;
 

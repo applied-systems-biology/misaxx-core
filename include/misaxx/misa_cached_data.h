@@ -251,7 +251,7 @@ namespace misaxx {
          * Use get_unique_location() to find the actual file instead.
          * @return
          */
-        boost::filesystem::path get_location() const {
+        boost::filesystem::path get_location() const override {
             return data->get_location();
         }
 
@@ -260,7 +260,7 @@ namespace misaxx {
          * This usually points to the actual file containing the data
          * @return
          */
-        boost::filesystem::path get_unique_location() const {
+        boost::filesystem::path get_unique_location() const override {
             return data->get_unique_location();
         }
 

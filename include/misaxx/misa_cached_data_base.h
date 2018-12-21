@@ -80,6 +80,23 @@ namespace misaxx {
          * @return
          */
         virtual bool has_data() const = 0;
+
+        /**
+         * Returns the location of the cache.
+         * This is the folder that contains the data. Please note that
+         * this location might not be unique for different caches, as multiple caches might be created
+         * on the same location.
+         * Use get_unique_location() to find the actual file instead.
+         * @return
+         */
+        virtual boost::filesystem::path get_location() const;
+
+        /**
+         * Returns the unique location of the cache.
+         * This usually points to the actual file containing the data
+         * @return
+         */
+        virtual boost::filesystem::path get_unique_location() const;
     };
 
 }

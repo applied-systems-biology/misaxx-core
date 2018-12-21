@@ -3,6 +3,7 @@
 //
 
 #include "misaxx/attachments/misa_location.h"
+#include <misaxx/misa_cached_data_base.h>
 
 using namespace misaxx;
 
