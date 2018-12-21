@@ -121,3 +121,20 @@ endif()")
             DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${library}
     )
 endfunction()
+
+# Adds additional compiler warnings
+function(misaxx_add_compiler_warnings library)
+    # Additional warnings
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        target_compile_options(${library} PRIVATE -Wredundant-decls
+                -Wcast-align
+                -Wmissing-declarations
+                -Wmissing-include-dirs
+                -Wswitch-enum
+                -Wswitch-default
+                -Wextra
+                -Wall
+                -Winvalid-pch
+                -Wredundant-decls)
+    endif()
+endfunction()
