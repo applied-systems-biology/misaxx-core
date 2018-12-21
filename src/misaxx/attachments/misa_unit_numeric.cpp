@@ -6,25 +6,25 @@
 
 using namespace misaxx;
 
-void misa_unit_numeric::from_json(const nlohmann::json &t_json) {
+void misa_unit_numeric::from_json(const nlohmann::json &) {
 }
 
 void misa_unit_numeric::to_json(nlohmann::json &t_json) const {
     misa_serializeable::to_json(t_json);
 }
 
-void misa_unit_numeric::to_json_schema(const misa_json_schema &t_schema) const {
+void misa_unit_numeric::to_json_schema(const misa_json_schema &) const {
 }
 
 std::string misa_unit_numeric::get_literal() const {
     return ""; // No literal
 }
 
-bool misa_unit_numeric::operator==(const misa_unit_numeric &rhs) const {
+bool misa_unit_numeric::operator==(const misa_unit_numeric &) const {
     return true;
 }
 
-bool misa_unit_numeric::operator!=(const misa_unit_numeric &rhs) const {
+bool misa_unit_numeric::operator!=(const misa_unit_numeric &) const {
     return false;
 }
 

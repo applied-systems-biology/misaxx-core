@@ -183,6 +183,20 @@ target_include_directories(misaxx-core
         ${CMAKE_CURRENT_SOURCE_DIR}
         )
 
+# Additional warnings
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(misaxx-core PRIVATE -Wredundant-decls
+            -Wcast-align
+            -Wmissing-declarations
+            -Wmissing-include-dirs
+            -Wswitch-enum
+            -Wswitch-default
+            -Wextra
+            -Wall
+            -Winvalid-pch
+            -Wredundant-decls)
+endif()
+
 # Include dependencies
 target_link_libraries(misaxx-core PUBLIC
         Boost::filesystem

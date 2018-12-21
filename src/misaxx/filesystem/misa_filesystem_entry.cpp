@@ -157,7 +157,7 @@ bool misa_filesystem_entry::has_subpath(boost::filesystem::path t_segment) const
     return !(it == end());
 }
 
-void misa_filesystem_entry::from_json(const nlohmann::json &t_json) {
+void misa_filesystem_entry::from_json(const nlohmann::json &) {
     throw std::runtime_error("Not implemented");
 }
 

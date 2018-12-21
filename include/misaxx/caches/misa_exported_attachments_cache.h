@@ -18,76 +18,37 @@ namespace misaxx {
      */
     struct misa_exported_attachments_cache : public misa_default_cache<cxxh::cache<nlohmann::json>, misa_file_pattern, misa_file_description> {
 
-        nlohmann::json &get() override {
-            return m_json;
-        }
+        nlohmann::json &get() override;
 
-        const nlohmann::json &get() const override {
-            return m_json;
-        }
+        const nlohmann::json &get() const override;
 
-        void set(nlohmann::json value) override {
-            m_json = std::move(value);
-        }
+        void set(nlohmann::json value) override;
 
-        bool has() const override {
-            return false;
-        }
+        bool has() const override;
 
-        bool can_pull() const override {
-            return boost::filesystem::is_regular_file(m_path);
-        }
+        bool can_pull() const override;
 
-        void pull() override {
-            std::ifstream sw;
-            sw.open(m_path.string());
-            sw >> m_json;
-        }
+        void pull() override;
 
-        void stash() override {
-            m_json = nlohmann::json::object();
-        }
+        void stash() override;
 
-        void push() override {
-            std::ofstream sw;
-            sw.open(m_path.string());
-            sw << std::setw(4) << m_json;
-        }
+        void push() override;
 
-        void do_link(const misa_file_description &t_description) override {
-            if(t_description.filename.empty())
-                throw std::runtime_error("Cannot link to file description with empty file name!");
-            m_path = this->get_location() / t_description.filename;
-            this->set_unique_location(m_path);
-        }
+        void do_link(const misa_file_description &t_description) override;
 
         /**
          * Saves the metadata included in this instance to the target JSON file
          */
-        void save_attachments() {
-            cxxh::readonly_access<attachment_type > access(attachments);
-            for(const auto &kv : access.get()) {
-                const misa_serializeable *md = kv.second.get();
-                md->to_json(m_json[md->get_serialization_id().get_id()]);
-            }
-        }
+        void save_attachments();
 
-        void postprocess() override {
-            save_attachments();
-            push();
-        }
+        void postprocess() override;
 
-        void simulate_link() override {
-            describe()->set(misa_file_pattern({ ".json" }));
-            describe()->access<misa_file_description>();
-        }
+        void simulate_link() override;
 
     protected:
 
         misa_file_description
-        produce_description(const boost::filesystem::path &t_location, const misa_file_pattern &t_pattern) override {
-            return misa_file_description();
-        }
+        produce_description(const boost::filesystem::path &, const misa_file_pattern &) override;
 
     private:
 
