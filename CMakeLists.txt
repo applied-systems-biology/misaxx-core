@@ -165,7 +165,7 @@ add_library(misaxx-core
         src/misaxx/misa_submodule_base.cpp
         include/misaxx/misa_submodule_base.h
         src/misaxx/runtime/misa_cli_base.cpp
-        include/misaxx/runtime/misa_cli_base.h)
+        include/misaxx/runtime/misa_cli_base.h include/misaxx/attachments/misa_locatable.h include/misaxx/attachments/misa_locatable_wrapper.h)
 
 target_compile_features(misaxx-core PUBLIC cxx_std_17)
 add_library(misaxx::misaxx-core ALIAS misaxx-core)

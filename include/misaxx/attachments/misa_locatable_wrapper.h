@@ -1,0 +1,44 @@
+//
+// Created by rgerst on 21.12.18.
+//
+
+
+#pragma once
+#include <misaxx/attachments/misa_locatable.h>
+
+namespace misaxx {
+    /**
+     * Wraps any misa_serializable value around a locatable
+     * @tparam Value
+     * @tparam Location
+     */
+    template<class Value, class Location> struct misa_locatable_wrapper : public misa_locatable<Location> {
+
+        Value value;
+
+        void from_json(const nlohmann::json &t_json) override {
+            misa_locatable::from_json(t_json);
+            value = t_json["value"].template get<Value>();
+        }
+
+        void to_json(nlohmann::json &t_json) const override {
+            misa_locatable::to_json(t_json);
+            t_json["value"] = value;
+        }
+
+        void to_json_schema(const misa_json_schema &t_schema) const override {
+            misa_locatable::to_json_schema(t_schema);
+            value.to_json_schema(t_schema.resolve("value"));
+        }
+
+    protected:
+
+        void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override {
+            misa_locatable::build_serialization_id_hierarchy(result);
+            misa_serialization_id self = value.get_serialization_id();
+            self.set_path(self.get_path() / "locatable");
+            result.emplace_back(std::move(self));
+        }
+
+    };
+}
