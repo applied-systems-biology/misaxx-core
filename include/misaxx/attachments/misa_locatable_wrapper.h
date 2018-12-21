@@ -16,6 +16,13 @@ namespace misaxx {
 
         Value value;
 
+        misa_locatable_wrapper() = default;
+
+        explicit misa_locatable_wrapper(Value t_value, Location t_location) :
+        misa_locatable<Location>(std::move(t_location)), value(std::move(t_value)) {
+
+        }
+
         void from_json(const nlohmann::json &t_json) override {
             misa_locatable::from_json(t_json);
             value = t_json["value"].template get<Value>();
