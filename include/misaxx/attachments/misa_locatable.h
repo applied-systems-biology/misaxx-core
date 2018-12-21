@@ -22,6 +22,12 @@ namespace misaxx {
          */
         Location location;
 
+        misa_locatable() = default;
+
+        explicit misa_locatable(Location t_location) : location(std::move(t_location)) {
+
+        }
+
         void from_json(const nlohmann::json &t_json) override {
             location = t_json["location"].template get<Location>();
         }
