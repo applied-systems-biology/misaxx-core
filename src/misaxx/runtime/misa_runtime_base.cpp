@@ -13,24 +13,84 @@ using namespace misaxx;
 
 std::weak_ptr<misa_runtime_base> misa_runtime_base::singleton_instance = std::shared_ptr<misa_runtime_base>();
 
-void misa_runtime_base::run() {
+void misa_runtime_base::run_single_threaded() {
 
-    cxxh::manual_stopwatch sw("Runtime");
-    sw.start();
+    while (!m_nodes_todo.empty()) {
 
-    m_root = create_root_node();
+        size_t missing_dependency = 0;
+        size_t rejected = 0;
+        bool tree_complete = true;
 
-    m_nodes_todo.push_back(m_root.get());
-    m_nodes_todo_lookup.insert(m_root.get());
-    ++m_known_nodes_count;
+        for (size_t i = 0; i < m_nodes_todo.size(); ++i) {
+            auto *nd = m_nodes_todo[i];
 
-    const bool enable_threading = m_num_threads > 1;
+            if (nd->get_subtree_status() != nodes::misa_work_subtree_status::complete)
+                tree_complete = false;
 
-    if (enable_threading)
-        omp_set_num_threads(this->m_num_threads);
+            // First check if we even can do work
+            if (!nd->dependencies_satisfied()) {
+                ++missing_dependency;
+                continue;
+            }
 
-#pragma omp parallel if (enable_threading)
-#pragma omp single
+            auto subtree_before = nd->get_subtree_status();
+            if (nd->get_worker_status() == nodes::misa_worker_status::undone ||
+                nd->get_worker_status() == nodes::misa_worker_status::rejected) {
+                if (nd->get_worker_status() == nodes::misa_worker_status::rejected) {
+                    progress(*nd, "Retrying single-threaded work on");
+                } else {
+                    progress(*nd, "Starting single-threaded work on");
+                }
+                nd->work();
+            }
+            if (nd->get_worker_status() == nodes::misa_worker_status::rejected) {
+                // If the work was rejected, don't do any additional steps afterwards
+                ++rejected;
+                continue;
+            }
+            if (subtree_before == nodes::misa_work_subtree_status::incomplete) {
+                // Look for new nodes to visit
+                for (auto &child : nd->get_children()) {
+                    if (child->get_worker_status() == nodes::misa_worker_status::undone &&
+                        m_nodes_todo_lookup.find(child.get()) == m_nodes_todo_lookup.end()) {
+                        m_nodes_todo_lookup.insert(child.get());
+                        m_nodes_todo.push_back(child.get());
+                        ++m_known_nodes_count;
+
+//                                if(build_schema) {
+//                                    parameter_schema.insert_node(child->get_path(), child->get_metadata());
+//                                }
+                    }
+                }
+            }
+            if (nd->get_worker_status() == nodes::misa_worker_status::done &&
+                nd->get_subtree_status() == nodes::misa_work_subtree_status::complete) {
+                // Use quick-delete to remove the completed node
+                std::swap(m_nodes_todo[i], m_nodes_todo[m_nodes_todo.size() - 1]);
+                m_nodes_todo.resize(m_nodes_todo.size() - 1);
+                --i;
+                ++m_finished_nodes_count;
+                progress(*nd, "Work finished on");
+            }
+        }
+
+        m_tree_complete |= tree_complete;
+
+        if (missing_dependency > 0) {
+            progress("Info: " + std::to_string(missing_dependency) + " workers are waiting for dependencies");
+        }
+        if (rejected > 0) {
+            progress("Info: " + std::to_string(rejected) + " workers are rejecting to work");
+        }
+    }
+}
+
+void misa_runtime_base::run_parallel() {
+
+    omp_set_num_threads(this->m_num_threads);
+
+    #pragma omp parallel
+    #pragma omp single
     while (!m_nodes_todo.empty()) {
 
         size_t missing_dependency = 0;
@@ -53,7 +113,7 @@ void misa_runtime_base::run() {
             if (nd->get_worker_status() == nodes::misa_worker_status::undone ||
                 nd->get_worker_status() == nodes::misa_worker_status::rejected) {
 //                        if (!enable_skipping || !nd->is_skippable()) {
-                if (!enable_threading || !nd->is_parallelizeable()) {
+                if (!nd->is_parallelizeable()) {
                     if (nd->get_worker_status() == nodes::misa_worker_status::rejected) {
                         progress(*nd, "Retrying single-threaded work on");
                     } else {
@@ -117,6 +177,25 @@ void misa_runtime_base::run() {
             progress("Info: " + std::to_string(rejected) + " workers are rejecting to work");
         }
     }
+}
+
+void misa_runtime_base::run() {
+
+    cxxh::manual_stopwatch sw("Runtime");
+    sw.start();
+
+    m_root = create_root_node();
+
+    m_nodes_todo.push_back(m_root.get());
+    m_nodes_todo_lookup.insert(m_root.get());
+    ++m_known_nodes_count;
+
+    const bool enable_threading = m_num_threads > 1;
+
+    if(enable_threading)
+        run_parallel();
+    else
+        run_single_threaded();
 
     // Postprocessing steps
     postprocess_caches();

@@ -216,6 +216,10 @@ namespace misaxx {
 
     private:
 
+        void run_single_threaded();
+
+        void run_parallel();
+
         void progress(const std::string &t_text);
 
         void progress(const nodes::misa_work_node &t_node, const std::string &t_text);
