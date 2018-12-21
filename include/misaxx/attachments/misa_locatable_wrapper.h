@@ -49,3 +49,16 @@ namespace misaxx {
 
     };
 }
+
+namespace nlohmann {
+    template<class Value, class Location>
+    struct adl_serializer<misaxx::misa_locatable_wrapper<Value, Location>> {
+        static void to_json(json &j, const misaxx::misa_locatable_wrapper<Value, Location> &opt) {
+            opt.to_json(j);
+        }
+
+        static void from_json(const json &j, misaxx::misa_locatable_wrapper<Value, Location> &opt) {
+            opt.from_json(j);
+        }
+    };
+}

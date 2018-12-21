@@ -34,4 +34,13 @@ namespace misaxx {
         void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;
 
     };
+
+    inline void to_json(nlohmann::json& j, const misa_labeled_object_location& p) {
+        p.to_json(j);
+    }
+
+    inline void from_json(const nlohmann::json& j, misa_labeled_object_location& p) {
+        p.from_json(j);
+    }
+
 }
