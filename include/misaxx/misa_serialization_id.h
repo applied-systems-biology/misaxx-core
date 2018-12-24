@@ -11,7 +11,7 @@
 #include <nlohmann/json.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/operators.hpp>
-#include <c++/7/bits/basic_string.h>
+#include <string>
 
 namespace misaxx {
 

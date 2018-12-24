@@ -9,14 +9,31 @@ include(CMakePackageConfigHelpers)
 
 # Build options
 option(BUILD_SHARED_LIBS "Build shared library" ON)
+option(WITH_CONAN "Build with Conan support if available" ON)
+
+# Conan integration
+set(CAN_USE_CONAN OFF)
+if(WITH_CONAN AND EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    set(CAN_USE_CONAN ON)
+    message("-- Enabling building with Conan package manager")
+else()
+    message("-- Building without Conan")
+endif()
 
 # Dependencies
-find_package(misaxx-helpers REQUIRED)
-find_package(misaxx-coixx REQUIRED)
-find_package(nlohmann_json REQUIRED)
-find_package(Boost 1.63 COMPONENTS REQUIRED filesystem regex program_options)
-find_package(OpenMP REQUIRED)
-feature_summary(WHAT ALL)
+if(CAN_USE_CONAN)
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)    
+    conan_basic_setup(TARGETS)
+    find_package(OpenMP REQUIRED)
+    feature_summary(WHAT ALL)
+else()
+    find_package(misaxx-helpers REQUIRED)
+    find_package(misaxx-coixx REQUIRED)
+    find_package(nlohmann_json REQUIRED)
+    find_package(Boost 1.63 COMPONENTS REQUIRED filesystem regex program_options)
+    find_package(OpenMP REQUIRED)
+    feature_summary(WHAT ALL)
+endif()
 
 # Setting up the library
 add_library(misaxx-core
@@ -165,7 +182,11 @@ add_library(misaxx-core
         src/misaxx/misa_submodule_base.cpp
         include/misaxx/misa_submodule_base.h
         src/misaxx/runtime/misa_cli_base.cpp
-        include/misaxx/runtime/misa_cli_base.h include/misaxx/attachments/misa_locatable.h include/misaxx/attachments/misa_locatable_wrapper.h include/misaxx/attachments/misa_labeled_object_location.h src/misaxx/attachments/misa_labeled_object_location.cpp)
+        include/misaxx/runtime/misa_cli_base.h 
+        include/misaxx/attachments/misa_locatable.h 
+        include/misaxx/attachments/misa_locatable_wrapper.h 
+        include/misaxx/attachments/misa_labeled_object_location.h 
+        src/misaxx/attachments/misa_labeled_object_location.cpp)
 
 target_compile_features(misaxx-core PUBLIC cxx_std_17)
 add_library(misaxx::misaxx-core ALIAS misaxx-core)
@@ -198,7 +219,10 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 endif()
 
 # Include dependencies
-target_link_libraries(misaxx-core PUBLIC
+if(CAN_USE_CONAN)
+    target_link_libraries(misaxx-core PUBLIC OpenMP::OpenMP_CXX CONAN_PKG::boost CONAN_PKG::jsonformoderncpp CONAN_PKG::misaxx-coixx CONAN_PKG::misaxx-helpers)
+else()
+    target_link_libraries(misaxx-core PUBLIC
         Boost::filesystem
         Boost::regex
         Boost::program_options
@@ -206,6 +230,7 @@ target_link_libraries(misaxx-core PUBLIC
         nlohmann_json
         misaxx::misaxx-helpers
         misaxx::misaxx-coixx)
+endif()
 
 # Installation
 set_target_properties(misaxx-core PROPERTIES
