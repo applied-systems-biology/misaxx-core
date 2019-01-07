@@ -1,5 +1,5 @@
 from conans import ConanFile, CMake
-
+import os
 
 class MisaxxCoreConan(ConanFile):
     name = "misaxx-core"
@@ -9,10 +9,11 @@ class MisaxxCoreConan(ConanFile):
     url = "https://asb-git.hki-jena.de/RGerst/misaxx-core"
     description = "MISA++ framework core framework"
     topics = ("MISA++", "utility", "opencv", "images")
-    settings = "os", "compiler", "build_type", "arch"
+    settings = "os", "compiler", "build_type", "arch", "cppstd"
     options = {"shared": [True, False]}
     default_options = "shared=True"
     generators = "cmake"
+    cppstd = "17"
 
     def requirements(self):
         self.requires.add('boost/1.68.0@conan/stable')
@@ -21,6 +22,9 @@ class MisaxxCoreConan(ConanFile):
         self.requires.add('misaxx-coixx/0.1.0@rgerst/stable')
         
     def configure(self):
+        if self.settings.compiler.libcxx == "libstdc++":
+            raise Exception("This package is only compatible with libstdc++11")
+
         self.options["opencv"].contrib = True
 
     def source(self):
