@@ -36,6 +36,7 @@ void misa_file_stack_pattern::to_json(nlohmann::json &t_json) const {
 }
 
 void misa_file_stack_pattern::to_json_schema(const misa_json_schema &t_schema) const {
+    misa_data_pattern<misa_file_stack_description>::to_json_schema(t_schema);
     std::vector<std::string> extensions_;
     for(const auto &extension : extensions) {
         extensions_.emplace_back(extension.string());

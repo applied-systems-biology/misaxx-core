@@ -15,7 +15,7 @@ misa_filesystem misa_filesystem::create_subsystem(const std::string &t_name) {
     return result;
 }
 
-void misa_filesystem::from_json(const nlohmann::json &t_json) {
+void misa_filesystem::from_json(const nlohmann::json &) {
     throw std::runtime_error("Not implemented");
 }
 
@@ -25,6 +25,7 @@ void misa_filesystem::to_json(nlohmann::json &t_json) const {
 }
 
 void misa_filesystem::to_json_schema(const misa_json_schema &t_schema) const {
+    misa_serializeable::to_json_schema(t_schema);
     imported->to_json_schema(t_schema.resolve("imported"));
     exported->to_json_schema(t_schema.resolve("exported"));
 }

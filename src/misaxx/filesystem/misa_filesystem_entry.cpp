@@ -167,6 +167,7 @@ void misa_filesystem_entry::to_json(nlohmann::json &t_json) const {
 }
 
 void misa_filesystem_entry::to_json_schema(const misa_json_schema &t_schema) const {
+    misa_serializeable::to_json_schema(t_schema);
     t_schema.resolve("external-path").declare_optional<std::string>();
     for(const auto &kv : children) {
         kv.second->to_json_schema(t_schema.resolve("children", kv.first));

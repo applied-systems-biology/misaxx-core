@@ -38,6 +38,7 @@ namespace misaxx {
         }
 
         void to_json_schema(const misa_json_schema &t_schema) const override {
+            misa_serializeable::to_json_schema(t_schema);
             location.to_json_schema(t_schema.resolve("location"));
         }
 

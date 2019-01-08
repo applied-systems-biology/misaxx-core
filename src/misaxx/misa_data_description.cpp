@@ -9,7 +9,8 @@ void misa_data_description::to_json(nlohmann::json &t_json) const {
     misa_serializeable::to_json(t_json);
 }
 
-void misa_data_description::to_json_schema(const misa_json_schema &) const {
+void misa_data_description::to_json_schema(const misa_json_schema &t_schema) const {
+    misa_serializeable::to_json_schema(t_schema);
 }
 
 void misa_data_description::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {

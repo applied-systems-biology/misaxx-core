@@ -30,6 +30,7 @@ void misa_location::to_json(nlohmann::json &t_json) const {
 }
 
 void misa_location::to_json_schema(const misa_json_schema &t_schema) const {
+    misa_serializeable::to_json_schema(t_schema);
     t_schema.resolve("filesystem-location").declare<std::string>();
     t_schema.resolve("filesystem-unique-location").declare<std::string>();
 }

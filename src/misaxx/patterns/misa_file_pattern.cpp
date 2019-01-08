@@ -31,6 +31,7 @@ void misa_file_pattern::to_json(nlohmann::json &t_json) const {
 }
 
 void misa_file_pattern::to_json_schema(const misa_json_schema &t_schema) const {
+    misa_data_pattern<misa_file_description>::to_json_schema(t_schema);
     t_schema.resolve("filename").declare_optional<std::string>(filename.string());
     std::vector<std::string> extensions_;
     for(const auto &extension : extensions) {

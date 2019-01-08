@@ -52,6 +52,7 @@ void misa_description_storage::to_json(nlohmann::json &t_json) const {
 }
 
 void misa_description_storage::to_json_schema(const misa_json_schema &t_schema) const {
+    misa_serializeable::to_json_schema(t_schema);
     if(has_pattern()) {
         t_schema.resolve("pattern", "pattern-type").define(get<misa_data_pattern_base>().get_serialization_id());
         get<misa_data_pattern_base>().to_json_schema(t_schema.resolve("pattern"));

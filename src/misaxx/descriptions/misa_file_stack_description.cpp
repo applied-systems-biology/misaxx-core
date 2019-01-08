@@ -20,6 +20,7 @@ void misa_file_stack_description::to_json(nlohmann::json &t_json) const {
 }
 
 void misa_file_stack_description::to_json_schema(const misa_json_schema &t_schema) const {
+    misa_data_description::to_json_schema(t_schema);
     for(const auto &kv : files) {
         kv.second.to_json_schema(t_schema.resolve("files", kv.first));
     }

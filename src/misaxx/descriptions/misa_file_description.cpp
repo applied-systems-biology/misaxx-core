@@ -16,6 +16,7 @@ void misa_file_description::to_json(nlohmann::json &t_json) const {
 }
 
 void misa_file_description::to_json_schema(const misa_json_schema &t_schema) const {
+    misa_data_description::to_json_schema(t_schema);
     t_schema.resolve("filename").declare_required<std::string>();
 }
 
