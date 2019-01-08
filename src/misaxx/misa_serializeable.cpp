@@ -9,8 +9,8 @@ void misa_serializeable::to_json(nlohmann::json &t_json) const {
 }
 
 void misa_serializeable::to_json_schema(const misa_json_schema &t_schema) const {
-    t_schema.resolve("misa:serialization-hierarchy").define(get_serialization_id_hierarchy());
-    t_schema.resolve("misa:serialization-id").define(get_serialization_id());
+    t_schema.annotate("misa:serialization-hierarchy", get_serialization_id_hierarchy());
+    t_schema.annotate("misa:serialization-id", get_serialization_id());
 }
 
 misa_serialization_id misa_serializeable::get_serialization_id() const {

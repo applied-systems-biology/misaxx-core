@@ -15,14 +15,9 @@ namespace misaxx {
      */
     class misa_json_schema {
     public:
-        misa_json_schema(misa_json_schema_builder &t_builder, std::vector<std::string> t_path) :
-                m_builder(&t_builder), m_path(std::move(t_path)) {
+        explicit misa_json_schema(misa_json_schema_builder &t_builder, std::vector<std::string> t_path);
 
-        }
-
-        misa_json_schema_builder &get_builder() const {
-            return *m_builder;
-        }
+        misa_json_schema_builder &get_builder() const;
 
         template<class... Args> misa_json_schema resolve(const Args&... t_segment) const {
             std::vector<std::string> new_path = m_path;
@@ -32,18 +27,7 @@ namespace misaxx {
             return misa_json_schema(get_builder(), std::move(new_path));
         }
 
-        misa_json_schema parent() const {
-            if(m_path.empty())
-                throw std::runtime_error("JSON schema is already parent!");
-            std::vector<std::string> new_path = m_path;
-            if(new_path.size() > 1) {
-                std::swap(new_path[0], new_path[new_path.size() - 1]);
-                new_path.erase(new_path.end() - 1);
-            } else {
-                new_path.clear();
-            }
-            return misa_json_schema(get_builder(), std::move(new_path));
-        }
+        misa_json_schema parent() const;
 
         /**
          * Declares this path as optional value with default
@@ -87,6 +71,17 @@ namespace misaxx {
             t_json_metadata.default_value = t_value;
             t_json_metadata.required = true;
             declare<T>(std::move(t_json_metadata));
+        }
+
+        /**
+         * Annotates this JSON schema object with the given value
+         * This might not conform to the standard!
+         * @tparam T
+         * @param t_key
+         * @param t_value
+         */
+        template<typename T> void annotate(const std::string &t_key, const T &t_value) const {
+            m_builder->annotate(m_path, t_key, t_value);
         }
 
     private:
