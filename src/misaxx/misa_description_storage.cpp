@@ -47,7 +47,7 @@ void misa_description_storage::to_json(nlohmann::json &t_json) const {
     }
     if(static_cast<bool>(m_description)) {
         auto &j = t_json["description"];
-        m_pattern->to_json(j);
+        m_description->to_json(j);
     }
 }
 

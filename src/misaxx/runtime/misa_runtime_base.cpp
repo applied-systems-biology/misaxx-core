@@ -361,7 +361,8 @@ void misa_runtime_base::postprocess_cache_attachments() {
             // Attach the description storage if needed
             if(!access.get().has<misa_locatable_wrapper<misa_description_storage, misa_location>>()) {
                 misa_location link(filesystem_generic_link_path, filesystem_unique_link_path);
-                misa_locatable_wrapper<misa_description_storage, misa_location> attachment(*ptr->describe(), std::move(link));
+                misa_description_storage descr(*ptr->describe());
+                misa_locatable_wrapper<misa_description_storage, misa_location> attachment(std::move(descr), std::move(link));
                 attachment.to_json(exported_json[attachment.get_serialization_id().get_id()]);
             }
 
