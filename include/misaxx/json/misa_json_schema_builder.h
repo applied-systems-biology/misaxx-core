@@ -54,7 +54,7 @@ namespace misaxx {
          */
         template<typename T> void annotate(const path_t &t_parameter_path, const std::string &t_annotation_name, const T &t_metadata) {
             ensure_schema_property_path(t_parameter_path);
-            json_helper::access_json_path(data, t_parameter_path)[t_annotation_name] = nlohmann::json(t_metadata);
+            json_helper::access_json_path(data, schema_property_path(t_parameter_path))[t_annotation_name] = nlohmann::json(t_metadata);
         }
 
         /**
