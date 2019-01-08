@@ -26,6 +26,10 @@ namespace misaxx {
 
         misa_description_storage(misa_description_storage && t_source) = default;
 
+        misa_description_storage &operator =(const misa_description_storage &t_source);
+
+        misa_description_storage &operator =(misa_description_storage &&t_source) = default;
+
         /**
          * Clones this metadata
          * @return

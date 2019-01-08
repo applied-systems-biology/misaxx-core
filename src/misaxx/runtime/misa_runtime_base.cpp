@@ -6,6 +6,7 @@
 #include <misaxx/workers/task_tree/misa_work_node.h>
 #include <misaxx/misa_cached_data_base.h>
 #include <misaxx/attachments/misa_location.h>
+#include <misaxx/attachments/misa_locatable_wrapper.h>
 #include "misaxx/runtime/misa_runtime_base.h"
 
 
@@ -355,6 +356,13 @@ void misa_runtime_base::postprocess_cache_attachments() {
             if (!access.get().has<misa_location>()) {
                 misa_location link(filesystem_generic_link_path, filesystem_unique_link_path);
                 link.to_json(exported_json[link.get_serialization_id().get_id()]);
+            }
+
+            // Attach the description storage if needed
+            if(!access.get().has<misa_locatable_wrapper<misa_description_storage, misa_location>>()) {
+                misa_location link(filesystem_generic_link_path, filesystem_unique_link_path);
+                misa_locatable_wrapper<misa_description_storage, misa_location> attachment(*ptr->describe(), std::move(link));
+                attachment.to_json(exported_json[attachment.get_serialization_id().get_id()]);
             }
 
             if (!is_simulating()) {

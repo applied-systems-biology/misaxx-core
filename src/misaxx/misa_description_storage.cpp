@@ -77,3 +77,10 @@ bool misa_description_storage::has_description() const {
     return static_cast<bool>(m_description) ||
            misa_serializeable::type_is_deserializeable_from_json<misa_data_description>(m_raw_description_json);
 }
+
+misa_description_storage &misa_description_storage::operator=(const misa_description_storage &t_source) {
+    nlohmann::json json;
+    t_source.to_json(json);
+    from_json(json);
+    return *this;
+}
