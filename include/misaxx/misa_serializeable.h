@@ -32,7 +32,7 @@ namespace misaxx {
          * Must be consistent with the JSON structure expected by from_json and to_json
          * @param t_schema
          */
-        virtual void to_json_schema(const misa_json_schema &t_schema) const = 0;
+        virtual void to_json_schema(const misa_json_schema &t_schema) const;
 
         /**
          * Gets the serialization ID of the object

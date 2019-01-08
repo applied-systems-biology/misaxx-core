@@ -8,6 +8,11 @@ void misa_serializeable::to_json(nlohmann::json &t_json) const {
     t_json["misa:serialization-id"] = get_serialization_id().get_id();
 }
 
+void misa_serializeable::to_json_schema(const misa_json_schema &t_schema) const {
+    t_schema.resolve("misa:serialization-hierarchy").define(get_serialization_id_hierarchy());
+    t_schema.resolve("misa:serialization-id").define(get_serialization_id());
+}
+
 misa_serialization_id misa_serializeable::get_serialization_id() const {
     const auto h = get_serialization_id_hierarchy();
     return h[h.size() - 1];
@@ -58,3 +63,4 @@ std::vector<misa_serialization_id> misa_serializeable::get_serialization_id_hier
     build_serialization_id_hierarchy(result);
     return result;
 }
+

@@ -25,8 +25,6 @@ class MisaxxCoreConan(ConanFile):
         if self.settings.compiler.libcxx == "libstdc++":
             raise Exception("This package is only compatible with libstdc++11")
 
-        self.options["opencv"].contrib = True
-
     def source(self):
         self.run("git clone https://asb-git.hki-jena.de/RGerst/misaxx-core.git")
 

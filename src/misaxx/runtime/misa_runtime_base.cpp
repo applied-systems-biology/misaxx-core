@@ -379,6 +379,7 @@ void misa_runtime_base::postprocess_parameter_schema() {
     // /properties/objects/properties/__OBJECT__ -> /properties/objects/additionalProperties
     {
         auto &base = schema.data["properties"]["objects"];
+        base["type"] = "object";
         base["additionalProperties"] = std::move(base["properties"]["__OBJECT__"]);
         base["properties"].erase(base["properties"].find("__OBJECT__"));
     }
