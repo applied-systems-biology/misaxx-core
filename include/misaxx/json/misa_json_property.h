@@ -10,7 +10,7 @@
 
 namespace misaxx {
     /**
-     * Additional metadata for JSON parameters
+     * Describes the content of a JSON parameter
      * @tparam T
      */
     template<class T> struct misa_json_property : public misa_json_property_base {

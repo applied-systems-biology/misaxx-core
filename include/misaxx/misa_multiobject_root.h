@@ -31,13 +31,13 @@ namespace misaxx {
 
         using misa_module<misa_multiobject_root_interface>::misa_module;
 
-        void create_blueprints(blueprints &t_blueprints) override {
+        void create_blueprints(blueprint_list &t_blueprints, parameter_list &t_parameters) override {
             if (misa_runtime_base::instance().is_simulating()) {
                 t_blueprints.add(create_submodule_blueprint<SubModule>("__OBJECT__"));
                 m_objects.push_back("__OBJECT__");
             } else {
                 std::cout << "[multiobject_root] Dispatching root module for all input objects ..." << std::endl;
-                const nlohmann::json &object_json = misa_runtime_base::instance().get_parameter_json()["objects"];
+                const nlohmann::json &object_json = misa_runtime_base::instance().get_parameter_json()["samples"];
                 for (nlohmann::json::const_iterator it = object_json.begin(); it != object_json.end(); ++it) {
                     const std::string &name = it.key();
                     filesystem::entry e = filesystem.imported->access(name);
@@ -59,7 +59,11 @@ namespace misaxx {
             }
         }
 
-        void build(const builder &t_builder) override {
+        void create_parameters(misa_parameter_builder &t_parameters) override {
+
+        }
+
+        void build(const blueprint_builder &t_builder) override {
             for(const std::string &key : m_objects) {
                 t_builder.build<SubModule>(key);
             }

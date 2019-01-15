@@ -45,13 +45,6 @@ add_library(misaxx-core
         include/misaxx/misa_cached_data.h
         include/misaxx/misa_cache.h
         include/misaxx/misa_root_module_base.h
-        include/misaxx/parameters/parameter_prepare.h
-        include/misaxx/parameters/parameter_base.h
-        include/misaxx/parameters/default_parameter_check.h
-        include/misaxx/parameters/default_parameter_prepare.h
-        include/misaxx/parameters/input_parameter.h
-        include/misaxx/parameters/output_parameter.h
-        include/misaxx/parameters/parameter_checks.h
         include/misaxx/misa_module.h
         include/misaxx/misa_data_pattern_base.h
         include/misaxx/misa_data_description.h
@@ -76,21 +69,16 @@ add_library(misaxx-core
         include/misaxx/runtime/misa_cli.h
         include/misaxx/misa_serializeable.h
         include/misaxx/misa_description_storage.h
-        include/misaxx/workers/paths/algorithm_node_path.h
-        include/misaxx/workers/paths/object_node_path.h
-        include/misaxx/workers/paths/guarded_node_path.h
-        include/misaxx/workers/paths/full_node_path.h
-        include/misaxx/workers/misa_worker_base.h
-        include/misaxx/workers/task_tree/misa_work_node.h
-        include/misaxx/workers/task_tree/misa_work_subtree_status.h
-        include/misaxx/workers/task_tree/misa_worker_status.h
-        include/misaxx/workers/misa_task.h
-        include/misaxx/workers/misa_functional_task.h
-        include/misaxx/workers/dependency_management/misa_work_dependency_group.h
-        include/misaxx/workers/dependency_management/misa_work_dependency_chain.h
-        include/misaxx/workers/dependency_management/misa_work_dependency_segment.h
-        include/misaxx/workers/misa_dispatcher.h
-        include/misaxx/workers/misa_worker.h
+        include/misaxx/workers/misa_work_node.h
+        include/misaxx/workers/misa_work_subtree_status.h
+        include/misaxx/workers/misa_worker_status.h
+        include/misaxx/misa_task.h
+        include/misaxx/misa_functional_task.h
+        include/misaxx/workers/misa_work_dependency_group.h
+        include/misaxx/workers/misa_work_dependency_chain.h
+        include/misaxx/workers/misa_work_dependency_segment.h
+        include/misaxx/misa_dispatcher.h
+        include/misaxx/misa_worker.h
         include/misaxx/misa_data_pattern.h
         src/misaxx/patterns/misa_image_file_stack_pattern.cpp
         src/misaxx/patterns/misa_file_pattern.cpp
@@ -100,13 +88,6 @@ add_library(misaxx-core
         src/misaxx/misa_cached_data.cpp
         src/misaxx/misa_cache.cpp
         src/misaxx/misa_root_module_base.cpp
-        src/misaxx/parameters/parameter_prepare.cpp
-        src/misaxx/parameters/parameter_base.cpp
-        src/misaxx/parameters/default_parameter_check.cpp
-        src/misaxx/parameters/default_parameter_prepare.cpp
-        src/misaxx/parameters/input_parameter.cpp
-        src/misaxx/parameters/output_parameter.cpp
-        src/misaxx/parameters/parameter_checks.cpp
         src/misaxx/misa_module.cpp
         src/misaxx/misa_data_pattern_base.cpp
         src/misaxx/misa_data_description.cpp
@@ -131,20 +112,15 @@ add_library(misaxx-core
         src/misaxx/runtime/misa_cli.cpp
         src/misaxx/misa_serializeable.cpp
         src/misaxx/misa_description_storage.cpp
-        src/misaxx/workers/paths/algorithm_node_path.cpp
-        src/misaxx/workers/paths/object_node_path.cpp
-        src/misaxx/workers/paths/guarded_node_path.cpp
-        src/misaxx/workers/paths/full_node_path.cpp
-        src/misaxx/workers/misa_worker_base.cpp
-        src/misaxx/workers/task_tree/misa_work_node.cpp
-        src/misaxx/workers/task_tree/misa_work_subtree_status.cpp
-        src/misaxx/workers/task_tree/misa_worker_status.cpp
-        src/misaxx/workers/misa_task.cpp
-        src/misaxx/workers/dependency_management/misa_work_dependency_group.cpp
-        src/misaxx/workers/dependency_management/misa_work_dependency_chain.cpp
-        src/misaxx/workers/dependency_management/misa_work_dependency_segment.cpp
-        src/misaxx/workers/misa_dispatcher.cpp
-        src/misaxx/workers/misa_worker.cpp
+        src/misaxx/workers/misa_work_node.cpp
+        src/misaxx/workers/misa_work_subtree_status.cpp
+        src/misaxx/workers/misa_worker_status.cpp
+        src/misaxx/misa_task.cpp
+        src/misaxx/workers/misa_work_dependency_group.cpp
+        src/misaxx/workers/misa_work_dependency_chain.cpp
+        src/misaxx/workers/misa_work_dependency_segment.cpp
+        src/misaxx/misa_dispatcher.cpp
+        src/misaxx/misa_worker.cpp
         src/misaxx/misa_data_pattern.cpp
         include/misaxx/misa_primitive.h
         include/misaxx/misa_serialization_id.h
@@ -179,10 +155,21 @@ add_library(misaxx-core
         include/misaxx/attachments/misa_locatable_wrapper.h 
         include/misaxx/attachments/misa_labeled_object_location.h 
         src/misaxx/attachments/misa_labeled_object_location.cpp
-        src/misaxx/misa_dispatcher_blueprints.cpp
-        include/misaxx/misa_dispatcher_blueprints.h
+        src/misaxx/misa_dispatcher_blueprint_list.cpp
+        include/misaxx/misa_dispatcher_blueprint_list.h
         src/misaxx/misa_dispatcher_builder.cpp
-        include/misaxx/misa_dispatcher_builder.h)
+        include/misaxx/misa_dispatcher_builder.h
+        include/misaxx/misa_parameter_base.h
+        include/misaxx/misa_parameter.h
+        include/misaxx/workers/misa_work_tree_path.h
+        src/misaxx/workers/misa_work_tree_path.cpp
+        include/misaxx/workers/misa_work_tree_node_path.h
+        src/misaxx/workers/misa_work_tree_node_path.cpp
+        src/misaxx/workers/misa_work_tree_sample_path.cpp
+        include/misaxx/workers/misa_work_tree_sample_path.h
+        src/misaxx/workers/misa_work_tree_algorithm_path.cpp
+        include/misaxx/workers/misa_work_tree_algorithm_path.h
+        src/misaxx/misa_parameter_builder.cpp include/misaxx/misa_parameter_builder.h)
 
 target_compile_features(misaxx-core PUBLIC cxx_std_17)
 add_library(misaxx::misaxx-core ALIAS misaxx-core)

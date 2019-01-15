@@ -5,11 +5,9 @@
 
 #pragma once
 
-#include <misaxx/workers/misa_worker.h>
-#include <misaxx/workers/paths/algorithm_node_path.h>
-#include <misaxx/workers/paths/object_node_path.h>
+#include <misaxx/misa_worker.h>
 #include <misaxx/misa_dispatch_blueprint.h>
-#include <misaxx/workers/misa_dispatcher.h>
+#include <misaxx/misa_dispatcher.h>
 
 namespace misaxx {
 
@@ -31,7 +29,7 @@ namespace misaxx {
 
         static_assert(std::is_base_of<misa_module_interface, ModuleDeclaration>::value, "misa_module only accepts module interfaces as template parameter!");
 
-        explicit misa_module(const std::shared_ptr<nodes::misa_work_node> &t_node, ModuleDeclaration definition) :
+        explicit misa_module(const std::shared_ptr<misa_work_node> &t_node, ModuleDeclaration definition) :
                 misa_dispatcher(t_node, std::shared_ptr<ModuleDeclaration>()),
                 ModuleDeclaration(std::move(definition)) {
         }

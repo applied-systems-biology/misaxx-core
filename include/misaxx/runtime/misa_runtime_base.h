@@ -18,9 +18,7 @@
 
 namespace misaxx {
 
-    namespace nodes {
-        struct misa_work_node;
-    }
+    struct misa_work_node;
 
     /**
      * The runtime is responsible for executing the work represented by the worker tree and providing external parameters such as
@@ -31,7 +29,7 @@ namespace misaxx {
 
     private:
 
-        std::shared_ptr<nodes::misa_work_node> m_root;
+        std::shared_ptr<misa_work_node> m_root;
 
         std::vector<std::shared_ptr<misa_cache>> m_registered_caches;
 
@@ -46,11 +44,11 @@ namespace misaxx {
         /**
          * List of nodes that are not completed and need to be watched
          */
-        std::vector<nodes::misa_work_node *> m_nodes_todo;
+        std::vector<misa_work_node *> m_nodes_todo;
         /**
          * List of nodes for fast lookup of unknown nodes
          */
-        std::unordered_set<nodes::misa_work_node *> m_nodes_todo_lookup;
+        std::unordered_set<misa_work_node *> m_nodes_todo_lookup;
 
         // Variables are protected and will be set by the inheriting runtime
 
@@ -81,7 +79,7 @@ namespace misaxx {
 
         virtual ~misa_runtime_base() = default;
 
-        virtual std::shared_ptr<nodes::misa_work_node> create_root_node() = 0;
+        virtual std::shared_ptr<misa_work_node> create_root_node() = 0;
 
     public:
 
@@ -157,7 +155,7 @@ namespace misaxx {
          * Returns the root node
          * @return
          */
-        std::shared_ptr<nodes::misa_work_node> get_root_node() const;
+        std::shared_ptr<misa_work_node> get_root_node() const;
 
         /**
          * Returns the current filesystem
@@ -214,6 +212,26 @@ namespace misaxx {
             }
         }
 
+        /**
+         * Registers a parameter into the JSON schema
+         * @tparam T
+         * @param t_path
+         * @param t_json_metadata
+         */
+        template<typename T> void register_parameter(const std::vector<std::string> &t_path, const misa_json_property<T> &t_json_metadata) {
+            if(is_simulating()) {
+                get_schema_builder().insert<T>(t_path, t_json_metadata);
+                if constexpr (std::is_base_of<misa_serializeable, T>::value) {
+                    T().to_json_schema(misa_json_schema(get_schema_builder(), t_path));
+                }
+                else {
+                    misa_primitive<T> v;
+                    v.metadata = t_json_metadata;
+                    v.to_json_schema(misa_json_schema(get_schema_builder(), t_path));
+                }
+            }
+        }
+
     private:
 
         void run_single_threaded();
@@ -222,7 +240,7 @@ namespace misaxx {
 
         void progress(const std::string &t_text);
 
-        void progress(const nodes::misa_work_node &t_node, const std::string &t_text);
+        void progress(const misa_work_node &t_node, const std::string &t_text);
 
         void postprocess_caches();
 

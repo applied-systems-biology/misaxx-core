@@ -9,7 +9,7 @@
 #include <misaxx/runtime/misa_runtime_base.h>
 #include <misaxx/json/misa_json_schema_builder.h>
 #include <misaxx-helpers/measurement/manual_stopwatch.h>
-#include <misaxx/workers/task_tree/misa_work_node.h>
+#include <misaxx/workers/misa_work_node.h>
 #include <misaxx/misa_root_module_base.h>
 #include <misaxx/json/misa_json_helper.h>
 
@@ -66,9 +66,9 @@ namespace misaxx {
 
     protected:
 
-        std::shared_ptr<nodes::misa_work_node> create_root_node() override {
-            return std::make_shared<nodes::misa_work_node>(m_root_dispatcher_name,
-                        std::shared_ptr<nodes::misa_work_node>(), [this](const std::shared_ptr<nodes::misa_work_node> &t_root) {
+        std::shared_ptr<misa_work_node> create_root_node() override {
+            return std::make_shared<misa_work_node>(m_root_dispatcher_name,
+                        std::shared_ptr<misa_work_node>(), [this](const std::shared_ptr<misa_work_node> &t_root) {
                         auto root_module = std::make_shared<RootModule>(t_root, std::move(m_root_declaration));
                         return root_module;
                     });

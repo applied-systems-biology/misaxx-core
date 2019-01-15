@@ -5,14 +5,14 @@
 #pragma once
 
 
-#include "misa_dispatcher_blueprints.h"
+#include "misa_dispatcher_blueprint_list.h"
 
 namespace misaxx {
     /**
      * Allows instantiation of a specific subtree supported by a misa_dispatcher_blueprint
      */
-    struct misa_dispatcher_builder : public misa_dispatcher_blueprints {
-        using misa_dispatcher_blueprints::misa_dispatcher_blueprints;
+    struct misa_dispatcher_builder : public misa_dispatcher_blueprint_list {
+        using misa_dispatcher_blueprint_list::misa_dispatcher_blueprint_list;
 
         /**
          * Instantiates a blueprint

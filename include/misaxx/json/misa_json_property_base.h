@@ -10,6 +10,9 @@
 
 namespace misaxx {
 
+    /**
+     * Describes the content of a JSON parameter
+     */
     struct misa_json_property_base {
 
         std::string title;

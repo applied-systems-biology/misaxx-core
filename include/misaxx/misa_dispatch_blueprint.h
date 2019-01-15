@@ -6,20 +6,20 @@
 #pragma once
 
 #include <string>
-#include <misaxx/workers/misa_worker_base.h>
 #include <functional>
 #include <typeindex>
 
 namespace misaxx {
 
     class misa_dispatcher;
+    class misa_worker;
 
     /**
      * Contains a blueprint for a dispatched worker
      * @tparam Worker
      */
     struct misa_dispatch_blueprint_base {
-        virtual misaxx::misa_worker_base &dispatch(misa_dispatcher &t_parent) const = 0;
+        virtual misa_worker &dispatch(misa_dispatcher &t_parent) const = 0;
         virtual std::type_index get_instantiated_type() = 0;
         virtual std::string get_name() = 0;
     };
@@ -57,7 +57,7 @@ namespace misaxx {
             return function(t_parent);
         }
 
-        misaxx::misa_worker_base &dispatch(misa_dispatcher &t_parent) const override {
+        misa_worker &dispatch(misa_dispatcher &t_parent) const override {
             return dispatch_specific(t_parent);
         }
 

@@ -1,14 +1,14 @@
 #include <misaxx/runtime/misa_runtime_base.h>
 #include <misaxx-helpers/measurement/manual_stopwatch.h>
 #include <omp.h>
-#include <misaxx/workers/task_tree/misa_work_subtree_status.h>
-#include <misaxx/workers/task_tree/misa_worker_status.h>
-#include <misaxx/workers/task_tree/misa_work_node.h>
+#include <misaxx/workers/misa_work_subtree_status.h>
+#include <misaxx/workers/misa_worker_status.h>
+#include <misaxx/workers/misa_work_node.h>
 #include <misaxx/misa_cached_data_base.h>
 #include <misaxx/attachments/misa_location.h>
 #include <misaxx/attachments/misa_locatable_wrapper.h>
 #include "misaxx/runtime/misa_runtime_base.h"
-
+#include <misaxx/workers/misa_work_node.h>
 
 using namespace misaxx;
 
@@ -25,7 +25,7 @@ void misa_runtime_base::run_single_threaded() {
         for (size_t i = 0; i < m_nodes_todo.size(); ++i) {
             auto *nd = m_nodes_todo[i];
 
-            if (nd->get_subtree_status() != nodes::misa_work_subtree_status::complete)
+            if (nd->get_subtree_status() != misa_work_subtree_status::complete)
                 tree_complete = false;
 
             // First check if we even can do work
@@ -35,24 +35,24 @@ void misa_runtime_base::run_single_threaded() {
             }
 
             auto subtree_before = nd->get_subtree_status();
-            if (nd->get_worker_status() == nodes::misa_worker_status::undone ||
-                nd->get_worker_status() == nodes::misa_worker_status::rejected) {
-                if (nd->get_worker_status() == nodes::misa_worker_status::rejected) {
+            if (nd->get_worker_status() == misa_worker_status::undone ||
+                nd->get_worker_status() == misa_worker_status::rejected) {
+                if (nd->get_worker_status() == misa_worker_status::rejected) {
                     progress(*nd, "Retrying single-threaded work on");
                 } else {
                     progress(*nd, "Starting single-threaded work on");
                 }
                 nd->work();
             }
-            if (nd->get_worker_status() == nodes::misa_worker_status::rejected) {
+            if (nd->get_worker_status() == misa_worker_status::rejected) {
                 // If the work was rejected, don't do any additional steps afterwards
                 ++rejected;
                 continue;
             }
-            if (subtree_before == nodes::misa_work_subtree_status::incomplete) {
+            if (subtree_before == misa_work_subtree_status::incomplete) {
                 // Look for new nodes to visit
                 for (auto &child : nd->get_children()) {
-                    if (child->get_worker_status() == nodes::misa_worker_status::undone &&
+                    if (child->get_worker_status() == misa_worker_status::undone &&
                         m_nodes_todo_lookup.find(child.get()) == m_nodes_todo_lookup.end()) {
                         m_nodes_todo_lookup.insert(child.get());
                         m_nodes_todo.push_back(child.get());
@@ -64,8 +64,8 @@ void misa_runtime_base::run_single_threaded() {
                     }
                 }
             }
-            if (nd->get_worker_status() == nodes::misa_worker_status::done &&
-                nd->get_subtree_status() == nodes::misa_work_subtree_status::complete) {
+            if (nd->get_worker_status() == misa_worker_status::done &&
+                nd->get_subtree_status() == misa_work_subtree_status::complete) {
                 // Use quick-delete to remove the completed node
                 std::swap(m_nodes_todo[i], m_nodes_todo[m_nodes_todo.size() - 1]);
                 m_nodes_todo.resize(m_nodes_todo.size() - 1);
@@ -101,7 +101,7 @@ void misa_runtime_base::run_parallel() {
         for (size_t i = 0; i < m_nodes_todo.size(); ++i) {
             auto *nd = m_nodes_todo[i];
 
-            if (nd->get_subtree_status() != nodes::misa_work_subtree_status::complete)
+            if (nd->get_subtree_status() != misa_work_subtree_status::complete)
                 tree_complete = false;
 
             // First check if we even can do work
@@ -111,18 +111,18 @@ void misa_runtime_base::run_parallel() {
             }
 
             auto subtree_before = nd->get_subtree_status();
-            if (nd->get_worker_status() == nodes::misa_worker_status::undone ||
-                nd->get_worker_status() == nodes::misa_worker_status::rejected) {
+            if (nd->get_worker_status() == misa_worker_status::undone ||
+                nd->get_worker_status() == misa_worker_status::rejected) {
 //                        if (!enable_skipping || !nd->is_skippable()) {
                 if (!nd->is_parallelizeable()) {
-                    if (nd->get_worker_status() == nodes::misa_worker_status::rejected) {
+                    if (nd->get_worker_status() == misa_worker_status::rejected) {
                         progress(*nd, "Retrying single-threaded work on");
                     } else {
                         progress(*nd, "Starting single-threaded work on");
                     }
                     nd->work();
                 } else {
-                    if (nd->get_worker_status() == nodes::misa_worker_status::rejected) {
+                    if (nd->get_worker_status() == misa_worker_status::rejected) {
                         progress(*nd, "Retrying parallelized work on");
                     } else {
                         progress(*nd, "Starting parallelized work on");
@@ -138,15 +138,15 @@ void misa_runtime_base::run_parallel() {
 //                            nd->skip_work();
 //                        }
             }
-            if (nd->get_worker_status() == nodes::misa_worker_status::rejected) {
+            if (nd->get_worker_status() == misa_worker_status::rejected) {
                 // If the work was rejected, don't do any additional steps afterwards
                 ++rejected;
                 continue;
             }
-            if (subtree_before == nodes::misa_work_subtree_status::incomplete) {
+            if (subtree_before == misa_work_subtree_status::incomplete) {
                 // Look for new nodes to visit
                 for (auto &child : nd->get_children()) {
-                    if (child->get_worker_status() == nodes::misa_worker_status::undone &&
+                    if (child->get_worker_status() == misa_worker_status::undone &&
                         m_nodes_todo_lookup.find(child.get()) == m_nodes_todo_lookup.end()) {
                         m_nodes_todo_lookup.insert(child.get());
                         m_nodes_todo.push_back(child.get());
@@ -158,8 +158,8 @@ void misa_runtime_base::run_parallel() {
                     }
                 }
             }
-            if (nd->get_worker_status() == nodes::misa_worker_status::done &&
-                nd->get_subtree_status() == nodes::misa_work_subtree_status::complete) {
+            if (nd->get_worker_status() == misa_worker_status::done &&
+                nd->get_subtree_status() == misa_work_subtree_status::complete) {
                 // Use quick-delete to remove the completed node
                 std::swap(m_nodes_todo[i], m_nodes_todo[m_nodes_todo.size() - 1]);
                 m_nodes_todo.resize(m_nodes_todo.size() - 1);
@@ -225,7 +225,7 @@ void misa_runtime_base::progress(const std::string &t_text) {
     }
 }
 
-void misa_runtime_base::progress(const nodes::misa_work_node &t_node, const std::string &t_text) {
+void misa_runtime_base::progress(const misa_work_node &t_node, const std::string &t_text) {
     std::stringstream stream;
     if (m_tree_complete) {
         stream << "<" << static_cast<int>(m_finished_nodes_count * 1.0 / m_known_nodes_count * 100) << "%" << ">";
@@ -233,7 +233,7 @@ void misa_runtime_base::progress(const nodes::misa_work_node &t_node, const std:
         stream << "<#>";
     }
     stream << " " << "<" << m_finished_nodes_count << " / " << m_known_nodes_count << ">";
-    stream << "\t" << t_text << " " << t_node.get_json_path();
+    stream << "\t" << t_text << " " << *t_node.get_global_path();
 
     if (stream.str() != m_last_progress) {
         std::cout << stream.str() << std::endl;
@@ -265,7 +265,7 @@ misa_json_schema_builder &misa_runtime_base::get_schema_builder() {
     return m_parameter_schema_builder;
 }
 
-std::shared_ptr<nodes::misa_work_node> misa_runtime_base::get_root_node() const {
+std::shared_ptr<misa_work_node> misa_runtime_base::get_root_node() const {
     return m_root;
 }
 
@@ -387,7 +387,7 @@ void misa_runtime_base::postprocess_parameter_schema() {
     // /properties/algorithm -> nothing to do
     // /properties/objects/properties/__OBJECT__ -> /properties/objects/additionalProperties
     {
-        auto &base = schema.data["properties"]["objects"];
+        auto &base = schema.data["properties"]["samples"];
         base["type"] = "object";
         base["additionalProperties"] = std::move(base["properties"]["__OBJECT__"]);
         base["properties"].erase(base["properties"].find("__OBJECT__"));

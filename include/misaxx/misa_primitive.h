@@ -47,7 +47,33 @@ namespace misaxx {
 
         void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override {
             misa_serializeable::build_serialization_id_hierarchy(result);
-            result.emplace_back(misa_serialization_id("misa", std::string("primitive/") + typeid(T).name()));
+            if constexpr (std::is_same<int, T>::value) {
+                result.emplace_back(misa_serialization_id("misa", "primitive/int"));
+            }
+            else if constexpr (std::is_same<char, T>::value) {
+                result.emplace_back(misa_serialization_id("misa", "primitive/char"));
+            }
+            else if constexpr (std::is_same<short, T>::value) {
+                result.emplace_back(misa_serialization_id("misa", "primitive/short"));
+            }
+            else if constexpr (std::is_same<long, T>::value) {
+                result.emplace_back(misa_serialization_id("misa", "primitive/long"));
+            }
+            else if constexpr (std::is_same<double, T>::value) {
+                result.emplace_back(misa_serialization_id("misa", "primitive/double"));
+            }
+            else if constexpr (std::is_same<float, T>::value) {
+                result.emplace_back(misa_serialization_id("misa", "primitive/float"));
+            }
+            else if constexpr (std::is_same<std::string, T>::value) {
+                result.emplace_back(misa_serialization_id("misa", "primitive/string"));
+            }
+            else if constexpr (std::is_same<bool, T>::value) {
+                result.emplace_back(misa_serialization_id("misa", "primitive/bool"));
+            }
+            else {
+                result.emplace_back(misa_serialization_id("misa", std::string("primitive/") + typeid(T).name()));
+            }
         }
     };
 
