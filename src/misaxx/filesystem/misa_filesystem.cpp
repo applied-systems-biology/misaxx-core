@@ -34,3 +34,28 @@ void misa_filesystem::build_serialization_id_hierarchy(std::vector<misa_serializ
     misa_serializeable::build_serialization_id_hierarchy(result);
     result.emplace_back(misa_serialization_id("misa", "filesystem"));
 }
+
+std::shared_ptr<misa_filesystem_entry>
+misa_filesystem::find_external_path(const boost::filesystem::path &t_path) const {
+
+//    std::cout << "SEARCHING_FOR "<< t_path << std::endl;
+
+    auto in_imported = imported->find_external_path(t_path);
+    auto in_exported = exported->find_external_path(t_path);
+
+    if(!static_cast<bool>(in_imported) && !static_cast<bool>(in_exported)) {
+        return std::shared_ptr<misa_filesystem_entry>();
+    }
+    else if(static_cast<bool>(in_imported) && !static_cast<bool>(in_exported)) {
+        return in_imported;
+    }
+    else if(!static_cast<bool>(in_imported) && static_cast<bool>(in_exported)) {
+        return in_exported;
+    }
+    else if(in_imported->get_depth() > in_exported->get_depth()) {
+        return in_imported;
+    }
+    else {
+        return in_exported;
+    }
+}

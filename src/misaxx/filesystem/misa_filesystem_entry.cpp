@@ -1,4 +1,5 @@
 #include <misaxx/filesystem/misa_filesystem_entry.h>
+#include <misaxx-helpers/filesystem.h>
 
 using namespace misaxx;
 
@@ -175,23 +176,48 @@ void misa_filesystem_entry::to_json_schema(const misa_json_schema &t_schema) con
     metadata->to_json_schema(t_schema.resolve("metadata"));
 }
 
-boost::filesystem::path misa_filesystem_entry::child_external_path(const boost::filesystem::path &t_path) {
-    if(t_path == external_path()) {
-        return "/";
-    }
-    else {
-        boost::filesystem::path absolute_path = boost::filesystem::absolute(t_path, boost::filesystem::current_path());
-        boost::filesystem::path absolute_external_path = boost::filesystem::absolute(external_path(), boost::filesystem::current_path());
-        if(boost::starts_with(absolute_path.string(), absolute_external_path.string())) {
-            return boost::filesystem::relative(absolute_path, absolute_external_path);
-        }
-        else {
-            return "";
-        }
-    }
-}
-
 void misa_filesystem_entry::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {
     misa_serializeable::build_serialization_id_hierarchy(result);
     result.emplace_back(misa_serialization_id("misa", "filesystem/entry"));
+}
+
+std::shared_ptr<misa_filesystem_entry>
+misa_filesystem_entry::find_external_path(const boost::filesystem::path &t_path) {
+    if(t_path == external_path()) {
+        return self();
+    }
+    else {
+        auto relative = cxxh::relativize_to_direct_parent(external_path(), t_path);
+        size_t d = get_depth();
+        std::shared_ptr<misa_filesystem_entry> result;
+
+        if(!relative.empty()) {
+            result = self();
+        }
+
+        // Look if a child path finds a better alternative
+        // Try to find the path with the highest depth
+        for(const auto &kv : children) {
+            auto by_child = kv.second->find_external_path(t_path);
+            if(static_cast<bool>(by_child)) {
+                size_t d2 = by_child->get_depth();
+                if(d2 > d) {
+                    result = by_child;
+                    d = d2;
+                }
+            }
+        }
+
+        return result;
+    }
+}
+
+size_t misa_filesystem_entry::get_depth() const {
+    auto ptr = parent.lock();
+    if(static_cast<bool>(ptr)) {
+        return ptr->get_depth() + 1;
+    }
+    else {
+        return 0;
+    }
 }

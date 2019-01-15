@@ -151,12 +151,18 @@ namespace misaxx {
         void to_json_schema(const misa_json_schema &t_schema) const override;
 
         /**
-        * Given an external_path(), return the path relative to this entries' external_path()
-        * If it is not a child path, return an empty path
-        * @param t_path
-        * @return
-        */
-        boost::filesystem::path child_external_path(const boost::filesystem::path &t_path);
+         * Finds a filesystem entry (including children) where its external path is either a parent of the input path
+         * or is equal to it. Returns nullptr if the path is not located within the filesystem.
+         * @param t_path
+         * @return
+         */
+        std::shared_ptr<misa_filesystem_entry> find_external_path(const boost::filesystem::path &t_path);
+
+        /**
+         * Returns the depth of this entry
+         * @return
+         */
+        size_t get_depth() const;
 
     protected:
 

@@ -335,6 +335,9 @@ void misa_runtime_base::postprocess_cache_attachments() {
             boost::filesystem::path filesystem_unique_link_path = ptr->get_unique_location_in_filesystem();
             boost::filesystem::path filesystem_generic_link_path = ptr->get_location_in_filesystem();
 
+            std::cout << "INFS: " << filesystem_unique_link_path << std::endl;
+            std::cout << "INFS2: " << filesystem_generic_link_path << std::endl;
+
             // Replace extension with JSON
             const boost::filesystem::path filesystem_export_base_path = get_filesystem().exported->external_path();
             boost::filesystem::path cache_attachment_path =

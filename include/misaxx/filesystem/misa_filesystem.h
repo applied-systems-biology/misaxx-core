@@ -40,6 +40,8 @@ namespace misaxx {
 
         void to_json_schema(const misa_json_schema &t_schema) const override;
 
+        std::shared_ptr<misa_filesystem_entry> find_external_path(const boost::filesystem::path &t_path) const;
+
     protected:
 
         void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;
