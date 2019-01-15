@@ -41,9 +41,8 @@ add_library(misaxx-core
         include/misaxx/patterns/misa_file_pattern.h
         include/misaxx/patterns/misa_image_file_pattern.h
         include/misaxx/patterns/misa_file_stack_pattern.h
-        include/misaxx/misa_module_declaration.h
+        include/misaxx/misa_module_interface.h
         include/misaxx/misa_cached_data.h
-        include/misaxx/misa_submodule.h
         include/misaxx/misa_cache.h
         include/misaxx/misa_root_module_base.h
         include/misaxx/parameters/parameter_prepare.h
@@ -59,7 +58,6 @@ add_library(misaxx-core
         include/misaxx/misa_multiobject_root.h
         include/misaxx/descriptions/misa_file_stack_description.h
         include/misaxx/descriptions/misa_file_description.h
-        include/misaxx/misa_module_declaration_base.h
         include/misaxx/json/misa_json_schema_builder.h
         include/misaxx/json/misa_json_schema.h
         include/misaxx/json/misa_json_property.h
@@ -72,8 +70,7 @@ add_library(misaxx-core
         include/misaxx/filesystem/misa_filesystem_directories_importer.h
         include/misaxx/filesystem/misa_filesystem_empty_importer.h
         include/misaxx/filesystem/misa_filesystem.h
-        include/misaxx/misa_future_dispatch.h
-        include/misaxx/misa_module_base.h
+        include/misaxx/misa_dispatch_blueprint.h
         include/misaxx/runtime/misa_runtime_base.h
         include/misaxx/runtime/misa_runtime.h
         include/misaxx/runtime/misa_cli.h
@@ -99,9 +96,8 @@ add_library(misaxx-core
         src/misaxx/patterns/misa_file_pattern.cpp
         src/misaxx/patterns/misa_image_file_pattern.cpp
         src/misaxx/patterns/misa_file_stack_pattern.cpp
-        src/misaxx/misa_module_declaration.cpp
+        src/misaxx/misa_module_interface.cpp
         src/misaxx/misa_cached_data.cpp
-        src/misaxx/misa_submodule.cpp
         src/misaxx/misa_cache.cpp
         src/misaxx/misa_root_module_base.cpp
         src/misaxx/parameters/parameter_prepare.cpp
@@ -117,7 +113,6 @@ add_library(misaxx-core
         src/misaxx/misa_multiobject_root.cpp
         src/misaxx/descriptions/misa_file_stack_description.cpp
         src/misaxx/descriptions/misa_file_description.cpp
-        src/misaxx/misa_module_declaration_base.cpp
         src/misaxx/json/misa_json_schema_builder.cpp
         src/misaxx/json/misa_json_schema.cpp
         src/misaxx/json/misa_json_property.cpp
@@ -130,8 +125,7 @@ add_library(misaxx-core
         src/misaxx/filesystem/misa_filesystem_directories_importer.cpp
         src/misaxx/filesystem/misa_filesystem_empty_importer.cpp
         src/misaxx/filesystem/misa_filesystem.cpp
-        src/misaxx/misa_future_dispatch.cpp
-        src/misaxx/misa_module_base.cpp
+        src/misaxx/misa_dispatch_blueprint.cpp
         src/misaxx/runtime/misa_runtime_base.cpp
         src/misaxx/runtime/misa_runtime.cpp
         src/misaxx/runtime/misa_cli.cpp
@@ -179,14 +173,16 @@ add_library(misaxx-core
         src/misaxx/misa_serialization_id.cpp
         src/misaxx/attachments/misa_matrix.cpp
         include/misaxx/attachments/misa_matrix.h
-        src/misaxx/misa_submodule_base.cpp
-        include/misaxx/misa_submodule_base.h
         src/misaxx/runtime/misa_cli_base.cpp
         include/misaxx/runtime/misa_cli_base.h 
         include/misaxx/attachments/misa_locatable.h 
         include/misaxx/attachments/misa_locatable_wrapper.h 
         include/misaxx/attachments/misa_labeled_object_location.h 
-        src/misaxx/attachments/misa_labeled_object_location.cpp)
+        src/misaxx/attachments/misa_labeled_object_location.cpp
+        src/misaxx/misa_dispatcher_blueprints.cpp
+        include/misaxx/misa_dispatcher_blueprints.h
+        src/misaxx/misa_dispatcher_builder.cpp
+        include/misaxx/misa_dispatcher_builder.h)
 
 target_compile_features(misaxx-core PUBLIC cxx_std_17)
 add_library(misaxx::misaxx-core ALIAS misaxx-core)

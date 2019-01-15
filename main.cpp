@@ -6,7 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <misaxx/misa_module.h>
-#include <misaxx/misa_module_declaration.h>
+#include <misaxx/misa_module_interface.h>
 #include <misaxx/workers/misa_task.h>
 #include <misaxx/runtime/misa_runtime.h>
 #include <misaxx/filesystem/misa_filesystem_directories_importer.h>

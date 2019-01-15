@@ -7,10 +7,10 @@
 
 #include <misaxx-helpers/dynamic_singleton_map.h>
 #include <misaxx-helpers/cache.h>
-#include <misaxx/misa_module_declaration_base.h>
 #include <misaxx/misa_serializeable.h>
 #include <misaxx/misa_cache.h>
 #include <misaxx/misa_cached_data_base.h>
+#include <misaxx/runtime/misa_runtime_base.h>
 
 namespace misaxx {
 

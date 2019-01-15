@@ -11,14 +11,18 @@
 #include <misaxx/workers/paths/algorithm_node_path.h>
 #include <misaxx/parameters/input_parameter.h>
 #include <misaxx/parameters/output_parameter.h>
+#include <misaxx/misa_module_interface.h>
 
 namespace misaxx {
     /**
      * Base class for all MISA++ workers
      * @tparam ModuleDeclaration
      */
-    template<class ModuleDeclaration> struct misa_worker : public misa_worker_base {
-        using module_type = ModuleDeclaration;
+    struct misa_worker : public misa_worker_base {
+
+        using node = std::shared_ptr<nodes::misa_work_node>;
+
+        using module = std::shared_ptr<misa_module_interface>;
 
         /**
         * Input variable that has a built-in function to check if the value is valid.
@@ -35,16 +39,25 @@ namespace misaxx {
         template<typename T, class OutputCheckTag = parameters::default_check, class OutputPrepareTag = parameters::default_prepare> using output = parameters::output_parameter<T, OutputCheckTag, OutputPrepareTag>;
 
 
-        explicit misa_worker(const std::shared_ptr<nodes::misa_work_node> &t_node, const std::shared_ptr<ModuleDeclaration> &t_module_declaration) :
-        m_node(t_node), m_module_declaration(t_module_declaration) {
-        }
+        explicit misa_worker(const node &t_node, const module &t_module_declaration);
 
         /**
          * Returns a pointer to the module that this worker is working on
          * @return
          */
-        virtual std::shared_ptr<ModuleDeclaration> module() {
-            return m_module_declaration.lock();
+        virtual module get_module();
+
+        /**
+         * Returns the current module and casts it to the target type
+         * @tparam Module
+         * @return
+         */
+        template<class Module> std::shared_ptr<Module> get_module_as() {
+            return std::dynamic_pointer_cast<Module>(get_module());
+        }
+
+        std::shared_ptr<misa_worker_base> self() const override {
+            return get_node()->get_instance();
         }
 
         /**
@@ -204,6 +217,6 @@ namespace misaxx {
         /**
          * Pointer to the module declaration
          */
-        std::weak_ptr<ModuleDeclaration> m_module_declaration;
+        std::weak_ptr<misa_module_interface> m_module_declaration;
     };
 }

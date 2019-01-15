@@ -33,12 +33,18 @@ namespace misaxx {
         /**
          * Runs the workload
          */
-        virtual void work() = 0;
+        virtual void execute_work() = 0;
 
         /**
          * Returns true if the worker allows parallelization
          * @return
          */
         virtual bool is_parallelizeable() const = 0;
+
+        /**
+         * Returns a shared pointer to the worker
+         * @return
+         */
+        virtual std::shared_ptr<misa_worker_base> self() const = 0;
     };
 }

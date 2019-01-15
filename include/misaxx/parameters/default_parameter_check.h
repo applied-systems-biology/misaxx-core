@@ -18,7 +18,7 @@ namespace misaxx::parameters {
      */
     template<typename T>
     struct default_check_t : public check_base {
-        static bool check(const T &t_value) {
+        static bool check(const T &) {
             return true;
         }
     };

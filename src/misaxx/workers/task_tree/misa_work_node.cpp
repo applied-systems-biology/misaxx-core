@@ -78,7 +78,7 @@ void misa_work_node::work() {
     if(m_status == misa_worker_status::undone || m_status == misa_worker_status::rejected) {
         auto instance = get_or_create_instance();
         m_status = misa_worker_status ::working;
-        instance->work();
+        instance->execute_work();
         if(m_status != misa_worker_status::rejected) {
             // If the worker has no children, we can already declare that it is finished
             if(instance->get_node()->get_children().empty())

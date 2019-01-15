@@ -36,7 +36,7 @@ namespace misaxx {
         /**
          * Module declaration type of the root node
          */
-        using module_declaration_type = typename RootModule::module_declaration_type;
+        using module_interface_type = typename RootModule::module_interface_type;
 
         /**
          * Returns the instance of the root dispatcher
@@ -80,7 +80,7 @@ namespace misaxx {
         * Root module declaration
          * This will be later moved into the actual root module
         */
-        module_declaration_type m_root_declaration;
+        module_interface_type m_root_declaration;
 
 
         /**
