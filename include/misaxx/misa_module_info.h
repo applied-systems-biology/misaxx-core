@@ -15,10 +15,13 @@ namespace misaxx {
     public:
         misa_module_info() = default;
 
-        misa_module_info(std::string t_name, std::string t_version);
+        misa_module_info(std::string t_name, std::string t_version, std::string t_description = "");
 
         std::string get_name() const;
+
         std::string get_version() const;
+
+        std::string get_description() const;
 
         void from_json(const nlohmann::json &t_json) override;
 
@@ -32,6 +35,7 @@ namespace misaxx {
     private:
         std::string m_name;
         std::string m_version;
+        std::string m_description;
     };
 
     inline void to_json(nlohmann::json& j, const misa_module_info& p) {
