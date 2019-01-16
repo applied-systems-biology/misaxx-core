@@ -33,6 +33,14 @@ namespace misaxx {
         std::string m_name;
         std::string m_version;
     };
+
+    inline void to_json(nlohmann::json& j, const misa_module_info& p) {
+        p.to_json(j);
+    }
+
+    inline void from_json(const nlohmann::json& j, misa_module_info& p) {
+        p.from_json(j);
+    }
 }
 
 

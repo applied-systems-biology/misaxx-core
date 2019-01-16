@@ -52,9 +52,10 @@ int misa_cli_base::prepare(const int argc, const char **argv) {
     po::options_description general_options("Runtime options");
     general_options.add_options()
             ("help,h", "Help screen")
+            ("version,v", "Prints the module name and version info")
+            ("version-json", "Prints the module module information as serialized JSON")
             ("parameters,p", po::value<std::string>(), "Provides the list of parameters")
             ("threads,t", po::value<int>(), "Sets the number of threads")
-//            ("no-skip", "Disables skipping of work that already has been finished")
             ("write-parameter-schema", po::value<std::string>(), "Writes a parameter schema to the target file");
 
     po::command_line_parser parser(argc, argv);
@@ -66,8 +67,22 @@ int misa_cli_base::prepare(const int argc, const char **argv) {
     po::notify(vm);
 
     if(vm.count("help")) {
+        auto info = misaxx::runtime_properties::get_module_info();
+        std::cout << info.get_name() << " " << info.get_version() << std::endl;
         std::cout << general_options << std::endl;
         return 1;
+    }
+    if(vm.count("version")) {
+        auto info = misaxx::runtime_properties::get_module_info();
+        std::cout << info.get_name() << " " << info.get_version() << std::endl;
+        return 0;
+    }
+    if(vm.count("version-json")) {
+        auto info = misaxx::runtime_properties::get_module_info();
+        nlohmann::json json;
+        info.to_json(json);
+        std::cout << json << std::endl;
+        return 0;
     }
     if(vm.count("write-parameter-schema")) {
         m_runtime->set_is_simulating(true);
