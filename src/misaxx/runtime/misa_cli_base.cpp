@@ -75,14 +75,14 @@ int misa_cli_base::prepare(const int argc, const char **argv) {
     if(vm.count("version")) {
         auto info = misaxx::runtime_properties::get_module_info();
         std::cout << info.get_name() << " " << info.get_version() << std::endl;
-        return 0;
+        return 1;
     }
     if(vm.count("version-json")) {
         auto info = misaxx::runtime_properties::get_module_info();
         nlohmann::json json;
         info.to_json(json);
         std::cout << json << std::endl;
-        return 0;
+        return 1;
     }
     if(vm.count("write-parameter-schema")) {
         m_runtime->set_is_simulating(true);
