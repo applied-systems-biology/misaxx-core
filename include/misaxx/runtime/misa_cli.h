@@ -27,7 +27,8 @@ namespace misaxx {
     public:
 
         using module_type = Module;
-        using runtime_type = misa_runtime<Module>;
+        using root_module_type = misa_multiobject_root<module_type>;
+        using runtime_type = misa_runtime<root_module_type>;
 
         explicit misa_cli(std::string t_root_name) :
             misa_cli_base(runtime_type::create_instance(std::move(t_root_name))) {
