@@ -30,6 +30,9 @@ std::vector<misa_dispatcher::blueprint>
 misa_dispatcher::create_blueprint_enum_parameter(misa_parameter<std::string> &t_parameter,
                                                  std::vector<misa_dispatcher::blueprint> t_blueprints,
                                                  const std::optional<std::string> &t_default) {
+    if(t_parameter.get_location().empty())
+        throw std::runtime_error("The provided parameter must be initialized!");
+
     for(const auto &bp : t_blueprints) {
         t_parameter.allowed_values.push_back(bp->get_name());
     }

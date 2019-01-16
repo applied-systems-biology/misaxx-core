@@ -11,7 +11,7 @@
 
 namespace misaxx {
     /**
-     * Allows access to a parameter
+     * Wrapper around a parameter, including metadata
      * @tparam T
      */
     template<typename T> struct misa_parameter : public misa_parameter_base, public misa_json_property<T> {
@@ -23,16 +23,31 @@ namespace misaxx {
 
         }
 
+        /**
+         * Location of the parameter within the parameter JSON
+         */
         path location;
 
+        /**
+         * Name of the parameter
+         * @return
+         */
         const std::string &get_name() const override {
             return location[location.size() - 1];
         }
 
+        /**
+         * Location of the parameter within the parameter JSON
+         * @return
+         */
         const path &get_location() const override {
             return location;
         }
 
+        /**
+         * Description of the parameter
+         * @return
+         */
         const misa_json_property_base &get_description() const override {
             return *this;
         }

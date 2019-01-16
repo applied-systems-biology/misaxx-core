@@ -81,6 +81,40 @@ namespace misaxx {
         }
 
         /**
+        * Creates a blueprint that instantiates a submodule
+        * This overload is able to take a pointer to an module interface and take over the contents to the newly created blueprint.
+        * The interface pointer is redirected to the created module instance.
+        * @param t_submodule
+        * @return
+        */
+        template<class Instance, class Interface = typename Instance::module_interface_type>
+        blueprint create_submodule_blueprint(const std::string &t_name, std::shared_ptr<Interface> &t_interface) {
+            static_assert(std::is_base_of<misa_module_interface, Instance>::value, "This function only supports submodules! Use create_blueprint() instead.");
+
+            // Modules need to be initialized immediately
+            Instance &instance = dispatch_instance<Instance>(t_name, std::move(*t_interface));
+
+            // Redirect the shared pointer to the instance
+            t_interface = instance.template get_module_as<Interface>();
+
+            // Create a sub-filesystem within the current module
+            instance.filesystem = get_module()->filesystem.create_subsystem(t_name);
+            instance.setup();
+
+            // The blueprint just works on a pointer
+            Instance *instance_ptr = &instance;
+
+            auto result = std::make_shared<misa_dispatch_blueprint<Instance>>();
+            result->name = t_name;
+            result->allow_multi_instancing = false;
+            result->function = [instance_ptr](misa_dispatcher &t_worker) -> Instance& {
+                return *instance_ptr;
+            };
+
+            return result;
+        }
+
+        /**
          * Exports a list of blueprints as enum parameter
          * @param t_parameter Parameter to be modified
          * @param t_blueprints
