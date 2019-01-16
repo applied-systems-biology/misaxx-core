@@ -10,7 +10,8 @@
 #include <misaxx/misa_serializeable.h>
 #include <misaxx/misa_cache.h>
 #include <misaxx/misa_cached_data_base.h>
-#include <misaxx/runtime/misa_runtime_base.h>
+#include <misaxx/runtime/misa_cache_registry.h>
+#include <misaxx/runtime/misa_runtime_properties.h>
 
 namespace misaxx {
 
@@ -75,7 +76,7 @@ namespace misaxx {
                         const std::shared_ptr<misa_description_storage> &t_description) {
             if (!data)
                 data = std::make_shared<Cache>();
-            misa_runtime_base::instance().register_cache(data);
+            misaxx::cache_registry::register_cache(data);
             std::cout << "[Cache] Linking " << t_location << " into cache of type " << typeid(Cache).name()
                       << std::endl;
             data->link(t_location, t_description);
@@ -90,10 +91,10 @@ namespace misaxx {
         void force_link(const filesystem::const_entry &t_location) {
             if (!data)
                 data = std::make_shared<Cache>();
-            misa_runtime_base::instance().register_cache(data);
+            misaxx::cache_registry::register_cache(data);
 
             // Special case simulation mode
-            if (misaxx::misa_runtime_base::instance().is_simulating()) {
+            if (misaxx::runtime_properties::is_simulating()) {
                 std::cout << "[Cache] Linking " << t_location->internal_path() << " into cache of type "
                           << typeid(Cache).name() << std::endl;
                 data->link("", t_location->metadata);
@@ -143,9 +144,9 @@ namespace misaxx {
                             const std::shared_ptr<misa_description_storage> &t_description) {
             if (!data) {
                 data = std::make_shared<Cache>();
-                misa_runtime_base::instance().register_cache(data);
+                misaxx::cache_registry::register_cache(data);
 
-                if (misaxx::misa_runtime_base::instance().is_simulating()) {
+                if (misaxx::runtime_properties::is_simulating()) {
                     std::cout << "[Cache] Creating " << t_location->internal_path() << " as cache of type "
                               << typeid(Cache).name() << std::endl;
                     // Metadata is copied into the export location

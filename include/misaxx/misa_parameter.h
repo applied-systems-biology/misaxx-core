@@ -6,7 +6,7 @@
 #pragma once
 
 #include <misaxx/json/misa_json_property.h>
-#include <misaxx/runtime/misa_runtime_base.h>
+#include <misaxx/runtime/misa_parameter_registry.h>
 #include "misa_parameter_base.h"
 
 namespace misaxx {
@@ -42,7 +42,7 @@ namespace misaxx {
          * @return
          */
         T query() const {
-            return misa_runtime_base::instance().get_json(get_location(), *this);
+            return misaxx::parameter_registry::get_json(get_location(), *this);
         }
     };
 }

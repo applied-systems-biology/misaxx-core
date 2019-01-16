@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <misaxx/runtime/misa_runtime_base.h>
 #include <misaxx/misa_cache.h>
+#include <misaxx/runtime/misa_runtime_properties.h>
 
 namespace misaxx {
 
@@ -46,7 +46,7 @@ namespace misaxx {
             m_description = t_description;
             m_location = t_location;
 
-            if(misa_runtime_base::instance().is_simulating()) {
+            if(misaxx::runtime_properties::is_simulating()) {
                 simulate_link();
                 return;
             }

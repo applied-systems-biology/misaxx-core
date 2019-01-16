@@ -16,7 +16,7 @@ void misa_dispatcher::execute_work() {
     this->m_parameter_builder = std::make_unique<misa_parameter_builder>(*this);
     this->create_parameters(*m_parameter_builder);
     this->create_blueprints(*m_builder, *m_parameter_builder);
-    if (misa_runtime_base::instance().is_simulating())
+    if (misaxx::runtime_properties::is_simulating())
         this->build_simulation(*m_builder);
     else
         this->build(*m_builder);
@@ -38,7 +38,7 @@ misa_dispatcher::create_blueprint_enum_parameter(misa_parameter<std::string> &t_
     }
 
     // Re-register into the runtime
-    misa_runtime_base::instance().register_parameter(t_parameter.get_location(), t_parameter);
+    misaxx::parameter_registry::register_parameter(t_parameter.get_location(), t_parameter);
 
     return std::move(t_blueprints);
 }

@@ -13,13 +13,15 @@
 #include <any>
 #include <misaxx-helpers/singleton_map.h>
 #include <misaxx/workers/misa_work_subtree_status.h>
-#include <misaxx/runtime/misa_runtime_base.h>
 #include <misaxx/misa_parameter_base.h>
 #include <memory>
 #include <mutex>
 #include <misaxx/workers/misa_work_tree_node_path.h>
 #include <misaxx/workers/misa_work_tree_algorithm_path.h>
 #include <misaxx/workers/misa_work_tree_sample_path.h>
+#include <misaxx/workers/misa_worker_status.h>
+#include <functional>
+#include <atomic>
 
 namespace misaxx {
 

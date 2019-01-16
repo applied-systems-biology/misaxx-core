@@ -12,7 +12,6 @@
 #include <misaxx/misa_cache.h>
 #include <misaxx/patterns/misa_image_file_pattern.h>
 #include <misaxx/patterns/misa_image_file_stack_pattern.h>
-#include <misaxx/runtime/misa_runtime_base.h>
 #include <misaxx/misa_default_cache.h>
 
 namespace misaxx {

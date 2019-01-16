@@ -9,6 +9,7 @@
 #include <misaxx/misa_cached_data_base.h>
 #include <misaxx/attachments/misa_location.h>
 #include <misaxx-helpers/measurement/manual_stopwatch.h>
+#include <misaxx/runtime/misa_parameter_registry.h>
 #include "misaxx/runtime/misa_cli_base.h"
 
 using namespace misaxx;
@@ -101,7 +102,7 @@ int misa_cli_base::prepare(const int argc, const char **argv) {
 
     // Load runtime parameters that are not from CLI
     if(!vm.count("threads") && !m_runtime->is_simulating()) {
-        m_runtime->set_num_threads(m_runtime->template get_json<int>({ "runtime", "num-threads" }, misa_json_property<int>().with_default_value(1)));
+        m_runtime->set_num_threads(misaxx::parameter_registry:: template get_json<int>({ "runtime", "num-threads" }, misa_json_property<int>().with_default_value(1)));
     }
 //            if(!vm.count("no-skip") && !m_runtime->is_simulating()) {
 //                m_runtime->enable_skipping = !m_runtime->template get_json<bool>({ "runtime", "no-skip" }, false, misa_json_property<bool>());
