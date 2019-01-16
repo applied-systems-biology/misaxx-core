@@ -76,7 +76,7 @@ endif()")
 \n\
 namespace ${module_name} {\n\
     inline misaxx::misa_module_info module_info() {\n\
-        return misaxx::misa_module_info(\"${PROJECT_NAME}\", \"${PROJECT_VERSION}\");\n\
+        return misaxx::misa_module_info(\"${PROJECT_NAME}\", \"${PROJECT_VERSION}\", \"${PROJECT_DESCRIPTION}\");\n\
     }\n\
 }")
     endif()
