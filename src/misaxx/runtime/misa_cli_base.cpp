@@ -46,7 +46,7 @@ void misa_cli_base::load_filesystem() {
     }
 }
 
-int misa_cli_base::prepare(const int argc, const char **argv) {
+misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **argv) {
     namespace po = boost::program_options;
 
     po::options_description general_options("Runtime options");
@@ -70,19 +70,19 @@ int misa_cli_base::prepare(const int argc, const char **argv) {
         auto info = misaxx::runtime_properties::get_module_info();
         std::cout << info.get_name() << " " << info.get_version() << std::endl;
         std::cout << general_options << std::endl;
-        return 1;
+        return misa_cli_base::cli_result::no_workload;
     }
     if(vm.count("version")) {
         auto info = misaxx::runtime_properties::get_module_info();
         std::cout << info.get_name() << " " << info.get_version() << std::endl;
-        return 1;
+        return misa_cli_base::cli_result::no_workload;
     }
     if(vm.count("version-json")) {
         auto info = misaxx::runtime_properties::get_module_info();
         nlohmann::json json;
         info.to_json(json);
         std::cout << json << std::endl;
-        return 1;
+        return misa_cli_base::cli_result::no_workload;
     }
     if(vm.count("write-parameter-schema")) {
         m_runtime->set_is_simulating(true);
@@ -125,7 +125,7 @@ int misa_cli_base::prepare(const int argc, const char **argv) {
 
     load_filesystem();
 
-    return 0;
+    return misa_cli_base::cli_result::continue_with_workload;
 }
 
 void misa_cli_base::run() {
@@ -150,11 +150,18 @@ void misa_cli_base::run() {
 }
 
 int misa_cli_base::prepare_and_run(const int argc, const char **argv) {
-    int ret = prepare(argc, argv);
-    if(ret != 0)
-        return ret;
-    run();
-    return 0;
+    const misa_cli_base::cli_result ret = prepare(argc, argv);
+    switch(ret) {
+        case misa_cli_base::cli_result::continue_with_workload:
+            run();
+            return 0;
+        case misa_cli_base::cli_result::no_workload:
+            return 0;
+        case misa_cli_base::cli_result::error:
+            return 1;
+        default:
+            throw std::runtime_error("Unsupported cli result case!");
+    }
 }
 
 std::shared_ptr<misa_runtime_base> misa_cli_base::get_runtime() const {
