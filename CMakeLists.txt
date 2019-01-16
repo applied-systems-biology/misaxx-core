@@ -169,7 +169,7 @@ add_library(misaxx-core
         include/misaxx/workers/misa_work_tree_sample_path.h
         src/misaxx/workers/misa_work_tree_algorithm_path.cpp
         include/misaxx/workers/misa_work_tree_algorithm_path.h
-        src/misaxx/misa_parameter_builder.cpp include/misaxx/misa_parameter_builder.h include/misaxx/runtime/misa_runtime_properties.h include/misaxx/runtime/misa_cache_registry.h include/misaxx/runtime/misa_parameter_registry.h src/misaxx/runtime/misa_runtime_properties.cpp src/misaxx/runtime/misa_cache_registry.cpp src/misaxx/runtime/misa_parameter_registry.cpp)
+        src/misaxx/misa_parameter_builder.cpp include/misaxx/misa_parameter_builder.h include/misaxx/runtime/misa_runtime_properties.h include/misaxx/runtime/misa_cache_registry.h include/misaxx/runtime/misa_parameter_registry.h src/misaxx/runtime/misa_runtime_properties.cpp src/misaxx/runtime/misa_cache_registry.cpp src/misaxx/runtime/misa_parameter_registry.cpp src/misa_module_info.cpp include/misaxx/misa_module_info.h)
 
 target_compile_features(misaxx-core PUBLIC cxx_std_17)
 add_library(misaxx::misaxx-core ALIAS misaxx-core)

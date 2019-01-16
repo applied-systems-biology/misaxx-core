@@ -14,10 +14,24 @@
 #include <misaxx/misa_primitive.h>
 
 namespace misaxx::parameter_registry {
+
+    /**
+     * Returns the full parameter JSON data
+     * @return
+     */
     extern nlohmann::json &get_parameter_json();
 
+    /**
+     * Returns one specific value from the parameter JSON
+     * @param t_path
+     * @return
+     */
     extern nlohmann::json get_json_raw(const std::vector<std::string> &t_path);
 
+    /**
+     * Returns the current schema builder.
+     * @return
+     */
     extern misa_json_schema_builder &get_schema_builder();
 
     /**

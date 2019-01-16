@@ -15,6 +15,7 @@
 #include <misaxx/misa_primitive.h>
 #include <misaxx/misa_cache.h>
 #include <unordered_set>
+#include <misaxx/misa_module_info.h>
 
 namespace misaxx {
 
@@ -168,6 +169,12 @@ namespace misaxx {
          * @param t_filesystem
          */
         virtual void set_filesystem(misa_filesystem t_filesystem) = 0;
+
+        /**
+         * Returns the module info
+         * @return
+         */
+        virtual misa_module_info get_module_info() = 0;
 
         /**
          * Starts the actual work of the runtime.

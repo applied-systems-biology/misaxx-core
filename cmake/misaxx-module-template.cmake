@@ -63,6 +63,25 @@ include(\${CMAKE_CURRENT_LIST_DIR}/${library}-targets.cmake)\n\
 endif()")
     endif()
 
+    # If necessary, create a header that contains the module info
+    if(EXISTS ${CMAKE_SOURCE_DIR}/include/${library}/module_info.h)
+        message("--   Module info header already exists at ${CMAKE_SOURCE_DIR}/include/${library}/module_info.h")
+    else()
+        message("--   Creating module info header ${CMAKE_SOURCE_DIR}/include/${library}/module_info.h")
+        # Auto-gen the name for the module
+        string(REPLACE "-" "_" module_name "${library}")
+
+        file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/cmake/)
+        file(WRITE ${CMAKE_SOURCE_DIR}/include/${library}/module_info.h "#include <misaxx/misa_module_info.h>\n\
+\n\
+namespace ${module_name} {\n\
+    inline misaxx::misa_module_info module_info() {\n\
+        return misaxx::misa_module_info(\"${PROJECT_NAME}\", \"${PROJECT_VERSION}\");\n\
+    }\n\
+}")
+    endif()
+    target_sources(${library} PRIVATE ${CMAKE_SOURCE_DIR}/include/${library}/module_info.h)
+
     # Internal alias
     add_library("${namespace}::${library}" ALIAS ${library})
 

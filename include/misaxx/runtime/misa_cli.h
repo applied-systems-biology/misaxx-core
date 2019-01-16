@@ -13,6 +13,7 @@
 #include <misaxx/misa_multiobject_root.h>
 #include <misaxx/misa_cached_data_base.h>
 #include <misaxx/attachments/misa_location.h>
+#include <misaxx/misa_module_info.h>
 #include "misa_cli_base.h"
 
 namespace misaxx {
@@ -30,8 +31,8 @@ namespace misaxx {
         using root_module_type = misa_multiobject_root<module_type>;
         using runtime_type = misa_runtime<root_module_type>;
 
-        explicit misa_cli(std::string t_root_name) :
-            misa_cli_base(runtime_type::create_instance(std::move(t_root_name))) {
+        explicit misa_cli(misa_module_info t_module_info) :
+            misa_cli_base(runtime_type::create_instance(std::move(t_module_info))) {
 
         }
 

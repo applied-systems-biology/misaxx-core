@@ -26,3 +26,7 @@ std::shared_ptr<misa_work_node> misaxx::runtime_properties::get_root_node() {
 misa_filesystem misaxx::runtime_properties::get_root_filesystem() {
     return misa_runtime_base::instance().get_filesystem();
 }
+
+misa_module_info runtime_properties::get_module_info() {
+    return misa_runtime_base::instance().get_module_info();
+}
