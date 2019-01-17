@@ -9,6 +9,7 @@ misa_task::misa_task(const misa_worker::node &t_node, const misa_worker::module 
     prop.default_value = true;
     prop.title = "Is Parallelizable";
     prop.description = "If enabled, this task can be run in parallel";
+    misaxx::parameter_registry::register_parameter(is_parallelizeable_path, prop);
     is_parallelizeable_parameter = misa_parameter<bool>(std::move(is_parallelizeable_path), std::move(prop));
 }
 
