@@ -2,6 +2,16 @@
 
 using namespace misaxx;
 
+misa_task::misa_task(const misa_worker::node &t_node, const misa_worker::module &t_module) : misa_worker(t_node, t_module) {
+    auto is_parallelizeable_path = t_node->get_algorithm_path()->get_path();
+    is_parallelizeable_path.emplace_back("task::is_parallelizeable");
+    misa_json_property<bool> prop;
+    prop.default_value = true;
+    prop.title = "Is Parallelizable";
+    prop.description = "If enabled, this task can be run in parallel";
+    is_parallelizeable_parameter = misa_parameter<bool>(std::move(is_parallelizeable_path), std::move(prop));
+}
+
 void misa_task::simulate_work() {
 }
 
@@ -18,10 +28,11 @@ bool misa_task::is_parallelizeable() const {
     return is_parallelizeable_parameter.query();
 }
 
-void misa_task::create_parameters(parameter_list &t_parameters) {
-    is_parallelizeable_parameter = t_parameters.create_algorithm_parameter<bool>("task::is_parallelizeable", true);
+void misa_task::create_parameters(parameter_list &) {
 }
 
 const misa_parameter_builder &misa_task::get_parameters() const {
     return *m_parameter_builder;
 }
+
+

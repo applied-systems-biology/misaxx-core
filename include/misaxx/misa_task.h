@@ -15,18 +15,18 @@ namespace misaxx {
      * @tparam ModuleDeclaration
      */
     struct misa_task : public misa_worker {
+    public:
 
         using parameter_list = misa_parameter_builder;
         template<typename T> using parameter = misa_parameter<T>;
 
         /**
          * Parameter that determines if this task is parallelizeable
+         * In contrast to other parameters, it can be queried before work() is called
          */
         misa_parameter<bool> is_parallelizeable_parameter;
 
-        using misa_worker::misa_worker;
-
-    public:
+        misa_task(const node &t_node, const module &t_module);
 
         virtual void work() = 0;
 
