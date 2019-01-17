@@ -39,6 +39,31 @@ int main(int argc, const char** argv) {\n\
 
     # Create install target for the executable
     install(TARGETS "${library}-bin" DESTINATION bin)
+
+    # Create and install the module link, so external programs can find this executable
+    message("--   A module link JSON will be created for this executable")
+    if(WIN32)
+        set(MISA_MODULE_LINK_OPERATING_SYSTEM Windows)
+    else()
+        # Assume Linux here for now
+        set(MISA_MODULE_LINK_OPERATING_SYSTEM Linux)
+    endif()
+    if("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
+        set(MISA_MODULE_LINK_ARCHITECTURE x64)
+    else()
+        # Assume x32 here for now
+        set(MISA_MODULE_LINK_ARCHITECTURE x32)
+    endif()
+    set(MISA_MODULE_LINK_EXECUTABLE_PATH ${CMAKE_INSTALL_PREFIX}/bin/$<TARGET_FILE_NAME:${library}-bin>)
+    file(WRITE ${CMAKE_BINARY_DIR}/misa-module-link.json "{\n\
+    \"operating-system\" : \"${MISA_MODULE_LINK_OPERATING_SYSTEM}\",\n\
+    \"architecture\" : \"${MISA_MODULE_LINK_ARCHITECTURE}\",\n\
+    \"executable-path\" : \"${MISA_MODULE_LINK_EXECUTABLE_PATH}\"\n\
+}")
+    install(FILES ${CMAKE_BINARY_DIR}/misa-module-link.json
+            RENAME ${library}-${PROJECT_VERSION}-${MISA_MODULE_LINK_OPERATING_SYSTEM}-${MISA_MODULE_LINK_ARCHITECTURE}.json
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}/misaxx/modules)
+
 endfunction()
 
 # Creates a shared library from the input library
