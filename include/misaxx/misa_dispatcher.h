@@ -31,7 +31,7 @@ namespace misaxx {
         using blueprint = std::shared_ptr<misa_dispatch_blueprint_base>;
         template<typename T> using parameter = misa_parameter<T>;
 
-        using misa_worker::misa_worker;
+        misa_dispatcher(const node &t_node, const module &t_module);
 
     protected:
 

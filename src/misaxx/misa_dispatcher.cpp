@@ -4,6 +4,11 @@
 
 using namespace misaxx;
 
+misa_dispatcher::misa_dispatcher(const misa_worker::node &t_node, const misa_worker::module &t_module) : misa_worker(
+        t_node, t_module) {
+
+}
+
 void misa_dispatcher::build_simulation(const misa_dispatcher::blueprint_builder &t_builder) {
     for(const auto &kv : t_builder.get_entries()) {
         kv.second->dispatch(*this);
@@ -53,3 +58,5 @@ const misa_parameter_builder &misa_dispatcher::get_parameters() const {
 void misa_dispatcher::create_parameters(misa_parameter_builder &) {
 
 }
+
+
