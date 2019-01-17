@@ -73,6 +73,7 @@ endif()")
 
         file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/cmake/)
         file(WRITE ${CMAKE_SOURCE_DIR}/include/${library}/module_info.h "#include <misaxx/misa_mutable_module_info.h>\n\
+#include <misaxx/module_info.h>\n\
 \n\
 namespace ${module_name} {\n\
     inline misaxx::misa_module_info module_info() {\n\
@@ -80,6 +81,8 @@ namespace ${module_name} {\n\
         info.set_name(\"${PROJECT_NAME}\");\n\
         info.set_version(\"${PROJECT_VERSION}\");\n\
         info.set_description(\"${PROJECT_DESCRIPTION}\");\n\
+        \n\
+        info.add_dependency(misaxx::module_info());\n\
         // TODO: Add dependencies via info.add_dependency()\n\
         return info;
     }\n\
