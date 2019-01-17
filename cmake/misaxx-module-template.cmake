@@ -44,9 +44,11 @@ int main(int argc, const char** argv) {\n\
     message("--   A module link JSON will be created for this executable")
     if(WIN32)
         set(MISA_MODULE_LINK_OPERATING_SYSTEM Windows)
+        set(MISA_MODULE_LINK_EXECUTABLE_PATH ${CMAKE_INSTALL_PREFIX}/bin/${library}.exe)
     else()
         # Assume Linux here for now
         set(MISA_MODULE_LINK_OPERATING_SYSTEM Linux)
+        set(MISA_MODULE_LINK_EXECUTABLE_PATH ${CMAKE_INSTALL_PREFIX}/bin/${library})
     endif()
     if("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
         set(MISA_MODULE_LINK_ARCHITECTURE x64)
@@ -54,7 +56,6 @@ int main(int argc, const char** argv) {\n\
         # Assume x32 here for now
         set(MISA_MODULE_LINK_ARCHITECTURE x32)
     endif()
-    set(MISA_MODULE_LINK_EXECUTABLE_PATH ${CMAKE_INSTALL_PREFIX}/bin/$<TARGET_FILE_NAME:${library}-bin>)
     file(WRITE ${CMAKE_BINARY_DIR}/misa-module-link.json "{\n\
     \"operating-system\" : \"${MISA_MODULE_LINK_OPERATING_SYSTEM}\",\n\
     \"architecture\" : \"${MISA_MODULE_LINK_ARCHITECTURE}\",\n\
