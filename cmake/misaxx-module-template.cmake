@@ -73,7 +73,8 @@ endif()")
         string(REPLACE "-" "_" module_name "${library}")
 
         file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/cmake/)
-        file(WRITE ${CMAKE_SOURCE_DIR}/cmake/module_info.h.in "#include <misaxx/misa_mutable_module_info.h>\n\
+        file(WRITE ${CMAKE_SOURCE_DIR}/cmake/module_info.h.in "#pragma once\n\
+#include <misaxx/misa_mutable_module_info.h>\n\
 #include <misaxx/module_info.h>\n\
 \n\
 namespace ${module_name} {\n\
