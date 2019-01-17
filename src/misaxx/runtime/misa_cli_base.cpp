@@ -53,7 +53,7 @@ misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **ar
     general_options.add_options()
             ("help,h", "Help screen")
             ("version,v", "Prints the module name and version info")
-            ("version-json", "Prints the module module information as serialized JSON")
+            ("module-info", "Prints the module module information as serialized JSON")
             ("parameters,p", po::value<std::string>(), "Provides the list of parameters")
             ("threads,t", po::value<int>(), "Sets the number of threads")
             ("write-parameter-schema", po::value<std::string>(), "Writes a parameter schema to the target file");
@@ -77,7 +77,7 @@ misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **ar
         std::cout << info.get_name() << " " << info.get_version() << std::endl;
         return misa_cli_base::cli_result::no_workload;
     }
-    if(vm.count("version-json")) {
+    if(vm.count("module-info")) {
         auto info = misaxx::runtime_properties::get_module_info();
         nlohmann::json json;
         info.to_json(json);
