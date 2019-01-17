@@ -169,8 +169,25 @@ add_library(misaxx-core
         include/misaxx/workers/misa_work_tree_sample_path.h
         src/misaxx/workers/misa_work_tree_algorithm_path.cpp
         include/misaxx/workers/misa_work_tree_algorithm_path.h
-        src/misaxx/misa_parameter_builder.cpp include/misaxx/misa_parameter_builder.h include/misaxx/runtime/misa_runtime_properties.h include/misaxx/runtime/misa_cache_registry.h include/misaxx/runtime/misa_parameter_registry.h src/misaxx/runtime/misa_runtime_properties.cpp src/misaxx/runtime/misa_cache_registry.cpp src/misaxx/runtime/misa_parameter_registry.cpp src/misa_module_info.cpp include/misaxx/misa_module_info.h src/misaxx/misa_mutable_module_info.cpp include/misaxx/misa_mutable_module_info.h include/misaxx/module_info.h)
+        src/misaxx/misa_parameter_builder.cpp
+        include/misaxx/misa_parameter_builder.h
+        include/misaxx/runtime/misa_runtime_properties.h
+        include/misaxx/runtime/misa_cache_registry.h
+        include/misaxx/runtime/misa_parameter_registry.h
+        src/misaxx/runtime/misa_runtime_properties.cpp
+        src/misaxx/runtime/misa_cache_registry.cpp
+        src/misaxx/runtime/misa_parameter_registry.cpp
+        src/misa_module_info.cpp include/misaxx/misa_module_info.h
+        src/misaxx/misa_mutable_module_info.cpp
+        include/misaxx/misa_mutable_module_info.h
+        )
 
+# Module info header
+configure_file(${CMAKE_SOURCE_DIR}/cmake/module_info.h.in
+        ${CMAKE_BINARY_DIR}/include/misaxx/module_info.h)
+target_sources(misaxx-core PRIVATE ${CMAKE_BINARY_DIR}/include/misaxx/module_info.h)
+
+# For installation
 target_compile_features(misaxx-core PUBLIC cxx_std_17)
 add_library(misaxx::misaxx-core ALIAS misaxx-core)
 
@@ -229,6 +246,9 @@ install(TARGETS misaxx-core
         INCLUDES DESTINATION ${LIBLEGACY_INCLUDE_DIRS}
         )
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/misaxx
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        )
+install(DIRECTORY ${CMAKE_BINARY_DIR}/include/misaxx
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
         )
 install(EXPORT misaxx-core-targets

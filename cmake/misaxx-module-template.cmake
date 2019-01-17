@@ -64,23 +64,24 @@ endif()")
     endif()
 
     # If necessary, create a header that contains the module info
-    if(EXISTS ${CMAKE_SOURCE_DIR}/include/${library}/module_info.h)
-        message("--   Module info header already exists at ${CMAKE_SOURCE_DIR}/include/${library}/module_info.h")
+    if(EXISTS ${CMAKE_SOURCE_DIR}/cmake/module_info.h.in)
+        message("--   Module info header template already exists at ${CMAKE_SOURCE_DIR}/cmake/module_info.h.in")
     else()
-        message("--   Creating module info header ${CMAKE_SOURCE_DIR}/include/${library}/module_info.h")
+        message("--   Creating module info header ${CMAKE_SOURCE_DIR}/cmake/module_info.h.in")
+        message(WARNING "Please make sure that you include the dependencies in ${CMAKE_SOURCE_DIR}/cmake/module_info.h.in")
         # Auto-gen the name for the module
         string(REPLACE "-" "_" module_name "${library}")
 
         file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/cmake/)
-        file(WRITE ${CMAKE_SOURCE_DIR}/include/${library}/module_info.h "#include <misaxx/misa_mutable_module_info.h>\n\
+        file(WRITE ${CMAKE_SOURCE_DIR}/cmake/module_info.h.in "#include <misaxx/misa_mutable_module_info.h>\n\
 #include <misaxx/module_info.h>\n\
 \n\
 namespace ${module_name} {\n\
     inline misaxx::misa_module_info module_info() {\n\
         misaxx::misa_mutable_module_info info;\n\
-        info.set_name(\"${PROJECT_NAME}\");\n\
-        info.set_version(\"${PROJECT_VERSION}\");\n\
-        info.set_description(\"${PROJECT_DESCRIPTION}\");\n\
+        info.set_name(\"@PROJECT_NAME@\");\n\
+        info.set_version(\"@PROJECT_VERSION@\");\n\
+        info.set_description(\"@PROJECT_DESCRIPTION@\");\n\
         \n\
         info.add_dependency(misaxx::module_info());\n\
         // TODO: Add dependencies via info.add_dependency()\n\
@@ -88,7 +89,10 @@ namespace ${module_name} {\n\
     }\n\
 }")
     endif()
-    target_sources(${library} PRIVATE ${CMAKE_SOURCE_DIR}/include/${library}/module_info.h)
+
+    configure_file(${CMAKE_SOURCE_DIR}/cmake/module_info.h.in
+            ${CMAKE_BINARY_DIR}/include/${library}/module_info.h)
+    target_sources(${library} PRIVATE ${CMAKE_BINARY_DIR}/include/${library}/module_info.h)
 
     # Internal alias
     add_library("${namespace}::${library}" ALIAS ${library})
@@ -124,6 +128,9 @@ namespace ${module_name} {\n\
             INCLUDES DESTINATION ${LIBLEGACY_INCLUDE_DIRS}
             )
     install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/${library}
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+            )
+    install(DIRECTORY ${CMAKE_BINARY_DIR}/include/${library}
             DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
             )
     install(EXPORT ${library}-targets
