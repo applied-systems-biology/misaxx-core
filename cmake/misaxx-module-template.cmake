@@ -72,11 +72,16 @@ endif()")
         string(REPLACE "-" "_" module_name "${library}")
 
         file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/cmake/)
-        file(WRITE ${CMAKE_SOURCE_DIR}/include/${library}/module_info.h "#include <misaxx/misa_module_info.h>\n\
+        file(WRITE ${CMAKE_SOURCE_DIR}/include/${library}/module_info.h "#include <misaxx/misa_mutable_module_info.h>\n\
 \n\
 namespace ${module_name} {\n\
     inline misaxx::misa_module_info module_info() {\n\
-        return misaxx::misa_module_info(\"${PROJECT_NAME}\", \"${PROJECT_VERSION}\", \"${PROJECT_DESCRIPTION}\");\n\
+        misaxx::misa_mutable_module_info info;\n\
+        info.set_name(\"${PROJECT_NAME}\");\n\
+        info.set_version(\"${PROJECT_VERSION}\");\n\
+        info.set_description(\"${PROJECT_DESCRIPTION}\");\n\
+        // TODO: Add dependencies via info.add_dependency()\n\
+        return info;
     }\n\
 }")
     endif()

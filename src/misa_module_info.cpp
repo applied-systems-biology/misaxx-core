@@ -6,11 +6,6 @@
 
 using namespace misaxx;
 
-misa_module_info::misa_module_info(std::string t_name, std::string t_version, std::string t_description) :
-m_name(std::move(t_name)), m_version(std::move(t_version)), m_description(std::move(t_description)) {
-
-}
-
 std::string misa_module_info::get_name() const {
     return m_name;
 }
@@ -24,6 +19,10 @@ std::string misa_module_info::get_description() const {
         return get_name();
     else
         return m_description;
+}
+
+std::vector<misa_module_info> misa_module_info::get_dependencies() const {
+    return m_dependencies;
 }
 
 void misa_module_info::from_json(const nlohmann::json &t_json) {
@@ -50,5 +49,6 @@ void misa_module_info::build_serialization_id_hierarchy(std::vector<misa_seriali
     misa_serializeable::build_serialization_id_hierarchy(result);
     result.emplace_back(misa_serialization_id("misa", "module-info"));
 }
+
 
 
