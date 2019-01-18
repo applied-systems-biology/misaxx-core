@@ -18,8 +18,6 @@ class MisaxxCoreConan(ConanFile):
     def requirements(self):
         self.requires.add('boost/1.68.0@conan/stable')
         self.requires.add('jsonformoderncpp/3.3.0@vthiery/stable')
-        self.requires.add('misaxx-helpers/0.1.0@hki/stable')
-        self.requires.add('misaxx-coixx/0.1.0@hki/stable')
         
     def configure(self):
         if self.settings.compiler.libcxx == "libstdc++":

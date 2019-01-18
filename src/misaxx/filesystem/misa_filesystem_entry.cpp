@@ -1,5 +1,5 @@
 #include <misaxx/filesystem/misa_filesystem_entry.h>
-#include <misaxx-helpers/filesystem.h>
+#include <misaxx/utils/filesystem.h>
 
 using namespace misaxx;
 
@@ -187,7 +187,7 @@ misa_filesystem_entry::find_external_path(const boost::filesystem::path &t_path)
         return self();
     }
     else {
-        auto relative = cxxh::relativize_to_direct_parent(external_path(), t_path);
+        auto relative = misaxx::utils::relativize_to_direct_parent(external_path(), t_path);
         size_t d = get_depth();
         std::shared_ptr<misa_filesystem_entry> result;
 

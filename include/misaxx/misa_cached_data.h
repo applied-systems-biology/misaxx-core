@@ -5,8 +5,8 @@
 
 #pragma once
 
-#include <misaxx-helpers/dynamic_singleton_map.h>
-#include <misaxx-helpers/cache.h>
+#include <misaxx/utils/dynamic_singleton_map.h>
+#include <misaxx/utils/cache.h>
 #include <misaxx/misa_serializeable.h>
 #include <misaxx/misa_cache.h>
 #include <misaxx/misa_cached_data_base.h>

@@ -1,5 +1,5 @@
 #include <misaxx/runtime/misa_runtime_base.h>
-#include <misaxx-helpers/measurement/manual_stopwatch.h>
+#include <misaxx/utils/manual_stopwatch.h>
 #include <omp.h>
 #include <misaxx/workers/misa_work_subtree_status.h>
 #include <misaxx/workers/misa_worker_status.h>
@@ -182,7 +182,7 @@ void misa_runtime_base::run_parallel() {
 
 void misa_runtime_base::run() {
 
-    cxxh::manual_stopwatch sw("Runtime");
+    misaxx::utils::manual_stopwatch sw("Runtime");
     sw.start();
 
     m_root = create_root_node();

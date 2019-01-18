@@ -4,24 +4,24 @@
 
 #pragma once
 
-#include <misaxx-helpers/dynamic_singleton_map.h>
-#include <misaxx-helpers/cache.h>
+#include <misaxx/utils/dynamic_singleton_map.h>
+#include <misaxx/utils/cache.h>
 #include <misaxx/misa_serializeable.h>
 #include <misaxx/misa_description_storage.h>
 #include <misaxx/misa_cache.h>
 
 namespace misaxx {
 
-    template<typename Value> using readonly_access = cxxh::readonly_access<Value>;
-    template<typename Value> using readwrite_access = cxxh::readwrite_access<Value>;
-    template<typename Value> using write_access = cxxh::write_access<Value>;
+    template<typename Value> using readonly_access = misaxx::utils::readonly_access<Value>;
+    template<typename Value> using readwrite_access = misaxx::utils::readwrite_access<Value>;
+    template<typename Value> using write_access = misaxx::utils::write_access<Value>;
 
     /**
      * Base class for cached data
      */
     struct misa_cached_data_base {
-        using attachment_type = cxxh::dynamic_singleton_map<misa_serializeable>;
-        using attachment_cache_type = cxxh::memory_cache<attachment_type>;
+        using attachment_type = misaxx::utils::dynamic_singleton_map<misa_serializeable>;
+        using attachment_cache_type = misaxx::utils::memory_cache<attachment_type>;
 
         misa_cached_data_base() = default;
 

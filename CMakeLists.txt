@@ -27,8 +27,6 @@ if(CAN_USE_CONAN)
     find_package(OpenMP REQUIRED)
     feature_summary(WHAT ALL)
 else()
-    find_package(misaxx-helpers REQUIRED)
-    find_package(misaxx-coixx REQUIRED)
     find_package(nlohmann_json REQUIRED)
     find_package(Boost 1.63 COMPONENTS REQUIRED filesystem regex program_options)
     find_package(OpenMP REQUIRED)
@@ -37,9 +35,7 @@ endif()
 
 # Setting up the library
 add_library(misaxx-core
-        include/misaxx/patterns/misa_image_file_stack_pattern.h
         include/misaxx/patterns/misa_file_pattern.h
-        include/misaxx/patterns/misa_image_file_pattern.h
         include/misaxx/patterns/misa_file_stack_pattern.h
         include/misaxx/misa_module_interface.h
         include/misaxx/misa_cached_data.h
@@ -55,8 +51,6 @@ add_library(misaxx-core
         include/misaxx/json/misa_json_schema.h
         include/misaxx/json/misa_json_property.h
         include/misaxx/json/misa_json_property_base.h
-        include/misaxx/caches/misa_image_stack_cache.h
-        include/misaxx/caches/misa_image_file_cache.h
         include/misaxx/caches/misa_exported_attachments_cache.h
         include/misaxx/filesystem/misa_filesystem_json_importer.h
         include/misaxx/filesystem/misa_filesystem_entry.h
@@ -80,9 +74,13 @@ add_library(misaxx-core
         include/misaxx/misa_dispatcher.h
         include/misaxx/misa_worker.h
         include/misaxx/misa_data_pattern.h
-        src/misaxx/patterns/misa_image_file_stack_pattern.cpp
+        include/misaxx/utils/cache/cache.h
+        include/misaxx/utils/cache/locked.h
+        include/misaxx/utils/cache/memory_cache.h
+        include/misaxx/utils/cache/readonly_access.h
+        include/misaxx/utils/cache/readwrite_access.h
+        include/misaxx/utils/cache/write_access.h
         src/misaxx/patterns/misa_file_pattern.cpp
-        src/misaxx/patterns/misa_image_file_pattern.cpp
         src/misaxx/patterns/misa_file_stack_pattern.cpp
         src/misaxx/misa_module_interface.cpp
         src/misaxx/misa_cached_data.cpp
@@ -98,8 +96,6 @@ add_library(misaxx-core
         src/misaxx/json/misa_json_schema.cpp
         src/misaxx/json/misa_json_property.cpp
         src/misaxx/json/misa_json_property_base.cpp
-        src/misaxx/caches/misa_image_stack_cache.cpp
-        src/misaxx/caches/misa_image_file_cache.cpp
         src/misaxx/caches/misa_exported_attachments_cache.cpp
         src/misaxx/filesystem/misa_filesystem_json_importer.cpp
         src/misaxx/filesystem/misa_filesystem_entry.cpp
@@ -133,10 +129,6 @@ add_library(misaxx-core
         include/misaxx/misa_manual_cache.h
         src/misaxx/accessors/misa_exported_attachments.cpp
         include/misaxx/accessors/misa_exported_attachments.h
-        src/misaxx/accessors/misa_image_file.cpp
-        include/misaxx/accessors/misa_image_file.h
-        src/misaxx/accessors/misa_image_stack.cpp
-        include/misaxx/accessors/misa_image_stack.h
         include/misaxx/misa_default_description_accessors.h
         src/misaxx/attachments/misa_location.cpp
         include/misaxx/attachments/misa_location.h
@@ -180,7 +172,7 @@ add_library(misaxx-core
         src/misa_module_info.cpp include/misaxx/misa_module_info.h
         src/misaxx/misa_mutable_module_info.cpp
         include/misaxx/misa_mutable_module_info.h
-        )
+        include/misaxx/utils/cache.h include/misaxx/utils/ref.h include/misaxx/utils/string.h include/misaxx/utils/type_traits.h include/misaxx/utils/dynamic_singleton_map.h src/misaxx/utils/filesystem.cpp include/misaxx/utils/filesystem.h include/misaxx/utils/manual_stopwatch.h src/misaxx/utils/manual_stopwatch.cpp)
 
 # Module info header
 configure_file(${CMAKE_SOURCE_DIR}/cmake/module_info.h.in
@@ -227,9 +219,7 @@ else()
         Boost::regex
         Boost::program_options
         OpenMP::OpenMP_CXX
-        nlohmann_json
-        misaxx::misaxx-helpers
-        misaxx::misaxx-coixx)
+        nlohmann_json)
 endif()
 
 # Installation

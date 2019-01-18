@@ -6,7 +6,6 @@
 
 #include <misaxx/caches/misa_exported_attachments_cache.h>
 #include <misaxx/misa_cached_data.h>
-#include <opencv2/opencv.hpp>
 #include <misaxx/misa_default_description_accessors.h>
 
 namespace misaxx {

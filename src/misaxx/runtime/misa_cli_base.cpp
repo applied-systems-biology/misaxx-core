@@ -8,7 +8,7 @@
 #include <misaxx/filesystem/misa_filesystem_json_importer.h>
 #include <misaxx/misa_cached_data_base.h>
 #include <misaxx/attachments/misa_location.h>
-#include <misaxx-helpers/measurement/manual_stopwatch.h>
+#include <misaxx/utils/manual_stopwatch.h>
 #include <misaxx/runtime/misa_parameter_registry.h>
 #include "misaxx/runtime/misa_cli_base.h"
 

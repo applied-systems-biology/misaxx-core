@@ -10,8 +10,7 @@
 #include <misaxx/misa_data_pattern_base.h>
 #include <misaxx/misa_data_description.h>
 #include <misaxx/misa_serializeable.h>
-#include <misaxx-helpers/type_traits.h>
-#include <misaxx-helpers/drilldown_singleton_map.h>
+#include <misaxx/utils/type_traits.h>
 
 namespace misaxx {
     /**
@@ -89,7 +88,7 @@ namespace misaxx {
                 }
             }
             else {
-                static_assert(cxxh::always_false<Metadata>::value, "Only patterns and descriptions are supported!");
+                static_assert(misaxx::utils::always_false<Metadata>::value, "Only patterns and descriptions are supported!");
             }
         }
 
@@ -123,7 +122,7 @@ namespace misaxx {
                 return *std::dynamic_pointer_cast<Metadata>(m_description);
             }
             else {
-                static_assert(cxxh::always_false<Metadata>::value, "Only patterns and descriptions are supported!");
+                static_assert(misaxx::utils::always_false<Metadata>::value, "Only patterns and descriptions are supported!");
             }
         }
 
@@ -162,7 +161,7 @@ namespace misaxx {
                 }
             }
             else {
-                static_assert(cxxh::always_false<Metadata>::value, "Only patterns and descriptions are supported!");
+                static_assert(misaxx::utils::always_false<Metadata>::value, "Only patterns and descriptions are supported!");
             }
         }
 
@@ -189,7 +188,7 @@ namespace misaxx {
                 }
             }
             else {
-                static_assert(cxxh::always_false<Metadata>::value, "Only patterns and descriptions are supported!");
+                static_assert(misaxx::utils::always_false<Metadata>::value, "Only patterns and descriptions are supported!");
             }
         }
 

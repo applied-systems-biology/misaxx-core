@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <misaxx-helpers/string.h>
+#include <misaxx/utils/string.h>
 #include "misa_unit.h"
 
 namespace misaxx {

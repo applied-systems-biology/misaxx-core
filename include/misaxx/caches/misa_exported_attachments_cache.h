@@ -8,7 +8,7 @@
 #include <misaxx/misa_default_cache.h>
 #include <misaxx/descriptions/misa_file_description.h>
 #include <misaxx/patterns/misa_file_pattern.h>
-#include <misaxx-helpers/cache.h>
+#include <misaxx/utils/cache.h>
 
 namespace misaxx {
 
@@ -16,7 +16,7 @@ namespace misaxx {
      * Cache that stores its attachments in a JSON file.
      * The unique location
      */
-    struct misa_exported_attachments_cache : public misa_default_cache<cxxh::cache<nlohmann::json>, misa_file_pattern, misa_file_description> {
+    struct misa_exported_attachments_cache : public misa_default_cache<misaxx::utils::cache<nlohmann::json>, misa_file_pattern, misa_file_description> {
 
         nlohmann::json &get() override;
 

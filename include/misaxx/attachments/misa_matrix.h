@@ -6,7 +6,6 @@
 #include <array>
 #include <boost/operators.hpp>
 #include <misaxx/attachments/misa_quantity.h>
-#include <opencv2/opencv.hpp>
 
 namespace misaxx {
 
@@ -96,7 +95,7 @@ namespace misaxx {
         void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override {
             misa_serializeable::build_serialization_id_hierarchy(result);
             misa_serialization_id self = m_unit.get_serialization_id();
-            self.set_path(self.get_path() / (std::string("matrix") + cxxh::to_string(Rows) + "x" + cxxh::to_string(Cols)));
+            self.set_path(self.get_path() / (std::string("matrix") + misaxx::utils::to_string(Rows) + "x" + misaxx::utils::to_string(Cols)));
             result.emplace_back(std::move(self));
         }
 

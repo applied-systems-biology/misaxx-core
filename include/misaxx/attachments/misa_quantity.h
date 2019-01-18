@@ -221,7 +221,7 @@ namespace misaxx {
         }
 
         friend std::ostream &operator<<(std::ostream &os, const misa_quantity &quantity) {
-            os << cxxh::to_string(quantity.m_value) << quantity.m_unit.get_literal();
+            os << misaxx::utils::to_string(quantity.m_value) << quantity.m_unit.get_literal();
             return os;
         }
 
