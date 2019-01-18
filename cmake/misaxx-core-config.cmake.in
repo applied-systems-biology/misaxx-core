@@ -1,7 +1,5 @@
 @PACKAGE_INIT@
 
-find_package(misaxx-helpers REQUIRED)
-find_package(misaxx-coixx REQUIRED)
 find_package(nlohmann_json REQUIRED)
 find_package(Boost 1.63 COMPONENTS REQUIRED filesystem regex program_options)
 find_package(OpenMP REQUIRED)
