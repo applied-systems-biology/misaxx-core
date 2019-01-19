@@ -9,6 +9,7 @@
 #include <misaxx/attachments/misa_locatable_wrapper.h>
 #include "misaxx/runtime/misa_runtime_base.h"
 #include <misaxx/workers/misa_work_node.h>
+#include <misaxx/filesystem/misa_filesystem_empty_importer.h>
 
 using namespace misaxx;
 
@@ -191,7 +192,7 @@ void misa_runtime_base::run() {
     m_nodes_todo_lookup.insert(m_root.get());
     ++m_known_nodes_count;
 
-    const bool enable_threading = m_num_threads > 1;
+    const bool enable_threading = m_num_threads > 1 && !is_simulating();
 
     if(enable_threading)
         run_parallel();
@@ -203,6 +204,53 @@ void misa_runtime_base::run() {
     postprocess_cache_attachments();
     if(is_simulating()) {
         postprocess_parameter_schema();
+    }
+    if(!is_simulating()) {
+        const auto parameters_path = get_filesystem().exported->external_path() / "parameters.json";
+        const auto module_info_path = get_filesystem().exported->external_path() / "misa-module-info.json";
+
+        // Write the parameter file
+        std::cout << "<#> <#> Writing parameters to " << parameters_path << std::endl;
+        std::ofstream sw;
+        sw.open(parameters_path);
+        sw << std::setw(4) << get_parameter_json();
+        sw.close();
+
+        // Write module info
+        std::cout << "<#> <#> Writing module info to " << parameters_path << std::endl;
+        sw.open(module_info_path);
+        sw << std::setw(4) << nlohmann::json(get_module_info());
+        sw.close();
+    }
+    if(!is_simulating()) {
+        // Write the parameter schema
+        m_is_simulating = true;
+
+        // Clear everything
+        m_nodes_todo.clear();
+        m_nodes_todo_lookup.clear();
+        m_known_nodes_count = 0;
+        m_parameter_schema_builder = misa_json_schema_builder {};
+
+        // To be safe, set the filesystem to something empty
+        const auto output_path = get_filesystem().exported->external_path() / "parameter-schema.json";
+        misa_filesystem_empty_importer importer;
+        set_filesystem(importer.import());
+
+        // Instantiate root node
+        m_root = create_root_node();
+
+        m_nodes_todo.push_back(m_root.get());
+        m_nodes_todo_lookup.insert(m_root.get());
+        ++m_known_nodes_count;
+
+        // Run the parameter schema workload
+        run_single_threaded();
+
+        postprocess_parameter_schema();
+
+        std::cout << "<#> <#> Writing parameter schema to " << output_path.string() << std::endl;
+        get_schema_builder().write(output_path);
     }
 
     sw.stop();
