@@ -183,8 +183,8 @@ void misa_runtime_base::run_parallel() {
 
 void misa_runtime_base::run() {
 
-    misaxx::utils::manual_stopwatch sw("Runtime");
-    sw.start();
+    misaxx::utils::manual_stopwatch stopwatch("Runtime");
+    stopwatch.start();
 
     m_root = create_root_node();
 
@@ -211,16 +211,16 @@ void misa_runtime_base::run() {
 
         // Write the parameter file
         std::cout << "<#> <#> Writing parameters to " << parameters_path << std::endl;
-        std::ofstream sw;
-        sw.open(parameters_path);
-        sw << std::setw(4) << get_parameter_json();
-        sw.close();
+        std::ofstream writer;
+        writer.open(parameters_path);
+        writer << std::setw(4) << get_parameter_json();
+        writer.close();
 
         // Write module info
         std::cout << "<#> <#> Writing module info to " << parameters_path << std::endl;
-        sw.open(module_info_path);
-        sw << std::setw(4) << nlohmann::json(get_module_info());
-        sw.close();
+        writer.open(module_info_path);
+        writer << std::setw(4) << nlohmann::json(get_module_info());
+        writer.close();
     }
     if(!is_simulating()) {
         // Write the parameter schema
@@ -253,7 +253,7 @@ void misa_runtime_base::run() {
         get_schema_builder().write(output_path);
     }
 
-    sw.stop();
+    stopwatch.stop();
 }
 
 void misa_runtime_base::progress(const std::string &t_text) {
