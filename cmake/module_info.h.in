@@ -1,5 +1,5 @@
 #pragma once
-#include <misaxx/misa_mutable_module_info.h>
+#include <misaxx/core/misa_mutable_module_info.h>
 
 namespace misaxx {
     inline misaxx::misa_module_info module_info() {

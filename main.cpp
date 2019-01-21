@@ -5,20 +5,20 @@
 
 #include <iostream>
 #include <fstream>
-#include <misaxx/misa_module.h>
-#include <misaxx/misa_module_interface.h>
-#include <misaxx/misa_task.h>
-#include <misaxx/runtime/misa_runtime.h>
-#include <misaxx/filesystem/misa_filesystem_directories_importer.h>
-#include <misaxx/runtime/misa_cli.h>
-#include <misaxx/workers/paths/algorithm_node_path.h>
-#include <misaxx/workers/paths/object_node_path.h>
-#include <misaxx/misa_cache.h>
-#include <misaxx/misa_cached_data.h>
-#include <misaxx/caches/misa_image_stack_cache.h>
-#include <misaxx/attachments/misa_matrix.h>
-#include <misaxx/attachments/misa_quantity.h>
-#include <misaxx/attachments/misa_unit_numeric.h>
+#include <misaxx/core/misa_module.h>
+#include <misaxx/core/misa_module_interface.h>
+#include <misaxx/core/misa_task.h>
+#include <misaxx/core/runtime/misa_runtime.h>
+#include <misaxx/core/filesystem/misa_filesystem_directories_importer.h>
+#include <misaxx/core/runtime/misa_cli.h>
+#include <misaxx/core/workers/paths/algorithm_node_path.h>
+#include <misaxx/core/workers/paths/object_node_path.h>
+#include <misaxx/core/misa_cache.h>
+#include <misaxx/core/misa_cached_data.h>
+#include <misaxx/core/caches/misa_image_stack_cache.h>
+#include <misaxx/core/attachments/misa_matrix.h>
+#include <misaxx/core/attachments/misa_quantity.h>
+#include <misaxx/core/attachments/misa_unit_numeric.h>
 
 using namespace misaxx;
 
