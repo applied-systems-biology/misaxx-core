@@ -251,6 +251,8 @@ void misa_runtime_base::run() {
 
         std::cout << "<#> <#> Writing parameter schema to " << output_path.string() << std::endl;
         get_schema_builder().write(output_path);
+
+        m_is_simulating = false;
     }
 
     stopwatch.stop();
