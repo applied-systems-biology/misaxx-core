@@ -217,7 +217,7 @@ void misa_runtime_base::run() {
         writer.close();
 
         // Write module info
-        std::cout << "<#> <#> Writing module info to " << parameters_path << std::endl;
+        std::cout << "<#> <#> Writing module info to " << module_info_path << std::endl;
         writer.open(module_info_path);
         writer << std::setw(4) << nlohmann::json(get_module_info());
         writer.close();
