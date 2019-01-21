@@ -231,6 +231,8 @@ void misa_runtime_base::run() {
         m_nodes_todo_lookup.clear();
         m_known_nodes_count = 0;
         m_parameter_schema_builder = misa_json_schema_builder {};
+        m_finished_nodes_count = 0;
+        m_tree_complete = false;
 
         // To be safe, set the filesystem to something empty
         const auto output_path = get_filesystem().exported->external_path() / "parameter-schema.json";
