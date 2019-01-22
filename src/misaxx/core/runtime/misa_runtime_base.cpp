@@ -211,13 +211,13 @@ void misa_runtime_base::run() {
         // Write the parameter file
         std::cout << "<#> <#> Writing parameters to " << parameters_path << std::endl;
         std::ofstream writer;
-        writer.open(parameters_path);
+        writer.open(parameters_path.string());
         writer << std::setw(4) << get_parameter_json();
         writer.close();
 
         // Write module info
         std::cout << "<#> <#> Writing module info to " << module_info_path << std::endl;
-        writer.open(module_info_path);
+        writer.open(module_info_path.string());
         writer << std::setw(4) << nlohmann::json(get_module_info());
         writer.close();
     }
