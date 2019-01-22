@@ -47,7 +47,7 @@ using namespace misaxx;\n\
 using namespace ${MISAXX_API_NAMESPACE};\n\
 \n\
 int main(int argc, const char** argv) {\n\
-    misa_cli<misa_multiobject_root<${MISAXX_API_NAMESPACE}::module>> cli(\"${MISAXX_LIBRARY}\");\n\
+    misa_cli<${MISAXX_API_NAMESPACE}::module> cli(${MISAXX_API_NAMESPACE}::module_info());\n\
     return cli.prepare_and_run(argc, argv);\n\
 }")
         message(WARNING "Please make sure that ${CMAKE_SOURCE_DIR}/src/main.cpp is correct")
