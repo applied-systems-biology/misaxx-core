@@ -203,9 +203,9 @@ namespace misaxx {
                                      const boost::filesystem::path &t_path,
                                      const std::shared_ptr<misa_description_storage> &t_description) {
             if (!data) {
-                if (t_filesystem.exported->has_subpath(t_path))
-                    throw std::runtime_error(
-                            "Suggested export location exported/" + t_path.string() + " is already used!");
+//                if (t_filesystem.exported->has_subpath(t_path))
+//                    throw std::runtime_error(
+//                            "Suggested export location exported/" + t_path.string() + " is already used!");
                 suggest_create(t_filesystem.exported->access(t_path), t_description);
             }
         }
