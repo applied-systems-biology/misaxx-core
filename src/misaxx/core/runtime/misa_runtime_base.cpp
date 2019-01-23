@@ -364,6 +364,10 @@ void misa_runtime_base::postprocess_caches() {
             std::cout << "[Caches] Post-processing cache " << ptr->get_location() << " (" << ptr->get_unique_location()
                       << ")" << std::endl;
             ptr->postprocess();
+            if(ptr->has_data()) {
+                std::cout << "[Caches] Info: " << ptr->get_location() << " (" << ptr->get_unique_location()
+                                               << ")" << " reports that it still contains data" << std::endl;
+            }
         }
     }
 }

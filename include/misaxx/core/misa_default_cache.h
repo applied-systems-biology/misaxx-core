@@ -75,6 +75,10 @@ namespace misaxx {
             m_unique_location = std::move(t_path);
         }
 
+        bool has_data() override {
+            return this->has();
+        }
+
     protected:
 
         /**
