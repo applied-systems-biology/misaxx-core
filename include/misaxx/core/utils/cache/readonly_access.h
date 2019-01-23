@@ -21,7 +21,7 @@ namespace misaxx::utils {
         }
 
         ~readonly_access() {
-            m_cache->try_stash(); // Push back into the cache
+            m_cache->try_stash(std::move(m_lock)); // Push back into the cache
         }
 
         readonly_access(const readonly_access<Value> &src) = delete;

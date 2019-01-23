@@ -145,6 +145,26 @@ namespace misaxx::utils {
             }
         }
 
+        /**
+         * Tries to discard the current value with stash(). Only works if there is no other access.
+         * Can be safely used from multiple threads.
+         * @param existing_lock An existing lock that should be taken over
+         */
+        void try_stash(std::unique_lock<std::shared_mutex> existing_lock) {
+            existing_lock.unlock();
+            try_stash();
+        }
+
+        /**
+         * Tries to discard the current value with stash(). Only works if there is no other access.
+         * Can be safely used from multiple threads.
+         * @param existing_lock An existing lock that should be taken over
+         */
+        void try_stash(std::shared_lock<std::shared_mutex> existing_lock) {
+            existing_lock.unlock();
+            try_stash();
+        }
+
     private:
 
         /**
