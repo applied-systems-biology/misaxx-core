@@ -184,7 +184,7 @@ target_compile_features(misaxx-core PUBLIC cxx_std_17)
 add_library(misaxx::core ALIAS misaxx-core)
 
 generate_export_header(misaxx-core
-        EXPORT_MACRO_NAME COIXX_API
+        EXPORT_MACRO_NAME MISAXX_CORE_API
         EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/include/misaxx/common.h
         )
 target_include_directories(misaxx-core
