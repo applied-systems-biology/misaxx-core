@@ -405,6 +405,7 @@ void misa_runtime_base::postprocess_cache_attachments() {
             // Attach the description storage if needed
             if(!access.get().has<misa_description_storage>()) {
                 misa_location link(filesystem_generic_link_path, filesystem_unique_link_path);
+                ptr->describe()->set_location(ptr->get_location_interface());
                 ptr->describe()->to_json(exported_json[ptr->describe()->get_serialization_id().get_id()]);
             }
 
