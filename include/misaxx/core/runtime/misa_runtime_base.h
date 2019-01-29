@@ -11,7 +11,7 @@
 #include <misaxx/core/json/misa_json_property.h>
 #include <nlohmann/json.hpp>
 #include <misaxx/core/json/misa_json_schema_builder.h>
-#include <misaxx/core/misa_serializeable.h>
+#include <misaxx/core/misa_serializable.h>
 #include <misaxx/core/misa_primitive.h>
 #include <misaxx/core/misa_cache.h>
 #include <unordered_set>

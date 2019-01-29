@@ -14,7 +14,7 @@ namespace misaxx {
      * Base type for all attachments that can be located
      * @tparam Location
      */
-    struct misa_locatable : public misa_serializeable {
+    struct misa_locatable : public misa_serializable {
 
         misa_locatable() = default;
 
@@ -46,7 +46,7 @@ namespace misaxx {
          * Sets the location of this locatable
          * @param location
          */
-        void set_location(std::shared_ptr<misa_location> location);
+        void set_location(std::shared_ptr<const misa_location> location);
 
     protected:
         void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;

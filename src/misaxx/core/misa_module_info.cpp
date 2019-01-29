@@ -35,7 +35,7 @@ void misa_module_info::from_json(const nlohmann::json &t_json) {
 }
 
 void misa_module_info::to_json(nlohmann::json &t_json) const {
-    misa_serializeable::to_json(t_json);
+    misa_serializable::to_json(t_json);
     t_json["name"] = m_name;
     t_json["version"] = m_version;
     t_json["description"] = get_description();
@@ -43,7 +43,7 @@ void misa_module_info::to_json(nlohmann::json &t_json) const {
 }
 
 void misa_module_info::to_json_schema(const misa_json_schema &t_schema) const {
-    misa_serializeable::to_json_schema(t_schema);
+    misa_serializable::to_json_schema(t_schema);
     t_schema.resolve("name").declare_required<std::string>();
     t_schema.resolve("version").declare_required<std::string>();
     t_schema.resolve("description").declare_optional<std::string>();
@@ -51,7 +51,7 @@ void misa_module_info::to_json_schema(const misa_json_schema &t_schema) const {
 }
 
 void misa_module_info::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {
-    misa_serializeable::build_serialization_id_hierarchy(result);
+    misa_serializable::build_serialization_id_hierarchy(result);
     result.emplace_back(misa_serialization_id("misa", "module-info"));
 }
 

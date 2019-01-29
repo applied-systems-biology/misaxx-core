@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <misaxx/core/misa_serializeable.h>
+#include <misaxx/core/attachments/misa_locatable.h>
 #include <misaxx/core/attachments/misa_unit_numeric.h>
 #include <boost/operators.hpp>
 #include <ostream>
@@ -30,7 +30,7 @@ namespace misaxx {
     template<typename Value, class Unit>
     struct misa_quantity :
             public misa_quantity_base,
-            public misa_serializeable,
+            public misa_locatable,
             private misa_quantity_operators_t <misa_quantity<Value, Unit>, Value>{
 
         using value_type = Value;
@@ -119,13 +119,13 @@ namespace misaxx {
         }
 
         void to_json(nlohmann::json &t_json) const override {
-            misa_serializeable::to_json(t_json);
+            misa_locatable::to_json(t_json);
             t_json["value"] = m_value;
             m_unit.to_json(t_json["unit"]);
         }
 
         void to_json_schema(const misa_json_schema &t_schema) const override {
-            misa_serializeable::to_json_schema(t_schema);
+            misa_locatable::to_json_schema(t_schema);
             t_schema.resolve("value").declare_required<Value>();
             m_unit.to_json_schema(t_schema.resolve("unit"));
         }
@@ -133,7 +133,7 @@ namespace misaxx {
     protected:
 
         void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override {
-            misa_serializeable::build_serialization_id_hierarchy(result);
+            misa_locatable::build_serialization_id_hierarchy(result);
             misa_serialization_id self = m_unit.get_serialization_id();
             self.set_path(self.get_path() / "quantity");
             result.emplace_back(std::move(self));

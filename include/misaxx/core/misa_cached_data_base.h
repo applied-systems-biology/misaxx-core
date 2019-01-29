@@ -6,7 +6,7 @@
 
 #include <misaxx/core/utils/dynamic_singleton_map.h>
 #include <misaxx/core/utils/cache.h>
-#include <misaxx/core/misa_serializeable.h>
+#include <misaxx/core/misa_serializable.h>
 #include <misaxx/core/misa_description_storage.h>
 #include <misaxx/core/misa_cache.h>
 
@@ -20,7 +20,7 @@ namespace misaxx {
      * Base class for cached data
      */
     struct misa_cached_data_base {
-        using attachment_type = misaxx::utils::dynamic_singleton_map<misa_serializeable>;
+        using attachment_type = misaxx::utils::dynamic_singleton_map<misa_serializable>;
         using attachment_cache_type = misaxx::utils::memory_cache<attachment_type>;
 
         misa_cached_data_base() = default;
@@ -127,7 +127,7 @@ namespace misaxx {
          * misaxx::misa_locatable instances.
          * @return
          */
-        virtual std::shared_ptr<misa_location> get_location_interface() const = 0;
+        virtual std::shared_ptr<const misa_location> get_location_interface() const = 0;
     };
 
 }

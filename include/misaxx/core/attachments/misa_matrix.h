@@ -36,7 +36,7 @@ namespace misaxx {
      */
     template<typename Value, class Unit, size_t Rows, size_t Cols> struct misa_matrix :
             public misa_matrix_base,
-            public misa_serializeable,
+            public misa_serializable,
             private misa_matrix_operators_t <misa_matrix<Value, misa_unit_numeric, Rows, Cols>, Value> {
 
         static_assert(Rows > 0 && Cols > 0, "The matrix must have a positive number of rows and columns!");
@@ -79,13 +79,13 @@ namespace misaxx {
         }
 
         void to_json(nlohmann::json &t_json) const override {
-            misa_serializeable::to_json(t_json);
+            misa_serializable::to_json(t_json);
             t_json["values"] = m_values;
             m_unit.to_json(t_json["unit"]);
         }
 
         void to_json_schema(const misa_json_schema &t_schema) const override {
-            misa_serializeable::to_json_schema(t_schema);
+            misa_serializable::to_json_schema(t_schema);
             t_schema.resolve("values").declare_required<std::vector<Value>>();
             m_unit.to_json_schema(t_schema.resolve("unit"));
         }
@@ -93,7 +93,7 @@ namespace misaxx {
     protected:
 
         void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override {
-            misa_serializeable::build_serialization_id_hierarchy(result);
+            misa_serializable::build_serialization_id_hierarchy(result);
             misa_serialization_id self = m_unit.get_serialization_id();
             self.set_path(self.get_path() / (std::string("matrix") + misaxx::utils::to_string(Rows) + "x" + misaxx::utils::to_string(Cols)));
             result.emplace_back(std::move(self));

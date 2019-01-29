@@ -10,7 +10,7 @@
 #include <misaxx/core/json/misa_json_property.h>
 #include <misaxx/core/runtime/misa_runtime_properties.h>
 #include <misaxx/core/json/misa_json_schema_builder.h>
-#include <misaxx/core/misa_serializeable.h>
+#include <misaxx/core/misa_serializable.h>
 #include <misaxx/core/misa_primitive.h>
 
 namespace misaxx::parameter_registry {
@@ -46,7 +46,7 @@ namespace misaxx::parameter_registry {
 
         if(is_simulating) {
             get_schema_builder().insert<T>(t_path, t_json_metadata);
-            if constexpr (std::is_base_of<misa_serializeable, T>::value) {
+            if constexpr (std::is_base_of<misa_serializable, T>::value) {
                 T().to_json_schema(misa_json_schema(get_schema_builder(), t_path));
             }
             else {
@@ -83,7 +83,7 @@ namespace misaxx::parameter_registry {
         const bool is_simulating = misaxx::runtime_properties::is_simulating();
         if(is_simulating) {
             get_schema_builder().insert<T>(t_path, t_json_metadata);
-            if constexpr (std::is_base_of<misa_serializeable, T>::value) {
+            if constexpr (std::is_base_of<misa_serializable, T>::value) {
                 T().to_json_schema(misa_json_schema(get_schema_builder(), t_path));
             }
             else {

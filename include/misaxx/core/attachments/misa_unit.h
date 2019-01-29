@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <misaxx/core/misa_serializeable.h>
+#include <misaxx/core/misa_serializable.h>
 
 namespace misaxx {
 
@@ -29,7 +29,7 @@ namespace misaxx {
      *
      * @tparam Order Order of the unit. Must be at least 1
      */
-    template<size_t Order> struct misa_unit : public misa_serializeable, public misa_unit_base {
+    template<size_t Order> struct misa_unit : public misa_serializable, public misa_unit_base {
         static constexpr size_t order = Order;
         static_assert(Order >= 1, "The order must be at least 1");
 

@@ -32,7 +32,7 @@ namespace misaxx {
     /**
      * An entry in the MISA++ virtual filesystem
      */
-    struct misa_filesystem_entry : std::enable_shared_from_this<misa_filesystem_entry>, public misa_serializeable {
+    struct misa_filesystem_entry : std::enable_shared_from_this<misa_filesystem_entry>, public misa_serializable {
 
         using path = boost::filesystem::path;
         using iterator = std::unordered_map<std::string, std::shared_ptr<misa_filesystem_entry>>::iterator;

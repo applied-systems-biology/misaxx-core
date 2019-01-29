@@ -25,18 +25,18 @@ void misa_location::from_json(const nlohmann::json &t_json) {
 }
 
 void misa_location::to_json(nlohmann::json &t_json) const {
-    misa_serializeable::to_json(t_json);
+    misa_serializable::to_json(t_json);
     t_json["filesystem-location"] = filesystem_location.string();
     t_json["filesystem-unique-location"] = filesystem_unique_location.string();
 }
 
 void misa_location::to_json_schema(const misa_json_schema &t_schema) const {
-    misa_serializeable::to_json_schema(t_schema);
+    misa_serializable::to_json_schema(t_schema);
     t_schema.resolve("filesystem-location").declare<std::string>();
     t_schema.resolve("filesystem-unique-location").declare<std::string>();
 }
 
 void misa_location::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {
-    misa_serializeable::build_serialization_id_hierarchy(result);
+    misa_serializable::build_serialization_id_hierarchy(result);
     result.emplace_back(misa_serialization_id("misa", "attachments/location"));
 }

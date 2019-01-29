@@ -61,7 +61,7 @@ add_library(misaxx-core
         include/misaxx/core/runtime/misa_runtime_base.h
         include/misaxx/core/runtime/misa_runtime.h
         include/misaxx/core/runtime/misa_cli.h
-        include/misaxx/core/misa_serializeable.h
+        include/misaxx/core/misa_serializable.h
         include/misaxx/core/misa_description_storage.h
         include/misaxx/core/workers/misa_work_node.h
         include/misaxx/core/workers/misa_work_subtree_status.h
@@ -106,7 +106,7 @@ add_library(misaxx-core
         src/misaxx/core/runtime/misa_runtime_base.cpp
         src/misaxx/core/runtime/misa_runtime.cpp
         src/misaxx/core/runtime/misa_cli.cpp
-        src/misaxx/core/misa_serializeable.cpp
+        src/misaxx/core/misa_serializable.cpp
         src/misaxx/core/misa_description_storage.cpp
         src/misaxx/core/workers/misa_work_node.cpp
         src/misaxx/core/workers/misa_work_subtree_status.cpp

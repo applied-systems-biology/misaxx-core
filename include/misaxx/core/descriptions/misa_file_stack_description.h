@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <misaxx/core/misa_serializeable.h>
+#include <misaxx/core/misa_serializable.h>
 #include <misaxx/core/descriptions/misa_file_description.h>
 #include <misaxx/core/misa_data_description.h>
 

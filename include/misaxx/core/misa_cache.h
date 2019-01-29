@@ -14,7 +14,7 @@ namespace misaxx {
      */
     struct misa_cache {
 
-        using attachment_type = misaxx::utils::dynamic_singleton_map<misa_serializeable>;
+        using attachment_type = misaxx::utils::dynamic_singleton_map<misa_serializable>;
         using attachment_cache_type = misaxx::utils::memory_cache<attachment_type>;
 
         /**

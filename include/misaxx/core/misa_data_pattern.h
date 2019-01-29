@@ -6,7 +6,7 @@
 #pragma once
 
 #include <misaxx/core/filesystem/misa_filesystem_entry.h>
-#include <misaxx/core/misa_serializeable.h>
+#include <misaxx/core/misa_serializable.h>
 #include <misaxx/core/misa_data_pattern_base.h>
 
 namespace misaxx {

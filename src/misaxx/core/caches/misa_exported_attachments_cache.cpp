@@ -48,7 +48,7 @@ void misa_exported_attachments_cache::do_link(const misa_file_description &t_des
 void misa_exported_attachments_cache::save_attachments() {
     misaxx::utils::readonly_access<attachment_type > access(attachments);
     for(const auto &kv : access.get()) {
-        const misa_serializeable *md = kv.second.get();
+        const misa_serializable *md = kv.second.get();
         md->to_json(m_json[md->get_serialization_id().get_id()]);
     }
 }

@@ -14,7 +14,7 @@ namespace misaxx {
                 return as;
         }
         // Try to load from JSON
-        if(!m_location_json.empty() && misa_serializeable::type_is_deserializeable_from_json<Location>(m_location_json)) {
+        if(!m_location_json.empty() && misa_serializable::type_is_deserializable_from_json<Location>(m_location_json)) {
             auto loc = std::make_shared<Location>();
             loc->from_json(m_location_json);
             m_location = loc;
@@ -28,6 +28,6 @@ namespace misaxx {
         if(static_cast<bool>(m_location) && dynamic_cast<const Location*>(m_location.get()))
             return true;
         else
-            return !m_location_json.empty() && misa_serializeable::type_is_deserializeable_from_json<Location>(m_location_json);
+            return !m_location_json.empty() && misa_serializable::type_is_deserializable_from_json<Location>(m_location_json);
     }
 }

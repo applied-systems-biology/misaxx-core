@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <misaxx/core/misa_serializeable.h>
+#include <misaxx/core/misa_serializable.h>
 
 namespace misaxx {
 
@@ -15,7 +15,7 @@ namespace misaxx {
      * External programs can look for this type in the serialization hierarchy.
      * All location providers should inherit from this attachment
      */
-    struct misa_location : public misa_serializeable {
+    struct misa_location : public misa_serializable {
 
         /**
          * Internal path within the filesystem that contains the referenced data

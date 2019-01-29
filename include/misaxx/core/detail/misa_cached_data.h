@@ -149,7 +149,7 @@ namespace misaxx {
     }
 
     template<class Cache>
-    std::shared_ptr<misa_location> misa_cached_data<Cache>::get_location_interface() const {
+    std::shared_ptr<const misa_location> misa_cached_data<Cache>::get_location_interface() const {
         return data->get_location_interface();
     }
 }

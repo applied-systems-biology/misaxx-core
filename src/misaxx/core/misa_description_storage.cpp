@@ -70,12 +70,12 @@ void misa_description_storage::build_serialization_id_hierarchy(std::vector<misa
 
 bool misa_description_storage::has_pattern() const {
     return static_cast<bool>(m_pattern) ||
-           misa_serializeable::type_is_deserializeable_from_json<misa_data_pattern_base>(m_raw_pattern_json);
+           misa_serializable::type_is_deserializable_from_json<misa_data_pattern_base>(m_raw_pattern_json);
 }
 
 bool misa_description_storage::has_description() const {
     return static_cast<bool>(m_description) ||
-           misa_serializeable::type_is_deserializeable_from_json<misa_data_description>(m_raw_description_json);
+           misa_serializable::type_is_deserializable_from_json<misa_data_description>(m_raw_description_json);
 }
 
 misa_description_storage &misa_description_storage::operator=(const misa_description_storage &t_source) {

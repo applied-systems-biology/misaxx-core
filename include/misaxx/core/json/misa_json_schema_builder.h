@@ -16,7 +16,7 @@
 
 namespace misaxx {
 
-    struct misa_serializeable;
+    struct misa_serializable;
 
     /**
      * Encapsulates writing a JSON schema
@@ -68,8 +68,8 @@ namespace misaxx {
 
             nlohmann::json as_json;
 
-            // If we have a serializeable, prefer the dynamic method
-            if constexpr (std::is_base_of<misa_serializeable, T>::value) {
+            // If we have a serializable, prefer the dynamic method
+            if constexpr (std::is_base_of<misa_serializable, T>::value) {
                 T v;
                 v.to_json(as_json);
             }

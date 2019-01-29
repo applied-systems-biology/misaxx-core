@@ -163,12 +163,12 @@ void misa_filesystem_entry::from_json(const nlohmann::json &) {
 }
 
 void misa_filesystem_entry::to_json(nlohmann::json &t_json) const {
-    misa_serializeable::to_json(t_json);
+    misa_serializable::to_json(t_json);
     throw std::runtime_error("Not implemented");
 }
 
 void misa_filesystem_entry::to_json_schema(const misa_json_schema &t_schema) const {
-    misa_serializeable::to_json_schema(t_schema);
+    misa_serializable::to_json_schema(t_schema);
     t_schema.resolve("external-path").declare_optional<std::string>();
     for(const auto &kv : children) {
         kv.second->to_json_schema(t_schema.resolve("children", kv.first));
@@ -177,7 +177,7 @@ void misa_filesystem_entry::to_json_schema(const misa_json_schema &t_schema) con
 }
 
 void misa_filesystem_entry::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {
-    misa_serializeable::build_serialization_id_hierarchy(result);
+    misa_serializable::build_serialization_id_hierarchy(result);
     result.emplace_back(misa_serialization_id("misa", "filesystem/entry"));
 }
 

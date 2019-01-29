@@ -9,7 +9,7 @@
 #include <nlohmann/json.hpp>
 #include <misaxx/core/misa_data_pattern_base.h>
 #include <misaxx/core/misa_data_description.h>
-#include <misaxx/core/misa_serializeable.h>
+#include <misaxx/core/misa_serializable.h>
 #include <misaxx/core/utils/type_traits.h>
 #include <misaxx/core/attachments/misa_locatable.h>
 
@@ -65,7 +65,7 @@ namespace misaxx {
             if constexpr (std::is_base_of<misa_data_pattern_base, Metadata>::value) {
                 if (static_cast<bool>(std::dynamic_pointer_cast<Metadata>(m_pattern))) {
                     return *std::dynamic_pointer_cast<Metadata>(m_pattern);
-                } else if (misa_serializeable::type_is_deserializeable_from_json<Metadata>(m_raw_pattern_json)) {
+                } else if (misa_serializable::type_is_deserializable_from_json<Metadata>(m_raw_pattern_json)) {
                     Metadata m;
                     m.from_json(m_raw_pattern_json);
                     m_pattern = std::make_shared<Metadata>(std::move(m));
@@ -78,7 +78,7 @@ namespace misaxx {
             else if constexpr (std::is_base_of<misa_data_description, Metadata>::value) {
                 if (static_cast<bool>(std::dynamic_pointer_cast<Metadata>(m_description))) {
                     return *std::dynamic_pointer_cast<Metadata>(m_description);
-                } else if (misa_serializeable::type_is_deserializeable_from_json<Metadata>(m_raw_description_json)) {
+                } else if (misa_serializable::type_is_deserializable_from_json<Metadata>(m_raw_description_json)) {
                     Metadata m;
                     m.from_json(m_raw_description_json);
                     m_description = std::make_shared<Metadata>(std::move(m));
@@ -142,7 +142,7 @@ namespace misaxx {
                     return *std::dynamic_pointer_cast<Metadata>(m_pattern);
                 } else {
                     Metadata m;
-                    if (misa_serializeable::type_is_deserializeable_from_json<Metadata>(m_raw_pattern_json)) {
+                    if (misa_serializable::type_is_deserializable_from_json<Metadata>(m_raw_pattern_json)) {
                         m.from_json(m_raw_pattern_json);
                     }
                     m_pattern = std::make_shared<Metadata>(std::move(m));
@@ -154,7 +154,7 @@ namespace misaxx {
                     return *std::dynamic_pointer_cast<Metadata>(m_description);
                 } else {
                     Metadata m;
-                    if (misa_serializeable::type_is_deserializeable_from_json<Metadata>(m_raw_description_json)) {
+                    if (misa_serializable::type_is_deserializable_from_json<Metadata>(m_raw_description_json)) {
                         m.from_json(m_raw_description_json);
                     }
                     m_description = std::make_shared<Metadata>(std::move(m));
@@ -177,7 +177,7 @@ namespace misaxx {
                     return true;
                 }
                 else {
-                    return misa_serializeable::type_is_deserializeable_from_json<Metadata>(m_raw_pattern_json);
+                    return misa_serializable::type_is_deserializable_from_json<Metadata>(m_raw_pattern_json);
                 }
             }
             else if constexpr (std::is_base_of<misa_data_description, Metadata>::value) {
@@ -185,7 +185,7 @@ namespace misaxx {
                     return true;
                 }
                 else {
-                    return misa_serializeable::type_is_deserializeable_from_json<Metadata>(m_raw_description_json);
+                    return misa_serializable::type_is_deserializable_from_json<Metadata>(m_raw_description_json);
                 }
             }
             else {

@@ -5,14 +5,14 @@
 
 #pragma once
 
-#include <misaxx/core/misa_serializeable.h>
+#include <misaxx/core/misa_serializable.h>
 
 namespace misaxx {
     /**
      * A description contains all necessary information to further process some data.
      * During importing, it is produced using a pattern.
      */
-    struct misa_data_description : public misa_serializeable {
+    struct misa_data_description : public misa_serializable {
         void from_json(const nlohmann::json &t_json) override;
 
         void to_json(nlohmann::json &t_json) const override;

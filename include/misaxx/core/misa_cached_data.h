@@ -7,7 +7,7 @@
 
 #include <misaxx/core/utils/dynamic_singleton_map.h>
 #include <misaxx/core/utils/cache.h>
-#include <misaxx/core/misa_serializeable.h>
+#include <misaxx/core/misa_serializable.h>
 #include <misaxx/core/misa_cache.h>
 #include <misaxx/core/misa_cached_data_base.h>
 #include <misaxx/core/runtime/misa_cache_registry.h>
@@ -176,7 +176,7 @@ namespace misaxx {
          * misaxx::misa_locatable instances.
          * @return
          */
-        std::shared_ptr<misa_location> get_location_interface() const override;
+        std::shared_ptr<const misa_location> get_location_interface() const override;
 
     };
 }

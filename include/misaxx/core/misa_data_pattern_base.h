@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include <misaxx/core/misa_serializeable.h>
+#include <misaxx/core/misa_serializable.h>
 
 namespace misaxx {
-    struct misa_data_pattern_base : public misa_serializeable {
+    struct misa_data_pattern_base : public misa_serializable {
         void from_json(const nlohmann::json &t_json) override;
 
         void to_json(nlohmann::json &t_json) const override;

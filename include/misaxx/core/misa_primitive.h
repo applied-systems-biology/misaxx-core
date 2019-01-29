@@ -5,14 +5,14 @@
 
 #pragma once
 
-#include <misaxx/core/misa_serializeable.h>
+#include <misaxx/core/misa_serializable.h>
 
 namespace misaxx {
     /**
      * A wrapper around a primitive value that supports dynamic serialization (misa_serializable)
-     * @tparam T Must be compile-type serializeable by nlohmann::json
+     * @tparam T Must be compile-type serializable by nlohmann::json
      */
-    template<typename T> struct misa_primitive : public misa_serializeable {
+    template<typename T> struct misa_primitive : public misa_serializable {
 
         using value_type = T;
 
@@ -30,23 +30,23 @@ namespace misaxx {
         }
 
         void from_json(const nlohmann::json &t_json) override {
-            value = misa_serializeable::deserialize_wrapped<T>(t_json);
+            value = misa_serializable::deserialize_wrapped<T>(t_json);
         }
 
         void to_json(nlohmann::json &t_json) const override {
-            misa_serializeable::to_json(t_json);
-            misa_serializeable::serialize_wrapped(value, t_json);
+            misa_serializable::to_json(t_json);
+            misa_serializable::serialize_wrapped(value, t_json);
         }
 
         void to_json_schema(const misa_json_schema &t_schema) const override {
-            misa_serializeable::to_json_schema(t_schema);
+            misa_serializable::to_json_schema(t_schema);
             t_schema.declare(metadata);
         }
 
     protected:
 
         void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override {
-            misa_serializeable::build_serialization_id_hierarchy(result);
+            misa_serializable::build_serialization_id_hierarchy(result);
             if constexpr (std::is_same<int, T>::value) {
                 result.emplace_back(misa_serialization_id("misa", "primitive/int"));
             }
@@ -80,5 +80,5 @@ namespace misaxx {
     /**
      * Returns a misa_primitive<T> if needed to wrap the value
      */
-    template<typename T> using misa_serializeable_value = typename std::conditional<std::is_base_of<misa_serializeable, T>::value, T, misa_primitive<T>>::type;
+    template<typename T> using misa_serializable_value = typename std::conditional<std::is_base_of<misa_serializable, T>::value, T, misa_primitive<T>>::type;
 }

@@ -5,13 +5,13 @@
 #pragma once
 
 #include <string>
-#include <misaxx/core/misa_serializeable.h>
+#include <misaxx/core/misa_serializable.h>
 
 namespace misaxx {
     /**
      * Contains basic information about a MISA++ module
      */
-    class misa_module_info : public misa_serializeable {
+    class misa_module_info : public misa_serializable {
     public:
         misa_module_info() = default;
 

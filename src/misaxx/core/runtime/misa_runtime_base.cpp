@@ -398,7 +398,7 @@ void misa_runtime_base::postprocess_cache_attachments() {
             nlohmann::json exported_json = nlohmann::json(nlohmann::json::object());
 
             for (const auto &kv : access.get()) {
-                const std::unique_ptr<misa_serializeable> &attachment_ptr = kv.second;
+                const std::unique_ptr<misa_serializable> &attachment_ptr = kv.second;
 
                 if (!cache_attachment_path.empty()) {
                     // Export the attachment as JSON
