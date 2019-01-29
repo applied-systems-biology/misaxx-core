@@ -259,36 +259,26 @@ void misa_runtime_base::run() {
 }
 
 void misa_runtime_base::progress(const std::string &t_text) {
-    std::stringstream stream;
     if (m_tree_complete) {
-        stream << "<" << static_cast<int>(m_finished_nodes_count * 1.0 / m_known_nodes_count * 100) << "%" << ">";
+        std::cout << "<" << static_cast<int>(m_finished_nodes_count * 1.0 / m_known_nodes_count * 100) << "%" << ">";
     } else {
-        stream << "<#>";
+        std::cout << "<#>";
     }
-    stream << " " << "<" << m_finished_nodes_count << " / " << m_known_nodes_count << ">";
+    std::cout << " " << "<" << m_finished_nodes_count << " / " << m_known_nodes_count << ">";
 
-    stream << "\t" << t_text;
-
-    if (stream.str() != m_last_progress) {
-        std::cout << stream.str() << std::endl;
-        m_last_progress = stream.str();
-    }
+    std::cout << "\t" << t_text;
+    std::cout << "\n";
 }
 
 void misa_runtime_base::progress(const misa_work_node &t_node, const std::string &t_text) {
-    std::stringstream stream;
     if (m_tree_complete) {
-        stream << "<" << static_cast<int>(m_finished_nodes_count * 1.0 / m_known_nodes_count * 100) << "%" << ">";
+        std::cout << "<" << static_cast<int>(m_finished_nodes_count * 1.0 / m_known_nodes_count * 100) << "%" << ">";
     } else {
-        stream << "<#>";
+        std::cout << "<#>";
     }
-    stream << " " << "<" << m_finished_nodes_count << " / " << m_known_nodes_count << ">";
-    stream << "\t" << t_text << " " << *t_node.get_global_path();
-
-    if (stream.str() != m_last_progress) {
-        std::cout << stream.str() << std::endl;
-        m_last_progress = stream.str();
-    }
+    std::cout << " " << "<" << m_finished_nodes_count << " / " << m_known_nodes_count << ">";
+    std::cout << "\t" << t_text << " " << *t_node.get_global_path();
+    std::cout << "\n";
 }
 
 bool misa_runtime_base::is_simulating() const {

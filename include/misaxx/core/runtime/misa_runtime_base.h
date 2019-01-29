@@ -40,8 +40,6 @@ namespace misaxx {
 
         bool m_tree_complete = false;
 
-        std::string m_last_progress;
-
         /**
          * List of nodes that are not completed and need to be watched
          */
