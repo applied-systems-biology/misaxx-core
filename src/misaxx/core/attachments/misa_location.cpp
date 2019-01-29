@@ -4,6 +4,7 @@
 
 #include <misaxx/core/attachments/misa_location.h>
 #include <misaxx/core/misa_cached_data_base.h>
+#include <misaxx/core/misa_cached_data_base.h>
 
 using namespace misaxx;
 

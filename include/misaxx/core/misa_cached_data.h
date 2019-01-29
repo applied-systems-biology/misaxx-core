@@ -265,5 +265,14 @@ namespace misaxx {
             return data->get_unique_location();
         }
 
+        /**
+         * Gets the location interface of this cache. This location interface is compatible with
+         * misaxx::misa_locatable instances.
+         * @return
+         */
+        std::shared_ptr<misa_location> get_location_interface() const override {
+            return data->get_location_interface();
+        }
+
     };
 }

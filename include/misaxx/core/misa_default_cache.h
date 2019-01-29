@@ -79,6 +79,13 @@ namespace misaxx {
             return this->has();
         }
 
+        std::shared_ptr<const misa_location> get_location_interface() const override {
+            if(!static_cast<bool>(m_location_interface)) {
+                m_location_interface = create_location_interface();
+            }
+            return m_location_interface;
+        }
+
     protected:
 
         /**
@@ -89,9 +96,22 @@ namespace misaxx {
          */
         virtual Description produce_description(const boost::filesystem::path &t_location, const Pattern &t_pattern) = 0;
 
+        /**
+         * Creates a location interface for this cache
+         * Override this behavior for more detailed location interfaces
+         * @return
+         */
+        virtual std::shared_ptr<misa_location> create_location_interface() const {
+            auto interface = std::make_shared<misa_location>();
+            interface->filesystem_location = get_location();
+            interface->filesystem_unique_location = get_unique_location();
+            return interface;
+        }
+
     private:
         std::shared_ptr<misa_description_storage> m_description;
         boost::filesystem::path m_location;
         boost::filesystem::path m_unique_location;
+        mutable std::shared_ptr<misa_location> m_location_interface;
     };
 }

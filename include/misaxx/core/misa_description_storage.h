@@ -11,13 +11,14 @@
 #include <misaxx/core/misa_data_description.h>
 #include <misaxx/core/misa_serializeable.h>
 #include <misaxx/core/utils/type_traits.h>
+#include <misaxx/core/attachments/misa_locatable.h>
 
 namespace misaxx {
     /**
      * Metadata that is attached to filesystem entries.
      * For flexibility, the filesystem metadata holds the raw JSON data that can be interpreted as misa_metadata instances
      */
-    struct misa_description_storage : public misa_serializeable {
+    struct misa_description_storage : public misa_locatable {
 
         misa_description_storage() = default;
 

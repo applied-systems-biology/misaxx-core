@@ -5,9 +5,10 @@
 #pragma once
 
 #include <misaxx/core/misa_serializeable.h>
-#include <misaxx/core/misa_cached_data_base.h>
 
 namespace misaxx {
+
+    struct misa_cached_data_base;
 
     /**
      * Allows finding an object within the filesystem.

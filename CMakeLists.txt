@@ -144,7 +144,6 @@ add_library(misaxx-core
         src/misaxx/core/runtime/misa_cli_base.cpp
         include/misaxx/core/runtime/misa_cli_base.h
         include/misaxx/core/attachments/misa_locatable.h
-        include/misaxx/core/attachments/misa_locatable_wrapper.h
         include/misaxx/core/attachments/misa_labeled_object_location.h
         src/misaxx/core/attachments/misa_labeled_object_location.cpp
         src/misaxx/core/misa_dispatcher_blueprint_list.cpp
@@ -172,7 +171,17 @@ add_library(misaxx-core
         src/misaxx/core/misa_module_info.cpp include/misaxx/core/misa_module_info.h
         src/misaxx/core/misa_mutable_module_info.cpp
         include/misaxx/core/misa_mutable_module_info.h
-        include/misaxx/core/utils/cache.h include/misaxx/core/utils/ref.h include/misaxx/core/utils/string.h include/misaxx/core/utils/type_traits.h include/misaxx/core/utils/dynamic_singleton_map.h src/misaxx/core/utils/filesystem.cpp include/misaxx/core/utils/filesystem.h include/misaxx/core/utils/manual_stopwatch.h src/misaxx/core/utils/manual_stopwatch.cpp)
+        include/misaxx/core/utils/cache.h
+        include/misaxx/core/utils/ref.h
+        include/misaxx/core/utils/string.h
+        include/misaxx/core/utils/type_traits.h
+        include/misaxx/core/utils/dynamic_singleton_map.h
+        src/misaxx/core/utils/filesystem.cpp
+        include/misaxx/core/utils/filesystem.h
+        include/misaxx/core/utils/manual_stopwatch.h
+        src/misaxx/core/utils/manual_stopwatch.cpp
+        src/misaxx/core/attachments/misa_locatable.cpp
+        include/misaxx/core/attachments/detail/misa_locatable.h)
 
 # Module info header
 configure_file(${CMAKE_SOURCE_DIR}/cmake/module_info.h.in

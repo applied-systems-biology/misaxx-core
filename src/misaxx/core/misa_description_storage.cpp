@@ -2,7 +2,7 @@
 
 using namespace misaxx;
 
-misa_description_storage::misa_description_storage(const misa_description_storage &t_source) {
+misa_description_storage::misa_description_storage(const misa_description_storage &t_source) : misa_locatable() {
     nlohmann::json json;
     t_source.to_json(json);
     from_json(json);
@@ -37,7 +37,7 @@ void misa_description_storage::from_json(const nlohmann::json &t_json) {
 }
 
 void misa_description_storage::to_json(nlohmann::json &t_json) const {
-    misa_serializeable::to_json(t_json);
+    misa_locatable::to_json(t_json);
     t_json["pattern"] = m_raw_pattern_json; // Pass along the raw metadata. This is very important!
     t_json["description"] = m_raw_description_json;
 
@@ -52,7 +52,7 @@ void misa_description_storage::to_json(nlohmann::json &t_json) const {
 }
 
 void misa_description_storage::to_json_schema(const misa_json_schema &t_schema) const {
-    misa_serializeable::to_json_schema(t_schema);
+    misa_locatable::to_json_schema(t_schema);
     if(has_pattern()) {
         t_schema.resolve("pattern", "pattern-type").define(get<misa_data_pattern_base>().get_serialization_id());
         get<misa_data_pattern_base>().to_json_schema(t_schema.resolve("pattern"));
@@ -64,7 +64,7 @@ void misa_description_storage::to_json_schema(const misa_json_schema &t_schema) 
 }
 
 void misa_description_storage::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {
-    misa_serializeable::build_serialization_id_hierarchy(result);
+    misa_locatable::build_serialization_id_hierarchy(result);
     result.emplace_back(misa_serialization_id("misa", "description-storage"));
 }
 

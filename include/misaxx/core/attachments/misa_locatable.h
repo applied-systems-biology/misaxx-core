@@ -14,54 +14,62 @@ namespace misaxx {
      * Base type for all attachments that can be located
      * @tparam Location
      */
-    template<class Location> struct misa_locatable : public misa_serializeable {
-        static_assert(std::is_base_of<misa_location, Location>::value, "Unsupported location type!");
-
-        /**
-         * Location of this locatable attachment
-         */
-        Location location;
+    struct misa_locatable : public misa_serializeable {
 
         misa_locatable() = default;
 
-        explicit misa_locatable(Location t_location) : location(std::move(t_location)) {
+        explicit misa_locatable(std::shared_ptr<const misa_location> t_location);
 
-        }
+        void from_json(const nlohmann::json &t_json) override;
 
-        void from_json(const nlohmann::json &t_json) override {
-            location = t_json["location"].template get<Location>();
-        }
+        void to_json(nlohmann::json &t_json) const override;
 
-        void to_json(nlohmann::json &t_json) const override {
-            misa_serializeable::to_json(t_json);
-            t_json["location"] = location;
-        }
+        void to_json_schema(const misa_json_schema &t_schema) const override;
 
-        void to_json_schema(const misa_json_schema &t_schema) const override {
-            misa_serializeable::to_json_schema(t_schema);
-            location.to_json_schema(t_schema.resolve("location"));
-        }
+        /**
+         * Returns the location as the specified class
+         * @tparam Location
+         * @return
+         */
+        template<class Location>
+        std::shared_ptr<const Location> get_location();
+
+        /**
+         * Returns true if this locatable has the location
+         * @tparam Location
+         * @return
+         */
+        template<class Location>
+        bool has_location();
+
+        /**
+         * Sets the location of this locatable
+         * @param location
+         */
+        void set_location(std::shared_ptr<misa_location> location);
 
     protected:
-        void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override {
-            misa_serializeable::build_serialization_id_hierarchy(result);
-            misa_serialization_id self = location.get_serialization_id();
-            self.set_path(self.get_path() / "locatable");
-            result.emplace_back(std::move(self));
-        }
+        void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;
+    private:
+        /**
+        * Pointer to the location.
+        * The location is obtained from a cache (or created manually)
+        */
+        std::shared_ptr<const misa_location> m_location;
+        /**
+         * If deserialized from JSON
+         */
+        nlohmann::json m_location_json;
     };
+
+    inline void to_json(nlohmann::json& j, const misa_locatable& p) {
+        p.to_json(j);
+    }
+
+    inline void from_json(const nlohmann::json& j, misa_locatable& p) {
+        p.from_json(j);
+    }
 }
 
-namespace nlohmann {
-    template<class Location>
-    struct adl_serializer<misaxx::misa_locatable<Location>> {
-        static void to_json(json &j, const misaxx::misa_locatable<Location> &opt) {
-            opt.to_json(j);
-        }
-
-        static void from_json(const json &j, misaxx::misa_locatable<Location> &opt) {
-            opt.from_json(j);
-        }
-    };
-}
+#include "detail/misa_locatable.h"
 

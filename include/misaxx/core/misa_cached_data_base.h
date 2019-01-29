@@ -97,6 +97,13 @@ namespace misaxx {
          * @return
          */
         virtual boost::filesystem::path get_unique_location() const = 0;
+
+        /**
+         * Gets the location interface of this cache. This location interface is compatible with
+         * misaxx::misa_locatable instances.
+         * @return
+         */
+        virtual std::shared_ptr<misa_location> get_location_interface() const = 0;
     };
 
 }
