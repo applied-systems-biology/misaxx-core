@@ -35,10 +35,34 @@ namespace misaxx {
         * Attaches data to this cache
         * @tparam Attachment
         * @param attachment
+        * @param autofill_location If true, set the location of a misa_locatable attachment to the location interface of this cache if the location is not set
         */
-        template<class Attachment> void attach(Attachment attachment) {
+        template<class Attachment> void attach(Attachment attachment, bool autofill_location = true) {
+            if constexpr (std::is_base_of<misa_locatable, Attachment>::value) {
+                if(!attachment.template has_location<misa_location>()) {
+                    attachment.set_location(get_location_interface());
+                }
+            }
             readwrite_access <attachment_type > access(get_cache_base()->attachments);
             access.get().insert(std::move(attachment));
+        }
+
+        /**
+         * Attaches data to this cache.
+         * If the attachment is a misa_locatable, set it to the location of the foreign cache (if not already set)
+         * @tparam Attachment
+         * @tparam CacheInterface
+         * @param attachment
+         * @param cache
+         */
+        template<class Attachment, class CacheInterface>
+        void attach_foreign(Attachment attachment, const CacheInterface &cache) {
+            if constexpr (std::is_base_of<misa_locatable, Attachment>::value) {
+                if(!attachment.template has_location<misa_location>()) {
+                    attachment.set_location(cache.get_location_interface());
+                }
+            }
+            attach<Attachment>(std::move(attachment));
         }
 
         /**

@@ -38,32 +38,25 @@ namespace misaxx {
          * Creates cached data from an existing cache instance.
          * @param t_cache
          */
-        explicit misa_cached_data(Cache t_cache) : data(std::make_shared<Cache>(std::move(t_cache))) {
-        }
+        explicit misa_cached_data(Cache t_cache);
 
         /**
          * Returns true if this cache is set from a parent module
          * @return
          */
-        bool is_externally_set() const override {
-            return data && !data.unique();
-        }
+        bool is_externally_set() const override;
 
         /**
          * Returns true if this cached data contains data
          * @return
          */
-        bool has_data() const override {
-            return static_cast<bool>(data);
-        }
+        bool has_data() const override;
 
         /**
          * Returns the cached data as pointer to misa_cache
          * @return
          */
-        std::shared_ptr<misa_cache> get_cache_base() const override {
-            return data;
-        }
+        std::shared_ptr<misa_cache> get_cache_base() const override;
 
         /**
         * Links this cache to a filesystem location.
@@ -73,14 +66,7 @@ namespace misaxx {
         * @param t_description
         */
         void force_link(const boost::filesystem::path &t_location,
-                        const std::shared_ptr<misa_description_storage> &t_description) {
-            if (!data)
-                data = std::make_shared<Cache>();
-            misaxx::cache_registry::register_cache(data);
-            std::cout << "[Cache] Linking " << t_location << " into cache of type " << typeid(Cache).name()
-                      << std::endl;
-            data->link(t_location, t_description);
-        }
+                        const std::shared_ptr<misa_description_storage> &t_description);
 
         /**
          * Links this cache to a filesystem location.
@@ -88,23 +74,7 @@ namespace misaxx {
          * Metadata is not copied during this operation.
          * @param t_location
          */
-        void force_link(const filesystem::const_entry &t_location) {
-            if (!data)
-                data = std::make_shared<Cache>();
-            misaxx::cache_registry::register_cache(data);
-
-            // Special case simulation mode
-            if (misaxx::runtime_properties::is_simulating()) {
-                std::cout << "[Cache] Linking " << t_location->internal_path() << " into cache of type "
-                          << typeid(Cache).name() << std::endl;
-                data->link("", t_location->metadata);
-                return;
-            }
-
-            std::cout << "[Cache] Linking " << t_location->internal_path() << " [" << t_location->external_path()
-                      << "] into cache of type " << typeid(Cache).name() << std::endl;
-            data->link(t_location->external_path(), t_location->metadata);
-        }
+        void force_link(const filesystem::const_entry &t_location);
 
         /**
          * Links this cache to a filesystem location if not already set.
@@ -114,12 +84,7 @@ namespace misaxx {
          * @param t_description
          */
         void suggest_link(const boost::filesystem::path &t_location,
-                          const std::shared_ptr<misa_description_storage> &t_description) {
-            if (!data) {
-                data = std::make_shared<Cache>();
-                force_link(t_location, t_description);
-            }
-        }
+                          const std::shared_ptr<misa_description_storage> &t_description);
 
         /**
          * Links this cache to a filesystem location if not already set.
@@ -127,12 +92,7 @@ namespace misaxx {
          * Metadata is not copied during this operation.
          * @param t_location
          */
-        void suggest_link(const filesystem::const_entry &t_location) {
-            if (!data) {
-                data = std::make_shared<Cache>();
-                force_link(t_location);
-            }
-        }
+        void suggest_link(const filesystem::const_entry &t_location);
 
         /**
         * Links this cache to a filesystem location if not already set.
@@ -141,44 +101,7 @@ namespace misaxx {
         * @param t_location
         */
         void suggest_create(const filesystem::entry &t_location,
-                            const std::shared_ptr<misa_description_storage> &t_description) {
-            if (!data) {
-                data = std::make_shared<Cache>();
-                misaxx::cache_registry::register_cache(data);
-
-                if (misaxx::runtime_properties::is_simulating()) {
-                    std::cout << "[Cache] Creating " << t_location->internal_path() << " as cache of type "
-                              << typeid(Cache).name() << std::endl;
-                    // Metadata is copied into the export location
-                    if (t_description.unique()) {
-                        t_location->metadata = t_description;
-                    } else {
-                        t_location->metadata = std::make_shared<misa_description_storage>(*t_description);
-                    }
-
-                    data->link("", t_location->metadata);
-                    return;
-                }
-
-                std::cout << "[Cache] Creating " << t_location->internal_path() << " [" << t_location->external_path()
-                          << "] as cache of type " << typeid(Cache).name() << std::endl;
-
-                // Create the directory if necessary
-                if (!boost::filesystem::exists(t_location->external_path())) {
-                    std::cout << "[Cache] Creating directory " << t_location->external_path() << std::endl;
-                    boost::filesystem::create_directories(t_location->external_path());
-                }
-
-                // Metadata is copied into the export location
-                if (t_description.unique()) {
-                    t_location->metadata = t_description;
-                } else {
-                    t_location->metadata = std::make_shared<misa_description_storage>(*t_description);
-                }
-
-                data->link(t_location->external_path(), t_location->metadata);
-            }
-        }
+                            const std::shared_ptr<misa_description_storage> &t_description);
 
         /**
          * Links this cache to an imported filesystem path.
@@ -186,11 +109,7 @@ namespace misaxx {
          * @param t_filesystem
          * @param t_path
          */
-        void suggest_import_location(const misa_filesystem &t_filesystem, const boost::filesystem::path &t_path) {
-            if (!data) {
-                suggest_link(t_filesystem.imported->at(t_path));
-            }
-        }
+        void suggest_import_location(const misa_filesystem &t_filesystem, const boost::filesystem::path &t_path);
 
         /**
          * Links this cache to an exported filesystem path.
@@ -201,22 +120,13 @@ namespace misaxx {
          */
         void suggest_export_location(const misa_filesystem &t_filesystem,
                                      const boost::filesystem::path &t_path,
-                                     const std::shared_ptr<misa_description_storage> &t_description) {
-            if (!data) {
-//                if (t_filesystem.exported->has_subpath(t_path))
-//                    throw std::runtime_error(
-//                            "Suggested export location exported/" + t_path.string() + " is already used!");
-                suggest_create(t_filesystem.exported->access(t_path), t_description);
-            }
-        }
+                                     const std::shared_ptr<misa_description_storage> &t_description);
 
         /**
          * Returns a description of the current cache
          * @return
          */
-        std::shared_ptr<misa_description_storage> describe() const override {
-            return data->describe();
-        }
+        std::shared_ptr<misa_description_storage> describe() const override;
 
         /**
          * Thread-safe read-only access to the data.
@@ -252,27 +162,23 @@ namespace misaxx {
          * Use get_unique_location() to find the actual file instead.
          * @return
          */
-        boost::filesystem::path get_location() const override {
-            return data->get_location();
-        }
+        boost::filesystem::path get_location() const override;
 
         /**
          * Returns the unique location of the cache.
          * This usually points to the actual file containing the data
          * @return
          */
-        boost::filesystem::path get_unique_location() const override {
-            return data->get_unique_location();
-        }
+        boost::filesystem::path get_unique_location() const override;
 
         /**
          * Gets the location interface of this cache. This location interface is compatible with
          * misaxx::misa_locatable instances.
          * @return
          */
-        std::shared_ptr<misa_location> get_location_interface() const override {
-            return data->get_location_interface();
-        }
+        std::shared_ptr<misa_location> get_location_interface() const override;
 
     };
 }
+
+#include "detail/misa_cached_data.h"

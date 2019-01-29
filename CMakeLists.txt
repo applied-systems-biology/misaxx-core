@@ -181,7 +181,7 @@ add_library(misaxx-core
         include/misaxx/core/utils/manual_stopwatch.h
         src/misaxx/core/utils/manual_stopwatch.cpp
         src/misaxx/core/attachments/misa_locatable.cpp
-        include/misaxx/core/attachments/detail/misa_locatable.h)
+        include/misaxx/core/attachments/detail/misa_locatable.h include/misaxx/core/detail/misa_cached_data.h)
 
 # Module info header
 configure_file(${CMAKE_SOURCE_DIR}/cmake/module_info.h.in
