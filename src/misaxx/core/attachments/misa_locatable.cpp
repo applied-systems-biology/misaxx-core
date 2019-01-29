@@ -11,7 +11,6 @@ misa_locatable::misa_locatable(std::shared_ptr<const misa_location> t_location) 
 }
 
 void misa_locatable::from_json(const nlohmann::json &t_json) {
-    misa_serializable::from_json(t_json);
     m_location_json = t_json["location"];
 }
 
