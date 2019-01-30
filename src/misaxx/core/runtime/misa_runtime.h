@@ -85,6 +85,11 @@ namespace misaxx {
 
     public:
 
+        /**
+         * Static singleton instance of the runtime
+         */
+        static std::weak_ptr<misa_runtime> singleton_instance;
+
         explicit misa_runtime(misa_module_info info, std::shared_ptr<misa_module_interface> interface, root_instantiator_t root_instantiator);
 
         /**
@@ -201,13 +206,6 @@ namespace misaxx {
         void postprocess_cache_attachments();
 
         void postprocess_parameter_schema();
-
-    protected:
-
-        /**
-         * Static singleton instance of the runtime
-         */
-        static std::weak_ptr<misa_runtime> singleton_instance;
 
     public:
 
