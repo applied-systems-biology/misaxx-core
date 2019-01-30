@@ -36,7 +36,7 @@ struct other_task1 : public misa_task<other_module_def> {
     void misa_work() override {
         auto x = get_node()->get_custom_path<algorithm_node_path>();
         auto y = get_node()->get_custom_path<object_node_path>();
-        std::cout << "test2" << std::endl;
+        std::cout << "test2" << "\n";
     }
 };
 
@@ -72,8 +72,8 @@ struct my_task1 : public misa_task<my_module_declaration> {
     using misa_task<my_module_declaration>::misa_task;
 
     void misa_work() override {
-//        std::cout << module()->test_file1.access_readonly().get().string() << std::endl;
-        std::cout << "test###abc" << std::endl;
+//        std::cout << module()->test_file1.access_readonly().get().string() << "\n";
+        std::cout << "test###abc" << "\n";
     }
 };
 
@@ -81,7 +81,7 @@ struct my_task2 : public misa_task<my_module_declaration> {
     using misa_task<my_module_declaration>::misa_task;
 
     void misa_work() override {
-        std::cout << "test###def" << std::endl;
+        std::cout << "test###def" << "\n";
     }
 };
 
@@ -123,7 +123,7 @@ int main(int argc, const char** argv) {
     auto w = m1 % m2;
     auto p = w.get_element_product();
 
-    std::cout << nlohmann::json(w) << std::endl;
+    std::cout << nlohmann::json(w) << "\n";
 
     misa_cli<misa_multiobject_root<my_module>> cli("my_module");
     return cli.prepare_and_run(argc, argv);

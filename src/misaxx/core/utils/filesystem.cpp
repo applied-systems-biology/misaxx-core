@@ -8,7 +8,7 @@
 boost::filesystem::path
 misaxx::utils::relativize_to_direct_parent(boost::filesystem::path t_parent, boost::filesystem::path t_path) {
 
-//    std::cout << "PARENT: " << t_parent << " PATH: " << t_path << std::endl;
+//    std::cout << "PARENT: " << t_parent << " PATH: " << t_path << "\n";
 
     // Make all paths absolute
     if(!t_path.is_absolute())
@@ -16,7 +16,7 @@ misaxx::utils::relativize_to_direct_parent(boost::filesystem::path t_parent, boo
     if(!t_parent.is_absolute())
         t_parent = boost::filesystem::absolute(t_parent, boost::filesystem::current_path());
 
-//    std::cout << "PARENTMODIFIED: " << t_parent << " PATHMODIFIED: " << t_path << std::endl;
+//    std::cout << "PARENTMODIFIED: " << t_parent << " PATHMODIFIED: " << t_path << "\n";
 
     boost::filesystem::path result;
     while(t_path != t_parent) {
@@ -26,7 +26,7 @@ misaxx::utils::relativize_to_direct_parent(boost::filesystem::path t_parent, boo
         t_path = t_path.parent_path();
     }
 
-//    std::cout << "RESULT: " << result << std::endl;
+//    std::cout << "RESULT: " << result << "\n";
 
     return result;
 }

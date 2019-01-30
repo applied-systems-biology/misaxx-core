@@ -11,10 +11,10 @@ misa_filesystem misa_filesystem_directories_importer::import() {
 }
 
 void misa_filesystem_directories_importer::discoverImporterEntry(const filesystem::entry &t_entry) {
-    std::cout << "[Filesystem][directories-importer] Importing entry " << t_entry->internal_path().string() << " @ " << t_entry->external_path().string() << std::endl;
+    std::cout << "[Filesystem][directories-importer] Importing entry " << t_entry->internal_path().string() << " @ " << t_entry->external_path().string() << "\n";
     auto metadata_file = t_entry->external_path() / "misa-data.json";
     if(boost::filesystem::is_regular_file(metadata_file)) {
-        std::cout << "[Filesystem][directories-importer] Importing metadata from file " << metadata_file.string() << std::endl;
+        std::cout << "[Filesystem][directories-importer] Importing metadata from file " << metadata_file.string() << "\n";
         nlohmann::json json;
         std::ifstream stream;
         stream.open(metadata_file.string());

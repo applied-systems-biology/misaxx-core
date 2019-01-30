@@ -208,14 +208,14 @@ void misa_runtime_base::run() {
         const auto module_info_path = get_filesystem().exported->external_path() / "misa-module-info.json";
 
         // Write the parameter file
-        std::cout << "<#> <#> Writing parameters to " << parameters_path << std::endl;
+        std::cout << "<#> <#> Writing parameters to " << parameters_path << "\n";
         std::ofstream writer;
         writer.open(parameters_path.string());
         writer << std::setw(4) << get_parameter_json();
         writer.close();
 
         // Write module info
-        std::cout << "<#> <#> Writing module info to " << module_info_path << std::endl;
+        std::cout << "<#> <#> Writing module info to " << module_info_path << "\n";
         writer.open(module_info_path.string());
         writer << std::setw(4) << nlohmann::json(get_module_info());
         writer.close();
@@ -249,7 +249,7 @@ void misa_runtime_base::run() {
 
         postprocess_parameter_schema();
 
-        std::cout << "<#> <#> Writing parameter schema to " << output_path.string() << std::endl;
+        std::cout << "<#> <#> Writing parameter schema to " << output_path.string() << "\n";
         get_schema_builder().write(output_path);
 
         m_is_simulating = false;
@@ -347,22 +347,22 @@ int misa_runtime_base::get_num_threads() const {
 
 void misa_runtime_base::postprocess_caches() {
     if (!is_simulating()) {
-        std::cout << "[Caches] Post-processing caches ..." << std::endl;
+        std::cout << "[Caches] Post-processing caches ..." << "\n";
         const std::vector<std::shared_ptr<misa_cache>> &caches = get_registered_caches();
         for (const auto &ptr : caches) {
             std::cout << "[Caches] Post-processing cache " << ptr->get_location() << " (" << ptr->get_unique_location()
-                      << ")" << std::endl;
+                      << ")" << "\n";
             ptr->postprocess();
             if(ptr->has_data()) {
                 std::cout << "[Caches] Info: " << ptr->get_location() << " (" << ptr->get_unique_location()
-                                               << ")" << " reports that it still contains data" << std::endl;
+                                               << ")" << " reports that it still contains data" << "\n";
             }
         }
     }
 }
 
 void misa_runtime_base::postprocess_cache_attachments() {
-    std::cout << "[Attachments] Post-processing attachments ..." << std::endl;
+    std::cout << "[Attachments] Post-processing attachments ..." << "\n";
 
     const std::vector<std::shared_ptr<misa_cache>> &caches = get_registered_caches();
     for (const auto &ptr : caches) {
@@ -371,7 +371,7 @@ void misa_runtime_base::postprocess_cache_attachments() {
             continue;
 
         std::cout << "[Attachments] Post-processing attachment " << ptr->get_location() << " ("
-                  << ptr->get_unique_location() << ")" << std::endl;
+                  << ptr->get_unique_location() << ")" << "\n";
 
         readonly_access<typename misa_cached_data_base::attachment_type> access(ptr->attachments); // Open the cache
 

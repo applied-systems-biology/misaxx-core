@@ -37,7 +37,7 @@ namespace misaxx {
                 t_blueprints.add(create_submodule_blueprint<SubModule>("__OBJECT__"));
                 m_objects.push_back("__OBJECT__");
             } else {
-                std::cout << "[multiobject_root] Dispatching root module for all input objects ..." << std::endl;
+                std::cout << "[multiobject_root] Dispatching root module for all input objects ..." << "\n";
                 const nlohmann::json &object_json = misaxx::parameter_registry::get_parameter_json()["samples"];
                 for (nlohmann::json::const_iterator it = object_json.begin(); it != object_json.end(); ++it) {
                     const std::string &name = it.key();
@@ -45,16 +45,16 @@ namespace misaxx {
                     if (e->has_external_path()) {
                         if (boost::filesystem::is_directory(e->external_path())) {
                             std::cout << "[multiobject_root] Found object " << name << ". External path "
-                                      << e->external_path().string() << " is valid." << std::endl;
+                                      << e->external_path().string() << " is valid." << "\n";
                             t_blueprints.add(create_submodule_blueprint<SubModule>(name));
                             m_objects.push_back(name);
                         } else {
                             std::cout << "[multiobject_root] Found object " << name << ", but external path "
-                                      << e->external_path().string() << " does not exist. Skipping." << std::endl;
+                                      << e->external_path().string() << " does not exist. Skipping." << "\n";
                         }
                     } else {
                         std::cout << "[multiobject_root] Found object " << name
-                                  << ", but it has no external path. Skipping." << std::endl;
+                                  << ", but it has no external path. Skipping." << "\n";
                     }
                 }
             }
@@ -73,24 +73,24 @@ namespace misaxx {
 //        void misa_init() override {
 //
 //            // Only consider objects defined in the "objects" parameters
-//            std::cout << "[multiobject_root] Dispatching root module for all input objects ..." << std::endl;
+//            std::cout << "[multiobject_root] Dispatching root module for all input objects ..." << "\n";
 //            const nlohmann::json &object_json = misa_runtime_base::instance().get_parameter_json()["objects"];
 //            for(nlohmann::json::const_iterator it = object_json.begin(); it != object_json.end(); ++it){
 //                const std::string &name = it.key();
 //                filesystem::entry e = filesystem.imported->access(name);
 //                if(e->has_external_path()) {
 //                    if(boost::filesystem::is_directory(e->external_path())) {
-//                        std::cout << "[multiobject_root] Found object " << name << ". External path " << e->external_path().string() << " is valid." << std::endl;
+//                        std::cout << "[multiobject_root] Found object " << name << ". External path " << e->external_path().string() << " is valid." << "\n";
 //                        misa_submodule<SubModule> module;
 //                        init_submodule(module, name);
 //                        misa_dispatch(future_dispatch(module));
 //                    }
 //                    else {
-//                        std::cout << "[multiobject_root] Found object " << name << ", but external path " << e->external_path().string() << " does not exist. Skipping." << std::endl;
+//                        std::cout << "[multiobject_root] Found object " << name << ", but external path " << e->external_path().string() << " does not exist. Skipping." << "\n";
 //                    }
 //                }
 //                else {
-//                    std::cout << "[multiobject_root] Found object " << name << ", but it has no external path. Skipping." << std::endl;
+//                    std::cout << "[multiobject_root] Found object " << name << ", but it has no external path. Skipping." << "\n";
 //                }
 //            }
 //        }

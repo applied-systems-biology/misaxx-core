@@ -68,20 +68,20 @@ misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **ar
 
     if(vm.count("help")) {
         auto info = misaxx::runtime_properties::get_module_info();
-        std::cout << info.get_name() << " " << info.get_version() << std::endl;
-        std::cout << general_options << std::endl;
+        std::cout << info.get_name() << " " << info.get_version() << "\n";
+        std::cout << general_options << "\n";
         return misa_cli_base::cli_result::no_workload;
     }
     if(vm.count("version")) {
         auto info = misaxx::runtime_properties::get_module_info();
-        std::cout << info.get_name() << " " << info.get_version() << std::endl;
+        std::cout << info.get_name() << " " << info.get_version() << "\n";
         return misa_cli_base::cli_result::no_workload;
     }
     if(vm.count("module-info")) {
         auto info = misaxx::runtime_properties::get_module_info();
         nlohmann::json json;
         info.to_json(json);
-        std::cout << json << std::endl;
+        std::cout << json << "\n";
         return misa_cli_base::cli_result::no_workload;
     }
     if(vm.count("write-parameter-schema")) {
@@ -96,7 +96,7 @@ misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **ar
         }
         else {
             m_runtime->set_num_threads(1);
-            std::cout << "<#> <#> RUNNING IN SIMULATION MODE. This application will run only with 1 thread." << std::endl;
+            std::cout << "<#> <#> RUNNING IN SIMULATION MODE. This application will run only with 1 thread." << "\n";
         }
     }
 //    if(vm.count("no-skip")) {
@@ -105,7 +105,7 @@ misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **ar
 //        }
 //    }
     if(vm.count("parameters")) {
-        std::cout << "<#> <#> Loading parameters from " << vm["parameters"].as<std::string>() << std::endl;
+        std::cout << "<#> <#> Loading parameters from " << vm["parameters"].as<std::string>() << "\n";
         std::ifstream in(vm["parameters"].as<std::string>());
         nlohmann::json j;
         in >> j;
@@ -129,22 +129,22 @@ misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **ar
 }
 
 void misa_cli_base::run() {
-    std::cout << "<#> <#> Starting run with " << m_runtime->get_num_threads() << " threads" << std::endl;
+    std::cout << "<#> <#> Starting run with " << m_runtime->get_num_threads() << " threads" << "\n";
 //            if(m_runtime.enable_skipping) {
-//                std::cout << "<#> <#> Skipping is enabled" << std::endl;
+//                std::cout << "<#> <#> Skipping is enabled" << "\n";
 //            }
 //            else {
-//                std::cout << "<#> <#> Skipping is disabled" << std::endl;
+//                std::cout << "<#> <#> Skipping is disabled" << "\n";
 //            }
     if(m_runtime->is_simulating()) {
-        std::cout << "<#> <#> RUNNING IN SIMULATION MODE. This will build a parameter schema, but no real work is done!" << std::endl;
+        std::cout << "<#> <#> RUNNING IN SIMULATION MODE. This will build a parameter schema, but no real work is done!" << "\n";
     }
 
     m_runtime->run();
 
     // Build schema
     if(m_runtime->is_simulating()) {
-        std::cout << "<#> <#> Writing parameter schema to " << m_parameter_schema_path.string() << std::endl;
+        std::cout << "<#> <#> Writing parameter schema to " << m_parameter_schema_path.string() << "\n";
         m_runtime->get_schema_builder().write(m_parameter_schema_path);
     }
 }

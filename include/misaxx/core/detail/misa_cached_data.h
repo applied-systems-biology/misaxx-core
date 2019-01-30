@@ -32,7 +32,7 @@ namespace misaxx {
             data = std::make_shared<Cache>();
         misaxx::cache_registry::register_cache(data);
         std::cout << "[Cache] Linking " << t_location << " into cache of type " << typeid(Cache).name()
-                  << std::endl;
+                  << "\n";
         data->link(t_location, t_description);
     }
 
@@ -45,13 +45,13 @@ namespace misaxx {
         // Special case simulation mode
         if (misaxx::runtime_properties::is_simulating()) {
             std::cout << "[Cache] Linking " << t_location->internal_path() << " into cache of type "
-                      << typeid(Cache).name() << std::endl;
+                      << typeid(Cache).name() << "\n";
             data->link("", t_location->metadata);
             return;
         }
 
         std::cout << "[Cache] Linking " << t_location->internal_path() << " [" << t_location->external_path()
-                  << "] into cache of type " << typeid(Cache).name() << std::endl;
+                  << "] into cache of type " << typeid(Cache).name() << "\n";
         data->link(t_location->external_path(), t_location->metadata);
     }
 
@@ -81,7 +81,7 @@ namespace misaxx {
 
             if (misaxx::runtime_properties::is_simulating()) {
                 std::cout << "[Cache] Creating " << t_location->internal_path() << " as cache of type "
-                          << typeid(Cache).name() << std::endl;
+                          << typeid(Cache).name() << "\n";
                 // Metadata is copied into the export location
                 if (t_description.unique()) {
                     t_location->metadata = t_description;
@@ -94,11 +94,11 @@ namespace misaxx {
             }
 
             std::cout << "[Cache] Creating " << t_location->internal_path() << " [" << t_location->external_path()
-                      << "] as cache of type " << typeid(Cache).name() << std::endl;
+                      << "] as cache of type " << typeid(Cache).name() << "\n";
 
             // Create the directory if necessary
             if (!boost::filesystem::exists(t_location->external_path())) {
-                std::cout << "[Cache] Creating directory " << t_location->external_path() << std::endl;
+                std::cout << "[Cache] Creating directory " << t_location->external_path() << "\n";
                 boost::filesystem::create_directories(t_location->external_path());
             }
 

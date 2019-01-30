@@ -6,16 +6,16 @@ void misa_filesystem_json_importer::import_entry(const nlohmann::json &t_json, c
 
     if(t_json.find("external-path") != t_json.end()) {
         t_entry->custom_external = t_json["external-path"].get<std::string>();
-        std::cout << "[Filesystem][json-importer] Importing entry " << t_entry->custom_external.string() << " into " << t_entry->internal_path().string() << std::endl;
+        std::cout << "[Filesystem][json-importer] Importing entry " << t_entry->custom_external.string() << " into " << t_entry->internal_path().string() << "\n";
     }
     else {
-        std::cout << "[Filesystem][json-importer] Importing entry " << t_entry->internal_path().string() << std::endl;
+        std::cout << "[Filesystem][json-importer] Importing entry " << t_entry->internal_path().string() << "\n";
     }
 
     // Load the metadata from JSON or file if applicable
     // File metadata is preferred
     if(t_entry->has_external_path() && boost::filesystem::is_regular_file(t_entry->external_path() / "misa-data.json")) {
-        std::cout << "[Filesystem][json-importer] Importing metadata from file " << (t_entry->external_path() / "misa-data.json").string() << std::endl;
+        std::cout << "[Filesystem][json-importer] Importing metadata from file " << (t_entry->external_path() / "misa-data.json").string() << "\n";
         nlohmann::json json;
         std::ifstream stream;
         stream.open((t_entry->external_path() / "misa-data.json").string());
@@ -23,7 +23,7 @@ void misa_filesystem_json_importer::import_entry(const nlohmann::json &t_json, c
         t_entry->metadata->from_json(json);
     }
     else if(t_json.find("data-metadata") != t_json.end()) {
-        std::cout << "[Filesystem][json-importer] Importing metadata from JSON" << std::endl;
+        std::cout << "[Filesystem][json-importer] Importing metadata from JSON" << "\n";
         t_entry->metadata->from_json(t_json["data-metadata"]);
     }
 
