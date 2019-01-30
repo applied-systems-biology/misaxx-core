@@ -16,6 +16,8 @@
 #include <misaxx/core/misa_cache.h>
 #include <unordered_set>
 #include <misaxx/core/misa_module_info.h>
+#include <misaxx/core/misa_module_interface.h>
+#include <misaxx/core/misa_dispatcher.h>
 
 namespace misaxx {
 
@@ -26,9 +28,17 @@ namespace misaxx {
      * JSON parameters.
      * This is the interface containing common functions for different runtime implementations.
      */
-    struct misa_runtime_base {
+    struct misa_runtime {
+
+        using root_instantiator_t = std::function<std::shared_ptr<misa_dispatcher>(const std::shared_ptr<misa_work_node>&, std::shared_ptr<misa_module_interface>)>;
 
     private:
+
+        misa_module_info m_module_info;
+
+        std::shared_ptr<misa_module_interface> m_module_interface;
+
+        root_instantiator_t m_module_instantiator;
 
         std::shared_ptr<misa_work_node> m_root;
 
@@ -73,18 +83,9 @@ namespace misaxx {
          */
         misa_json_schema_builder m_parameter_schema_builder;
 
-    protected:
-
-        /**
-         * Protected constructor for singleton
-         */
-        misa_runtime_base() = default;
-
-        virtual ~misa_runtime_base() = default;
-
-        virtual std::shared_ptr<misa_work_node> create_root_node() = 0;
-
     public:
+
+        explicit misa_runtime(misa_module_info info, std::shared_ptr<misa_module_interface> interface, root_instantiator_t root_instantiator);
 
         /**
          * Enables or disables simulation mode
@@ -164,19 +165,19 @@ namespace misaxx {
          * Returns the current filesystem
          * @return
          */
-        virtual misa_filesystem get_filesystem() = 0;
+        misa_filesystem get_filesystem();
 
         /**
          * Sets the filesystem
          * @param t_filesystem
          */
-        virtual void set_filesystem(misa_filesystem t_filesystem) = 0;
+        void set_filesystem(misa_filesystem t_filesystem);
 
         /**
          * Returns the module info
          * @return
          */
-        virtual misa_module_info get_module_info() = 0;
+        misa_module_info get_module_info();
 
         /**
          * Starts the actual work of the runtime.
@@ -184,6 +185,8 @@ namespace misaxx {
         void run();
 
     private:
+
+        std::shared_ptr<misa_work_node> create_root_node();
 
         void run_single_threaded();
 
@@ -204,7 +207,7 @@ namespace misaxx {
         /**
          * Static singleton instance of the runtime
          */
-        static std::weak_ptr<misa_runtime_base> singleton_instance;
+        static std::weak_ptr<misa_runtime> singleton_instance;
 
     public:
 
@@ -212,7 +215,8 @@ namespace misaxx {
          * Returns the current runtime
          * @return
          */
-        static misa_runtime_base &instance();
+        static misa_runtime &instance();
+
     };
 
 }

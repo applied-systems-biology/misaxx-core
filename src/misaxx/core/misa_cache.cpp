@@ -1,11 +1,11 @@
 #include <misaxx/core/misa_cache.h>
-#include <misaxx/core/runtime/misa_runtime.h>
+#include "runtime/misa_runtime.h"
 #include <misaxx/core/utils/filesystem.h>
 #include <misaxx/core/misa_cache.h>
 
 
 boost::filesystem::path misaxx::misa_cache::get_location_in_filesystem() const {
-    const auto fs = misa_runtime_base::instance().get_filesystem();
+    const auto fs = misa_runtime::instance().get_filesystem();
     const auto found_entry = fs.find_external_path(get_location());
 
     if(!static_cast<bool>(found_entry)) {
@@ -27,7 +27,7 @@ boost::filesystem::path misaxx::misa_cache::get_location_in_filesystem() const {
 }
 
 boost::filesystem::path misaxx::misa_cache::get_unique_location_in_filesystem() const {
-    const auto fs = misa_runtime_base::instance().get_filesystem();
+    const auto fs = misa_runtime::instance().get_filesystem();
     const auto found_entry = fs.find_external_path(get_unique_location());
 
     if(!static_cast<bool>(found_entry)) {

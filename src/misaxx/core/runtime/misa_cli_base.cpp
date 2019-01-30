@@ -11,6 +11,7 @@
 #include <misaxx/core/utils/manual_stopwatch.h>
 #include <misaxx/core/runtime/misa_parameter_registry.h>
 #include <misaxx/core/runtime/misa_cli_base.h>
+#include "misa_runtime.h"
 
 using namespace misaxx;
 
@@ -164,6 +165,6 @@ int misa_cli_base::prepare_and_run(const int argc, const char **argv) {
     }
 }
 
-std::shared_ptr<misa_runtime_base> misa_cli_base::get_runtime() const {
+std::shared_ptr<misa_runtime> misa_cli_base::get_runtime() const {
     return m_runtime;
 }

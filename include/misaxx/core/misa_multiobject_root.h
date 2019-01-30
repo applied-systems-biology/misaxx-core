@@ -74,7 +74,7 @@ namespace misaxx {
 //
 //            // Only consider objects defined in the "objects" parameters
 //            std::cout << "[multiobject_root] Dispatching root module for all input objects ..." << "\n";
-//            const nlohmann::json &object_json = misa_runtime_base::instance().get_parameter_json()["objects"];
+//            const nlohmann::json &object_json = misa_runtime::instance().get_parameter_json()["objects"];
 //            for(nlohmann::json::const_iterator it = object_json.begin(); it != object_json.end(); ++it){
 //                const std::string &name = it.key();
 //                filesystem::entry e = filesystem.imported->access(name);

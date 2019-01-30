@@ -41,8 +41,7 @@ add_library(misaxx-core
         include/misaxx/core/filesystem/misa_filesystem_empty_importer.h
         include/misaxx/core/filesystem/misa_filesystem.h
         include/misaxx/core/misa_dispatch_blueprint.h
-        include/misaxx/core/runtime/misa_runtime_base.h
-        include/misaxx/core/runtime/misa_runtime.h
+        src/misaxx/core/runtime/misa_runtime.h
         include/misaxx/core/runtime/misa_cli.h
         include/misaxx/core/misa_serializable.h
         include/misaxx/core/misa_description_storage.h
@@ -86,7 +85,6 @@ add_library(misaxx-core
         src/misaxx/core/filesystem/misa_filesystem_empty_importer.cpp
         src/misaxx/core/filesystem/misa_filesystem.cpp
         src/misaxx/core/misa_dispatch_blueprint.cpp
-        src/misaxx/core/runtime/misa_runtime_base.cpp
         src/misaxx/core/runtime/misa_runtime.cpp
         src/misaxx/core/runtime/misa_cli.cpp
         src/misaxx/core/misa_serializable.cpp

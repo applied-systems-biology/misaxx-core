@@ -8,7 +8,7 @@
 #include <misaxx/core/misa_module.h>
 #include <misaxx/core/misa_module_interface.h>
 #include <misaxx/core/misa_task.h>
-#include <misaxx/core/runtime/misa_runtime.h>
+#include <src/misaxx/core/runtime/misa_runtime.h>
 #include <misaxx/core/filesystem/misa_filesystem_directories_importer.h>
 #include <misaxx/core/runtime/misa_cli.h>
 #include <misaxx/core/workers/paths/algorithm_node_path.h>
