@@ -9,29 +9,12 @@ include(CMakePackageConfigHelpers)
 
 # Build options
 option(BUILD_SHARED_LIBS "Build shared library" ON)
-option(WITH_CONAN "Build with Conan support if available" ON)
-
-# Conan integration
-set(CAN_USE_CONAN OFF)
-if(WITH_CONAN AND EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-    set(CAN_USE_CONAN ON)
-    message("-- Enabling building with Conan package manager")
-else()
-    message("-- Building without Conan")
-endif()
 
 # Dependencies
-if(CAN_USE_CONAN)
-    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)    
-    conan_basic_setup(TARGETS)
-    find_package(OpenMP REQUIRED)
-    feature_summary(WHAT ALL)
-else()
-    find_package(nlohmann_json REQUIRED)
-    find_package(Boost 1.63 COMPONENTS REQUIRED filesystem regex program_options)
-    find_package(OpenMP REQUIRED)
-    feature_summary(WHAT ALL)
-endif()
+find_package(nlohmann_json REQUIRED)
+find_package(Boost 1.63 COMPONENTS REQUIRED filesystem regex program_options)
+find_package(OpenMP REQUIRED)
+feature_summary(WHAT ALL)
 
 # Setting up the library
 add_library(misaxx-core
