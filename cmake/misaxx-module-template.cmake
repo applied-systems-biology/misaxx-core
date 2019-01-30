@@ -126,7 +126,7 @@ endfunction()
 # creates necessary install targets for
 function(misaxx_with_default_api)
     misaxx_ensure_configuration()
-    message("-- ${MISAXX_LIBRARY} is configured to be a shared library ${MISAXX_LIBRARY_NAMESPACE}::${MISAXX_LIBRARY}")
+    message("-- ${MISAXX_LIBRARY} is configured to be a shared library ${MISAXX_LIBRARY_NAMESPACE}${MISAXX_LIBRARY}")
 
     # Option for shared library
     option(BUILD_SHARED_LIBS "Build shared library" ON)
