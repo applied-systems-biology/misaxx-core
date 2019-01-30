@@ -41,6 +41,7 @@ void misa_runtime_base::run_single_threaded() {
                 } else {
                     progress(*nd, "Starting single-threaded work on");
                 }
+                nd->prepare_work();
                 nd->work();
             }
             if (nd->get_worker_status() == misa_worker_status::rejected) {
@@ -76,11 +77,13 @@ void misa_runtime_base::run_single_threaded() {
 
         m_tree_complete |= tree_complete;
 
-        if (missing_dependency > 0) {
+        if (missing_dependency > 0 && missing_dependency != m_last_waiting_announcement) {
             progress("Info: " + std::to_string(missing_dependency) + " workers are waiting for dependencies");
+            m_last_waiting_announcement = missing_dependency;
         }
-        if (rejected > 0) {
+        if (rejected > 0 && rejected != m_last_rejecting_announcement) {
             progress("Info: " + std::to_string(rejected) + " workers are rejecting to work");
+            m_last_rejecting_announcement = rejected;
         }
     }
 }
@@ -119,6 +122,7 @@ void misa_runtime_base::run_parallel() {
                     } else {
                         progress(*nd, "Starting single-threaded work on");
                     }
+                    nd->prepare_work();
                     nd->work();
                 } else {
                     if (nd->get_worker_status() == misa_worker_status::rejected) {
@@ -126,8 +130,8 @@ void misa_runtime_base::run_parallel() {
                     } else {
                         progress(*nd, "Starting parallelized work on");
                     }
-
-#pragma omp task shared(nd)
+                    nd->prepare_work();
+                    #pragma omp task shared(nd)
                     {
                         nd->work();
                     }
@@ -170,11 +174,13 @@ void misa_runtime_base::run_parallel() {
 
         m_tree_complete |= tree_complete;
 
-        if (missing_dependency > 0) {
+        if (missing_dependency > 0 && missing_dependency != m_last_waiting_announcement) {
             progress("Info: " + std::to_string(missing_dependency) + " workers are waiting for dependencies");
+            m_last_waiting_announcement = missing_dependency;
         }
-        if (rejected > 0) {
+        if (rejected > 0 && rejected != m_last_rejecting_announcement) {
             progress("Info: " + std::to_string(rejected) + " workers are rejecting to work");
+            m_last_rejecting_announcement = rejected;
         }
     }
 }

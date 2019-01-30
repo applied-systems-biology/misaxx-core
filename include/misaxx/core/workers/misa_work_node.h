@@ -97,7 +97,15 @@ namespace misaxx {
         void skip_work();
 
         /**
+         * Called by the runtime to setup working.
+         * Must be called before work()
+         */
+        void prepare_work();
+
+        /**
          * Starts the actual work of this node
+         * prepare_work() must be called beforehand
+         * This function can be run in parallel
          */
         void work();
 
@@ -193,11 +201,6 @@ namespace misaxx {
          * The instantiator responsible for creating the worker instance when requested
          */
         instantiator_type m_instantiator;
-
-        /**
-         * Required for locking the instance pointer when the instance is created
-         */
-        std::mutex m_instantiator_mutex;
 
         mutable std::shared_ptr<misa_work_tree_node_path> m_global_path;
 

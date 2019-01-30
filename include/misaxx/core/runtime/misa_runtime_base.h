@@ -38,6 +38,10 @@ namespace misaxx {
 
         size_t m_finished_nodes_count = 0;
 
+        size_t m_last_waiting_announcement = 0;
+
+        size_t m_last_rejecting_announcement = 0;
+
         bool m_tree_complete = false;
 
         /**

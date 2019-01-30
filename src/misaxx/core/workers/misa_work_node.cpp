@@ -65,23 +65,28 @@ void misa_work_node::skip_work() {
     m_status = misa_worker_status ::done;
 }
 
-void misa_work_node::work() {
+void misa_work_node::prepare_work() {
     if(m_status == misa_worker_status::undone || m_status == misa_worker_status::rejected) {
-        auto instance = get_or_create_instance();
         m_status = misa_worker_status ::working;
-        instance->execute_work();
-        if(m_status != misa_worker_status::rejected) {
-            // If the worker has no children, we can already declare that it is finished
-            if(instance->get_node()->get_children().empty())
-                m_status = misa_worker_status ::done;
-            else
-                m_status = misa_worker_status ::waiting;
-        }
+        get_or_create_instance();
+    }
+}
+
+void misa_work_node::work() {
+    if(m_status != misa_worker_status::working)
+        throw std::runtime_error("Run prepare_work() before work()!");
+    auto instance = get_instance();
+    instance->execute_work();
+    if(m_status != misa_worker_status::rejected) {
+        // If the worker has no children, we can already declare that it is finished
+        if(instance->get_node()->get_children().empty())
+            m_status = misa_worker_status ::done;
+        else
+            m_status = misa_worker_status ::waiting;
     }
 }
 
 std::shared_ptr<misaxx::misa_worker> misa_work_node::get_or_create_instance() {
-    std::lock_guard<std::mutex> lock(m_instantiator_mutex);
     if(!m_instance) {
         m_instance = m_instantiator(self());
     }
