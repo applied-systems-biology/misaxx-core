@@ -1,5 +1,6 @@
 #include <misaxx/core/workers/misa_work_node.h>
 #include <misaxx/core/misa_worker.h>
+#include <misaxx/core/misa_dispatcher.h>
 
 using namespace misaxx;
 
@@ -23,6 +24,10 @@ bool misa_work_node::is_parallelizeable() {
 }
 
 misa_work_subtree_status misa_work_node::get_subtree_status() const {
+    if(dynamic_cast<const misa_task*>(m_instance.get()) != nullptr) {
+        // Tasks never build a subtree
+        return misa_work_subtree_status ::complete;
+    }
     if(m_status == misa_worker_status::done) {
         return misa_work_subtree_status ::complete;
     }
