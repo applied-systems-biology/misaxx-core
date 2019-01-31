@@ -42,8 +42,8 @@ namespace misaxx {
 
         explicit misa_cli(misa_module_info t_module_info) :
             misa_cli_base(create_runtime(std::move(t_module_info),
-                                         std::make_shared<typename Module::module_interface_type>(), [](const std::shared_ptr<misa_work_node>& nd, std::shared_ptr<misa_module_interface> interface) {
-                return std::make_shared<Module>(nd, std::move(*std::dynamic_pointer_cast<typename Module::module_interface_type>(interface)));
+                                         std::make_shared<typename root_module_type::module_interface_type>(), [](const std::shared_ptr<misa_work_node>& nd, std::shared_ptr<misa_module_interface> interface) {
+                return std::make_shared<root_module_type>(nd, std::move(*std::dynamic_pointer_cast<typename root_module_type::module_interface_type>(interface)));
             })) {
 
         }
