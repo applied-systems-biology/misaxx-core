@@ -487,7 +487,7 @@ std::shared_ptr<misa_work_node> misa_runtime::create_root_node() {
 //    auto result = m_module_instantiator(m_module_interface);
 //    m_module_interface = result->get_module();
 //    return result;
-    return std::make_shared<misa_work_node>(m_module_info.get_name(), std::shared_ptr<misa_work_node> (),  [this](const std::shared_ptr<misa_work_node> &t_root) {
+    return misa_work_node::create_instance(m_module_info.get_name(), std::shared_ptr<misa_work_node> (),  [this](const std::shared_ptr<misa_work_node> &t_root) {
                                                 auto root_module = this->m_module_instantiator(t_root, std::move(this->m_module_interface));
                                                 this->m_module_interface = root_module->get_module();
                                                 return root_module;
