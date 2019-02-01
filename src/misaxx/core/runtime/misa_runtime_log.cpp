@@ -29,7 +29,9 @@ void misaxx::misa_runtime_log::from_json(const nlohmann::json &) {
 
 void misaxx::misa_runtime_log::to_json(nlohmann::json &t_json) const {
     misa_serializable::to_json(t_json);
-    t_json["entries"] = entries;
+    for(const auto &kv : entries) {
+        t_json["thread" + std::to_string(kv.first)] = kv.second;
+    }
 }
 
 void misaxx::misa_runtime_log::to_json_schema(const misaxx::misa_json_schema &t_schema) const {
