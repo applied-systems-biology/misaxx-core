@@ -206,6 +206,7 @@ void misa_runtime::run() {
         run_single_threaded();
 
     // Postprocessing steps
+    stopwatch.new_operation("Postprocessing");
     postprocess_caches();
     postprocess_cache_attachments();
     if(is_simulating()) {
