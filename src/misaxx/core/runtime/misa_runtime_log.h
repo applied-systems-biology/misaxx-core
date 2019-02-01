@@ -19,6 +19,7 @@ namespace misaxx {
 
         struct entry : public misa_serializable {
             const misa_runtime_log *m_log = nullptr;
+            int thread;
             std::string name;
             time_point start_time;
             time_point end_time;
@@ -37,9 +38,9 @@ namespace misaxx {
             void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;
         };
 
-        void start(uintptr_t id, std::string name);
+        void start(int thread, std::string name);
 
-        void stop(uintptr_t id);
+        void stop(int thread);
 
         void from_json(const nlohmann::json &t_json) override;
 
@@ -53,7 +54,7 @@ namespace misaxx {
     private:
         std::mutex mutex;
         time_point start_time = clock::now();
-        std::unordered_map<uintptr_t, entry> entries;
+        std::unordered_map<int, std::vector<entry>> entries;
     };
 
     inline void to_json(nlohmann::json& j, const misa_runtime_log& p) {

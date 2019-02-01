@@ -16,48 +16,6 @@ using namespace misaxx;
 
 std::weak_ptr<misa_runtime> misa_runtime::singleton_instance = std::shared_ptr<misa_runtime>();
 
-namespace {
-
-    void start_runtime_log(bool enable, misa_runtime_log &log, const misa_work_node &nd) {
-        if(enable) {
-            log.start(reinterpret_cast<uintptr_t>(&nd), misaxx::utils::to_string(*nd.get_global_path()));
-        }
-    }
-
-    void stop_runtime_log(bool enable, misa_runtime_log &log, const misa_work_node &nd) {
-        if(enable) {
-            log.stop(reinterpret_cast<uintptr_t>(&nd));
-        }
-    }
-
-    void start_postprocessing_runtime_log(bool enable, misa_runtime_log &log, const misa_cache &cache) {
-        if(enable) {
-            log.start(reinterpret_cast<uintptr_t>(&cache), "Postprocessing: " +
-            cache.get_location().string() + " (" + cache.get_unique_location().string() + ")");
-        }
-    }
-
-    void stop_postprocessing_runtime_log(bool enable, misa_runtime_log &log, const misa_cache &cache) {
-        if(enable) {
-            log.stop(reinterpret_cast<uintptr_t>(&cache));
-        }
-    }
-
-    void start_attachment_runtime_log(bool enable, misa_runtime_log &log, const misa_cache &cache, const misa_cache::attachment_cache_type &attachments) {
-        if(enable) {
-            log.start(reinterpret_cast<uintptr_t>(&attachments), "Postprocessing: " +
-                                                          cache.get_location().string() + " (" + cache.get_unique_location().string() + ")");
-        }
-    }
-
-    void stop_attachment_runtime_log(bool enable, misa_runtime_log &log, const misa_cache::attachment_cache_type &attachments) {
-        if(enable) {
-            log.stop(reinterpret_cast<uintptr_t>(&attachments));
-        }
-    }
-
-}
-
 void misa_runtime::run_single_threaded() {
 
     while (!m_nodes_todo.empty()) {
@@ -86,10 +44,14 @@ void misa_runtime::run_single_threaded() {
                 } else {
                     progress(*nd, "Starting single-threaded work on");
                 }
-                start_runtime_log(m_enable_runtime_log, m_runtime_log, *nd);
+                if(m_enable_runtime_log) {
+                    m_runtime_log.start(0, nd->get_name());
+                }
                 nd->prepare_work();
                 nd->work();
-                stop_runtime_log(m_enable_runtime_log, m_runtime_log, *nd);
+                if(m_enable_runtime_log) {
+                    m_runtime_log.stop(0);
+                }
             }
             if (nd->get_worker_status() == misa_worker_status::rejected) {
                 // If the work was rejected, don't do any additional steps afterwards
@@ -169,10 +131,14 @@ void misa_runtime::run_parallel() {
                     } else {
                         progress(*nd, "Starting single-threaded work on");
                     }
-                    start_runtime_log(m_enable_runtime_log, m_runtime_log, *nd);
+                    if(m_enable_runtime_log) {
+                        m_runtime_log.start(0, nd->get_name());
+                    }
                     nd->prepare_work();
                     nd->work();
-                    stop_runtime_log(m_enable_runtime_log, m_runtime_log, *nd);
+                    if(m_enable_runtime_log) {
+                        m_runtime_log.stop(0);
+                    }
                 } else {
                     if (nd->get_worker_status() == misa_worker_status::rejected) {
                         progress(*nd, "Retrying parallelized work on");
@@ -183,9 +149,13 @@ void misa_runtime::run_parallel() {
                     nd->prepare_work();
                     #pragma omp task shared(nd)
                     {
-                        start_runtime_log(m_enable_runtime_log, m_runtime_log, *nd);
+                        if(m_enable_runtime_log) {
+                            m_runtime_log.start(omp_get_thread_num(), nd->get_name());
+                        }
                         nd->work();
-                        stop_runtime_log(m_enable_runtime_log, m_runtime_log, *nd);
+                        if(m_enable_runtime_log) {
+                            m_runtime_log.stop(omp_get_thread_num());
+                        }
                     }
                 }
 //                        } else {
@@ -428,7 +398,9 @@ void misa_runtime::postprocess_caches() {
     if (!is_simulating()) {
         std::cout << "[Caches] Post-processing caches ..." << "\n";
         for (const auto &ptr : get_registered_caches()) {
-            start_postprocessing_runtime_log(m_enable_runtime_log, m_runtime_log, *ptr);
+            if(m_enable_runtime_log) {
+                m_runtime_log.start(0, "Postprocessing " + ptr->get_location().string() + " (" + ptr->get_unique_location().string() + ")");
+            }
             std::cout << "[Caches] Post-processing cache " << ptr->get_location() << " (" << ptr->get_unique_location()
                       << ")" << "\n";
             ptr->postprocess();
@@ -436,7 +408,9 @@ void misa_runtime::postprocess_caches() {
                 std::cout << "[Caches] Info: " << ptr->get_location() << " (" << ptr->get_unique_location()
                                                << ")" << " reports that it still contains data" << "\n";
             }
-            stop_postprocessing_runtime_log(m_enable_runtime_log, m_runtime_log, *ptr);
+            if(m_enable_runtime_log) {
+                m_runtime_log.stop(0);
+            }
         }
     }
 }
@@ -457,7 +431,9 @@ void misa_runtime::postprocess_cache_attachments() {
 
         if (!is_simulating()) {
 
-            start_attachment_runtime_log(m_enable_runtime_log, m_runtime_log, *ptr, ptr->attachments);
+            if(m_enable_runtime_log) {
+                m_runtime_log.start(0, "Attachments: " + ptr->get_location().string() + " (" + ptr->get_unique_location().string() + ")");
+            }
 
             readonly_access<typename misa_cached_data_base::attachment_type> access(ptr->attachments); // Open the cache
 
@@ -504,7 +480,9 @@ void misa_runtime::postprocess_cache_attachments() {
                 sw << std::setw(4) << exported_json;
             }
 
-            stop_attachment_runtime_log(m_enable_runtime_log, m_runtime_log, ptr->attachments);
+            if(m_enable_runtime_log) {
+                m_runtime_log.stop(0);
+            }
         }
     }
 }

@@ -5,20 +5,20 @@
 #include "misa_runtime_log.h"
 #include <chrono>
 
-void misaxx::misa_runtime_log::start(uintptr_t id, std::string name) {
+void misaxx::misa_runtime_log::start(int thread, std::string name) {
     std::lock_guard<std::mutex> lock {mutex};
     entry e {*this};
     e.start_time = clock::now();
     e.end_time = clock::now();
     e.name = std::move(name);
-    entries[id] = std::move(e);
+    entries[thread].emplace_back(std::move(e));
 }
 
-void misaxx::misa_runtime_log::stop(uintptr_t id) {
+void misaxx::misa_runtime_log::stop(int thread) {
     std::lock_guard<std::mutex> lock {mutex};
-    auto it = entries.find(id);
-    if(it != entries.end()) {
-        it->second.end_time = clock::now();
+    std::vector<entry> &list = entries.at(thread);
+    if(!list.empty()) {
+        list.back().end_time = clock::now();
     }
 }
 
@@ -28,11 +28,7 @@ void misaxx::misa_runtime_log::from_json(const nlohmann::json &) {
 
 void misaxx::misa_runtime_log::to_json(nlohmann::json &t_json) const {
     misa_serializable::to_json(t_json);
-    std::vector<entry> vec;
-    for(const auto &kv : entries) {
-        vec.push_back(kv.second);
-    }
-    t_json["entries"] = vec;
+    t_json["entries"] = entries;
 }
 
 void misaxx::misa_runtime_log::to_json_schema(const misaxx::misa_json_schema &t_schema) const {
