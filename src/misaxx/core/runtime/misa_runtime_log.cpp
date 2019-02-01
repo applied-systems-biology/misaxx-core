@@ -11,6 +11,7 @@ void misaxx::misa_runtime_log::start(int thread, std::string name) {
     e.start_time = clock::now();
     e.end_time = clock::now();
     e.name = std::move(name);
+    e.thread = thread;
     entries[thread].emplace_back(std::move(e));
 }
 
