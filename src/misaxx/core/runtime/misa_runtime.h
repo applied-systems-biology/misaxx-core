@@ -144,6 +144,12 @@ namespace misaxx {
         void register_cache(std::shared_ptr<misa_cache> t_cache);
 
         /**
+         * Unregisters a cache
+         * @param t_cache
+         */
+        bool unregister_cache(const std::shared_ptr<misa_cache> &t_cache);
+
+        /**
        * Returns the list of registered caches
        * @return
        */

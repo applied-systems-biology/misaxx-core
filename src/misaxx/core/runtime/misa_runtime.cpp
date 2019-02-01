@@ -298,6 +298,17 @@ void misa_runtime::register_cache(std::shared_ptr<misa_cache> t_cache) {
     m_registered_caches.emplace_back(std::move(t_cache));
 }
 
+bool misa_runtime::unregister_cache(const std::shared_ptr<misa_cache> &t_cache) {
+    for(size_t i = 0; i < m_registered_caches.size(); ++i) {
+        if(m_registered_caches[i] == t_cache) {
+            std::swap(m_registered_caches[i], m_registered_caches[m_registered_caches.size() - 1]);
+            m_registered_caches.erase(m_registered_caches.end() - 1);
+            return true;
+        }
+    }
+    return false;
+}
+
 const std::vector<std::shared_ptr<misa_cache>> &misa_runtime::get_registered_caches() const {
     return m_registered_caches;
 }
@@ -513,3 +524,4 @@ void misa_runtime::set_lazy_write_attachments(bool value) {
 void misa_runtime::set_write_attachments(bool value) {
     m_write_attachments = value;
 }
+
