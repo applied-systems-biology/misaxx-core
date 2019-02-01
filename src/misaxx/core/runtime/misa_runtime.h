@@ -19,6 +19,7 @@
 #include <misaxx/core/misa_module_interface.h>
 #include <misaxx/core/misa_dispatcher.h>
 #include <unordered_set>
+#include "misa_runtime_log.h"
 
 namespace misaxx {
 
@@ -86,6 +87,16 @@ namespace misaxx {
         bool m_lazy_write_attachments = true;
 
         /**
+         * If true, log the start and stop times of each worker
+         */
+        bool m_enable_runtime_log = false;
+
+        /**
+         * Runtime log
+         */
+        misa_runtime_log m_runtime_log;
+
+        /**
          * Parameters for the workers
          */
         nlohmann::json m_parameters;
@@ -119,6 +130,8 @@ namespace misaxx {
         void set_write_attachments(bool value);
 
         void set_lazy_write_attachments(bool value);
+
+        void set_enable_runtime_log(bool value);
 
         /**
          * Returns the number of threads
@@ -181,6 +194,12 @@ namespace misaxx {
          * @return
          */
         misa_json_schema_builder &get_schema_builder();
+
+        /**
+         * Returns the runtime log
+         * @return
+         */
+        misa_runtime_log &get_runtime_log();
 
         /**
          * Returns the root node

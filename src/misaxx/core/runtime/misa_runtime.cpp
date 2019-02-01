@@ -8,12 +8,55 @@
 #include <misaxx/core/attachments/misa_location.h>
 #include <misaxx/core/workers/misa_work_node.h>
 #include <misaxx/core/filesystem/misa_filesystem_empty_importer.h>
+#include <misaxx/core/utils/string.h>
 #include "misa_runtime.h"
 
 
 using namespace misaxx;
 
 std::weak_ptr<misa_runtime> misa_runtime::singleton_instance = std::shared_ptr<misa_runtime>();
+
+namespace {
+
+    void start_runtime_log(bool enable, misa_runtime_log &log, const misa_work_node &nd) {
+        if(enable) {
+            log.start(reinterpret_cast<uintptr_t>(&nd), misaxx::utils::to_string(*nd.get_global_path()));
+        }
+    }
+
+    void stop_runtime_log(bool enable, misa_runtime_log &log, const misa_work_node &nd) {
+        if(enable) {
+            log.stop(reinterpret_cast<uintptr_t>(&nd));
+        }
+    }
+
+    void start_postprocessing_runtime_log(bool enable, misa_runtime_log &log, const misa_cache &cache) {
+        if(enable) {
+            log.start(reinterpret_cast<uintptr_t>(&cache), "Postprocessing: " +
+            cache.get_location().string() + " (" + cache.get_unique_location().string() + ")");
+        }
+    }
+
+    void stop_postprocessing_runtime_log(bool enable, misa_runtime_log &log, const misa_cache &cache) {
+        if(enable) {
+            log.stop(reinterpret_cast<uintptr_t>(&cache));
+        }
+    }
+
+    void start_attachment_runtime_log(bool enable, misa_runtime_log &log, const misa_cache &cache, const misa_cache::attachment_cache_type &attachments) {
+        if(enable) {
+            log.start(reinterpret_cast<uintptr_t>(&attachments), "Postprocessing: " +
+                                                          cache.get_location().string() + " (" + cache.get_unique_location().string() + ")");
+        }
+    }
+
+    void stop_attachment_runtime_log(bool enable, misa_runtime_log &log, const misa_cache::attachment_cache_type &attachments) {
+        if(enable) {
+            log.stop(reinterpret_cast<uintptr_t>(&attachments));
+        }
+    }
+
+}
 
 void misa_runtime::run_single_threaded() {
 
@@ -43,8 +86,10 @@ void misa_runtime::run_single_threaded() {
                 } else {
                     progress(*nd, "Starting single-threaded work on");
                 }
+                start_runtime_log(m_enable_runtime_log, m_runtime_log, *nd);
                 nd->prepare_work();
                 nd->work();
+                stop_runtime_log(m_enable_runtime_log, m_runtime_log, *nd);
             }
             if (nd->get_worker_status() == misa_worker_status::rejected) {
                 // If the work was rejected, don't do any additional steps afterwards
@@ -124,18 +169,23 @@ void misa_runtime::run_parallel() {
                     } else {
                         progress(*nd, "Starting single-threaded work on");
                     }
+                    start_runtime_log(m_enable_runtime_log, m_runtime_log, *nd);
                     nd->prepare_work();
                     nd->work();
+                    stop_runtime_log(m_enable_runtime_log, m_runtime_log, *nd);
                 } else {
                     if (nd->get_worker_status() == misa_worker_status::rejected) {
                         progress(*nd, "Retrying parallelized work on");
                     } else {
                         progress(*nd, "Starting parallelized work on");
                     }
+
                     nd->prepare_work();
                     #pragma omp task shared(nd)
                     {
+                        start_runtime_log(m_enable_runtime_log, m_runtime_log, *nd);
                         nd->work();
+                        stop_runtime_log(m_enable_runtime_log, m_runtime_log, *nd);
                     }
                 }
 //                        } else {
@@ -263,6 +313,15 @@ void misa_runtime::run() {
 
         m_is_simulating = false;
     }
+    if(m_enable_runtime_log) {
+        // Write the runtime log
+        nlohmann::json j;
+        m_runtime_log.to_json(j);
+        std::ofstream out;
+        out.open((get_filesystem().exported->external_path() / "runtime-log.json").string());
+        out << std::setw(4) << j;
+        out.close();
+    }
 
     stopwatch.stop();
 }
@@ -366,6 +425,7 @@ void misa_runtime::postprocess_caches() {
     if (!is_simulating()) {
         std::cout << "[Caches] Post-processing caches ..." << "\n";
         for (const auto &ptr : get_registered_caches()) {
+            start_postprocessing_runtime_log(m_enable_runtime_log, m_runtime_log, *ptr);
             std::cout << "[Caches] Post-processing cache " << ptr->get_location() << " (" << ptr->get_unique_location()
                       << ")" << "\n";
             ptr->postprocess();
@@ -373,6 +433,7 @@ void misa_runtime::postprocess_caches() {
                 std::cout << "[Caches] Info: " << ptr->get_location() << " (" << ptr->get_unique_location()
                                                << ")" << " reports that it still contains data" << "\n";
             }
+            stop_postprocessing_runtime_log(m_enable_runtime_log, m_runtime_log, *ptr);
         }
     }
 }
@@ -392,6 +453,8 @@ void misa_runtime::postprocess_cache_attachments() {
             continue;
 
         if (!is_simulating()) {
+
+            start_attachment_runtime_log(m_enable_runtime_log, m_runtime_log, *ptr, ptr->attachments);
 
             readonly_access<typename misa_cached_data_base::attachment_type> access(ptr->attachments); // Open the cache
 
@@ -437,6 +500,8 @@ void misa_runtime::postprocess_cache_attachments() {
                 sw.open(cache_attachment_path.string());
                 sw << std::setw(4) << exported_json;
             }
+
+            stop_attachment_runtime_log(m_enable_runtime_log, m_runtime_log, ptr->attachments);
         }
     }
 }
@@ -474,6 +539,8 @@ void misa_runtime::postprocess_parameter_schema() {
     // Write runtime parameters
     schema.insert<int>({"runtime", "num-threads"},
                        misa_json_property<int>().with_title("Number of threads").with_default_value(1).make_optional());
+    schema.insert<bool>({"runtime", "write-runtime-log"},
+                       misa_json_property<bool>().with_title("Write runtime log").with_default_value(false).make_optional());
     schema.insert<bool>({"runtime", "postprocessing", "write-attachments"},
                        misa_json_property<bool>().with_title("Write attachments").with_default_value(true).make_optional());
     schema.insert<bool>({"runtime", "postprocessing", "lazy-write-attachments"},
@@ -518,5 +585,13 @@ void misa_runtime::set_lazy_write_attachments(bool value) {
 
 void misa_runtime::set_write_attachments(bool value) {
     m_write_attachments = value;
+}
+
+void misa_runtime::set_enable_runtime_log(bool value) {
+    m_enable_runtime_log = value;
+}
+
+misa_runtime_log &misa_runtime::get_runtime_log() {
+    return m_runtime_log;
 }
 

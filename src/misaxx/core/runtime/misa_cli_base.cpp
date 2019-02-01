@@ -57,7 +57,8 @@ misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **ar
             ("module-info", "Prints the module module information as serialized JSON")
             ("parameters,p", po::value<std::string>(), "Provides the list of parameters")
             ("threads,t", po::value<int>(), "Sets the number of threads")
-            ("write-parameter-schema", po::value<std::string>(), "Writes a parameter schema to the target file");
+            ("write-parameter-schema", po::value<std::string>(), "Writes a parameter schema to the target file")
+            ("write-runtime-log", "Writes a log containing the runtimes of each tasks into the output directory");
 
     po::command_line_parser parser(argc, argv);
     parser.options(general_options);
@@ -90,6 +91,14 @@ misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **ar
         m_parameter_schema_path = vm["write-parameter-schema"].as<std::string>();
         if(!m_parameter_schema_path.parent_path().empty())
             boost::filesystem::create_directories(m_parameter_schema_path.parent_path());
+    }
+    if(vm.count("write-runtime-log")) {
+        m_runtime->set_enable_runtime_log(true);
+    }
+    else {
+        m_runtime->set_enable_runtime_log(misaxx::parameter_registry::get_json<bool>({
+            "runtime", "write-runtime-log"
+        }, misaxx::misa_json_property<bool>().with_default_value(false)));
     }
     if(vm.count("threads")) {
         if(!m_runtime->is_simulating()) {

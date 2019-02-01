@@ -165,7 +165,7 @@ add_library(misaxx-core
         include/misaxx/core/attachments/detail/misa_locatable.h
         include/misaxx/core/detail/misa_cached_data.h
         src/misaxx/core/workers/misa_work_node_impl.cpp
-        src/misaxx/core/workers/misa_work_node_impl.h)
+        src/misaxx/core/workers/misa_work_node_impl.h src/misaxx/core/runtime/misa_runtime_log.cpp src/misaxx/core/runtime/misa_runtime_log.h)
 
 # Module info header
 configure_file(${CMAKE_SOURCE_DIR}/cmake/module_info.h.in
