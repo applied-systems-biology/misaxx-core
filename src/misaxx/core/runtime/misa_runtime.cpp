@@ -370,6 +370,12 @@ void misa_runtime::postprocess_caches() {
 }
 
 void misa_runtime::postprocess_cache_attachments() {
+
+    if(!m_write_attachments) {
+        std::cout << "[Attachments] Post-processing attachments ... Skipped" << "\n";
+        return;
+    }
+
     std::cout << "[Attachments] Post-processing attachments ..." << "\n";
 
     const std::vector<std::shared_ptr<misa_cache>> &caches = get_registered_caches();
@@ -378,12 +384,17 @@ void misa_runtime::postprocess_cache_attachments() {
         if (ptr->get_unique_location().empty())
             continue;
 
-        std::cout << "[Attachments] Post-processing attachment " << ptr->get_location() << " ("
-                  << ptr->get_unique_location() << ")" << "\n";
-
-        readonly_access<typename misa_cached_data_base::attachment_type> access(ptr->attachments); // Open the cache
-
         if (!is_simulating()) {
+
+            std::cout << "[Attachments] Post-processing attachment " << ptr->get_location() << " ("
+                      << ptr->get_unique_location() << ")" << "\n";
+
+            readonly_access<typename misa_cached_data_base::attachment_type> access(ptr->attachments); // Open the cache
+
+            if(m_lazy_write_attachments && access.get().empty()) {
+                std::cout << "... contains nothing of interest and will be skipped" << "\n";
+            }
+
             boost::filesystem::path filesystem_unique_link_path = ptr->get_unique_location_in_filesystem();
             boost::filesystem::path filesystem_generic_link_path = ptr->get_location_in_filesystem();
 
@@ -404,11 +415,8 @@ void misa_runtime::postprocess_cache_attachments() {
                 }
             }
 
-            // Attach misa_filesystem_link if needed
-            if (!access.get().has<misa_location>()) {
-                misa_location link(filesystem_generic_link_path, filesystem_unique_link_path);
-                link.to_json(exported_json[link.get_serialization_id().get_id()]);
-            }
+            // Attach the location
+            ptr->get_location_interface()->to_json(exported_json["location"]);
 
             // Attach the description storage if needed
             if(!access.get().has<misa_description_storage>()) {
@@ -459,7 +467,10 @@ void misa_runtime::postprocess_parameter_schema() {
     // Write runtime parameters
     schema.insert<int>({"runtime", "num-threads"},
                        misa_json_property<int>().with_title("Number of threads").with_default_value(1).make_optional());
-//                schema.insert<bool>({"runtime", "no-skip"}, misa_json_property<bool>("Disable skipping", ""));
+    schema.insert<bool>({"runtime", "postprocessing", "write-attachments"},
+                       misa_json_property<bool>().with_title("Write attachments").with_default_value(true).make_optional());
+    schema.insert<bool>({"runtime", "postprocessing", "lazy-write-attachments"},
+                        misa_json_property<bool>().with_title("Only write attachments with actual data").with_default_value(true).make_optional());
 
 }
 
@@ -492,4 +503,12 @@ std::shared_ptr<misa_work_node> misa_runtime::create_root_node() {
                                                 this->m_module_interface = root_module->get_module();
                                                 return root_module;
                                             });
+}
+
+void misa_runtime::set_lazy_write_attachments(bool value) {
+    m_lazy_write_attachments = value;
+}
+
+void misa_runtime::set_write_attachments(bool value) {
+    m_write_attachments = value;
 }

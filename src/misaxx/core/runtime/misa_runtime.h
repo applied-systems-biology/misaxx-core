@@ -74,6 +74,17 @@ namespace misaxx {
         int m_num_threads = 1;
 
         /**
+         * If true, write attachments
+         */
+        bool m_write_attachments = true;
+
+        /**
+         * If true, write only attachments with user-generated data
+         * Otherwise, also writes "empty" attachments (containing description storage and location)
+         */
+        bool m_lazy_write_attachments = true;
+
+        /**
          * Parameters for the workers
          */
         nlohmann::json m_parameters;
@@ -103,6 +114,10 @@ namespace misaxx {
          * @param threads
          */
         void set_num_threads(int threads);
+
+        void set_write_attachments(bool value);
+
+        void set_lazy_write_attachments(bool value);
 
         /**
          * Returns the number of threads

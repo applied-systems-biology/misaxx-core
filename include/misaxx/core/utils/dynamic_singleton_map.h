@@ -87,6 +87,10 @@ namespace misaxx::utils {
             return find<Type>() != end();
         }
 
+        bool empty() const {
+            return m_storage.empty();
+        }
+
     private:
 
         storage_t m_storage;
