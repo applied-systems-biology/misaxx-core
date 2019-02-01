@@ -56,8 +56,9 @@ void misaxx::misa_runtime_log::entry::from_json(const nlohmann::json &) {
 
 void misaxx::misa_runtime_log::entry::to_json(nlohmann::json &t_json) const {
     misa_serializable::to_json(t_json);
-    t_json["start-time"] = std::chrono::duration_cast<duration>(m_log->start_time - start_time).count();
-    t_json["end-time"] = std::chrono::duration_cast<duration>(m_log->start_time - end_time).count();
+    t_json["start-time"] = std::chrono::duration_cast<duration>(start_time - m_log->start_time).count();
+    t_json["end-time"] = std::chrono::duration_cast<duration>(end_time - m_log->start_time).count();
+    t_json["unit"] = "ms";
     t_json["name"] = name;
 }
 
@@ -65,6 +66,7 @@ void misaxx::misa_runtime_log::entry::to_json_schema(const misaxx::misa_json_sch
     misa_serializable::to_json_schema(t_schema);
     t_schema.resolve("start-time").declare_required<double>();
     t_schema.resolve("end-time").declare_required<double>();
+    t_schema.resolve("unit").declare_required<std::string>();
     t_schema.resolve("name").declare_required<std::string>();
 }
 
