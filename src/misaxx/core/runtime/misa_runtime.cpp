@@ -45,7 +45,7 @@ void misa_runtime::run_single_threaded() {
                     progress(*nd, "Starting single-threaded work on");
                 }
                 if(m_enable_runtime_log) {
-                    m_runtime_log.start(0, nd->get_name());
+                    m_runtime_log.start(0, misaxx::utils::to_string(*nd->get_global_path()));
                 }
                 nd->prepare_work();
                 nd->work();
@@ -132,7 +132,7 @@ void misa_runtime::run_parallel() {
                         progress(*nd, "Starting single-threaded work on");
                     }
                     if(m_enable_runtime_log) {
-                        m_runtime_log.start(0, nd->get_name());
+                        m_runtime_log.start(0, misaxx::utils::to_string(*nd->get_global_path()));
                     }
                     nd->prepare_work();
                     nd->work();
@@ -150,7 +150,7 @@ void misa_runtime::run_parallel() {
                     #pragma omp task shared(nd)
                     {
                         if(m_enable_runtime_log) {
-                            m_runtime_log.start(omp_get_thread_num(), nd->get_name());
+                            m_runtime_log.start(omp_get_thread_num(), misaxx::utils::to_string(*nd->get_global_path()));
                         }
                         nd->work();
                         if(m_enable_runtime_log) {
