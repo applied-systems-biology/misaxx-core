@@ -92,14 +92,6 @@ misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **ar
         if(!m_parameter_schema_path.parent_path().empty())
             boost::filesystem::create_directories(m_parameter_schema_path.parent_path());
     }
-    if(vm.count("write-runtime-log")) {
-        m_runtime->set_enable_runtime_log(true);
-    }
-    else {
-        m_runtime->set_enable_runtime_log(misaxx::parameter_registry::get_json<bool>({
-            "runtime", "write-runtime-log"
-        }, misaxx::misa_json_property<bool>().with_default_value(false)));
-    }
     if(vm.count("threads")) {
         if(!m_runtime->is_simulating()) {
             m_runtime->set_num_threads(vm["threads"].as<int>());
@@ -128,6 +120,14 @@ misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **ar
     // Load runtime parameters that are not from CLI
     if(!vm.count("threads") && !m_runtime->is_simulating()) {
         m_runtime->set_num_threads(misaxx::parameter_registry:: template get_json<int>({ "runtime", "num-threads" }, misa_json_property<int>().with_default_value(1)));
+    }
+    if(vm.count("write-runtime-log")) {
+        m_runtime->set_enable_runtime_log(true);
+    }
+    else {
+        m_runtime->set_enable_runtime_log(misaxx::parameter_registry::get_json<bool>({
+                                                                                             "runtime", "write-runtime-log"
+                                                                                     }, misaxx::misa_json_property<bool>().with_default_value(false)));
     }
 //            if(!vm.count("no-skip") && !m_runtime->is_simulating()) {
 //                m_runtime->enable_skipping = !m_runtime->template get_json<bool>({ "runtime", "no-skip" }, false, misa_json_property<bool>());
