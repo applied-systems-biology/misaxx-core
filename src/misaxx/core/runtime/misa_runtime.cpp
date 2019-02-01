@@ -292,6 +292,7 @@ void misa_runtime::run() {
         m_tree_complete = false;
 
         // To be safe, set the filesystem to something empty
+        const auto runtime_log_output_path = get_filesystem().exported->external_path() / "runtime-log.json";
         const auto output_path = get_filesystem().exported->external_path() / "parameter-schema.json";
         misa_filesystem_empty_importer importer;
         set_filesystem(importer.import());
@@ -312,13 +313,12 @@ void misa_runtime::run() {
         get_schema_builder().write(output_path);
 
         m_is_simulating = false;
-    }
-    if(m_enable_runtime_log) {
+
         // Write the runtime log
         nlohmann::json j;
         m_runtime_log.to_json(j);
         std::ofstream out;
-        out.open((get_filesystem().exported->external_path() / "runtime-log.json").string());
+        out.open(runtime_log_output_path.string());
         out << std::setw(4) << j;
         out.close();
     }
