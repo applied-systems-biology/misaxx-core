@@ -285,6 +285,7 @@ void misa_runtime::run() {
         m_is_simulating = false;
 
         // Write the runtime log
+        if(m_enable_runtime_log)
         {
             std::cout << "<#> <#> Writing runtime log to " << runtime_log_output_path.string() << "\n";
             nlohmann::json j;
