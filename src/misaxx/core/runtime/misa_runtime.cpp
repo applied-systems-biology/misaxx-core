@@ -295,21 +295,18 @@ bool misa_runtime::is_simulating() const {
 }
 
 void misa_runtime::register_cache(std::shared_ptr<misa_cache> t_cache) {
-    m_registered_caches.emplace_back(std::move(t_cache));
+    m_registered_caches.insert(std::move(t_cache));
 }
 
 bool misa_runtime::unregister_cache(const std::shared_ptr<misa_cache> &t_cache) {
-    for(size_t i = 0; i < m_registered_caches.size(); ++i) {
-        if(m_registered_caches[i] == t_cache) {
-            std::swap(m_registered_caches[i], m_registered_caches[m_registered_caches.size() - 1]);
-            m_registered_caches.erase(m_registered_caches.end() - 1);
-            return true;
-        }
+    if(m_registered_caches.count(t_cache) > 0) {
+        m_registered_caches.erase(t_cache);
+        return true;
     }
     return false;
 }
 
-const std::vector<std::shared_ptr<misa_cache>> &misa_runtime::get_registered_caches() const {
+const std::unordered_set<std::shared_ptr<misa_cache>> &misa_runtime::get_registered_caches() const {
     return m_registered_caches;
 }
 
@@ -368,8 +365,7 @@ int misa_runtime::get_num_threads() const {
 void misa_runtime::postprocess_caches() {
     if (!is_simulating()) {
         std::cout << "[Caches] Post-processing caches ..." << "\n";
-        const std::vector<std::shared_ptr<misa_cache>> &caches = get_registered_caches();
-        for (const auto &ptr : caches) {
+        for (const auto &ptr : get_registered_caches()) {
             std::cout << "[Caches] Post-processing cache " << ptr->get_location() << " (" << ptr->get_unique_location()
                       << ")" << "\n";
             ptr->postprocess();
@@ -390,8 +386,7 @@ void misa_runtime::postprocess_cache_attachments() {
 
     std::cout << "[Attachments] Post-processing attachments ..." << "\n";
 
-    const std::vector<std::shared_ptr<misa_cache>> &caches = get_registered_caches();
-    for (const auto &ptr : caches) {
+    for (const auto &ptr : get_registered_caches()) {
 
         if (ptr->get_unique_location().empty())
             continue;

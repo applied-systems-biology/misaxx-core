@@ -18,6 +18,7 @@
 #include <misaxx/core/misa_module_info.h>
 #include <misaxx/core/misa_module_interface.h>
 #include <misaxx/core/misa_dispatcher.h>
+#include <unordered_set>
 
 namespace misaxx {
 
@@ -42,7 +43,7 @@ namespace misaxx {
 
         std::shared_ptr<misa_work_node> m_root;
 
-        std::vector<std::shared_ptr<misa_cache>> m_registered_caches;
+        std::unordered_set<std::shared_ptr<misa_cache>> m_registered_caches;
 
         size_t m_known_nodes_count = 0;
 
@@ -153,7 +154,7 @@ namespace misaxx {
        * Returns the list of registered caches
        * @return
        */
-        const std::vector<std::shared_ptr<misa_cache>> &get_registered_caches() const;
+        const std::unordered_set<std::shared_ptr<misa_cache>> &get_registered_caches() const;
 
         /**
          * Returns the JSON that contains the parameters

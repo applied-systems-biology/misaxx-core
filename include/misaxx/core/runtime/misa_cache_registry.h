@@ -7,6 +7,7 @@
 
 #include <memory>
 #include <vector>
+#include <unordered_set>
 
 namespace misaxx {
     struct misa_cache;
@@ -39,5 +40,5 @@ namespace misaxx::cache_registry {
      * Returns the registered caches
      * @return
      */
-    extern const std::vector<std::shared_ptr<misa_cache>> &get_registered_caches();
+    extern const std::unordered_set<std::shared_ptr<misa_cache>> &get_registered_caches();
 }
