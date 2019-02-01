@@ -386,14 +386,14 @@ void misa_runtime::postprocess_cache_attachments() {
 
         if (!is_simulating()) {
 
-            std::cout << "[Attachments] Post-processing attachment " << ptr->get_location() << " ("
-                      << ptr->get_unique_location() << ")" << "\n";
-
             readonly_access<typename misa_cached_data_base::attachment_type> access(ptr->attachments); // Open the cache
 
             if(m_lazy_write_attachments && access.get().empty()) {
-                std::cout << "... contains nothing of interest and will be skipped" << "\n";
+                continue;
             }
+
+            std::cout << "[Attachments] Post-processing attachment " << ptr->get_location() << " ("
+                      << ptr->get_unique_location() << ")" << "\n";
 
             boost::filesystem::path filesystem_unique_link_path = ptr->get_unique_location_in_filesystem();
             boost::filesystem::path filesystem_generic_link_path = ptr->get_location_in_filesystem();
