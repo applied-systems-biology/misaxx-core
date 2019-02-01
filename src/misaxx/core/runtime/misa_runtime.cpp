@@ -315,12 +315,15 @@ void misa_runtime::run() {
         m_is_simulating = false;
 
         // Write the runtime log
-        nlohmann::json j;
-        m_runtime_log.to_json(j);
-        std::ofstream out;
-        out.open(runtime_log_output_path.string());
-        out << std::setw(4) << j;
-        out.close();
+        {
+            std::cout << "<#> <#> Writing runtime log to " << runtime_log_output_path.string() << "\n";
+            nlohmann::json j;
+            m_runtime_log.to_json(j);
+            std::ofstream out;
+            out.open(runtime_log_output_path.string());
+            out << std::setw(4) << j;
+            out.close();
+        }
     }
 
     stopwatch.stop();
