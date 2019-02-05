@@ -60,7 +60,7 @@ void misa_exported_attachments_cache::postprocess() {
 
 void misa_exported_attachments_cache::simulate_link() {
     describe()->set(misa_file_pattern({ ".json" }));
-    describe()->access<misa_file_description>();
+    describe()->access<misa_exported_attachments_description>();
 }
 
 misa_exported_attachments_description
