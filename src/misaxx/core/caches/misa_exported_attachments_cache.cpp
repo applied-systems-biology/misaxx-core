@@ -38,7 +38,7 @@ void misa_exported_attachments_cache::push() {
     sw << std::setw(4) << m_json;
 }
 
-void misa_exported_attachments_cache::do_link(const misa_file_description &t_description) {
+void misa_exported_attachments_cache::do_link(const misa_exported_attachments_description &t_description) {
     if(t_description.filename.empty())
         throw std::runtime_error("Cannot link to file description with empty file name!");
     m_path = this->get_location() / t_description.filename;
@@ -63,7 +63,7 @@ void misa_exported_attachments_cache::simulate_link() {
     describe()->access<misa_file_description>();
 }
 
-misa_file_description
+misa_exported_attachments_description
 misa_exported_attachments_cache::produce_description(const boost::filesystem::path &, const misa_file_pattern &) {
-    return misa_file_description();
+    return misa_exported_attachments_description();
 }
