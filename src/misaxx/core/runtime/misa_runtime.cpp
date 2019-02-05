@@ -220,10 +220,22 @@ void misa_runtime::run() {
 
     const bool enable_threading = m_num_threads > 1 && !is_simulating();
 
+    if(!m_enable_runtime_log) {
+        for(int thread = 0; thread < m_num_threads; ++thread) {
+            m_runtime_log.start(thread, "Undefined workload");
+        }
+    }
+
     if(enable_threading)
         run_parallel();
     else
         run_single_threaded();
+
+    if(!m_enable_runtime_log) {
+        for(int thread = 0; thread < m_num_threads; ++thread) {
+            m_runtime_log.stop(thread);
+        }
+    }
 
     // Postprocessing steps
     stopwatch.new_operation("Postprocessing");
@@ -285,7 +297,6 @@ void misa_runtime::run() {
         m_is_simulating = false;
 
         // Write the runtime log
-        if(m_enable_runtime_log)
         {
             std::cout << "<#> <#> Writing runtime log to " << runtime_log_output_path.string() << "\n";
             nlohmann::json j;
@@ -398,6 +409,9 @@ int misa_runtime::get_num_threads() const {
 void misa_runtime::postprocess_caches() {
     if (!is_simulating()) {
         std::cout << "[Caches] Post-processing caches ..." << "\n";
+        if(!m_enable_runtime_log) {
+            m_runtime_log.start(0, "Postprocessing");
+        }
         for (const auto &ptr : get_registered_caches()) {
             if(m_enable_runtime_log) {
                 m_runtime_log.start(0, "Postprocessing " + ptr->get_location().string() + " (" + ptr->get_unique_location().string() + ")");
@@ -413,6 +427,9 @@ void misa_runtime::postprocess_caches() {
                 m_runtime_log.stop(0);
             }
         }
+        if(!m_enable_runtime_log) {
+            m_runtime_log.stop(0);
+        }
     }
 }
 
@@ -424,6 +441,10 @@ void misa_runtime::postprocess_cache_attachments() {
     }
 
     std::cout << "[Attachments] Post-processing attachments ..." << "\n";
+
+    if(!m_enable_runtime_log) {
+        m_runtime_log.start(0, "Attachments");
+    }
 
     for (const auto &ptr : get_registered_caches()) {
 
@@ -485,6 +506,10 @@ void misa_runtime::postprocess_cache_attachments() {
                 m_runtime_log.stop(0);
             }
         }
+    }
+
+    if(!m_enable_runtime_log) {
+        m_runtime_log.stop(0);
     }
 }
 
