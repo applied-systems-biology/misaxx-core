@@ -19,7 +19,7 @@ namespace misaxx {
          * Deserializes the JSON data
          * @param t_json
          */
-        virtual void from_json(const nlohmann::json &t_json) = 0;
+        virtual void from_json(const nlohmann::json &t_json);
 
         /**
          * Serializes the JSON data

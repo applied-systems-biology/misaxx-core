@@ -19,7 +19,7 @@ void misa_file_pattern::from_json(const nlohmann::json &t_json) {
 }
 
 void misa_file_pattern::to_json(nlohmann::json &t_json) const {
-    misa_data_pattern<misa_file_description>::to_json(t_json);
+    misa_data_pattern::to_json(t_json);
     t_json["filename"] = filename.string();
     {
         std::vector<std::string> extensions_;
@@ -31,7 +31,7 @@ void misa_file_pattern::to_json(nlohmann::json &t_json) const {
 }
 
 void misa_file_pattern::to_json_schema(const misa_json_schema &t_schema) const {
-    misa_data_pattern<misa_file_description>::to_json_schema(t_schema);
+    misa_data_pattern::to_json_schema(t_schema);
     t_schema.resolve("filename").declare_optional<std::string>(filename.string());
     std::vector<std::string> extensions_;
     for(const auto &extension : extensions) {
@@ -56,29 +56,25 @@ bool misa_file_pattern::matches(const boost::filesystem::path &t_path) const {
     return false;
 }
 
-misa_file_description misa_file_pattern::produce() const {
-    misa_file_description result;
-    result.filename = filename;
-    return result;
+void misa_file_pattern::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {
+    misa_data_pattern::build_serialization_id_hierarchy(result);
+    result.emplace_back(misa_serialization_id("misa", "patterns/file"));
 }
 
-misa_file_description misa_file_pattern::produce(const boost::filesystem::path &t_directory) const {
-    misa_file_description result;
+void misa_file_pattern::apply(misa_file_description &target) const {
+    target.filename = filename;
+}
+
+void misa_file_pattern::apply(misa_file_description &target, const boost::filesystem::path &t_directory) const {
     if(has_filename()) {
-        result.filename = filename;
+        target.filename = filename;
     }
     else {
         for(const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_directory))) {
             if(matches(entry.path())) {
-                result.filename = entry.path().filename();
+                target.filename = entry.path().filename();
                 break;
             }
         }
     }
-    return result;
-}
-
-void misa_file_pattern::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {
-    misa_data_pattern_base::build_serialization_id_hierarchy(result);
-    result.emplace_back(misa_serialization_id("misa", "patterns/file"));
 }

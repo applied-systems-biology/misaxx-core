@@ -25,7 +25,7 @@ add_library(misaxx-core
         include/misaxx/core/misa_cache.h
         include/misaxx/core/misa_root_module_base.h
         include/misaxx/core/misa_module.h
-        include/misaxx/core/misa_data_pattern_base.h
+        include/misaxx/core/misa_data_pattern.h
         include/misaxx/core/misa_data_description.h
         include/misaxx/core/misa_multiobject_root.h
         include/misaxx/core/descriptions/misa_file_stack_description.h
@@ -55,7 +55,6 @@ add_library(misaxx-core
         include/misaxx/core/workers/misa_work_dependency_segment.h
         include/misaxx/core/misa_dispatcher.h
         include/misaxx/core/misa_worker.h
-        include/misaxx/core/misa_data_pattern.h
         include/misaxx/core/utils/cache/cache.h
         include/misaxx/core/utils/cache/locked.h
         include/misaxx/core/utils/cache/memory_cache.h
@@ -69,7 +68,7 @@ add_library(misaxx-core
         src/misaxx/core/misa_cache.cpp
         src/misaxx/core/misa_root_module_base.cpp
         src/misaxx/core/misa_module.cpp
-        src/misaxx/core/misa_data_pattern_base.cpp
+        src/misaxx/core/misa_data_pattern.cpp
         src/misaxx/core/misa_data_description.cpp
         src/misaxx/core/misa_multiobject_root.cpp
         src/misaxx/core/descriptions/misa_file_stack_description.cpp

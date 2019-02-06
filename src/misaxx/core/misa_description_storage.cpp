@@ -54,8 +54,8 @@ void misa_description_storage::to_json(nlohmann::json &t_json) const {
 void misa_description_storage::to_json_schema(const misa_json_schema &t_schema) const {
     misa_locatable::to_json_schema(t_schema);
     if(has_pattern()) {
-        t_schema.resolve("pattern", "pattern-type").define(get<misa_data_pattern_base>().get_serialization_id());
-        get<misa_data_pattern_base>().to_json_schema(t_schema.resolve("pattern"));
+        t_schema.resolve("pattern", "pattern-type").define(get<misa_data_pattern>().get_serialization_id());
+        get<misa_data_pattern>().to_json_schema(t_schema.resolve("pattern"));
     }
     if(has_description()) {
         t_schema.resolve("description", "description-type").define(get<misa_data_description>().get_serialization_id());
@@ -70,7 +70,7 @@ void misa_description_storage::build_serialization_id_hierarchy(std::vector<misa
 
 bool misa_description_storage::has_pattern() const {
     return static_cast<bool>(m_pattern) ||
-           misa_serializable::type_is_deserializable_from_json<misa_data_pattern_base>(m_raw_pattern_json);
+           misa_serializable::type_is_deserializable_from_json<misa_data_pattern>(m_raw_pattern_json);
 }
 
 bool misa_description_storage::has_description() const {
