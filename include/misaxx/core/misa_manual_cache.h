@@ -16,9 +16,9 @@ namespace misaxx {
      * @tparam Cache
      * @tparam Description
      */
-    template<class Cache, class Description> class misa_manual_cache : public misa_default_cache<Cache, misa_dummy_pattern<Description>, Description> {
+    template<class Cache, class Description> class misa_manual_cache : public misa_default_cache<Cache, misa_dummy_pattern, Description> {
     protected:
-        Description produce_description(const boost::filesystem::path &t_location, const misa_dummy_pattern<Description> &t_pattern) override {
+        Description produce_description(const boost::filesystem::path &t_location, const misa_dummy_pattern &t_pattern) override {
             // Manual linkage will create a proper description
             return Description();
         }
