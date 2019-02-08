@@ -29,7 +29,7 @@ namespace misaxx {
                                                         std::function<std::shared_ptr<misa_dispatcher>(const std::shared_ptr<misa_work_node>&, std::shared_ptr<misa_module_interface>)> t_module_dispatcher_builder);
 
     /**
-     * MISA++ CLI
+     * Command line interface of a worker module
      * @tparam Module The module that should be executed
      * @tparam Runtime
      */

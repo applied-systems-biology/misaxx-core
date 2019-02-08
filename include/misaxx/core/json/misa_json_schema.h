@@ -10,15 +10,30 @@
 
 namespace misaxx {
     /**
-     * Helper class around pattxx JSON schema for serialization.
-     * This will be later replaced by a proper json_schema.
+     * Helper class around pattxx JSON schema for serialization
      */
     class misa_json_schema {
     public:
+
+        /**
+         * Initializes a new JSON schema access from the underlying builder and a base path
+         * @param t_builder
+         * @param t_path
+         */
         explicit misa_json_schema(misa_json_schema_builder &t_builder, std::vector<std::string> t_path);
 
+        /**
+         * Returns the underlying schema builder
+         * @return
+         */
         misa_json_schema_builder &get_builder() const;
 
+        /**
+         * Resolves the provided path and returns a new schema access that represents this path
+         * @tparam Args
+         * @param t_segment
+         * @return
+         */
         template<class... Args> misa_json_schema resolve(const Args&... t_segment) const {
             std::vector<std::string> new_path = m_path;
             for(const std::string &segment : std::initializer_list<std::string>({ t_segment... })) {
@@ -27,6 +42,10 @@ namespace misaxx {
             return misa_json_schema(get_builder(), std::move(new_path));
         }
 
+        /**
+         * Returns the access for the parent property
+         * @return
+         */
         misa_json_schema parent() const;
 
         /**

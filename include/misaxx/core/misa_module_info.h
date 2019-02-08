@@ -15,12 +15,28 @@ namespace misaxx {
     public:
         misa_module_info() = default;
 
+        /**
+         * A short, lowercase name without spaces or special characters
+         * @return
+         */
         std::string get_name() const;
 
+        /**
+         * The version of the module
+         * @return
+         */
         std::string get_version() const;
 
+        /**
+         * A short, descriptive name of the module
+         * @return
+         */
         std::string get_description() const;
 
+        /**
+         * The list of dependency modules
+         * @return
+         */
         std::vector<misa_module_info> get_dependencies() const;
 
         void from_json(const nlohmann::json &t_json) override;

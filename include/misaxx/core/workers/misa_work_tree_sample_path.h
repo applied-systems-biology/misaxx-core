@@ -7,6 +7,10 @@
 #include <misaxx/core/workers/misa_work_tree_path.h>
 
 namespace misaxx {
+
+    /**
+     * Node path that only depends on the sample and nothing else
+     */
     class misa_work_tree_sample_path : public misa_work_tree_path {
     public:
         misa_work_tree_sample_path() = default;

@@ -27,31 +27,59 @@ namespace misaxx {
 
         misa_json_property() = default;
 
+        /**
+         * Attaches a title to the JSON property
+         * @param t_title
+         * @return
+         */
         misa_json_property<T> &with_title(std::string t_title) {
             title = std::move(t_title);
             return *this;
         }
 
+        /**
+         * Attaches a description to the JSON property
+         * @param t_description
+         * @return
+         */
         misa_json_property<T> &with_description(std::string t_description) {
             description = std::move(t_description);
             return *this;
         }
 
+        /**
+         * Declares the property as required property
+         * @return
+         */
         misa_json_property<T> &make_required() {
             required = true;
             return *this;
         }
 
+        /**
+         * Declares the property as optional property
+         * @return
+         */
         misa_json_property<T> &make_optional() {
             required = false;
             return *this;
         }
 
+        /**
+         * Declares that the property only supports a certain set of values
+         * @param t_allowed_values
+         * @return
+         */
         misa_json_property<T> &make_enum(std::vector<T> t_allowed_values) {
             allowed_values = std::move(t_allowed_values);
             return *this;
         }
 
+        /**
+         * Sets the default value of the property
+         * @param t_default_value
+         * @return
+         */
         misa_json_property<T> &with_default_value(T t_default_value) {
             default_value = std::move(t_default_value);
             return *this;

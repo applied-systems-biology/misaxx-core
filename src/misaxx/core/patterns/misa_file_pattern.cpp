@@ -49,6 +49,10 @@ bool misa_file_pattern::has_extensions() const {
 }
 
 bool misa_file_pattern::matches(const boost::filesystem::path &t_path) const {
+    if(has_filename() && t_path.filename() == filename)
+        return true;
+    if(extensions.empty())
+        return true;
     for(const auto &extension : extensions) {
         if(t_path.extension() == extension)
             return true;

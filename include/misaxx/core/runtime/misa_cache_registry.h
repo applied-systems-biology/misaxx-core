@@ -14,6 +14,9 @@ namespace misaxx {
     struct misa_cached_data_base;
 }
 
+/**
+ * Contains helpers to interact with caches
+ */
 namespace misaxx::cache_registry {
     /**
      * Registers a cache into the runtime

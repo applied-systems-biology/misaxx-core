@@ -23,6 +23,15 @@ namespace misaxx::json_helper {
         return *current;
     }
 
+    /**
+     * Accesses a JSON path
+     * @tparam Args
+     * @param t_json The JSON object
+     * @param t_path The path that should be accessed
+     * @param t_after An additional property that should be also part of the path
+     * @param t_args Additional path elements
+     * @return
+     */
     template<class ...Args> inline nlohmann::json &access_json_path(nlohmann::json &t_json, const std::vector<std::string> &t_path, const std::string &t_after, const Args&... t_args) {
         nlohmann::json *current = &t_json;
         for(const auto &segment : t_path) {

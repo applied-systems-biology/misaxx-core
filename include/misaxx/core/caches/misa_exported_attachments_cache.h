@@ -15,7 +15,7 @@ namespace misaxx {
 
     /**
      * Cache that stores its attachments in a JSON file.
-     * The unique location
+     * The unique location contains the absolute path of this file
      */
     struct misa_exported_attachments_cache : public misa_default_cache<misaxx::utils::cache<nlohmann::json>,
             misa_file_pattern, misa_exported_attachments_description> {

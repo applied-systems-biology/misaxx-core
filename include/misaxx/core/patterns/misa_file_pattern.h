@@ -11,11 +11,20 @@
 namespace misaxx {
 
     /**
-     * A file pattern is a description that allows
+     * A pattern that can set the filename of misaxx::misa_file_description description types
      */
     struct misa_file_pattern : public misa_data_pattern {
 
+        /**
+         * An optional preset filename. If it is present, the pattern will always use this filename
+         */
         boost::filesystem::path filename;
+
+        /**
+         * Extensions that the file can have
+         * If empty, the pattern accepts any file
+         * This has no effect if the filename is not empty
+         */
         std::vector<boost::filesystem::path> extensions;
 
         misa_file_pattern() = default;
@@ -28,14 +37,38 @@ namespace misaxx {
 
         void to_json_schema(const misa_json_schema &t_schema) const override;
 
+        /**
+         * Returns true if the pattern has already a filename
+         * @return
+         */
         bool has_filename() const;
 
+        /**
+         * Returns true if the pattern has a set of file extensions to look for
+         * @return
+         */
         bool has_extensions() const;
 
+        /**
+         * Returns true if the path matches the pattern
+         * @param t_path
+         * @return
+         */
         bool matches(const boost::filesystem::path &t_path) const;
 
+        /**
+         * Sets the filename of the description
+         * Requires that the pattern already has a filename
+         * @param target
+         */
         void apply(misa_file_description &target) const;
 
+        /**
+         * Applies the pattern and
+         * sets the filename of the description
+         * @param target
+         * @param t_directory
+         */
         void apply(misa_file_description &target, const boost::filesystem::path &t_directory) const;
 
     protected:

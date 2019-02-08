@@ -9,7 +9,8 @@
 
 namespace misaxx {
     /**
-     * Filesystem of a MISA++ module. The filesystem has 3 folders, "imported", "exported" and "modules".
+     * Filesystem of a module
+     * It has two folders "imported" and "exported"
      */
     struct misa_filesystem : public misa_serializable {
         /**

@@ -10,7 +10,6 @@
 #include <misaxx/core/workers/misa_work_dependency_group.h>
 #include <misaxx/core/misa_worker.h>
 #include <misaxx/core/misa_dispatch_blueprint.h>
-#include <misaxx/core/misa_functional_task.h>
 #include <misaxx/core/workers/misa_work_node.h>
 #include <misaxx/core/misa_dispatcher_builder.h>
 #include <misaxx/core/utils/ref.h>
@@ -18,8 +17,8 @@
 namespace misaxx {
 
     /**
-     * MISA++ dispatcher base class.
-     * @tparam ModuleDeclaration
+     * A dispatcher is a worker that is only responsible for creating tasks or dispatching sub-dispatchers.
+     * It should not do any work.
      */
     struct misa_dispatcher : public misa_worker {
 
@@ -127,6 +126,10 @@ namespace misaxx {
 
     public:
 
+        /**
+         * Inherited from the base class. You can use create_blueprint instead.
+         * @param t_parameters
+         */
         void create_parameters(misa_parameter_builder &t_parameters) override;
 
         /**
@@ -146,10 +149,21 @@ namespace misaxx {
          */
         virtual void build_simulation(const blueprint_builder &t_builder);
 
+        /**
+         * Called by the runtime to execute the workload
+         */
         void execute_work() override;
 
+        /**
+         * Returns always false
+         * @return
+         */
         bool is_parallelizeable() const override;
 
+        /**
+         * Returns the parameter builder
+         * @return
+         */
         const misa_parameter_builder &get_parameters() const override;
 
     private:

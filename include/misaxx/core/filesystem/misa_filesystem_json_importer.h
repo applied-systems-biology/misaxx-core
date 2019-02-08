@@ -15,29 +15,7 @@
 namespace misaxx {
 
     /**
-     * Imports a MISA++ filesystem from a JSON configuration file
-     * The JSON data should have following format:
-     *
-     * \code{.json}
-     * {
-     *  "imported" : {
-     *      "type" : "directory",
-     *      "external-path" : "<optional external path>",
-     *      "children" : {
-     *          "file.txt" : {
-     *              "type" : "file",
-     *              "external-path" : "<optional external path>"
-     *          }
-     *      }
-     *  },
-     *  "exported" : {
-     *  }
-     * }
-     * \endcode
-     *
-     * Please note that this importer requires that all files are defined in the JSON
-     * data. If the JSON data should only contain partially defined structures (such as
-     * the existance of a file stack, but not all files), use structured_data_importer instead.
+     * Imports a MISA++ filesystem from JSON data
      */
     struct misa_filesystem_json_importer {
 

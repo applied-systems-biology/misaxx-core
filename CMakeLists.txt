@@ -49,7 +49,6 @@ add_library(misaxx-core
         include/misaxx/core/workers/misa_work_subtree_status.h
         include/misaxx/core/workers/misa_worker_status.h
         include/misaxx/core/misa_task.h
-        include/misaxx/core/misa_functional_task.h
         include/misaxx/core/workers/misa_work_dependency_group.h
         include/misaxx/core/workers/misa_work_dependency_chain.h
         include/misaxx/core/workers/misa_work_dependency_segment.h
@@ -124,8 +123,6 @@ add_library(misaxx-core
         src/misaxx/core/runtime/misa_cli_base.cpp
         include/misaxx/core/runtime/misa_cli_base.h
         include/misaxx/core/attachments/misa_locatable.h
-        include/misaxx/core/attachments/misa_labeled_object_location.h
-        src/misaxx/core/attachments/misa_labeled_object_location.cpp
         src/misaxx/core/misa_dispatcher_blueprint_list.cpp
         include/misaxx/core/misa_dispatcher_blueprint_list.h
         src/misaxx/core/misa_dispatcher_builder.cpp

@@ -10,6 +10,10 @@
 #include <misaxx/core/misa_data_description.h>
 
 namespace misaxx {
+
+    /**
+     * General-purpose description for a stack of files
+     */
     struct misa_file_stack_description : public misa_data_description {
 
         using files_type = std::unordered_map<std::string, misa_file_description>;

@@ -53,7 +53,6 @@ namespace misaxx {
          */
         misa_filesystem_entry_type type;
 
-
         /**
          * Custom external path of this entry.
          * If not set, the path will be loaded from the parent.
@@ -61,7 +60,7 @@ namespace misaxx {
         path custom_external;
 
         /**
-         * Contains important information how this filesystem entry is interpreted from a data point
+         * Contains the description and/or the pattern that can be attached to the filesystem
          */
         std::shared_ptr<misa_description_storage> metadata = std::make_shared<misa_description_storage>();
 
@@ -95,10 +94,25 @@ namespace misaxx {
          */
         filesystem::entry self();
 
+        /**
+         * Returns a managed pointer to this entry
+         * @return
+         */
         filesystem::const_entry self() const;
 
+        /**
+         * Creates a child entry with given name and external path
+         * @param t_name
+         * @param t_custom_external
+         * @return
+         */
         filesystem::entry create(std::string t_name, path t_custom_external = path());
 
+        /**
+         * Inserts a child into this entry
+         * @param ptr
+         * @return
+         */
         filesystem::entry insert(filesystem::entry ptr);
 
         iterator begin();
@@ -113,6 +127,10 @@ namespace misaxx {
 
         const_iterator find(const std::string &t_name) const;
 
+        /**
+         * Returns true if the entry has no children
+         * @return
+         */
         bool empty() const;
 
         /**

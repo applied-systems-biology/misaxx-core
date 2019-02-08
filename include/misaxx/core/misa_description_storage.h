@@ -15,8 +15,8 @@
 
 namespace misaxx {
     /**
-     * Metadata that is attached to filesystem entries.
-     * For flexibility, the filesystem metadata holds the raw JSON data that can be interpreted as misa_metadata instances
+     * Holds a misaxx::misa_data_pattern and/or a misaxx:misa_data_description
+     * This storage also holds JSON data, allowing dynamic deserialization if needed
      */
     struct misa_description_storage : public misa_locatable {
 

@@ -19,7 +19,7 @@ namespace misaxx {
     struct misa_serializable;
 
     /**
-     * Encapsulates writing a JSON schema
+     * Responsible for creating a JSON schema
      */
     struct misa_json_schema_builder {
 

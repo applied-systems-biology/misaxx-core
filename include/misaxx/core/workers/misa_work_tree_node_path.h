@@ -8,8 +8,8 @@
 
 namespace misaxx {
     /**
-     * Path used internally for a path within the node tree
-     * Should not used for JSON
+     * Full path of a node
+     * Should not be used for JSON
      */
     class misa_work_tree_node_path : public misa_work_tree_path {
     public:

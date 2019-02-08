@@ -19,7 +19,6 @@ namespace misaxx {
 
 /**
  * Helper namespace that allows access to some properties of the current runtime
- * This allows querying the runtime without depending on its header
  */
 namespace misaxx::runtime_properties {
 

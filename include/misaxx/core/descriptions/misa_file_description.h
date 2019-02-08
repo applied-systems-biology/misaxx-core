@@ -14,7 +14,7 @@
 namespace misaxx {
 
     /**
-     * Describes a file
+     * General-purpose description for a file
      */
     struct misa_file_description : public misa_data_description {
 

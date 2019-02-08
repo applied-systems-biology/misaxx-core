@@ -7,6 +7,11 @@
 #include <misaxx/core/workers/misa_work_tree_path.h>
 
 namespace misaxx {
+
+    /**
+     * Path that only depends on the node hierarchy starting (exclusive) from the sample
+     * This means that the sample is not taken into account
+     */
     class misa_work_tree_algorithm_path : public misa_work_tree_path {
     public:
         misa_work_tree_algorithm_path() = default;

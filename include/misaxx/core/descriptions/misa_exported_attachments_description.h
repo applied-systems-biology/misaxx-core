@@ -6,6 +6,10 @@
 #include <misaxx/core/descriptions/misa_file_description.h>
 
 namespace misaxx {
+
+    /**
+     * Description for misaxx::misa_exported_attachments_cache
+     */
     struct misa_exported_attachments_description : public misa_file_description {
         using misa_file_description::misa_file_description;
 

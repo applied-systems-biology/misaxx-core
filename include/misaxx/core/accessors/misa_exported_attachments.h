@@ -10,13 +10,18 @@
 
 namespace misaxx {
     /**
-     * Allows exporting attachments to a specified file
+     * This cache exports all attached data into a separate file.
      */
     struct misa_exported_attachments : public misa_cached_data<misa_exported_attachments_cache>,
             public misa_description_accessors_from_cache<misa_exported_attachments_cache, misa_exported_attachments> {
 
         using misa_cached_data<misa_exported_attachments_cache>::suggest_export_location;
 
+        /**
+         * Suggests a filename for the exported attachments
+         * @param t_filesystem
+         * @param t_path
+         */
         void suggest_export_location(const misa_filesystem &t_filesystem,
                                      const boost::filesystem::path &t_path);
 

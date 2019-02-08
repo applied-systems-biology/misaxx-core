@@ -11,9 +11,7 @@ namespace misaxx {
     struct misa_cached_data_base;
 
     /**
-     * Allows finding an object within the filesystem.
-     * External programs can look for this type in the serialization hierarchy.
-     * All location providers should inherit from this attachment
+     * Base type for custom locations that identifies the location within the filesystem.
      */
     struct misa_location : public misa_serializable {
 

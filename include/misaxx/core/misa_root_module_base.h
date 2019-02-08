@@ -7,7 +7,7 @@
 
 namespace misaxx {
     /**
-     * Tags a module as root module used by object_node_path.
+     * Tags a module as root module used by node paths
      */
     struct misa_root_module_base {
     };

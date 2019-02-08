@@ -16,7 +16,7 @@
 namespace misaxx {
 
     /**
-     * Contains an unique id that identifies a serializes class
+     * Contains an unique id that identifies a serialized class
      */
     struct misa_serialization_id : public boost::equality_comparable<misa_serialization_id> {
 

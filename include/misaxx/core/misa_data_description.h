@@ -9,8 +9,7 @@
 
 namespace misaxx {
     /**
-     * A description contains all necessary information to further process some data.
-     * During importing, it is produced using a pattern.
+     * A description contains all necessary information to link a cache to a filesystem location
      */
     struct misa_data_description : public misa_serializable {
         void from_json(const nlohmann::json &t_json) override;

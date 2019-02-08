@@ -10,8 +10,16 @@
 #include <misaxx/core/misa_data_pattern.h>
 
 namespace misaxx {
+
+    /**
+     * Pattern that looks for a set of files
+     */
     struct misa_file_stack_pattern : public misa_data_pattern {
 
+        /**
+         * The extensions that files should have
+         * If empty, all files are valid
+         */
         std::vector<boost::filesystem::path> extensions;
 
         misa_file_stack_pattern() = default;

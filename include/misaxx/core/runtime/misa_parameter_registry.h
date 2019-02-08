@@ -13,6 +13,9 @@
 #include <misaxx/core/misa_serializable.h>
 #include <misaxx/core/misa_primitive.h>
 
+/**
+ * Contains functions to manually query parameters, interact with the schema builder and more
+ */
 namespace misaxx::parameter_registry {
 
     /**

@@ -28,16 +28,37 @@ namespace misaxx {
 
         misa_task(const node &t_node, const module &t_module);
 
+        /**
+         * Function where the actual work should be done
+         */
         virtual void work() = 0;
 
+        /**
+         * Called instead of work() if the runtime is in simulation modue
+         */
         virtual void simulate_work();
 
+        /**
+         * Allows creation of parameters
+         * @param t_parameters
+         */
         void create_parameters(parameter_list &t_parameters) override;
 
+        /**
+         * Called by the runtime to execute the work
+         */
         void execute_work() override;
 
+        /**
+         * Returns the value of the "task::is-parallelizable" parameter
+         * @return
+         */
         bool is_parallelizeable() const override;
 
+        /**
+         * Returns the parameter builder
+         * @return
+         */
         const misa_parameter_builder &get_parameters() const override;
 
     private:

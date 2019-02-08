@@ -10,9 +10,8 @@
 namespace misaxx {
 
     /**
-     * A pattern consists of externally provided information how to import data.
-     * During the import process, the pattern is analyzed and transformed into a description, which contains
-     * all necessary data for additional processing.
+     * A pattern is used to produce or setup a misaxx::misa_data_description.
+     * It should contain information and methods to extract the correct files that contain the actual data.
      */
     struct misa_data_pattern : public misa_serializable {
 

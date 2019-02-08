@@ -17,7 +17,7 @@ namespace misaxx {
     template<typename Value> using write_access = misaxx::utils::write_access<Value>;
 
     /**
-     * Base class for cached data
+     * Base class for misaxx::misa_cached_data
      */
     struct misa_cached_data_base {
         using attachment_type = misaxx::utils::dynamic_singleton_map<misa_serializable>;

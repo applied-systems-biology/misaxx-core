@@ -16,7 +16,7 @@ namespace misaxx {
     class misa_work_node;
 
     /**
-     * Global path within the work tree
+     * Base class for worker tree node paths
      */
     struct misa_work_tree_path {
 

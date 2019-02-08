@@ -11,7 +11,8 @@
 namespace misaxx {
 
     /**
-     * Base type for all attachments that can be located
+     * Base type for all attachments that can be located.
+     * It has a method get_location() that returns a location instance of given type if the data is present
      * @tparam Location
      */
     struct misa_locatable : public misa_serializable {

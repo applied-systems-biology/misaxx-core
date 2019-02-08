@@ -27,6 +27,11 @@ namespace misaxx {
     struct misa_quantity_base {
     };
 
+    /**
+     * A quantity is a value with a unit
+     * @tparam Value
+     * @tparam Unit
+     */
     template<typename Value, class Unit>
     struct misa_quantity :
             public misa_quantity_base,
@@ -74,14 +79,26 @@ namespace misaxx {
             return cast_value<T>();
         }
 
+        /**
+         * Returns the raw value
+         * @return
+         */
         value_type get_value() const {
             return m_value;
         }
 
+        /**
+         * Returns the raw value
+         * @return
+         */
         value_type &get_value() {
             return m_value;
         }
 
+        /**
+         * Returns the unit
+         * @return
+         */
         unit_type get_unit() const {
             return m_unit;
         }
@@ -140,6 +157,13 @@ namespace misaxx {
         }
 
     public:
+
+        /**
+         * Returns true if the value and the unit are the same
+         * No conversion is applied
+         * @param rhs
+         * @return
+         */
         bool operator==(const misa_quantity<Value, Unit> &rhs) const {
             return m_value == rhs.m_value && m_unit == rhs.m_unit;
         }

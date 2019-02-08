@@ -11,8 +11,7 @@
 
 namespace misaxx {
     /**
-     * An object that can be serialized and deserialized from/to JSON
-     *
+     * An object that can be serialized and deserialized from/to JSON.
      */
     struct misa_serializable {
         /**

@@ -16,7 +16,7 @@ namespace misaxx {
      * setting up the data and submodules.
      *
      * A MISA module must be always instantiated with a module interface (the root module is instantiated with a default interface)
-     * @tparam ModuleDeclaration
+     * @tparam ModuleDeclaration The module interface
      */
     template<class ModuleDeclaration>
     struct misa_module : public misa_dispatcher,

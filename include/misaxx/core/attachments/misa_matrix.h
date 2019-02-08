@@ -101,14 +101,31 @@ namespace misaxx {
 
     public:
 
+        /**
+         * Returns the number of elements within this matrix
+         * @return
+         */
         constexpr size_t size() const {
             return Rows * Cols;
         }
 
+        /**
+         * Returns one element
+         * @param row
+         * @param col
+         * @return
+         */
         misa_quantity<value_type, unit_type> get(size_t row, size_t col) const {
             return misa_quantity<value_type, unit_type>(get_value(row, col), m_unit);
         }
 
+        /**
+         * Sets the value of one element.
+         * Automatically converts the value into the unit of this matrix
+         * @param row
+         * @param col
+         * @param v
+         */
         void set(size_t row, size_t col, const misa_quantity<value_type, unit_type> &v) {
             if(v.get_unit() == get_unit()) {
                 get_value(row, col) = v.get_value();
@@ -119,30 +136,60 @@ namespace misaxx {
             }
         }
 
+        /**
+         * Returns the raw value of the element of index i
+         * @param i
+         * @return
+         */
         value_type value_at(size_t i) const {
             return m_values.at(i);
         }
 
+        /**
+         * Returns the raw value of the element of index i
+         * @param i
+         * @return
+         */
         value_type &value_at(size_t i) {
             return m_values.at(i);
         }
 
+        /**
+         * Returns the raw value of an element
+         * @param row
+         * @param col
+         * @return
+         */
         value_type get_value(size_t row, size_t col) const {
             if(row >= Rows || col >= Cols)
                 throw std::out_of_range("Matrix position out of range");
             return m_values.at(col + row * cols);
         }
 
+        /**
+         * Returns the raw value of an element
+         * @param row
+         * @param col
+         * @return
+         */
         value_type &get_value(size_t row, size_t col) {
             if(row >= Rows || col >= Cols)
                 throw std::out_of_range("Matrix position out of range");
             return m_values.at(col + row * cols);
         }
 
+        /**
+         * Returns the unit of this matrix
+         * @return
+         */
         unit_type get_unit() const {
             return m_unit;
         }
 
+        /**
+         * Returns if the matrix is a square matrix
+         * @return
+         */
         constexpr bool is_square() const {
             return Rows == Cols;
         }
@@ -215,10 +262,22 @@ namespace misaxx {
             return misa_quantity<Value, Unit>(std::accumulate(m_values.begin(), m_values.end(), 0), m_unit);
         }
 
+        /**
+         * Returns true if oth matrices are the same
+         * No conversion of units is done
+         * @param rhs
+         * @return
+         */
         bool operator==(const misa_matrix<Value, Unit, Rows, Cols> &rhs) const {
             return m_values == rhs.m_values && m_unit == rhs.m_unit;
         }
 
+        /**
+         * Element-wise addition operation
+         * Automatically converts the unit
+         * @param rhs
+         * @return
+         */
         misa_matrix<Value, Unit, Rows, Cols> &operator+=(const misa_matrix<Value, Unit, Rows, Cols> &rhs) {
             if (rhs.m_unit == m_unit) {
                 for(size_t i = 0; i < size(); ++i) {
@@ -231,6 +290,12 @@ namespace misaxx {
             return *this;
         }
 
+        /**
+         * Element-wise subtraction operation
+         * Automatically converts the unit
+         * @param rhs
+         * @return
+         */
         misa_matrix<Value, Unit, Rows, Cols> &operator-=(const misa_matrix<Value, Unit, Rows, Cols> &rhs) {
             if (rhs.m_unit == m_unit) {
                 for(size_t i = 0; i < size(); ++i) {
@@ -243,6 +308,11 @@ namespace misaxx {
             return *this;
         }
 
+        /**
+         * Element-wise addition with scalar
+         * @param value
+         * @return
+         */
         misa_matrix<Value, Unit, Rows, Cols> &operator+=(const value_type &value) {
             for(auto& v : m_values) {
                 v += value;
@@ -250,6 +320,11 @@ namespace misaxx {
             return *this;
         }
 
+        /**
+         * Element-wise subtraction with scalar
+         * @param value
+         * @return
+         */
         misa_matrix<Value, Unit, Rows, Cols> &operator-=(const value_type &value) {
             for(auto& v : m_values) {
                 v -= value;
@@ -257,6 +332,11 @@ namespace misaxx {
             return *this;
         }
 
+        /**
+         * Element-wise multiplication with scalar
+         * @param value
+         * @return
+         */
         misa_matrix<Value, Unit, Rows, Cols> &operator*=(const value_type &value) {
             for(auto& v : m_values) {
                 v *= value;
@@ -264,6 +344,11 @@ namespace misaxx {
             return *this;
         }
 
+        /**
+         * Element-wise division with scalar
+         * @param value
+         * @return
+         */
         misa_matrix<Value, Unit, Rows, Cols> &operator/=(const value_type &value) {
             for(auto& v : m_values) {
                 v /= value;
@@ -271,6 +356,11 @@ namespace misaxx {
             return *this;
         }
 
+        /**
+         * Element-wise modulo with scalar
+         * @param value
+         * @return
+         */
         misa_matrix<Value, Unit, Rows, Cols> &operator%=(const value_type &value) {
             for(auto& v : m_values) {
                 v %= value;
@@ -278,6 +368,10 @@ namespace misaxx {
             return *this;
         }
 
+        /**
+         * Element-wise addition by 1
+         * @return
+         */
         misa_matrix<Value, Unit, Rows, Cols> &operator++() {
             for(auto& v : m_values) {
                 ++v;
@@ -285,6 +379,10 @@ namespace misaxx {
             return *this;
         }
 
+        /**
+         * Element-wise subtraction by 1
+         * @return
+         */
         misa_matrix<Value, Unit, Rows, Cols> &operator--() {
             for(auto& v : m_values) {
                 --v;
