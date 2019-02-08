@@ -63,3 +63,5 @@ std::vector<misa_serialization_id> misa_serializable::get_serialization_id_hiera
     return result;
 }
 
+void misa_serializable::from_json(const nlohmann::json &) { }
+

@@ -7,7 +7,7 @@
 
 #include <string>
 #include <nlohmann/json.hpp>
-#include <misaxx/core/misa_data_pattern_base.h>
+#include <misaxx/core/misa_data_pattern.h>
 #include <misaxx/core/misa_data_description.h>
 #include <misaxx/core/misa_serializable.h>
 #include <misaxx/core/utils/type_traits.h>
@@ -62,7 +62,7 @@ namespace misaxx {
          * @return
          */
         template <class Metadata> const Metadata &get() const {
-            if constexpr (std::is_base_of<misa_data_pattern_base, Metadata>::value) {
+            if constexpr (std::is_base_of<misa_data_pattern, Metadata>::value) {
                 if (static_cast<bool>(std::dynamic_pointer_cast<Metadata>(m_pattern))) {
                     return *std::dynamic_pointer_cast<Metadata>(m_pattern);
                 } else if (misa_serializable::type_is_deserializable_from_json<Metadata>(m_raw_pattern_json)) {
@@ -114,7 +114,7 @@ namespace misaxx {
          * @return
          */
         template <class Metadata> Metadata &set(Metadata t_description) {
-            if constexpr (std::is_base_of<misa_data_pattern_base, Metadata>::value) {
+            if constexpr (std::is_base_of<misa_data_pattern, Metadata>::value) {
                 m_pattern = std::make_shared<Metadata>(std::move(t_description));
                 return *std::dynamic_pointer_cast<Metadata>(m_pattern);
             }
@@ -137,7 +137,7 @@ namespace misaxx {
 
             std::vector<misa_serialization_id> serialization_hierarchy = Metadata().get_serialization_id_hierarchy();
 
-            if constexpr (std::is_base_of<misa_data_pattern_base, Metadata>::value) {
+            if constexpr (std::is_base_of<misa_data_pattern, Metadata>::value) {
                 if (static_cast<bool>(std::dynamic_pointer_cast<Metadata>(m_pattern))) {
                     return *std::dynamic_pointer_cast<Metadata>(m_pattern);
                 } else {
@@ -172,7 +172,7 @@ namespace misaxx {
         * @return
         */
         template <class Metadata> bool has() const {
-            if constexpr (std::is_base_of<misa_data_pattern_base, Metadata>::value) {
+            if constexpr (std::is_base_of<misa_data_pattern, Metadata>::value) {
                 if(static_cast<bool>(std::dynamic_pointer_cast<Metadata>(m_pattern))) {
                     return true;
                 }
@@ -217,7 +217,7 @@ namespace misaxx {
         */
         nlohmann::json m_raw_description_json;
 
-        mutable std::shared_ptr<misa_data_pattern_base> m_pattern;
+        mutable std::shared_ptr<misa_data_pattern> m_pattern;
 
         mutable std::shared_ptr<misa_data_description> m_description;
 
@@ -233,7 +233,7 @@ namespace misaxx {
         */
         template<typename Arg, typename... Args> static std::shared_ptr<misa_description_storage> with(Arg &&arg, Args&&... args) {
             using arg_type = typename std::remove_reference<Arg>::type;
-            static_assert(std::is_base_of<misa_data_description, arg_type>::value || std::is_base_of<misa_data_pattern_base, arg_type>::value,
+            static_assert(std::is_base_of<misa_data_description, arg_type>::value || std::is_base_of<misa_data_pattern, arg_type>::value,
                           "Only patterns and descriptions can be attached!");
             if constexpr (sizeof...(Args) > 0) {
                 auto storage = misa_description_storage::with(std::forward<Args>(args)...);

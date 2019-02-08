@@ -10,7 +10,7 @@
 #include <misaxx/core/misa_data_pattern.h>
 
 namespace misaxx {
-    struct misa_file_stack_pattern : public misa_data_pattern<misa_file_stack_description> {
+    struct misa_file_stack_pattern : public misa_data_pattern {
 
         std::vector<boost::filesystem::path> extensions;
 
@@ -18,7 +18,7 @@ namespace misaxx {
 
         explicit misa_file_stack_pattern(std::vector<boost::filesystem::path> t_extensions);
 
-        misa_file_stack_description produce(const boost::filesystem::path &t_directory) const;
+        void apply(misa_file_stack_description &target, const boost::filesystem::path &t_directory) const;
 
         void from_json(const nlohmann::json &t_json) override;
 
