@@ -40,7 +40,8 @@ function(misaxx_with_default_executable)
     else()
         file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/src/)
         message("--   Creating ${CMAKE_SOURCE_DIR}/src/main.cpp based on module name ${MISAXX_API_NAME}")
-        file(WRITE ${CMAKE_SOURCE_DIR}/src/main.cpp "\#include <MISAXX_API_INCLUDE_PATH/${MISAXX_API_NAME}_module.h>\n\
+        file(WRITE ${CMAKE_SOURCE_DIR}/src/main.cpp "\#include <${MISAXX_API_INCLUDE_PATH}/module.h>\n\
+\#include <${MISAXX_API_INCLUDE_PATH}/module_info.h>\n\
 \#include <misaxx/core/runtime/misa_cli.h>\n\
 \n\
 using namespace misaxx;\n\
