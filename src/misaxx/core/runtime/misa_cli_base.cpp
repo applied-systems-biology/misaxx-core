@@ -58,7 +58,7 @@ misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **ar
             ("parameters,p", po::value<std::string>(), "Provides the list of parameters")
             ("threads,t", po::value<int>(), "Sets the number of threads")
             ("write-parameter-schema", po::value<std::string>(), "Writes a parameter schema to the target file")
-            ("write-runtime-log", "Writes a log containing the runtimes of each tasks into the output directory");
+            ("full-runtime-log", "Writes a comprehensive log containing the runtimes of each tasks into the output directory");
 
     po::command_line_parser parser(argc, argv);
     parser.options(general_options);
@@ -121,12 +121,12 @@ misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **ar
     if(!vm.count("threads") && !m_runtime->is_simulating()) {
         m_runtime->set_num_threads(misaxx::parameter_registry:: template get_json<int>({ "runtime", "num-threads" }, misa_json_property<int>().with_default_value(1)));
     }
-    if(vm.count("write-runtime-log")) {
+    if(vm.count("full-runtime-log")) {
         m_runtime->set_enable_runtime_log(true);
     }
     else {
         m_runtime->set_enable_runtime_log(misaxx::parameter_registry::get_json<bool>({
-                                                                                             "runtime", "write-runtime-log"
+                                                                                             "runtime", "full-runtime-log"
                                                                                      }, misaxx::misa_json_property<bool>().with_default_value(false)));
     }
 //            if(!vm.count("no-skip") && !m_runtime->is_simulating()) {

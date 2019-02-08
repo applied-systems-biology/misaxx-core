@@ -546,8 +546,8 @@ void misa_runtime::postprocess_parameter_schema() {
     // Write runtime parameters
     schema.insert<int>({"runtime", "num-threads"},
                        misa_json_property<int>().with_title("Number of threads").with_default_value(1).make_optional());
-    schema.insert<bool>({"runtime", "write-runtime-log"},
-                       misa_json_property<bool>().with_title("Write runtime log").with_default_value(false).make_optional());
+    schema.insert<bool>({"runtime", "full-runtime-log"},
+                       misa_json_property<bool>().with_title("Full runtime log").with_default_value(false).make_optional());
     schema.insert<bool>({"runtime", "postprocessing", "write-attachments"},
                        misa_json_property<bool>().with_title("Write attachments").with_default_value(true).make_optional());
     schema.insert<bool>({"runtime", "postprocessing", "lazy-write-attachments"},
