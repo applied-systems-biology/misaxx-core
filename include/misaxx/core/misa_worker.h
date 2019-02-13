@@ -59,7 +59,7 @@ namespace misaxx {
         /**
          * Rejects the workload. It will be tried again later.
          */
-        void reject_work();
+        void repeat_work();
 
         /**
          * Override this function to create misa_parameter<T> queries

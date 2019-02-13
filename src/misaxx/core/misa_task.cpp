@@ -17,8 +17,12 @@ void misa_task::simulate_work() {
 }
 
 void misa_task::execute_work() {
-    m_parameter_builder = std::make_unique<misa_parameter_builder>(*this);
-    create_parameters(*m_parameter_builder);
+    // Check if we actually need to create parameters
+    if(!static_cast<bool>(m_parameter_builder)) {
+        m_parameter_builder = std::make_unique<misa_parameter_builder>(*this);
+        create_parameters(*m_parameter_builder);
+    }
+
     if(misaxx::runtime_properties::is_simulating())
         simulate_work();
     else

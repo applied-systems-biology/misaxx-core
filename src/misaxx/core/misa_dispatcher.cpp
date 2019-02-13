@@ -17,10 +17,15 @@ void misa_dispatcher::build_simulation(const misa_dispatcher::blueprint_builder 
 
 void misa_dispatcher::execute_work() {
     // We need to create the builder here when we have an already determined adress
-    this->m_builder = std::make_unique<misa_dispatcher_builder>(*this);
-    this->m_parameter_builder = std::make_unique<misa_parameter_builder>(*this);
-    this->create_parameters(*m_parameter_builder);
-    this->create_blueprints(*m_builder, *m_parameter_builder);
+    if(!static_cast<bool>(m_parameter_builder)) {
+        this->m_parameter_builder = std::make_unique<misa_parameter_builder>(*this);
+        this->create_parameters(*m_parameter_builder);
+    }
+    if(!static_cast<bool>(m_builder)) {
+        this->m_builder = std::make_unique<misa_dispatcher_builder>(*this);
+        this->create_blueprints(*m_builder, *m_parameter_builder);
+    }
+
     if (misaxx::runtime_properties::is_simulating())
         this->build_simulation(*m_builder);
     else

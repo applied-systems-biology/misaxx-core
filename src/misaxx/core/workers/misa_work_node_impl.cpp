@@ -65,8 +65,8 @@ misa_worker_status misa_work_node_impl::get_worker_status() const {
     return m_status;
 }
 
-void misa_work_node_impl::reject_work() {
-    m_status = misa_worker_status ::rejected;
+void misa_work_node_impl::repeat_work() {
+    m_status = misa_worker_status ::queued_repeat;
 }
 
 void misa_work_node_impl::skip_work() {
@@ -74,7 +74,7 @@ void misa_work_node_impl::skip_work() {
 }
 
 void misa_work_node_impl::prepare_work() {
-    if(m_status == misa_worker_status::undone || m_status == misa_worker_status::rejected) {
+    if(m_status == misa_worker_status::undone || m_status == misa_worker_status::queued_repeat) {
         m_status = misa_worker_status ::working;
         get_or_create_instance();
     }
@@ -85,7 +85,7 @@ void misa_work_node_impl::work() {
         throw std::runtime_error("Run prepare_work() before work()!");
     auto instance = get_instance();
     instance->execute_work();
-    if(m_status != misa_worker_status::rejected) {
+    if(m_status != misa_worker_status::queued_repeat) {
         // If the worker has no children, we can already declare that it is finished
         if(instance->get_node()->get_children().empty())
             m_status = misa_worker_status ::done;

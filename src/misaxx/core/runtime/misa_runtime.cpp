@@ -38,8 +38,8 @@ void misa_runtime::run_single_threaded() {
 
             auto subtree_before = nd->get_subtree_status();
             if (nd->get_worker_status() == misa_worker_status::undone ||
-                nd->get_worker_status() == misa_worker_status::rejected) {
-                if (nd->get_worker_status() == misa_worker_status::rejected) {
+                nd->get_worker_status() == misa_worker_status::queued_repeat) {
+                if (nd->get_worker_status() == misa_worker_status::queued_repeat) {
                     progress(*nd, "Retrying single-threaded work on");
                 } else {
                     progress(*nd, "Starting single-threaded work on");
@@ -53,7 +53,7 @@ void misa_runtime::run_single_threaded() {
                     m_runtime_log.stop(0);
                 }
             }
-            if (nd->get_worker_status() == misa_worker_status::rejected) {
+            if (nd->get_worker_status() == misa_worker_status::queued_repeat) {
                 // If the work was rejected, don't do any additional steps afterwards
                 ++rejected;
                 continue;
@@ -123,10 +123,10 @@ void misa_runtime::run_parallel() {
 
             auto subtree_before = nd->get_subtree_status();
             if (nd->get_worker_status() == misa_worker_status::undone ||
-                nd->get_worker_status() == misa_worker_status::rejected) {
+                nd->get_worker_status() == misa_worker_status::queued_repeat) {
 //                        if (!enable_skipping || !nd->is_skippable()) {
                 if (!nd->is_parallelizeable()) {
-                    if (nd->get_worker_status() == misa_worker_status::rejected) {
+                    if (nd->get_worker_status() == misa_worker_status::queued_repeat) {
                         progress(*nd, "Retrying single-threaded work on");
                     } else {
                         progress(*nd, "Starting single-threaded work on");
@@ -140,7 +140,7 @@ void misa_runtime::run_parallel() {
                         m_runtime_log.stop(0);
                     }
                 } else {
-                    if (nd->get_worker_status() == misa_worker_status::rejected) {
+                    if (nd->get_worker_status() == misa_worker_status::queued_repeat) {
                         progress(*nd, "Retrying parallelized work on");
                     } else {
                         progress(*nd, "Starting parallelized work on");
@@ -163,7 +163,7 @@ void misa_runtime::run_parallel() {
 //                            nd->skip_work();
 //                        }
             }
-            if (nd->get_worker_status() == misa_worker_status::rejected) {
+            if (nd->get_worker_status() == misa_worker_status::queued_repeat) {
                 // If the work was rejected, don't do any additional steps afterwards
                 ++rejected;
                 continue;

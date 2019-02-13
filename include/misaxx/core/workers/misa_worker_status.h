@@ -26,7 +26,7 @@ namespace misaxx {
          * The worker rejected the work (e.g. via worker::input<>::exists).
          * Work must be retried later
          */
-        rejected,
+        queued_repeat,
         /**
          * The worker is waiting for sub-workers
          */

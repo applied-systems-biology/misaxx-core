@@ -16,8 +16,8 @@ std::shared_ptr<misa_work_node> misa_worker::get_node() const {
     return m_node.lock();
 }
 
-void misa_worker::reject_work() {
-    get_node()->reject_work();
+void misa_worker::repeat_work() {
+    get_node()->repeat_work();
 }
 
 std::shared_ptr<misa_worker> misa_worker::self() const {

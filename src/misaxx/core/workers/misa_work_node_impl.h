@@ -65,7 +65,7 @@ namespace misaxx {
         /**
          * Allows the worker instance to reject work.
          */
-        void reject_work() override;
+        void repeat_work() override;
 
         /**
          * Allows the runtime to skip the work (will be set to done)

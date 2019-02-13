@@ -91,7 +91,7 @@ namespace misaxx {
         /**
          * Allows the worker instance to reject work.
          */
-        virtual void reject_work() = 0;
+        virtual void repeat_work() = 0;
 
         /**
          * Allows the runtime to skip the work (will be set to done)
