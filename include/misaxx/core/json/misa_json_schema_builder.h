@@ -108,6 +108,16 @@ namespace misaxx {
             if(t_json_metadata.default_value) {
                 json_helper::access_json_path(data, property_base_path, "default") = t_json_metadata.default_value.value();
             }
+
+            // Add documentation if available
+            if(!t_json_metadata.title.empty()) {
+                annotate(t_parameter_path, "misa:documentation-title", t_json_metadata.title);
+            }
+
+            if(!t_json_metadata.description.empty()) {
+                annotate(t_parameter_path, "misa:documentation-description", t_json_metadata.description);
+            }
+
         }
 
         /**
