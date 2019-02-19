@@ -545,13 +545,29 @@ void misa_runtime::postprocess_parameter_schema() {
 
     // Write runtime parameters
     schema.insert<int>({"runtime", "num-threads"},
-                       misa_json_property<int>().with_title("Number of threads").with_default_value(1).make_optional());
+                       misa_json_property<int>()
+                               .with_title("Number of threads")
+                               .with_description("Changes the number of threads")
+                               .with_default_value(1)
+                               .make_optional());
     schema.insert<bool>({"runtime", "full-runtime-log"},
-                       misa_json_property<bool>().with_title("Full runtime log").with_default_value(false).make_optional());
+                       misa_json_property<bool>()
+                               .with_title("Full runtime log")
+                               .with_description("If enabled, the runtime log will contain all individual workers")
+                               .with_default_value(false)
+                               .make_optional());
     schema.insert<bool>({"runtime", "postprocessing", "write-attachments"},
-                       misa_json_property<bool>().with_title("Write attachments").with_default_value(true).make_optional());
+                       misa_json_property<bool>()
+                               .with_title("Write attachments")
+                               .with_description("If enabled, write data attached to caches after the work is done")
+                               .with_default_value(true)
+                               .make_optional());
     schema.insert<bool>({"runtime", "postprocessing", "lazy-write-attachments"},
-                        misa_json_property<bool>().with_title("Only write attachments with actual data").with_default_value(true).make_optional());
+                        misa_json_property<bool>()
+                                .with_title("Only write attachments with actual data")
+                                .with_description("If enabled, only non-empty attachment files will be written")
+                                .with_default_value(true)
+                                .make_optional());
 
 }
 
