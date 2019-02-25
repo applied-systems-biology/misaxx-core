@@ -46,12 +46,14 @@ namespace misaxx {
                         if (boost::filesystem::is_directory(e->external_path())) {
                             std::cout << "[multiobject_root] Found object " << name << ". External path "
                                       << e->external_path().string() << " is valid." << "\n";
-                            t_blueprints.add(create_submodule_blueprint<SubModule>(name));
-                            m_objects.push_back(name);
+
                         } else {
-                            std::cout << "[multiobject_root] Found object " << name << ", but external path "
-                                      << e->external_path().string() << " does not exist. Skipping." << "\n";
+                            std::cout << "[multiobject_root] Warning: Found object " << name << ", but external path "
+                                      << e->external_path().string() << " does not exist." << "\n";
                         }
+
+                        t_blueprints.add(create_submodule_blueprint<SubModule>(name));
+                        m_objects.push_back(name);
                     } else {
                         std::cout << "[multiobject_root] Found object " << name
                                   << ", but it has no external path. Skipping." << "\n";
