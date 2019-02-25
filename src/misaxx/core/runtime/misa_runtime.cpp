@@ -245,6 +245,10 @@ void misa_runtime::run() {
         postprocess_parameter_schema();
     }
     if(!is_simulating()) {
+        if(!boost::filesystem::exists(get_filesystem().exported->external_path())) {
+            boost::filesystem::create_directories(get_filesystem().exported->external_path());
+        }
+
         const auto parameters_path = get_filesystem().exported->external_path() / "parameters.json";
         const auto module_info_path = get_filesystem().exported->external_path() / "misa-module-info.json";
 
