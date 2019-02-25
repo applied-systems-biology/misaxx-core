@@ -6,11 +6,11 @@
 
 using namespace misaxx;
 
-void misa_mutable_module_info::set_name(std::string t_name) {
-    m_name = std::move(t_name);
+void misa_mutable_module_info::set_id(std::string t_id) {
+    m_id = std::move(t_id);
 }
 
-void misa_mutable_module_info::set_description(std::string t_description) {
+void misa_mutable_module_info::set_name(std::string t_description) {
     m_description = std::move(t_description);
 }
 

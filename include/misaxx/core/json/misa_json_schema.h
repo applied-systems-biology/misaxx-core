@@ -20,13 +20,13 @@ namespace misaxx {
          * @param t_builder
          * @param t_path
          */
-        explicit misa_json_schema(misa_json_schema_builder &t_builder, std::vector<std::string> t_path);
+        explicit misa_json_schema(std::shared_ptr<misa_json_schema_builder> t_builder, std::vector<std::string> t_path);
 
         /**
          * Returns the underlying schema builder
          * @return
          */
-        misa_json_schema_builder &get_builder() const;
+        std::shared_ptr<misa_json_schema_builder> get_builder() const;
 
         /**
          * Resolves the provided path and returns a new schema access that represents this path
@@ -104,7 +104,7 @@ namespace misaxx {
         }
 
     private:
-        misa_json_schema_builder *m_builder;
+        std::shared_ptr<misa_json_schema_builder> m_builder;
         std::vector<std::string> m_path;
     };
 }

@@ -35,7 +35,7 @@ namespace misaxx::parameter_registry {
      * Returns the current schema builder.
      * @return
      */
-    extern misa_json_schema_builder &get_schema_builder();
+    extern std::shared_ptr<misa_json_schema_builder> get_schema_builder();
 
     /**
       * Gets the converted JSON value of given path. If the value is not defined in JSON, an exception is thrown.
@@ -48,7 +48,7 @@ namespace misaxx::parameter_registry {
         const bool is_simulating = misaxx::runtime_properties::is_simulating();
 
         if(is_simulating) {
-            get_schema_builder().insert<T>(t_path, t_json_metadata);
+            get_schema_builder()->insert<T>(t_path, t_json_metadata);
             if constexpr (std::is_base_of<misa_serializable, T>::value) {
                 T().to_json_schema(misa_json_schema(get_schema_builder(), t_path));
             }
@@ -85,7 +85,7 @@ namespace misaxx::parameter_registry {
     template<typename T> inline void register_parameter(const std::vector<std::string> &t_path, const misa_json_property<T> &t_json_metadata) {
         const bool is_simulating = misaxx::runtime_properties::is_simulating();
         if(is_simulating) {
-            get_schema_builder().insert<T>(t_path, t_json_metadata);
+            get_schema_builder()->insert<T>(t_path, t_json_metadata);
             if constexpr (std::is_base_of<misa_serializable, T>::value) {
                 T().to_json_schema(misa_json_schema(get_schema_builder(), t_path));
             }

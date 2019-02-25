@@ -4,17 +4,18 @@
 
 #include <misaxx/core/json/misa_json_schema.h>
 
-misaxx::misa_json_schema::misa_json_schema(misaxx::misa_json_schema_builder &t_builder, std::vector<std::string> t_path)
-        :
-        m_builder(&t_builder), m_path(std::move(t_path)) {
+using namespace misaxx;
+
+misa_json_schema::misa_json_schema(std::shared_ptr<misa_json_schema_builder> t_builder, std::vector<std::string> t_path) :
+        m_builder(std::move(t_builder)), m_path(std::move(t_path)) {
 
 }
 
-misaxx::misa_json_schema_builder &misaxx::misa_json_schema::get_builder() const {
-    return *m_builder;
+std::shared_ptr<misa_json_schema_builder> misa_json_schema::get_builder() const {
+    return m_builder;
 }
 
-misaxx::misa_json_schema misaxx::misa_json_schema::parent() const {
+misa_json_schema misa_json_schema::parent() const {
     if(m_path.empty())
         throw std::runtime_error("JSON schema is already parent!");
     std::vector<std::string> new_path = m_path;

@@ -13,9 +13,9 @@ namespace misaxx {
 
         misa_mutable_module_info() = default;
 
-        void set_name(std::string t_name);
+        void set_id(std::string t_id);
 
-        void set_description(std::string t_description);
+        void set_name(std::string t_description);
 
         void set_version(std::string t_version);
 

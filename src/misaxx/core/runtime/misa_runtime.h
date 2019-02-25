@@ -104,7 +104,7 @@ namespace misaxx {
         /**
          * Used to create a configuration schema
          */
-        misa_json_schema_builder m_parameter_schema_builder;
+        std::shared_ptr<misa_json_schema_builder> m_parameter_schema_builder;
 
     public:
 
@@ -193,7 +193,7 @@ namespace misaxx {
          * If it returns nullptr, the schema builder will be ignored.
          * @return
          */
-        misa_json_schema_builder &get_schema_builder();
+        std::shared_ptr<misa_json_schema_builder> get_schema_builder();
 
         /**
          * Returns the runtime log

@@ -70,13 +70,13 @@ misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **ar
 
     if(vm.count("help")) {
         auto info = misaxx::runtime_properties::get_module_info();
-        std::cout << info.get_name() << " " << info.get_version() << "\n";
+        std::cout << info.get_id() << " " << info.get_version() << "\n";
         std::cout << general_options << "\n";
         return misa_cli_base::cli_result::no_workload;
     }
     if(vm.count("version")) {
         auto info = misaxx::runtime_properties::get_module_info();
-        std::cout << info.get_name() << " " << info.get_version() << "\n";
+        std::cout << info.get_id() << " " << info.get_version() << "\n";
         return misa_cli_base::cli_result::no_workload;
     }
     if(vm.count("module-info")) {
@@ -155,7 +155,7 @@ void misa_cli_base::run() {
     // Build schema
     if(m_runtime->is_simulating()) {
         std::cout << "<#> <#> Writing parameter schema to " << m_parameter_schema_path.string() << "\n";
-        m_runtime->get_schema_builder().write(m_parameter_schema_path);
+        m_runtime->get_schema_builder()->write(m_parameter_schema_path);
     }
 }
 

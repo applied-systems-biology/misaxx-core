@@ -269,7 +269,7 @@ void misa_runtime::run() {
         m_nodes_todo.clear();
         m_nodes_todo_lookup.clear();
         m_known_nodes_count = 0;
-        m_parameter_schema_builder = misa_json_schema_builder {};
+        m_parameter_schema_builder = std::make_shared<misa_json_schema_builder>();
         m_finished_nodes_count = 0;
         m_tree_complete = false;
 
@@ -292,7 +292,7 @@ void misa_runtime::run() {
         postprocess_parameter_schema();
 
         std::cout << "<#> <#> Writing parameter schema to " << output_path.string() << "\n";
-        get_schema_builder().write(output_path);
+        get_schema_builder()->write(output_path);
 
         m_is_simulating = false;
 
@@ -362,7 +362,7 @@ nlohmann::json misa_runtime::get_json_raw(const std::vector<std::string> &t_path
     return misaxx::json_helper::access_json_path(m_parameters, t_path);
 }
 
-misa_json_schema_builder &misa_runtime::get_schema_builder() {
+std::shared_ptr<misa_json_schema_builder> misa_runtime::get_schema_builder() {
     return m_parameter_schema_builder;
 }
 
@@ -489,10 +489,9 @@ void misa_runtime::postprocess_cache_attachments() {
 
                     // Export attachment JSON schema
                     if(attachment_schemata.find(attachment_ptr->get_serialization_id().get_id()) == attachment_schemata.end()) {
-                        misa_json_schema_builder builder;
-                        misa_json_schema schema { builder, std::vector<std::string>() };
+                        misa_json_schema schema { std::make_shared<misa_json_schema_builder>(), std::vector<std::string>() };
                         attachment_ptr->to_json_schema(schema);
-                        attachment_schemata[attachment_ptr->get_serialization_id().get_id()] = builder.data;
+                        attachment_schemata[attachment_ptr->get_serialization_id().get_id()] = schema.get_builder()->data;
                     }
                 }
             }
@@ -533,18 +532,18 @@ void misa_runtime::postprocess_cache_attachments() {
 }
 
 void misa_runtime::postprocess_parameter_schema() {
-    misa_json_schema_builder &schema = get_schema_builder();
+    std::shared_ptr<misa_json_schema_builder> schema = get_schema_builder();
 
     // Save filesystem to parameter schema
     get_filesystem().to_json_schema(misa_json_schema(schema, {"filesystem", "json-data"}));
-    schema.insert<std::string>({"filesystem", "source"},
+    schema->insert<std::string>({"filesystem", "source"},
                                misa_json_property<std::string>().with_default_value("json").make_required());
 
     // Workaround: Due to inflexibility with schema generation, manually put "__OBJECT__" nodes into list builders
     // /properties/algorithm -> nothing to do
     // /properties/objects/properties/__OBJECT__ -> /properties/objects/additionalProperties
     {
-        auto &base = schema.data["properties"]["samples"];
+        auto &base = schema->data["properties"]["samples"];
         base["type"] = "object";
         base["additionalProperties"] = std::move(base["properties"]["__OBJECT__"]);
         base["properties"].erase(base["properties"].find("__OBJECT__"));
@@ -552,36 +551,36 @@ void misa_runtime::postprocess_parameter_schema() {
 
     // /properties/runtime::filesystem/properties/json-data/properties/imported/properties/children/properties/__OBJECT__ -> /properties/runtime::filesystem/properties/json-data/properties/imported/properties/children/additionalProperties
     {
-        auto &base = schema.data["properties"]["filesystem"]["properties"]["json-data"]["properties"]["imported"]["properties"]["children"];
+        auto &base = schema->data["properties"]["filesystem"]["properties"]["json-data"]["properties"]["imported"]["properties"]["children"];
         base["additionalProperties"] = std::move(base["properties"]["__OBJECT__"]);
         base["properties"].erase(base["properties"].find("__OBJECT__"));
     }
     {
-        auto &base = schema.data["properties"]["filesystem"]["properties"]["json-data"]["properties"]["exported"]["properties"]["children"];
+        auto &base = schema->data["properties"]["filesystem"]["properties"]["json-data"]["properties"]["exported"]["properties"]["children"];
         base["additionalProperties"] = std::move(base["properties"]["__OBJECT__"]);
         base["properties"].erase(base["properties"].find("__OBJECT__"));
     }
 
     // Write runtime parameters
-    schema.insert<int>({"runtime", "num-threads"},
+    schema->insert<int>({"runtime", "num-threads"},
                        misa_json_property<int>()
                                .with_title("Number of threads")
                                .with_description("Changes the number of threads")
                                .with_default_value(1)
                                .make_optional());
-    schema.insert<bool>({"runtime", "full-runtime-log"},
+    schema->insert<bool>({"runtime", "full-runtime-log"},
                        misa_json_property<bool>()
                                .with_title("Full runtime log")
                                .with_description("If enabled, the runtime log will contain all individual workers")
                                .with_default_value(false)
                                .make_optional());
-    schema.insert<bool>({"runtime", "postprocessing", "write-attachments"},
+    schema->insert<bool>({"runtime", "postprocessing", "write-attachments"},
                        misa_json_property<bool>()
                                .with_title("Write attachments")
                                .with_description("If enabled, write data attached to caches after the work is done")
                                .with_default_value(true)
                                .make_optional());
-    schema.insert<bool>({"runtime", "postprocessing", "lazy-write-attachments"},
+    schema->insert<bool>({"runtime", "postprocessing", "lazy-write-attachments"},
                         misa_json_property<bool>()
                                 .with_title("Only write attachments with actual data")
                                 .with_description("If enabled, only non-empty attachment files will be written")
@@ -614,7 +613,7 @@ std::shared_ptr<misa_work_node> misa_runtime::create_root_node() {
 //    auto result = m_module_instantiator(m_module_interface);
 //    m_module_interface = result->get_module();
 //    return result;
-    return misa_work_node::create_instance(m_module_info.get_name(), std::shared_ptr<misa_work_node> (),  [this](const std::shared_ptr<misa_work_node> &t_root) {
+    return misa_work_node::create_instance(m_module_info.get_id(), std::shared_ptr<misa_work_node> (),  [this](const std::shared_ptr<misa_work_node> &t_root) {
                                                 auto root_module = this->m_module_instantiator(t_root, std::move(this->m_module_interface));
                                                 this->m_module_interface = root_module->get_module();
                                                 return root_module;

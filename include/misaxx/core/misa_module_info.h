@@ -19,7 +19,7 @@ namespace misaxx {
          * A short, lowercase name without spaces or special characters
          * @return
          */
-        std::string get_name() const;
+        std::string get_id() const;
 
         /**
          * The version of the module
@@ -31,7 +31,7 @@ namespace misaxx {
          * A short, descriptive name of the module
          * @return
          */
-        std::string get_description() const;
+        std::string get_name() const;
 
         /**
          * The list of dependency modules
@@ -49,7 +49,7 @@ namespace misaxx {
 
         void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;
 
-        std::string m_name;
+        std::string m_id;
         std::string m_version;
         std::string m_description;
         std::vector<misa_module_info> m_dependencies;
