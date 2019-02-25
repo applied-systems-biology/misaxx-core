@@ -3,6 +3,7 @@
 //
 
 #include <misaxx/core/misa_module_info.h>
+#include <misaxx/core/misa_json_schema_property.h>
 
 using namespace misaxx;
 
@@ -42,12 +43,12 @@ void misa_module_info::to_json(nlohmann::json &t_json) const {
     t_json["dependencies"] = m_dependencies;
 }
 
-void misa_module_info::to_json_schema(const misa_json_schema &t_schema) const {
+void misa_module_info::to_json_schema(misa_json_schema_property &t_schema) const {
     misa_serializable::to_json_schema(t_schema);
-    t_schema.resolve("name").declare_required<std::string>();
-    t_schema.resolve("version").declare_required<std::string>();
-    t_schema.resolve("description").declare_optional<std::string>();
-    t_schema.resolve("dependencies").declare_optional<std::vector<misa_module_info>>();
+    t_schema.resolve("name")->declare_required<std::string>();
+    t_schema.resolve("version")->declare_required<std::string>();
+    t_schema.resolve("description")->declare_optional<std::string>();
+    t_schema.resolve("dependencies")->declare_optional<std::vector<misa_module_info>>();
 }
 
 void misa_module_info::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {

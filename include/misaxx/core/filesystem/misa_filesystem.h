@@ -39,7 +39,7 @@ namespace misaxx {
 
         void to_json(nlohmann::json &t_json) const override;
 
-        void to_json_schema(const misa_json_schema &t_schema) const override;
+        void to_json_schema(misa_json_schema_property &t_schema) const override;
 
         std::shared_ptr<misa_filesystem_entry> find_external_path(const boost::filesystem::path &t_path) const;
 

@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <misaxx/core/json/misa_json_property.h>
+
 #include <misaxx/core/runtime/misa_parameter_registry.h>
 #include <misaxx/core/misa_parameter_base.h>
 
@@ -14,19 +14,15 @@ namespace misaxx {
      * Wrapper around a parameter, including metadata
      * @tparam T
      */
-    template<typename T> struct misa_parameter : public misa_parameter_base, public misa_json_property<T> {
+    template<typename T> struct misa_parameter : public misa_parameter_base {
 
         misa_parameter() = default;
 
-        explicit misa_parameter(path t_location, misa_json_property<T> t_metadata = misa_json_property<T>()) :
-                misa_json_property<T>(std::move(t_metadata)), location(std::move(t_location)) {
+        explicit misa_parameter(path t_location, std::shared_ptr<misa_json_schema_property> t_schema) :
+                misa_parameter_base(std::move(t_location), std::move(t_schema)) {
 
         }
 
-        /**
-         * Location of the parameter within the parameter JSON
-         */
-        path location;
 
         /**
          * Name of the parameter
@@ -45,19 +41,11 @@ namespace misaxx {
         }
 
         /**
-         * Description of the parameter
-         * @return
-         */
-        const misa_json_property_base &get_description() const override {
-            return *this;
-        }
-
-        /**
          * Gets the value of this parameter from the parameter file
          * @return
          */
         T query() const {
-            return misaxx::parameter_registry::get_json(get_location(), *this);
+            return misaxx::parameter_registry::get_json<T>(get_location());
         }
     };
 }

@@ -6,7 +6,6 @@
 #pragma once
 
 #include <nlohmann/json.hpp>
-#include <misaxx/core/json/misa_json_schema.h>
 #include <misaxx/core/misa_serialization_id.h>
 
 namespace misaxx {
@@ -28,13 +27,6 @@ namespace misaxx {
          * @param t_json
          */
         virtual void to_json(nlohmann::json &t_json) const;
-
-        /**
-         * Describes the structure of the data as JSON schema
-         * Must be consistent with the JSON structure expected by from_json and to_json
-         * @param t_schema
-         */
-        virtual void to_json_schema(const misa_json_schema &t_schema) const;
 
         /**
          * Describes the structure of the data as JSON schema

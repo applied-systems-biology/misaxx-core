@@ -84,9 +84,9 @@ namespace misaxx {
             m_unit.to_json(t_json["unit"]);
         }
 
-        void to_json_schema(const misa_json_schema &t_schema) const override {
+        void to_json_schema(misa_json_schema_property &t_schema) const override {
             misa_serializable::to_json_schema(t_schema);
-            t_schema.resolve("values").declare_required<std::vector<Value>>();
+            t_schema.resolve("values")->declare_required<std::vector<Value>>();
             m_unit.to_json_schema(t_schema.resolve("unit"));
         }
 

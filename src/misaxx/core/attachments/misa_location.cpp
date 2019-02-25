@@ -30,10 +30,10 @@ void misa_location::to_json(nlohmann::json &t_json) const {
     t_json["filesystem-unique-location"] = filesystem_unique_location.string();
 }
 
-void misa_location::to_json_schema(const misa_json_schema &t_schema) const {
+void misa_location::to_json_schema(misa_json_schema_property &t_schema) const {
     misa_serializable::to_json_schema(t_schema);
-    t_schema.resolve("filesystem-location").declare<std::string>();
-    t_schema.resolve("filesystem-unique-location").declare<std::string>();
+    t_schema["filesystem-location"] = std::string();
+    t_schema["filesystem-unique-location"] = std::string();
 }
 
 void misa_location::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {

@@ -30,10 +30,6 @@ add_library(misaxx-core
         include/misaxx/core/misa_multiobject_root.h
         include/misaxx/core/descriptions/misa_file_stack_description.h
         include/misaxx/core/descriptions/misa_file_description.h
-        include/misaxx/core/json/misa_json_schema_builder.h
-        include/misaxx/core/json/misa_json_schema.h
-        include/misaxx/core/json/misa_json_property.h
-        include/misaxx/core/json/misa_json_property_base.h
         include/misaxx/core/caches/misa_exported_attachments_cache.h
         include/misaxx/core/filesystem/misa_filesystem_json_importer.h
         include/misaxx/core/filesystem/misa_filesystem_entry.h
@@ -72,10 +68,6 @@ add_library(misaxx-core
         src/misaxx/core/misa_multiobject_root.cpp
         src/misaxx/core/descriptions/misa_file_stack_description.cpp
         src/misaxx/core/descriptions/misa_file_description.cpp
-        src/misaxx/core/json/misa_json_schema_builder.cpp
-        src/misaxx/core/json/misa_json_schema.cpp
-        src/misaxx/core/json/misa_json_property.cpp
-        src/misaxx/core/json/misa_json_property_base.cpp
         src/misaxx/core/caches/misa_exported_attachments_cache.cpp
         src/misaxx/core/filesystem/misa_filesystem_json_importer.cpp
         src/misaxx/core/filesystem/misa_filesystem_entry.cpp
@@ -99,7 +91,6 @@ add_library(misaxx-core
         src/misaxx/core/misa_data_pattern.cpp
         include/misaxx/core/misa_primitive.h
         include/misaxx/core/misa_serialization_id.h
-        include/misaxx/core/json/misa_json_helper.h
         src/misaxx/core/misa_cached_data_base.cpp
         include/misaxx/core/misa_cached_data_base.h
         include/misaxx/core/misa_default_cache.h
@@ -161,7 +152,7 @@ add_library(misaxx-core
         include/misaxx/core/attachments/detail/misa_locatable.h
         include/misaxx/core/detail/misa_cached_data.h
         src/misaxx/core/workers/misa_work_node_impl.cpp
-        src/misaxx/core/workers/misa_work_node_impl.h src/misaxx/core/runtime/misa_runtime_log.cpp src/misaxx/core/runtime/misa_runtime_log.h src/misaxx/core/descriptions/misa_exported_attachments_description.cpp include/misaxx/core/descriptions/misa_exported_attachments_description.h src/misaxx/core/json/misa_json_schema_property.cpp include/misaxx/core/json/misa_json_schema_property.h)
+        src/misaxx/core/workers/misa_work_node_impl.h src/misaxx/core/runtime/misa_runtime_log.cpp src/misaxx/core/runtime/misa_runtime_log.h src/misaxx/core/descriptions/misa_exported_attachments_description.cpp include/misaxx/core/descriptions/misa_exported_attachments_description.h src/misaxx/core/misa_json_schema_property.cpp include/misaxx/core/misa_json_schema_property.h src/misaxx/core/misa_parameter_base.cpp)
 
 # Module info header
 configure_file(${CMAKE_SOURCE_DIR}/cmake/module_info.h.in

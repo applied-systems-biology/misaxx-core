@@ -44,14 +44,11 @@ misa_dispatcher::create_blueprint_enum_parameter(misa_parameter<std::string> &t_
         throw std::runtime_error("The provided parameter must be initialized!");
 
     for(const auto &bp : t_blueprints) {
-        t_parameter.allowed_values.push_back(bp->get_name());
+        t_parameter.schema->allowed_values.push_back(bp->get_name());
     }
     if(t_default.has_value()) {
-        t_parameter.with_default_value(t_default.value());
+        t_parameter.schema->default_value = t_default.value();
     }
-
-    // Re-register into the runtime
-    misaxx::parameter_registry::register_parameter(t_parameter.get_location(), t_parameter);
 
     return std::move(t_blueprints);
 }

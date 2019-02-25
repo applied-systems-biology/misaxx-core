@@ -3,6 +3,7 @@
 //
 
 #include <misaxx/core/attachments/misa_locatable.h>
+#include <misaxx/core/misa_json_schema_property.h>
 
 using namespace misaxx;
 
@@ -22,9 +23,9 @@ void misa_locatable::to_json(nlohmann::json &t_json) const {
         t_json["location"] = nlohmann::json {};
 }
 
-void misa_locatable::to_json_schema(const misa_json_schema &t_schema) const {
+void misa_locatable::to_json_schema(misa_json_schema_property &t_schema) const {
     misa_serializable::to_json_schema(t_schema);
-    t_schema.resolve("location").declare<misa_location>();
+    t_schema["location"] = misa_location();
 }
 
 void misa_locatable::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {

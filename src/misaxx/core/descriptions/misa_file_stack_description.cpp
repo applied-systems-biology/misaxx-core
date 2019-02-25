@@ -1,4 +1,5 @@
 #include <misaxx/core/descriptions/misa_file_stack_description.h>
+#include <misaxx/core/misa_json_schema_property.h>
 
 using namespace misaxx;
 
@@ -19,10 +20,10 @@ void misa_file_stack_description::to_json(nlohmann::json &t_json) const {
     t_json["files"] = files;
 }
 
-void misa_file_stack_description::to_json_schema(const misa_json_schema &t_schema) const {
+void misa_file_stack_description::to_json_schema(misa_json_schema_property &t_schema) const {
     misa_data_description::to_json_schema(t_schema);
     for(const auto &kv : files) {
-        kv.second.to_json_schema(t_schema.resolve("files", kv.first));
+        kv.second.to_json_schema(t_schema["files"][kv.first]);
     }
 }
 
