@@ -488,12 +488,11 @@ void misa_runtime::postprocess_cache_attachments() {
                     attachment_ptr->to_json(exported_json[attachment_ptr->get_serialization_id().get_id()]);
 
                     // Export attachment JSON schema
-                    std::string serialization_id = static_cast<std::string>(attachment_ptr->get_serialization_id());
-                    if(attachment_schemata.find(serialization_id) == attachment_schemata.end()) {
+                    if(attachment_schemata.find(attachment_ptr->get_serialization_id().get_id()) == attachment_schemata.end()) {
                         misa_json_schema_builder builder;
                         misa_json_schema schema { builder, std::vector<std::string>() };
                         attachment_ptr->to_json_schema(schema);
-                        attachment_schemata[serialization_id] = builder.data;
+                        attachment_schemata[attachment_ptr->get_serialization_id().get_id()] = builder.data;
                     }
                 }
             }
