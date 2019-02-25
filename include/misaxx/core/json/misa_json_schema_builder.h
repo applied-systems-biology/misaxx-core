@@ -25,6 +25,8 @@ namespace misaxx {
 
         using path_t = std::vector<std::string>;
 
+        misa_json_schema_builder();
+
         /**
          * Returns the path to the JSON schema definition property of given parameter
          * @param t_parameter_path
@@ -66,37 +68,16 @@ namespace misaxx {
         template<typename T> void insert(const path_t &t_parameter_path, const misa_json_property<T> &t_json_metadata) {
             ensure_schema_property_path(t_parameter_path);
 
-            nlohmann::json as_json;
-
-            // If we have a serializable, prefer the dynamic method
-            if constexpr (std::is_base_of<misa_serializable, T>::value) {
-                T v;
-                v.to_json(as_json);
-            }
-            else {
-                as_json = nlohmann::json(T());
-            }
-
             const auto property_base_path = schema_property_path(t_parameter_path);
             const auto property_parent_base_path = schema_parent_path(t_parameter_path);
 
-            json_helper::access_json_path(data, property_base_path, "type") = as_json.type_name();
-
-            // If the property is required, update the required list
-            if(t_json_metadata.required) {
-                nlohmann::json &required_list = json_helper::access_json_path(data, property_parent_base_path, "required");
-
-                if(required_list.empty()) {
-                    required_list = { t_parameter_path[t_parameter_path.size() - 1] };
-                }
-                else {
-                    const auto &item = t_parameter_path[t_parameter_path.size() - 1];
-                    for(const auto &v : required_list) {
-                        if(v == item)
-                            return;
-                    }
-                    required_list.push_back(item);
-                }
+            // Assign type name
+            if constexpr (std::is_base_of<misa_serializable, T>::value) {
+                json_helper::access_json_path(data, property_base_path, "type") = "object"; // Serializable objects are always objects
+            }
+            else {
+                nlohmann::json as_json = nlohmann::json(T());
+                json_helper::access_json_path(data, property_base_path, "type") = as_json.type_name();
             }
 
             // If we have enumerated values, use them
@@ -109,27 +90,23 @@ namespace misaxx {
                 json_helper::access_json_path(data, property_base_path, "default") = t_json_metadata.default_value.value();
             }
 
-            // Add documentation if available
-            if(!t_json_metadata.title.empty()) {
-                annotate(t_parameter_path, "misa:documentation-title", t_json_metadata.title);
-            }
-
-            if(!t_json_metadata.description.empty()) {
-                annotate(t_parameter_path, "misa:documentation-description", t_json_metadata.description);
-            }
-
+            insert_common(t_parameter_path, t_json_metadata);
         }
 
         /**
          * Final JSON schema
          */
-        nlohmann::json data = nlohmann::json({ {"type", "object"}, {"$schema", "http://json-schema.org/draft-07/schema#"} });
+        nlohmann::json data;
 
         /**
          * Saves the parameter schema to a file.
          * @param t_path
          */
-        void write(const boost::filesystem::path &t_path);
+        void write(const boost::filesystem::path &t_path) const;
+
+    private:
+
+        void insert_common(const path_t &t_parameter_path, const misa_json_property_base &t_json_metadata);
 
     };
 
