@@ -9,6 +9,19 @@
 #include <misaxx/core/json/misa_json_property.h>
 
 namespace misaxx {
+
+    namespace detail {
+        /**
+         * The core of misa_json_schema that allows including template schemata
+         * @tparam T
+         */
+        template<typename T> struct misa_json_schema_declarator {
+            static void declare(const std::shared_ptr<misa_json_schema_builder> &builder, const std::vector<std::string>& path, misa_json_property<T> metadata) {
+                builder->insert<T>(path, std::move(metadata));
+            }
+        };
+    }
+
     /**
      * Helper class around pattxx JSON schema for serialization
      */
@@ -55,7 +68,7 @@ namespace misaxx {
          * @param t_json_metadata
          */
         template<typename T> void declare(misa_json_property<T> t_json_metadata = misa_json_property<T>()) const  {
-            m_builder->insert<T>(m_path, std::move(t_json_metadata));
+            detail::misa_json_schema_declarator<T>::declare(m_builder, m_path, std::move(t_json_metadata));
         }
 
         /**
@@ -103,8 +116,37 @@ namespace misaxx {
             m_builder->annotate(m_path, t_key, t_value);
         }
 
+        /**
+         * Creates a JSON schema entry from the value.
+         * It is not a valid JSON schema due to a missing schema annotation
+         * @tparam T
+         * @param t_json_metadata
+         * @return
+         */
+        template<typename T>
+        static nlohmann::json get_schema_value(misa_json_property<T> t_json_metadata = misa_json_property<T>()) {
+            auto builder = std::make_shared<misa_json_schema_builder>();
+            misa_json_schema schema { builder, { "schema" } };
+            schema.declare(t_json_metadata);
+            return builder->data["properties"]["schema"];
+        }
+
     private:
         std::shared_ptr<misa_json_schema_builder> m_builder;
         std::vector<std::string> m_path;
     };
+
+    namespace detail {
+        template<typename V> struct misa_json_schema_declarator<std::vector<V>> {
+            static void declare(const std::shared_ptr<misa_json_schema_builder> &builder, const std::vector<std::string>& path, misa_json_property<std::vector<V>> metadata) {
+                builder->insert<std::vector<V>>(path, std::move(metadata));
+
+                // Create a sub-schema for vector items
+                auto temp_builder = std::make_shared<misa_json_schema_builder>();
+                misa_json_schema schema { temp_builder, { "schema" } };
+                schema.declare<V>();
+                builder->annotate(path, "items", temp_builder->data["properties"]["schema"]);
+            }
+        };
+    }
 }

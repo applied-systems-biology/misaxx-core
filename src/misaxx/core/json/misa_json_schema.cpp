@@ -27,3 +27,4 @@ misa_json_schema misa_json_schema::parent() const {
     }
     return misa_json_schema(get_builder(), std::move(new_path));
 }
+

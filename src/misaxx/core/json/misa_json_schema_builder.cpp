@@ -1,4 +1,6 @@
 #include <misaxx/core/json/misa_json_schema_builder.h>
+#include <misaxx/core/json/misa_json_schema.h>
+#include <misaxx/core/misa_serializable.h>
 
 using namespace misaxx;
 
@@ -75,5 +77,15 @@ void misa_json_schema_builder::insert_common(const misa_json_schema_builder::pat
     if(!t_json_metadata.description.empty()) {
         annotate(t_parameter_path, "misa:documentation-description", t_json_metadata.description);
     }
+}
+
+void misa_json_schema_builder::insert_serializable(const misa_json_schema_builder::path_t &t_parameter_path,
+                                                   const misa_serializable &serializable) {
+    misa_json_schema schema { self(), t_parameter_path };
+    serializable.to_json_schema(schema);
+}
+
+std::shared_ptr<misa_json_schema_builder> misa_json_schema_builder::self() {
+    return shared_from_this();
 }
 

@@ -21,7 +21,7 @@ namespace misaxx {
     /**
      * Responsible for creating a JSON schema
      */
-    struct misa_json_schema_builder {
+    struct misa_json_schema_builder : public std::enable_shared_from_this<misa_json_schema_builder> {
 
         using path_t = std::vector<std::string>;
 
@@ -73,7 +73,7 @@ namespace misaxx {
 
             // Assign type name
             if constexpr (std::is_base_of<misa_serializable, T>::value) {
-                json_helper::access_json_path(data, property_base_path, "type") = "object"; // Serializable objects are always objects
+                insert_serializable(t_parameter_path, T());
             }
             else {
                 nlohmann::json as_json = nlohmann::json(T());
@@ -104,9 +104,13 @@ namespace misaxx {
          */
         void write(const boost::filesystem::path &t_path) const;
 
+        std::shared_ptr<misa_json_schema_builder> self();
+
     private:
 
         void insert_common(const path_t &t_parameter_path, const misa_json_property_base &t_json_metadata);
+
+        void insert_serializable(const path_t &t_parameter_path, const misa_serializable &serializable);
 
     };
 
