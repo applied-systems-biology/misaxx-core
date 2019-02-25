@@ -7,6 +7,7 @@
 
 #include <misaxx/core/json/misa_json_schema_builder.h>
 #include <misaxx/core/json/misa_json_property.h>
+#include <misaxx/core/misa_serialization_id.h>
 
 namespace misaxx {
 

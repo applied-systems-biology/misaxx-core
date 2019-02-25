@@ -10,6 +10,9 @@
 #include <misaxx/core/misa_serialization_id.h>
 
 namespace misaxx {
+
+    struct misa_json_schema_property;
+
     /**
      * An object that can be serialized and deserialized from/to JSON.
      */
@@ -32,6 +35,13 @@ namespace misaxx {
          * @param t_schema
          */
         virtual void to_json_schema(const misa_json_schema &t_schema) const;
+
+        /**
+         * Describes the structure of the data as JSON schema
+         * Must be consistent with the JSON structure expected by from_json and to_json
+         * @param schema
+         */
+        virtual void to_json_schema(misa_json_schema_property &schema) const;
 
         /**
          * Gets the serialization ID of the object
