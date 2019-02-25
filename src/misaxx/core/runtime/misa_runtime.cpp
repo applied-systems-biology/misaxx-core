@@ -489,9 +489,9 @@ void misa_runtime::postprocess_cache_attachments() {
 
                     // Export attachment JSON schema
                     if(attachment_schemata.find(attachment_ptr->get_serialization_id().get_id()) == attachment_schemata.end()) {
-                        misa_json_schema schema { std::make_shared<misa_json_schema_builder>(), std::vector<std::string>() };
+                        misa_json_schema schema { std::make_shared<misa_json_schema_builder>(), { "schema" } };
                         attachment_ptr->to_json_schema(schema);
-                        attachment_schemata[attachment_ptr->get_serialization_id().get_id()] = schema.get_builder()->data;
+                        attachment_schemata[attachment_ptr->get_serialization_id().get_id()] = schema.get_builder()->data["properties"]["schema"];
                     }
                 }
             }
@@ -522,7 +522,7 @@ void misa_runtime::postprocess_cache_attachments() {
     if (!is_simulating()) {
         const boost::filesystem::path filesystem_export_base_path = get_filesystem().exported->external_path();
         std::ofstream sw;
-        sw.open((filesystem_export_base_path / "attachments" / "serialization-ids.json" ));
+        sw.open((filesystem_export_base_path / "attachments" / "serialization-schemas.json" ));
         sw << std::setw(4) << attachment_schemata;
     }
 
