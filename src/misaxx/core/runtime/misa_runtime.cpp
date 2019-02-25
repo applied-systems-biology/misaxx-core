@@ -446,6 +446,9 @@ void misa_runtime::postprocess_cache_attachments() {
         m_runtime_log.start(0, "Attachments");
     }
 
+    // Attachment JSON schemata
+    nlohmann::json attachment_schemata;
+
     for (const auto &ptr : get_registered_caches()) {
 
         if (ptr->get_unique_location().empty())
@@ -483,6 +486,15 @@ void misa_runtime::postprocess_cache_attachments() {
                 if (!cache_attachment_path.empty()) {
                     // Export the attachment as JSON
                     attachment_ptr->to_json(exported_json[attachment_ptr->get_serialization_id().get_id()]);
+
+                    // Export attachment JSON schema
+                    std::string serialization_id = static_cast<std::string>(attachment_ptr->get_serialization_id());
+                    if(attachment_schemata.find(serialization_id) == attachment_schemata.end()) {
+                        misa_json_schema_builder builder;
+                        misa_json_schema schema { builder, std::vector<std::string>() };
+                        attachment_ptr->to_json_schema(schema);
+                        attachment_schemata[serialization_id] = builder.data;
+                    }
                 }
             }
 
@@ -506,6 +518,14 @@ void misa_runtime::postprocess_cache_attachments() {
                 m_runtime_log.stop(0);
             }
         }
+    }
+
+    // Write attachment serialization IDs
+    if (!is_simulating()) {
+        const boost::filesystem::path filesystem_export_base_path = get_filesystem().exported->external_path();
+        std::ofstream sw;
+        sw.open((filesystem_export_base_path / "attachments" / "serialization-ids.json" ));
+        sw << std::setw(4) << attachment_schemata;
     }
 
     if(!m_enable_runtime_log) {
