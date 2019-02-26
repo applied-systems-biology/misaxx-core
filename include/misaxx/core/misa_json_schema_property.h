@@ -7,10 +7,31 @@
 #include <nlohmann/json.hpp>
 #include <misaxx/core/misa_serialization_id.h>
 #include <misaxx/core/misa_serializable.h>
+#include <map>
+#include <unordered_map>
 
 namespace misaxx {
 
     struct misa_json_schema_property : public std::enable_shared_from_this<misa_json_schema_property> {
+
+        /**
+         * Needed to override buggy behavior of nlohmann::json's object detector
+         * @tparam Type
+         */
+        template<typename Type>
+        struct is_map : public std::false_type {
+
+        };
+
+        template<typename V>
+        struct is_map<std::map<std::string, V>> : public std::true_type {
+
+        };
+
+        template<typename V>
+        struct is_map<std::unordered_map<std::string, V>> : public std::true_type {
+
+        };
 
         /**
          * Subtree-properties are supposed to have no default value and no child template.
@@ -100,6 +121,12 @@ namespace misaxx {
                 property_type = property_type::subtree;
                 value_type = nlohmann::json::value_t::object;
                 dynamic_cast<const misa_serializable &>(T()).to_json_schema(*this);
+            } else if constexpr (is_map<T>::value) {
+                property_type = property_type::leaf;
+                value_type = nlohmann::json::value_t::object;
+                // Extract the "additionalProperties" property from the type as children_template
+                children_template = std::make_shared<misa_json_schema_property>();
+                children_template->declare<typename T::mapped_type>();
             } else if constexpr (nlohmann::detail::is_compatible_string_type<nlohmann::json, T>::value) {
                 property_type = property_type::leaf;
                 value_type = nlohmann::json::value_t::string;
