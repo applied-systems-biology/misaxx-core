@@ -4,6 +4,7 @@
 
 #include "misa_runtime_log.h"
 #include <chrono>
+#include <misaxx/core/misa_json_schema_property.h>
 
 void misaxx::misa_runtime_log::start(int thread, std::string name) {
     std::lock_guard<std::mutex> lock {mutex};
@@ -34,9 +35,9 @@ void misaxx::misa_runtime_log::to_json(nlohmann::json &t_json) const {
     }
 }
 
-void misaxx::misa_runtime_log::to_json_schema(const misaxx::misa_json_schema &t_schema) const {
+void misaxx::misa_runtime_log::to_json_schema(misaxx::misa_json_schema_property &t_schema) const {
     misa_serializable::to_json_schema(t_schema);
-    t_schema.resolve("entries").declare_required<std::vector<entry>>();
+    t_schema.resolve("entries")->declare_required<std::vector<entry>>();
 }
 
 void
@@ -61,12 +62,12 @@ void misaxx::misa_runtime_log::entry::to_json(nlohmann::json &t_json) const {
     t_json["name"] = name;
 }
 
-void misaxx::misa_runtime_log::entry::to_json_schema(const misaxx::misa_json_schema &t_schema) const {
+void misaxx::misa_runtime_log::entry::to_json_schema(misaxx::misa_json_schema_property &t_schema) const {
     misa_serializable::to_json_schema(t_schema);
-    t_schema.resolve("start-time").declare_required<double>();
-    t_schema.resolve("end-time").declare_required<double>();
-    t_schema.resolve("unit").declare_required<std::string>();
-    t_schema.resolve("name").declare_required<std::string>();
+    t_schema.resolve("start-time")->declare_required<double>();
+    t_schema.resolve("end-time")->declare_required<double>();
+    t_schema.resolve("unit")->declare_required<std::string>();
+    t_schema.resolve("name")->declare_required<std::string>();
 }
 
 void misaxx::misa_runtime_log::entry::build_serialization_id_hierarchy(

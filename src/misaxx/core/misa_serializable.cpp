@@ -1,4 +1,5 @@
 #include <misaxx/core/misa_serializable.h>
+#include <misaxx/core/misa_json_schema_property.h>
 
 using namespace misaxx;
 
@@ -7,9 +8,9 @@ void misa_serializable::to_json(nlohmann::json &t_json) const {
     t_json["misa:serialization-id"] = get_serialization_id().get_id();
 }
 
-void misa_serializable::to_json_schema(const misa_json_schema &t_schema) const {
-    t_schema.annotate("misa:serialization-hierarchy", get_serialization_id_hierarchy());
-    t_schema.annotate("misa:serialization-id", get_serialization_id());
+void misa_serializable::to_json_schema(misa_json_schema_property &schema) const {
+    schema.serialization_id = get_serialization_id();
+    schema.serialization_hierarchy = get_serialization_id_hierarchy();
 }
 
 misa_serialization_id misa_serializable::get_serialization_id() const {
@@ -64,4 +65,5 @@ std::vector<misa_serialization_id> misa_serializable::get_serialization_id_hiera
 }
 
 void misa_serializable::from_json(const nlohmann::json &) { }
+
 

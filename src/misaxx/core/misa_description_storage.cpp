@@ -51,15 +51,15 @@ void misa_description_storage::to_json(nlohmann::json &t_json) const {
     }
 }
 
-void misa_description_storage::to_json_schema(const misa_json_schema &t_schema) const {
+void misa_description_storage::to_json_schema(misa_json_schema_property &t_schema) const {
     misa_locatable::to_json_schema(t_schema);
     if(has_pattern()) {
-        t_schema.resolve("pattern", "pattern-type").define(get<misa_data_pattern>().get_serialization_id());
-        get<misa_data_pattern>().to_json_schema(t_schema.resolve("pattern"));
+//        t_schema["pattern"]["pattern-type"].define(get<misa_data_pattern>().get_serialization_id());
+        get<misa_data_pattern>().to_json_schema(t_schema["pattern"]);
     }
     if(has_description()) {
-        t_schema.resolve("description", "description-type").define(get<misa_data_description>().get_serialization_id());
-        get<misa_data_description>().to_json_schema(t_schema.resolve("description"));
+//        t_schema["description"]["description-type"].define(get<misa_data_description>().get_serialization_id());
+        get<misa_data_description>().to_json_schema(t_schema["description"]);
     }
 }
 

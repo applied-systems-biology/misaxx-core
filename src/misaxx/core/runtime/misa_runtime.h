@@ -8,9 +8,9 @@
 #include <vector>
 #include <string>
 #include <boost/algorithm/string/join.hpp>
-#include <misaxx/core/json/misa_json_property.h>
+
 #include <nlohmann/json.hpp>
-#include <misaxx/core/json/misa_json_schema_builder.h>
+#include <misaxx/core/misa_json_schema_property.h>
 #include <misaxx/core/misa_serializable.h>
 #include <misaxx/core/misa_primitive.h>
 #include <misaxx/core/misa_cache.h>
@@ -104,7 +104,7 @@ namespace misaxx {
         /**
          * Used to create a configuration schema
          */
-        std::shared_ptr<misa_json_schema_builder> m_parameter_schema_builder;
+        std::shared_ptr<misa_json_schema_property> m_parameter_schema_builder;
 
     public:
 
@@ -193,7 +193,7 @@ namespace misaxx {
          * If it returns nullptr, the schema builder will be ignored.
          * @return
          */
-        std::shared_ptr<misa_json_schema_builder> get_schema_builder();
+        std::shared_ptr<misa_json_schema_property> get_schema_builder();
 
         /**
          * Returns the runtime log

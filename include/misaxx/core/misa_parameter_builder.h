@@ -25,12 +25,12 @@ namespace misaxx {
          * @param t_metadata
          * @return
          */
-        template<typename T> misa_parameter<T> create_algorithm_parameter(std::string t_name, T t_default, misa_json_property<T> t_metadata = misa_json_property<T>()) {
-            t_metadata.default_value = std::move(t_default);
+        template<typename T> misa_parameter<T> create_algorithm_parameter(std::string t_name, const T &t_default) {
             auto path = get_algorithm_path();
             path.emplace_back(std::move(t_name));
-            misaxx::parameter_registry::register_parameter(path, t_metadata);
-            return misa_parameter<T>(std::move(path), std::move(t_metadata));
+            auto schema = misaxx::parameter_registry::register_parameter(path);
+            schema->declare_optional<T>(t_default);
+            return misa_parameter<T>(std::move(path), std::move(schema));
         }
 
         /**
@@ -40,11 +40,12 @@ namespace misaxx {
          * @param t_metadata
          * @return
          */
-        template<typename T> misa_parameter<T> create_algorithm_parameter(std::string t_name, misa_json_property<T> t_metadata = misa_json_property<T>()) {
+        template<typename T> misa_parameter<T> create_algorithm_parameter(std::string t_name) {
             auto path = get_algorithm_path();
             path.emplace_back(std::move(t_name));
-            misaxx::parameter_registry::register_parameter(path, t_metadata);
-            return misa_parameter<T>(std::move(path), std::move(t_metadata));
+            auto schema = misaxx::parameter_registry::register_parameter(path);
+            schema->declare_required<T>();
+            return misa_parameter<T>(std::move(path), std::move(schema));
         }
 
         /**
@@ -55,12 +56,12 @@ namespace misaxx {
          * @param t_metadata
          * @return
          */
-        template<typename T> misa_parameter<T> create_sample_parameter(std::string t_name, T t_default, misa_json_property<T> t_metadata = misa_json_property<T>()) {
-            t_metadata.default_value = std::move(t_default);
+        template<typename T> misa_parameter<T> create_sample_parameter(std::string t_name, const T &t_default) {
             auto path = get_sample_path();
             path.emplace_back(std::move(t_name));
-            misaxx::parameter_registry::register_parameter(path, t_metadata);
-            return misa_parameter<T>(std::move(path), std::move(t_metadata));
+            auto schema = misaxx::parameter_registry::register_parameter(path);
+            schema->declare_optional<T>(t_default);
+            return misa_parameter<T>(std::move(path), std::move(schema));
         }
 
         /**
@@ -70,11 +71,12 @@ namespace misaxx {
          * @param t_metadata
          * @return
          */
-        template<typename T> misa_parameter<T> create_sample_parameter(std::string t_name,misa_json_property<T> t_metadata = misa_json_property<T>()) {
+        template<typename T> misa_parameter<T> create_sample_parameter(std::string t_name) {
             auto path = get_sample_path();
             path.emplace_back(std::move(t_name));
-            misaxx::parameter_registry::register_parameter(path, t_metadata);
-            return misa_parameter<T>(std::move(path), std::move(t_metadata));
+            auto schema = misaxx::parameter_registry::register_parameter(path);
+            schema->declare_required<T>();
+            return misa_parameter<T>(std::move(path), std::move(schema));
         }
 
         /**
@@ -85,12 +87,12 @@ namespace misaxx {
        * @param t_metadata
        * @return
        */
-        template<typename T> misa_parameter<T> create_runtime_parameter(std::string t_name, T t_default, misa_json_property<T> t_metadata = misa_json_property<T>()) {
-            t_metadata.default_value = std::move(t_default);
+        template<typename T> misa_parameter<T> create_runtime_parameter(std::string t_name, const T &t_default) {
             auto path = get_runtime_path();
             path.emplace_back(std::move(t_name));
-            misaxx::parameter_registry::register_parameter(path, t_metadata);
-            return misa_parameter<T>(std::move(path), std::move(t_metadata));
+            auto schema = misaxx::parameter_registry::register_parameter(path);
+            schema->declare_optional<T>(t_default);
+            return misa_parameter<T>(std::move(path), std::move(schema));
         }
 
         /**
@@ -100,11 +102,12 @@ namespace misaxx {
          * @param t_metadata
          * @return
          */
-        template<typename T> misa_parameter<T> create_runtime_parameter(std::string t_name,misa_json_property<T> t_metadata = misa_json_property<T>()) {
+        template<typename T> misa_parameter<T> create_runtime_parameter(std::string t_name) {
             auto path = get_runtime_path();
             path.emplace_back(std::move(t_name));
-            misaxx::parameter_registry::register_parameter(path, t_metadata);
-            return misa_parameter<T>(std::move(path), std::move(t_metadata));
+            auto schema = misaxx::parameter_registry::register_parameter(path);
+            schema->declare_required<T>();
+            return misa_parameter<T>(std::move(path), std::move(schema));
         }
 
     private:

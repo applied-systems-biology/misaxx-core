@@ -6,10 +6,12 @@
 #pragma once
 
 #include <nlohmann/json.hpp>
-#include <misaxx/core/json/misa_json_schema.h>
 #include <misaxx/core/misa_serialization_id.h>
 
 namespace misaxx {
+
+    struct misa_json_schema_property;
+
     /**
      * An object that can be serialized and deserialized from/to JSON.
      */
@@ -29,9 +31,9 @@ namespace misaxx {
         /**
          * Describes the structure of the data as JSON schema
          * Must be consistent with the JSON structure expected by from_json and to_json
-         * @param t_schema
+         * @param schema
          */
-        virtual void to_json_schema(const misa_json_schema &t_schema) const;
+        virtual void to_json_schema(misa_json_schema_property &schema) const;
 
         /**
          * Gets the serialization ID of the object
@@ -137,3 +139,6 @@ namespace misaxx {
         }
     };
 }
+
+// For convenience
+#include <misaxx/core/misa_json_schema_property.h>

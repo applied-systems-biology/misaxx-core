@@ -17,7 +17,6 @@ namespace misaxx {
         using value_type = T;
 
         T value = T();
-        misa_json_property<T> metadata;
 
         misa_primitive() = default;
 
@@ -38,9 +37,9 @@ namespace misaxx {
             misa_serializable::serialize_wrapped(value, t_json);
         }
 
-        void to_json_schema(const misa_json_schema &t_schema) const override {
+        void to_json_schema(misa_json_schema_property &t_schema) const override {
             misa_serializable::to_json_schema(t_schema);
-            t_schema.declare(metadata);
+            t_schema = T();
         }
 
     protected:

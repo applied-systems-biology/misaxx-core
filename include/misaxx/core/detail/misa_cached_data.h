@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <iostream>
+
 namespace misaxx {
     template<class Cache>
     misa_cached_data<Cache>::misa_cached_data(Cache t_cache) : data(std::make_shared<Cache>(std::move(t_cache))) {

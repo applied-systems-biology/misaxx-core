@@ -11,6 +11,7 @@
 #include <misaxx/core/utils/manual_stopwatch.h>
 #include <misaxx/core/runtime/misa_parameter_registry.h>
 #include <misaxx/core/runtime/misa_cli_base.h>
+#include <iomanip>
 #include "misa_runtime.h"
 
 using namespace misaxx;
@@ -119,16 +120,18 @@ misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **ar
 
     // Load runtime parameters that are not from CLI
     if(!vm.count("threads") && !m_runtime->is_simulating()) {
-        m_runtime->set_num_threads(misaxx::parameter_registry:: template get_json<int>({ "runtime", "num-threads" }, misa_json_property<int>().with_default_value(1)));
+        auto schema = misaxx::parameter_registry::register_parameter({ "runtime", "num-threads" });
+        schema->declare_optional<int>(1);
+        m_runtime->set_num_threads(misaxx::parameter_registry:: template get_json<int>({ "runtime", "num-threads" }));
     }
     if(!m_runtime->is_simulating()) {
         if(vm.count("full-runtime-log")) {
             m_runtime->set_enable_runtime_log(true);
         }
         else {
-            m_runtime->set_enable_runtime_log(misaxx::parameter_registry::get_json<bool>({
-                                                                                                 "runtime", "full-runtime-log"
-                                                                                         }, misaxx::misa_json_property<bool>().with_default_value(false)));
+            auto schema = misaxx::parameter_registry::register_parameter({ "runtime", "full-runtime-log" });
+            schema->declare_optional<bool>(false);
+            m_runtime->set_enable_runtime_log(misaxx::parameter_registry::get_json<bool>({ "runtime", "full-runtime-log" }));
         }
     }
 
@@ -158,7 +161,11 @@ void misa_cli_base::run() {
     // Build schema
     if(m_runtime->is_simulating()) {
         std::cout << "<#> <#> Writing parameter schema to " << m_parameter_schema_path.string() << "\n";
-        m_runtime->get_schema_builder()->write(m_parameter_schema_path);
+        nlohmann::json j;
+        m_runtime->get_schema_builder()->to_json(j);
+        std::ofstream w;
+        w.open(m_parameter_schema_path.string());
+        w << std::setw(4) << j;
     }
 }
 

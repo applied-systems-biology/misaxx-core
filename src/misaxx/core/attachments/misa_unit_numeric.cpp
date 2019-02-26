@@ -13,7 +13,7 @@ void misa_unit_numeric::to_json(nlohmann::json &t_json) const {
     misa_serializable::to_json(t_json);
 }
 
-void misa_unit_numeric::to_json_schema(const misa_json_schema &t_schema) const {
+void misa_unit_numeric::to_json_schema(misa_json_schema_property &t_schema) const {
     misa_unit<1>::to_json_schema(t_schema);
 }
 
