@@ -574,16 +574,16 @@ void misa_runtime::postprocess_parameter_schema() {
     // Write runtime parameters
     (*schema)["runtime"]["num-threads"].document_title("Number of threads")
             .document_description("Changes the number of threads")
-            .make_optional(1);
+            .declare_optional<int>(1);
     (*schema)["runtime"]["full-runtime-log"].document_title("Full runtime log")
             .document_description("If enabled, the runtime log will contain all individual workers")
-            .make_optional(false);
+            .declare_optional(false);
     (*schema)["runtime"]["postprocessing"]["write-attachments"].document_title("Write attachments")
             .document_description("If enabled, write data attached to caches after the work is done")
-            .make_optional(true);
+            .declare_optional(true);
     (*schema)["runtime"]["postprocessing"]["lazy-write-attachments"].document_title("Only write attachments with actual data")
             .document_description("If enabled, only non-empty attachment files will be written")
-            .make_optional(true);
+            .declare_optional(true);
 }
 
 misa_runtime::misa_runtime(misa_module_info info, std::shared_ptr<misa_module_interface> interface,
