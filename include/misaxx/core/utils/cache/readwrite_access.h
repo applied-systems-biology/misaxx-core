@@ -19,7 +19,7 @@ namespace misaxx::utils {
     public:
         using value_type = Value;
 
-        explicit readwrite_access(cache<Value> &t_cache) : m_cache(&t_cache), m_lock(t_cache.exclusive_access()) {
+        explicit readwrite_access(cache<Value> &t_cache) : m_cache(&t_cache), m_lock(t_cache.exclusive_lock()) {
             m_lock.lock();
             m_cache->pull();
         }

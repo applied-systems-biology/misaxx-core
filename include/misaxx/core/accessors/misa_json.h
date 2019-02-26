@@ -15,6 +15,12 @@ namespace misaxx {
     struct misa_json : public misa_cached_data<misa_json_cache>,
             public misa_description_accessors_from_cache<misa_json_cache, misa_json> {
         using  misa_cached_data<misa_json_cache>::misa_cached_data;
+
+        /**
+         * Returns true if the JSON file already exists
+         * @return
+         */
+        bool exists() const;
     };
 }
 
