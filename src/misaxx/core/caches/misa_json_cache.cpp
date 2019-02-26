@@ -12,7 +12,8 @@ void misaxx::misa_json_cache::simulate_link() {
 }
 
 void misaxx::misa_json_cache::do_link(const misaxx::misa_json_description &t_description) {
-    m_filename = t_description.filename;
+    m_filename = get_location() / t_description.filename;
+    set_unique_location(m_filename);
 }
 
 misaxx::misa_json_description misaxx::misa_json_cache::produce_description(const boost::filesystem::path &t_location,
