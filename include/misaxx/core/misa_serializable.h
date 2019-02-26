@@ -50,6 +50,20 @@ namespace misaxx {
         std::vector<misa_serialization_id> get_serialization_id_hierarchy() const;
 
         /**
+         * Override this method to change the automatically generated documentation name of this object
+         * It is used during to_json_schema()
+         * @return
+         */
+        virtual std::string get_documentation_name() const;
+
+        /**
+         * Override this method to change the automatically generatated documentation name of this object
+         * It is used during to_json_schema()
+         * @return
+         */
+        virtual std::string get_documentation_description() const;
+
+        /**
          * Deserializes a wrapped value from the JSON
          * @tparam T
          * @param t_json
