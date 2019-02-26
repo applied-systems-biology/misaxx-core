@@ -54,14 +54,14 @@ namespace misaxx {
          * @param t_path
          * @return
          */
-        bool matches(const boost::filesystem::path &t_path) const;
+        virtual bool matches(const boost::filesystem::path &t_path) const;
 
         /**
          * Sets the filename of the description
          * Requires that the pattern already has a filename
          * @param target
          */
-        void apply(misa_file_description &target) const;
+        virtual void apply(misa_file_description &target) const;
 
         /**
          * Applies the pattern and
@@ -69,7 +69,7 @@ namespace misaxx {
          * @param target
          * @param t_directory
          */
-        void apply(misa_file_description &target, const boost::filesystem::path &t_directory) const;
+        virtual void apply(misa_file_description &target, const boost::filesystem::path &t_directory) const;
 
     protected:
         void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;

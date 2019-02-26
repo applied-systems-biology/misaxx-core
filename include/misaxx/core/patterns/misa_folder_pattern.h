@@ -21,7 +21,7 @@ namespace misaxx {
          * @param target
          * @param t_directory
          */
-        void apply(misa_folder_description &target, const boost::filesystem::path &t_directory) const;
+        virtual void apply(misa_folder_description &target, const boost::filesystem::path &t_directory) const;
 
     protected:
         void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;
