@@ -562,10 +562,13 @@ void misa_runtime::postprocess_parameter_schema() {
     // Workaround: Due to inflexibility with schema generation, manually put "__OBJECT__" nodes into list builders
     // /properties/algorithm -> nothing to do
     // /properties/objects/properties/__OBJECT__ -> /properties/objects/additionalProperties
+    (*schema)["samples"]["__OBJECT__"]; // Needed if there are no sample parameters
     (*schema)["samples"].make_template();
 
     // /properties/runtime::filesystem/properties/json-data/properties/imported/properties/children/properties/__OBJECT__ -> /properties/runtime::filesystem/properties/json-data/properties/imported/properties/children/additionalProperties
+    (*schema)["filesystem"]["json-data"]["imported"]["children"]["__OBJECT__"];
     (*schema)["filesystem"]["json-data"]["imported"]["children"].make_template();
+    (*schema)["filesystem"]["json-data"]["exported"]["children"]["__OBJECT__"];
     (*schema)["filesystem"]["json-data"]["exported"]["children"].make_template();
 
     // Write runtime parameters
