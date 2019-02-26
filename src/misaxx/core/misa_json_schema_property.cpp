@@ -93,7 +93,8 @@ void misa_json_schema_property::to_json(nlohmann::json &json) const {
                 required_children.push_back(kv.first);
             kv.second->to_json(json["properties"][kv.first]);
         }
-        json["required"] = required_children;
+        if(!required_children.empty())
+            json["required"] = required_children;
     }
 }
 

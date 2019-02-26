@@ -29,7 +29,7 @@ namespace misaxx {
             auto path = get_algorithm_path();
             path.emplace_back(std::move(t_name));
             auto schema = misaxx::parameter_registry::register_parameter(path);
-            schema->make_optional(t_default);
+            schema->declare_optional<T>(t_default);
             return misa_parameter<T>(std::move(path), std::move(schema));
         }
 
@@ -44,6 +44,7 @@ namespace misaxx {
             auto path = get_algorithm_path();
             path.emplace_back(std::move(t_name));
             auto schema = misaxx::parameter_registry::register_parameter(path);
+            schema->declare_required<T>();
             return misa_parameter<T>(std::move(path), std::move(schema));
         }
 
@@ -59,7 +60,7 @@ namespace misaxx {
             auto path = get_sample_path();
             path.emplace_back(std::move(t_name));
             auto schema = misaxx::parameter_registry::register_parameter(path);
-            schema->make_optional(t_default);
+            schema->declare_optional<T>(t_default);
             return misa_parameter<T>(std::move(path), std::move(schema));
         }
 
@@ -73,8 +74,9 @@ namespace misaxx {
         template<typename T> misa_parameter<T> create_sample_parameter(std::string t_name) {
             auto path = get_sample_path();
             path.emplace_back(std::move(t_name));
-            auto sample = misaxx::parameter_registry::register_parameter(path);
-            return misa_parameter<T>(std::move(path), std::move(sample));
+            auto schema = misaxx::parameter_registry::register_parameter(path);
+            schema->declare_required<T>();
+            return misa_parameter<T>(std::move(path), std::move(schema));
         }
 
         /**
@@ -89,7 +91,7 @@ namespace misaxx {
             auto path = get_runtime_path();
             path.emplace_back(std::move(t_name));
             auto schema = misaxx::parameter_registry::register_parameter(path);
-            schema->make_optional(t_default);
+            schema->declare_optional<T>(t_default);
             return misa_parameter<T>(std::move(path), std::move(schema));
         }
 
@@ -104,6 +106,7 @@ namespace misaxx {
             auto path = get_runtime_path();
             path.emplace_back(std::move(t_name));
             auto schema = misaxx::parameter_registry::register_parameter(path);
+            schema->declare_required<T>();
             return misa_parameter<T>(std::move(path), std::move(schema));
         }
 

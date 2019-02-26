@@ -6,10 +6,9 @@ misa_task::misa_task(const misa_worker::node &t_node, const misa_worker::module 
     auto is_parallelizeable_path = t_node->get_algorithm_path()->get_path();
     is_parallelizeable_path.emplace_back("task::is_parallelizeable");
     auto schema = misaxx::parameter_registry::register_parameter(is_parallelizeable_path);
-    schema->default_value = true;
-    schema->title = "Is Parallelizable";
-    schema->description = "If enabled, this task can be run in parallel";
-
+    schema->declare_optional<bool>(true)
+            .document_title("Is Parallelizable")
+            .document_description("If enabled, this task can be run in parallel");
     is_parallelizeable_parameter = misa_parameter<bool>(std::move(is_parallelizeable_path), std::move(schema));
 }
 

@@ -100,6 +100,12 @@ namespace misaxx {
                 property_type = property_type::subtree;
                 value_type = nlohmann::json::value_t::object;
                 dynamic_cast<const misa_serializable &>(T()).to_json_schema(*this);
+            } else if constexpr (nlohmann::detail::is_compatible_string_type<nlohmann::json, T>::value) {
+                property_type = property_type::leaf;
+                value_type = nlohmann::json::value_t::string;
+            } else if constexpr (nlohmann::detail::is_compatible_integer_type<nlohmann::json, T>::value) {
+                property_type = property_type::leaf;
+                value_type = nlohmann::json::value_t::number_integer;
             } else if constexpr (nlohmann::detail::is_compatible_array_type<nlohmann::json, T>::value) {
                 property_type = property_type::leaf;
                 value_type = nlohmann::json::value_t::array;
