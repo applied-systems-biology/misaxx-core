@@ -25,3 +25,11 @@ void misa_file_description::build_serialization_id_hierarchy(std::vector<misa_se
     misa_data_description::build_serialization_id_hierarchy(result);
     result.emplace_back(misa_serialization_id("misa", "descriptions/file"));
 }
+
+std::string misa_file_description::get_documentation_name() const {
+    return "File";
+}
+
+std::string misa_file_description::get_documentation_description() const {
+    return "A file located within the filesystem";
+}

@@ -148,6 +148,14 @@ namespace misaxx {
             m_unit.to_json_schema(t_schema["unit"]);
         }
 
+        std::string get_documentation_name() const override {
+            return "Quantity";
+        }
+
+        std::string get_documentation_description() const override {
+            return "Serializable value with an unit";
+        }
+
     protected:
 
         void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override {

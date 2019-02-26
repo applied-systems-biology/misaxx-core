@@ -33,3 +33,11 @@ void misa_unit_numeric::build_serialization_id_hierarchy(std::vector<misa_serial
     misa_serializable::build_serialization_id_hierarchy(result);
     result.emplace_back(misa_serialization_id("misa", "attachments/quantities/numeric"));
 }
+
+std::string misa_unit_numeric::get_documentation_name() const {
+    return "Numeric unit";
+}
+
+std::string misa_unit_numeric::get_documentation_description() const {
+    return "Unit of order 0";
+}

@@ -82,3 +82,11 @@ void misa_file_pattern::apply(misa_file_description &target, const boost::filesy
         }
     }
 }
+
+std::string misa_file_pattern::get_documentation_name() const {
+    return "File pattern";
+}
+
+std::string misa_file_pattern::get_documentation_description() const {
+    return "Pattern that looks for a file with a specified extension";
+}

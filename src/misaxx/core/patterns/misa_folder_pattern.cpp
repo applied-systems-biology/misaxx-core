@@ -28,3 +28,11 @@ void misaxx::misa_folder_pattern::apply(misaxx::misa_folder_description &target,
                                         const boost::filesystem::path &t_directory) const {
     target.folder = t_directory;
 }
+
+std::string misaxx::misa_folder_pattern::get_documentation_name() const {
+    return "Folder pattern";
+}
+
+std::string misaxx::misa_folder_pattern::get_documentation_description() const {
+    return "Outputs the folder that is used as pattern input";
+}

@@ -23,6 +23,10 @@ namespace misaxx {
          */
         virtual void apply(misa_folder_description &target, const boost::filesystem::path &t_directory) const;
 
+        std::string get_documentation_name() const override;
+
+        std::string get_documentation_description() const override;
+
     protected:
         void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;
     };

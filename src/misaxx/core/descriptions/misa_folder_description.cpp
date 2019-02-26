@@ -24,3 +24,11 @@ void misaxx::misa_folder_description::build_serialization_id_hierarchy(
     misa_data_description::build_serialization_id_hierarchy(result);
     result.emplace_back(misa_serialization_id("misa", "descriptions/folder"));
 }
+
+std::string misaxx::misa_folder_description::get_documentation_name() const {
+    return "Folder";
+}
+
+std::string misaxx::misa_folder_description::get_documentation_description() const {
+    return "A folder within the filesystem";
+}

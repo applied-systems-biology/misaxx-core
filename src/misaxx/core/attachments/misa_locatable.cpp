@@ -38,4 +38,12 @@ void misa_locatable::set_location(std::shared_ptr<const misa_location> location)
     m_location_json = nlohmann::json {};
 }
 
+std::string misa_locatable::get_documentation_name() const {
+    return "MISA Locatable";
+}
+
+std::string misa_locatable::get_documentation_description() const {
+    return "Serializable object that contains information about its location";
+}
+
 

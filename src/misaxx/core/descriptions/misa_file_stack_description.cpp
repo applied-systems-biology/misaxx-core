@@ -31,3 +31,11 @@ void misa_file_stack_description::build_serialization_id_hierarchy(std::vector<m
     misa_data_description::build_serialization_id_hierarchy(result);
     result.emplace_back(misa_serialization_id("misa", "descriptions/file-stack"));
 }
+
+std::string misa_file_stack_description::get_documentation_name() const {
+    return "File stack";
+}
+
+std::string misa_file_stack_description::get_documentation_description() const {
+    return "A list of files within the filesystem";
+}

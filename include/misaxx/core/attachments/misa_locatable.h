@@ -49,6 +49,10 @@ namespace misaxx {
          */
         void set_location(std::shared_ptr<const misa_location> location);
 
+        std::string get_documentation_name() const override;
+
+        std::string get_documentation_description() const override;
+
     protected:
         void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;
     private:

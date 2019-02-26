@@ -52,3 +52,11 @@ misa_file_stack_pattern::apply(misa_file_stack_description &target, const boost:
         }
     }
 }
+
+std::string misa_file_stack_pattern::get_documentation_name() const {
+    return "File stack pattern";
+}
+
+std::string misa_file_stack_pattern::get_documentation_description() const {
+    return "A pattern that looks for a list of files with a specific extension";
+}

@@ -40,3 +40,11 @@ void misa_location::build_serialization_id_hierarchy(std::vector<misa_serializat
     misa_serializable::build_serialization_id_hierarchy(result);
     result.emplace_back(misa_serialization_id("misa", "attachments/location"));
 }
+
+std::string misa_location::get_documentation_name() const {
+    return "MISA Location";
+}
+
+std::string misa_location::get_documentation_description() const {
+    return "Describes a location within data";
+}

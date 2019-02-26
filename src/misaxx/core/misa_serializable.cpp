@@ -73,11 +73,11 @@ std::vector<misa_serialization_id> misa_serializable::get_serialization_id_hiera
 void misa_serializable::from_json(const nlohmann::json &) { }
 
 std::string misa_serializable::get_documentation_name() const {
-    return "";
+    return "MISA Serializable";
 }
 
 std::string misa_serializable::get_documentation_description() const {
-    return "";
+    return "JSON-serialized object";
 }
 
 

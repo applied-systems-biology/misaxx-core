@@ -9,3 +9,11 @@ void misaxx::misa_exported_attachments_description::build_serialization_id_hiera
     misa_file_description::build_serialization_id_hierarchy(result);
     result.emplace_back(misaxx::misa_serialization_id("misa", "descriptions/exported-attachments"));
 }
+
+std::string misaxx::misa_exported_attachments_description::get_documentation_name() const {
+    return "Exported attachments";
+}
+
+std::string misaxx::misa_exported_attachments_description::get_documentation_description() const {
+    return "Contains a copy of all data attached to a cache";
+}
