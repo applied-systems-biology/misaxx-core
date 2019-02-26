@@ -178,6 +178,20 @@ namespace misaxx {
         }
 
         /**
+         * Sets the allowed_values property
+         * @tparam V
+         * @param values
+         * @return
+         */
+        template<typename V>
+        misa_json_schema_property &make_enum(const std::vector<V> &values) {
+            for(const auto &v : values) {
+                allowed_values.emplace_back(nlohmann::json(v));
+            }
+            return *this;
+        }
+
+        /**
          * declare().make_optional()
          * @tparam T
          * @param t_value

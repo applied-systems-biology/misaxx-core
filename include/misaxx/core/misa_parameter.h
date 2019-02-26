@@ -18,6 +18,10 @@ namespace misaxx {
 
         misa_parameter() = default;
 
+        explicit misa_parameter(const path &t_location) : misa_parameter(t_location, parameter_registry::register_parameter(t_location)) {
+
+        }
+
         explicit misa_parameter(path t_location, std::shared_ptr<misa_json_schema_property> t_schema) :
                 misa_parameter_base(std::move(t_location), std::move(t_schema)) {
 

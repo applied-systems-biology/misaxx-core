@@ -145,7 +145,7 @@ namespace misaxx {
         void to_json_schema(misa_json_schema_property &t_schema) const override {
             misa_locatable::to_json_schema(t_schema);
             t_schema.resolve("value")->declare_required<Value>();
-            m_unit.to_json_schema(t_schema.resolve("unit"));
+            m_unit.to_json_schema(t_schema["unit"]);
         }
 
     protected:

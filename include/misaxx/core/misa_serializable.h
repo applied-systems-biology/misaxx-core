@@ -139,3 +139,6 @@ namespace misaxx {
         }
     };
 }
+
+// For convenience
+#include <misaxx/core/misa_json_schema_property.h>
