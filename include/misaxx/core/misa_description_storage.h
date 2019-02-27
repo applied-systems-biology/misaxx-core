@@ -22,6 +22,8 @@ namespace misaxx {
 
         misa_description_storage() = default;
 
+        explicit misa_description_storage(std::shared_ptr<misa_data_pattern> t_pattern, std::shared_ptr<misa_data_description> t_description);
+
         misa_description_storage(const misa_description_storage &t_source);
 
         misa_description_storage(misa_description_storage && t_source) = default;

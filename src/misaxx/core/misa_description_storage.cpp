@@ -2,6 +2,12 @@
 
 using namespace misaxx;
 
+misa_description_storage::misa_description_storage(std::shared_ptr<misa_data_pattern> t_pattern,
+                                                   std::shared_ptr<misa_data_description> t_description) : m_pattern(
+        std::move(t_pattern)), m_description(std::move(t_description)) {
+
+}
+
 misa_description_storage::misa_description_storage(const misa_description_storage &t_source) : misa_locatable() {
     nlohmann::json json;
     t_source.to_json(json);
@@ -13,10 +19,9 @@ std::shared_ptr<misa_description_storage> misa_description_storage::clone() cons
 }
 
 void misa_description_storage::from_imported_json(const nlohmann::json &t_json) {
-    if(t_json.find("pattern") != t_json.end() || t_json.find("description") != t_json.end()) {
+    if (t_json.find("pattern") != t_json.end() || t_json.find("description") != t_json.end()) {
         from_json(t_json);
-    }
-    else {
+    } else {
         m_raw_pattern_json = t_json;
     }
 }
@@ -24,13 +29,13 @@ void misa_description_storage::from_imported_json(const nlohmann::json &t_json) 
 void misa_description_storage::from_json(const nlohmann::json &t_json) {
     {
         auto it = t_json.find("pattern");
-        if(it != t_json.end()) {
+        if (it != t_json.end()) {
             m_raw_pattern_json = it.value();
         }
     }
     {
         auto it = t_json.find("description");
-        if(it != t_json.end()) {
+        if (it != t_json.end()) {
             m_raw_description_json = it.value();
         }
     }
@@ -41,11 +46,11 @@ void misa_description_storage::to_json(nlohmann::json &t_json) const {
     t_json["pattern"] = m_raw_pattern_json; // Pass along the raw metadata. This is very important!
     t_json["description"] = m_raw_description_json;
 
-    if(static_cast<bool>(m_pattern)) {
+    if (static_cast<bool>(m_pattern)) {
         auto &j = t_json["pattern"];
         m_pattern->to_json(j);
     }
-    if(static_cast<bool>(m_description)) {
+    if (static_cast<bool>(m_description)) {
         auto &j = t_json["description"];
         m_description->to_json(j);
     }
@@ -53,11 +58,11 @@ void misa_description_storage::to_json(nlohmann::json &t_json) const {
 
 void misa_description_storage::to_json_schema(misa_json_schema_property &t_schema) const {
     misa_locatable::to_json_schema(t_schema);
-    if(has_pattern()) {
+    if (has_pattern()) {
 //        t_schema["pattern"]["pattern-type"].define(get<misa_data_pattern>().get_serialization_id());
         get<misa_data_pattern>().to_json_schema(t_schema["pattern"]);
     }
-    if(has_description()) {
+    if (has_description()) {
 //        t_schema["description"]["description-type"].define(get<misa_data_description>().get_serialization_id());
         get<misa_data_description>().to_json_schema(t_schema["description"]);
     }
@@ -84,3 +89,4 @@ misa_description_storage &misa_description_storage::operator=(const misa_descrip
     from_json(json);
     return *this;
 }
+

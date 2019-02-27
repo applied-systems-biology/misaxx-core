@@ -76,7 +76,7 @@ namespace misaxx {
          * @param t_description
          */
         void force_link(const boost::filesystem::path &t_location,
-                        misa_data_description t_description);
+                        std::shared_ptr<misa_data_description> t_description);
 
         /**
          * Links this cache to a filesystem location.
@@ -104,7 +104,7 @@ namespace misaxx {
          * @param t_description
          */
         void suggest_link(const boost::filesystem::path &t_location,
-                          misa_data_description t_description);
+                          std::shared_ptr<misa_data_description> t_description);
 
         /**
          * Links this cache to a filesystem location if not already set.
@@ -130,7 +130,7 @@ namespace misaxx {
          * @param t_location
          * @param t_description
          */
-        void suggest_create(const filesystem::entry &t_location, misa_data_description t_description);
+        void suggest_create(const filesystem::entry &t_location, std::shared_ptr<misa_data_description> t_description);
 
         /**
          * Links this cache to an imported filesystem path.
@@ -160,7 +160,7 @@ namespace misaxx {
          */
         void suggest_export_location(const misa_filesystem &t_filesystem,
                                      const boost::filesystem::path &t_path,
-                                     misa_data_description t_description);
+                                     std::shared_ptr<misa_data_description> t_description);
 
         /**
          * Returns a description of the current cache
