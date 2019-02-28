@@ -21,19 +21,17 @@ namespace {
         nlohmann::json pattern;
 
         std::string get_name() const {
-            if(description.find("misa:documentation-title") != description.end()) {
+            if (description.find("misa:documentation-title") != description.end()) {
                 return description.at("misa:documentation-title").get<std::string>();
-            }
-            else {
+            } else {
                 return description.at("misa:serialization-id").get<std::string>();
             }
         }
 
         std::string get_description() const {
-            if(description.find("misa:documentation-description") != description.end()) {
+            if (description.find("misa:documentation-description") != description.end()) {
                 return description.at("misa:documentation-description").get<std::string>();
-            }
-            else {
+            } else {
                 return "No description provided";
             }
         }
@@ -44,14 +42,14 @@ namespace {
         nlohmann::json property;
 
         std::string get_name() const {
-            if(property.find("misa:documentation-title") != property.end()) {
+            if (property.find("misa:documentation-title") != property.end()) {
                 return property.at("misa:documentation-title").get<std::string>();
             }
             return "";
         }
 
         std::string get_description() const {
-            if(property.find("misa:documentation-description") != property.end()) {
+            if (property.find("misa:documentation-description") != property.end()) {
                 return property.at("misa:documentation-description").get<std::string>();
             }
             return "";
@@ -62,7 +60,7 @@ namespace {
         }
 
         std::string get_default() const {
-            if(property.find("default") != property.end()) {
+            if (property.find("default") != property.end()) {
                 std::stringstream w;
                 w << property.at("default");
                 return w.str();
@@ -70,17 +68,22 @@ namespace {
             return "";
         }
 
-        std::string get_allowed_values() const {
-            if(property.find("enum") != property.end()) {
-                std::stringstream w;
-                w << property.at("enum");
-                return w.str();
+        std::vector<std::string> get_allowed_values() const {
+            std::vector<std::string> values;
+            if (property.find("enum") != property.end()) {
+                for(const auto &e : property.at("enum")) {
+                    std::stringstream w;
+                    w << e;
+                    values.emplace_back(w.str());
+                }
+                return values;
             }
-            return "";
+            return values;
         }
 
         bool is_interesting() const {
-            return !(get_name().empty() && get_description().empty() && get_default().empty() && get_allowed_values().empty());
+            return !(get_name().empty() && get_description().empty() && get_default().empty() &&
+                     get_allowed_values().empty());
         }
     };
 
@@ -89,22 +92,22 @@ namespace {
         json["filesystem"]["input-directory"] = "<Input directory>";
         json["filesystem"]["output-directory"] = "<Output directory>";
         json["filesystem"]["source"] = "directories";
-        json["samples"]["My sample 1"] = nlohmann::json::object({ });
-        json["samples"]["My sample 2"] = nlohmann::json::object({ });
+        json["samples"]["My sample 1"] = nlohmann::json::object({});
+        json["samples"]["My sample 2"] = nlohmann::json::object({});
 
         std::stringstream w;
         w << std::setw(4) << json;
         return w.str();
     }
 
-    inline std::optional<nlohmann::json> extract_property(const nlohmann::json &json, const std::vector<std::string> &path) {
-        const nlohmann::json* current = &json;
-        for(const auto &entry : path) {
+    inline std::optional<nlohmann::json>
+    extract_property(const nlohmann::json &json, const std::vector<std::string> &path) {
+        const nlohmann::json *current = &json;
+        for (const auto &entry : path) {
             auto it = current->find(entry);
-            if(it == current->end()) {
+            if (it == current->end()) {
                 return std::nullopt;
-            }
-            else {
+            } else {
                 current = &(*it);
             }
         }
@@ -113,29 +116,33 @@ namespace {
 
 
     inline void extract_caches(const nlohmann::json &entry, const std::string &path, std::vector<cache_info> &result) {
-        if(!entry.is_object())
+        if (!entry.is_object())
             return;
-        if(entry.find("misa:serialization-id") != entry.end() && entry.at("misa:serialization-id").get<std::string>() == "misa:filesystem/entry") {
-            std::optional<nlohmann::json> fs_opt = extract_property(entry, { "properties", "metadata", "properties", "description" });
-            if(fs_opt.has_value()) {
-                std::optional<nlohmann::json> fs_pattern = extract_property(entry, { "properties", "metadata", "properties", "pattern" });
+        if (entry.find("misa:serialization-id") != entry.end() &&
+            entry.at("misa:serialization-id").get<std::string>() == "misa:filesystem/entry") {
+            std::optional<nlohmann::json> fs_opt = extract_property(entry, {"properties", "metadata", "properties",
+                                                                            "description"});
+            if (fs_opt.has_value()) {
+                std::optional<nlohmann::json> fs_pattern = extract_property(entry,
+                                                                            {"properties", "metadata", "properties",
+                                                                             "pattern"});
 
                 cache_info info;
                 info.description = fs_opt.value();
                 info.path = path;
 
-                if(fs_pattern.has_value())
+                if (fs_pattern.has_value())
                     info.pattern = fs_pattern.value();
 
                 result.emplace_back(std::move(info));
             }
         }
-        for(auto it = entry.begin(); it != entry.end(); ++it) {
-            if(it.value().is_object()) {
+        for (auto it = entry.begin(); it != entry.end(); ++it) {
+            if (it.value().is_object()) {
 
                 std::string sub_path = path;
-                if(it.value().find("misa:serialization-id") != it.value().end() &&
-                        it.value().at("misa:serialization-id").get<std::string>() == "misa:filesystem/entry") {
+                if (it.value().find("misa:serialization-id") != it.value().end() &&
+                    it.value().at("misa:serialization-id").get<std::string>() == "misa:filesystem/entry") {
                     sub_path += it.key() + "/";
                 }
 
@@ -147,14 +154,18 @@ namespace {
     inline void write_filesystem_readme(markdown::document &doc, const nlohmann::json &schema) {
         using namespace markdown;
 
-        std::optional<nlohmann::json> fs_opt = extract_property(schema, { "properties", "filesystem", "properties", "json-data", "properties",
-                                                                          "imported", "properties", "children", "additionalProperties" });
-        if(fs_opt.has_value()) {
+        std::optional<nlohmann::json> fs_opt = extract_property(schema,
+                                                                {"properties", "filesystem", "properties", "json-data",
+                                                                 "properties",
+                                                                 "imported", "properties", "children",
+                                                                 "additionalProperties"});
+        if (fs_opt.has_value()) {
             doc += heading2("Input files");
             doc += paragraph(text("The application expects that the input folder follows a specific structure. "),
                              text("Please put the input data into their respective folders or create symbolic links if you want to avoid copying already existing data."));
-            doc += paragraph(text("The input folder should contain sub-folders that match the sample names provided in the parameter file. "),
-                             text("Specific folders are used as input data. See the following table for the full filesystem structure and which kind of data is expected within those folders:"));
+            doc += paragraph(
+                    text("The input folder should contain sub-folders that match the sample names provided in the parameter file. "),
+                    text("Specific folders are used as input data. See the following table for the full filesystem structure and which kind of data is expected within those folders:"));
 
             std::vector<cache_info> caches;
             extract_caches(fs_opt.value(), "<Input folder>/<Sample>/", caches);
@@ -162,24 +173,27 @@ namespace {
             table<2> tbl;
             tbl += row(text("Path"), text("Data type"));
 
-            for(const auto &cache : caches) {
+            for (const auto &cache : caches) {
                 tbl += row(inline_code(cache.path), text(cache.get_name()));
             }
 
             doc += cut(tbl);
-        }
-        else {
+        } else {
             doc += heading2("Input files");
-            doc += paragraph(text("This module has no input files. Please provide an input directory that only contains empty directories corresponding to the samples."));
+            doc += paragraph(
+                    text("This module has no input files. Please provide an input directory that only contains empty directories corresponding to the samples."));
         }
     }
 
     inline void write_output_filesystem_readme(markdown::document &doc, const nlohmann::json &schema) {
         using namespace markdown;
 
-        std::optional<nlohmann::json> fs_opt = extract_property(schema, { "properties", "filesystem", "properties", "json-data", "properties",
-                                                                          "exported", "properties", "children", "additionalProperties" });
-        if(fs_opt.has_value()) {
+        std::optional<nlohmann::json> fs_opt = extract_property(schema,
+                                                                {"properties", "filesystem", "properties", "json-data",
+                                                                 "properties",
+                                                                 "exported", "properties", "children",
+                                                                 "additionalProperties"});
+        if (fs_opt.has_value()) {
             doc += heading2("Output files");
             doc += paragraph(text("Following files and directories are generated into the output folder:"));
 
@@ -189,55 +203,66 @@ namespace {
             table<2> cache_tbl;
             cache_tbl += row(text("Path"), text("Data type"));
 
-            for(const auto &cache : caches) {
+            for (const auto &cache : caches) {
                 cache_tbl += row(inline_code(cache.path), text(cache.get_name()));
             }
 
             table<2> tbl;
             tbl += row(text("Path"), text("Description"));
             tbl += row(inline_code("<Output folder>/parameters.json"), text("A copy of the parameter file"));
-            tbl += row(inline_code("<Output folder>/parameter-schema.json"), text("Human- and machine-readable schema that describes the parameter file, input and output files"));
-            tbl += row(inline_code("<Output folder>/runtime-log.json"), text("Contains information about the performance"));
-            tbl += row(inline_code("<Output folder>/attachments/"), text("Additional info attached to data during calculation. The folder structure follows the structure of input and output files"));
-            tbl += row(inline_code("<Output folder>/attachments/serialization-schemas.json"), text("Description of attached object types"));
+            tbl += row(inline_code("<Output folder>/parameter-schema.json"),
+                       text("Human- and machine-readable schema that describes the parameter file, input and output files"));
+            tbl += row(inline_code("<Output folder>/runtime-log.json"),
+                       text("Contains information about the performance"));
+            tbl += row(inline_code("<Output folder>/attachments/"),
+                       text("Additional info attached to data during calculation. The folder structure follows the structure of input and output files"));
+            tbl += row(inline_code("<Output folder>/attachments/serialization-schemas.json"),
+                       text("Description of attached object types"));
 
             doc += cut(cache_tbl);
             doc += paragraph(text("The application will also generate following output files:"));
             doc += cut(tbl);
-        }
-        else {
+        } else {
             doc += heading2("Output files");
-            doc += paragraph(text("This module has no input files. Please provide an input directory that only contains empty directories corresponding to the samples."));
+            doc += paragraph(
+                    text("This module has no input files. Please provide an input directory that only contains empty directories corresponding to the samples."));
         }
     }
 
     inline void write_cache_readme(markdown::document &doc, const nlohmann::json &schema) {
         std::vector<cache_info> caches;
-        std::optional<nlohmann::json> fs_opt_imported = extract_property(schema, { "properties", "filesystem", "properties", "json-data", "properties",
-                                                                          "imported", "properties", "children", "additionalProperties" });
-        std::optional<nlohmann::json> fs_opt_exported = extract_property(schema, { "properties", "filesystem", "properties", "json-data", "properties",
-                                                                          "exported", "properties", "children", "additionalProperties" });
-        if(fs_opt_imported.has_value()) {
+        std::optional<nlohmann::json> fs_opt_imported = extract_property(schema,
+                                                                         {"properties", "filesystem", "properties",
+                                                                          "json-data", "properties",
+                                                                          "imported", "properties", "children",
+                                                                          "additionalProperties"});
+        std::optional<nlohmann::json> fs_opt_exported = extract_property(schema,
+                                                                         {"properties", "filesystem", "properties",
+                                                                          "json-data", "properties",
+                                                                          "exported", "properties", "children",
+                                                                          "additionalProperties"});
+        if (fs_opt_imported.has_value()) {
             extract_caches(fs_opt_imported.value(), "/", caches);
         }
-        if(fs_opt_imported.has_value()) {
+        if (fs_opt_imported.has_value()) {
             extract_caches(fs_opt_exported.value(), "/", caches);
         }
-        if(!caches.empty()) {
+        if (!caches.empty()) {
             using namespace markdown;
             doc += heading2("Data types");
-            doc += paragraph(text("Input and output data have a "), bold("data type"), text(" that determines which kind of files should be put into the folder or "),
-                    text("which files are generated as output."));
+            doc += paragraph(text("Input and output data have a "), bold("data type"),
+                             text(" that determines which kind of files should be put into the folder or "),
+                             text("which files are generated as output."));
 
             std::unordered_map<std::string, cache_info> infos;
-            for(const auto &info : caches) {
+            for (const auto &info : caches) {
                 infos[info.get_name()] = info;
             }
 
             table<2> tbl;
             tbl += row(text("Data type"), text("Description"));
 
-            for(const auto &kv : infos) {
+            for (const auto &kv : infos) {
                 tbl += row(text(kv.first), text(kv.second.get_description()));
             }
 
@@ -246,32 +271,31 @@ namespace {
     }
 
     inline nlohmann::json schema_to_json(const nlohmann::json &schema) {
-        if(schema.at("type") == "object") {
-            nlohmann::json result = nlohmann::json::object({ });
-            if(schema.find("properties") != schema.end()) {
-                for(auto it = schema.at("properties").begin(); it != schema.at("properties").end(); ++it) {
+        if (schema.at("type") == "object") {
+            nlohmann::json result = nlohmann::json::object({});
+            if (schema.find("properties") != schema.end()) {
+                for (auto it = schema.at("properties").begin(); it != schema.at("properties").end(); ++it) {
                     result[it.key()] = schema_to_json(it.value());
                 }
             }
             return result;
-        }
-        else if(schema.find("default") != schema.end()) {
+        } else if (schema.find("default") != schema.end()) {
             return schema.at("default");
-        }
-        else {
+        } else {
             return nlohmann::json("<TODO: " + schema.at("type").get<std::string>() + " value>");
         }
     }
 
-    inline void extract_parameters(const nlohmann::json &schema, const std::string &path, std::vector<parameter_info> &result) {
+    inline void
+    extract_parameters(const nlohmann::json &schema, const std::string &path, std::vector<parameter_info> &result) {
         parameter_info info;
         info.path = path;
         info.property = schema;
         result.emplace_back(std::move(info));
 
-        if(schema.at("type") == "object") {
-            if(schema.find("properties") != schema.end()) {
-                for(auto it = schema.at("properties").begin(); it != schema.at("properties").end(); ++it) {
+        if (schema.at("type") == "object") {
+            if (schema.find("properties") != schema.end()) {
+                for (auto it = schema.at("properties").begin(); it != schema.at("properties").end(); ++it) {
                     extract_parameters(it.value(), path + "/" + it.key(), result);
                 }
             }
@@ -279,23 +303,23 @@ namespace {
     }
 
     inline std::string full_example_json(const nlohmann::json &schema) {
-        nlohmann::json json {};
+        nlohmann::json json{};
         json["filesystem"]["input-directory"] = "<Input directory>";
         json["filesystem"]["output-directory"] = "<Output directory>";
         json["filesystem"]["source"] = "directories";
 
-        auto algorithm_schema = extract_property(schema, { "properties", "algorithm" });
-        if(algorithm_schema.has_value()) {
+        auto algorithm_schema = extract_property(schema, {"properties", "algorithm"});
+        if (algorithm_schema.has_value()) {
             json["algorithm"] = schema_to_json(algorithm_schema.value());
         }
 
-        auto sample_schema = extract_property(schema, {"properties", "samples", "additionalProperties" });
-        if(sample_schema.has_value()) {
+        auto sample_schema = extract_property(schema, {"properties", "samples", "additionalProperties"});
+        if (sample_schema.has_value()) {
             json["samples"]["<Sample>"] = schema_to_json(sample_schema.value());
         }
 
-        auto runtime_schema = extract_property(schema, {"properties", "runtime" });
-        if(runtime_schema.has_value()) {
+        auto runtime_schema = extract_property(schema, {"properties", "runtime"});
+        if (runtime_schema.has_value()) {
             json["runtime"] = schema_to_json(runtime_schema.value());
         }
 
@@ -307,40 +331,60 @@ namespace {
     inline void write_parameters_readme(markdown::document &doc, const nlohmann::json &schema) {
         using namespace markdown;
         doc += heading2("Full parameters");
-        doc += paragraph(text("The parameter file contains additional parameters that can change the behaviour of algorithms, "
-                              "provide them with additional sample parameters and change internal runtime settings. "
-                              "Following example parameter file contains all available settings and their default values:"));
+        doc += paragraph(
+                text("The parameter file contains additional parameters that can change the behaviour of algorithms, "
+                     "provide them with additional sample parameters and change internal runtime settings. "
+                     "Following example parameter file contains all available settings and their default values:"));
         doc += code(full_example_json(schema), "json");
 
-
-        doc += paragraph(text("Following list provides a documentation for each parameter:"));
-
         std::vector<parameter_info> all_parameters;
-        auto algorithm_schema = extract_property(schema, { "properties", "algorithm" });
-        if(algorithm_schema.has_value()) {
+        auto algorithm_schema = extract_property(schema, {"properties", "algorithm"});
+        if (algorithm_schema.has_value()) {
             extract_parameters(algorithm_schema.value(), "/algorithm", all_parameters);
         }
 
-        auto sample_schema = extract_property(schema, {"properties", "samples", "additionalProperties" });
-        if(sample_schema.has_value()) {
+        auto sample_schema = extract_property(schema, {"properties", "samples", "additionalProperties"});
+        if (sample_schema.has_value()) {
             extract_parameters(sample_schema.value(), "/samples/<Sample>", all_parameters);
         }
 
-        auto runtime_schema = extract_property(schema, {"properties", "runtime" });
-        if(runtime_schema.has_value()) {
+        auto runtime_schema = extract_property(schema, {"properties", "runtime"});
+        if (runtime_schema.has_value()) {
             extract_parameters(runtime_schema.value(), "/runtime", all_parameters);
         }
 
 
-        table<6> tbl;
-        tbl += row(text("Parameter"), text("Name"), text("Description"), text("Type"), text("Default"), text("Allowed values"));
-        for(const auto &info : all_parameters) {
-            if(info.is_interesting())
-                tbl += row(inline_code(info.path), text(info.get_name()), text(info.get_description()), text(info.get_type()),
-                        inline_code(info.get_default()), inline_code(info.get_allowed_values()));
-        }
+//        table<6> tbl;
+//        tbl += row(text("Parameter"), text("Name"), text("Description"), text("Type"), text("Default"), text("Allowed values"));
+//        for(const auto &info : all_parameters) {
+//            if(info.is_interesting())
+//                tbl += row(inline_code(info.path), text(info.get_name()), text(info.get_description()), text(info.get_type()),
+//                        inline_code(info.get_default()), inline_code(info.get_allowed_values()));
+//        }
+//
+//        doc += cut(tbl);
 
-        doc += cut(tbl);
+        doc += heading2("Parameter documentation");
+        for(const auto &info : all_parameters) {
+            if(info.is_interesting()) {
+                doc += heading(info.path, 2);
+                if(!info.get_name().empty())
+                    doc += paragraph(bold(info.get_name()));
+                if(!info.get_description().empty())
+                    doc += paragraph(text(info.get_description()));
+                if(!info.get_default().empty())
+                    doc += paragraph(bold("Default value:"), text(" "), inline_code(info.get_default()));
+                auto allowed = info.get_allowed_values();
+                if(!allowed.empty()) {
+                    doc += paragraph(text("Following values are allowed:"));
+                    auto list = itemize();
+                    for(const auto &e : allowed) {
+                        *list += inline_code(e);
+                    }
+                    doc += std::move(list);
+                }
+            }
+        }
     }
 
 }
@@ -363,7 +407,8 @@ void misaxx::build_readme(const nlohmann::json &schema, const boost::filesystem:
     // General parameter file
     doc += paragraph(text("A basic parameter file has the following format:"));
     doc += code(readme_basic_parameter_file(), "json");
-    doc += paragraph(text("The parameter file must at least provide an input directory, an output directory and the list of samples. "),
+    doc += paragraph(
+            text("The parameter file must at least provide an input directory, an output directory and the list of samples. "),
             text("Additionally, there might be required parameters. See below to find a list of all optional and required parameters."));
 
     // Multithreading

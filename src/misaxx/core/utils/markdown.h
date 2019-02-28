@@ -166,6 +166,25 @@ namespace markdown::impl {
         explicit itemize(std::vector<std::unique_ptr<span>> t_content) : content(std::move(t_content)) {
         }
 
+        template<typename Span>
+        void operator+=(Span entry) {
+            content.emplace_back(std::move(entry));
+        }
+
+        template<typename Span>
+        itemize &operator+(Span entry) {
+            *this += std::move(entry);
+            return *this;
+        }
+
+        template<typename Span, typename ...Args>
+        void addAll(Span &&entry, Args &&... args) {
+            *this += std::forward<Span>(entry);
+            if constexpr (sizeof...(Args) > 0) {
+                addAll(std::forward<Args>(args)...);
+            }
+        }
+
         std::string to_string() const override {
             std::string output = "";
             for (const auto &item : content) {
@@ -186,11 +205,29 @@ namespace markdown::impl {
         explicit enumerate(std::vector<std::unique_ptr<span>> t_content) : content(std::move(t_content)) {
 
         }
+        template<typename Span>
+        void operator+=(Span entry) {
+            content.emplace_back(std::move(entry));
+        }
+
+        template<typename Span>
+        enumerate &operator+(Span entry) {
+            *this += std::move(entry);
+            return *this;
+        }
+
+        template<typename Span, typename ...Args>
+        void addAll(Span &&entry, Args &&... args) {
+            *this += std::forward<Span>(entry);
+            if constexpr (sizeof...(Args) > 0) {
+                addAll(std::forward<Args>(args)...);
+            }
+        }
 
         std::string to_string() const override {
             std::string output = "";
             for (size_t i = 0; i < content.size(); ++i) {
-                output += std::to_string(i + 1) + ". " + content.at(i)->to_string() + "";
+                output += std::to_string(i + 1) + ". " + content.at(i)->to_string() + "\n";
             }
             return output;
         }
@@ -434,6 +471,10 @@ namespace markdown {
     template<size_t Columns>
     using table = markdown::impl::table<Columns>;
 
+    inline std::unique_ptr<markdown::impl::span_paragraph> paragraph() {
+        return std::make_unique<markdown::impl::span_paragraph>();
+    }
+    
     template<typename Span, typename ...Args>
     inline std::unique_ptr<markdown::impl::span_paragraph> paragraph(Span &&span, Args &&... args) {
         auto result = std::make_unique<markdown::impl::span_paragraph>();
@@ -443,6 +484,40 @@ namespace markdown {
 
     inline std::unique_ptr<markdown::impl::span_paragraph> paragraph(std::unique_ptr<markdown::impl::span> span) {
         auto result = std::make_unique<markdown::impl::span_paragraph>();
+        *result += std::move(span);
+        return result;
+    }
+
+    inline std::unique_ptr<markdown::impl::itemize> itemize() {
+        return std::make_unique<markdown::impl::itemize>();
+    }
+
+    template<typename Span, typename ...Args>
+    inline std::unique_ptr<markdown::impl::itemize> itemize(Span &&span, Args &&... args) {
+        auto result = std::make_unique<markdown::impl::itemize>();
+        result->addAll(std::forward<Span>(span), std::forward<Args>(args)...);
+        return result;
+    }
+
+    inline std::unique_ptr<markdown::impl::itemize> itemize(std::unique_ptr<markdown::impl::span> span) {
+        auto result = std::make_unique<markdown::impl::itemize>();
+        *result += std::move(span);
+        return result;
+    }
+
+    inline std::unique_ptr<markdown::impl::enumerate> enumerate() {
+        return std::make_unique<markdown::impl::enumerate>();
+    }
+
+    template<typename Span, typename ...Args>
+    inline std::unique_ptr<markdown::impl::enumerate> enumerate(Span &&span, Args &&... args) {
+        auto result = std::make_unique<markdown::impl::enumerate>();
+        result->addAll(std::forward<Span>(span), std::forward<Args>(args)...);
+        return result;
+    }
+
+    inline std::unique_ptr<markdown::impl::enumerate> enumerate(std::unique_ptr<markdown::impl::span> span) {
+        auto result = std::make_unique<markdown::impl::enumerate>();
         *result += std::move(span);
         return result;
     }
