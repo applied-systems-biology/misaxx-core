@@ -530,7 +530,7 @@ void misa_runtime::postprocess_cache_attachments() {
     if (!is_simulating()) {
         const boost::filesystem::path filesystem_export_base_path = get_filesystem().exported->external_path();
         std::ofstream sw;
-        sw.open((filesystem_export_base_path / "attachments" / "serialization-schemas.json"));
+        sw.open((filesystem_export_base_path / "attachments" / "serialization-schemas.json").string());
         sw << std::setw(4) << attachment_schemata;
     }
 
