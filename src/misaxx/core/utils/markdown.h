@@ -352,7 +352,7 @@ namespace markdown::impl {
             std::stringstream result;
 
             bool first_row = true;
-            for(const auto r : content) {
+            for(const auto &r : content) {
 
                 result << "|";
                 size_t line_counter = 1;
