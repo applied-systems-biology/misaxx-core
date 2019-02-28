@@ -166,7 +166,7 @@ namespace misaxx {
 
         void to_json(nlohmann::json &t_json) const override;
 
-        void to_json_schema(const misa_json_schema &t_schema) const override;
+        void to_json_schema(misa_json_schema_property &t_schema) const override;
 
         /**
          * Finds a filesystem entry (including children) where its external path is either a parent of the input path

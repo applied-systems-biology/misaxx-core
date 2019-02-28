@@ -10,6 +10,7 @@
 #include <misaxx/core/misa_root_module_base.h>
 #include <misaxx/core/runtime/misa_runtime_properties.h>
 #include <misaxx/core/runtime/misa_parameter_registry.h>
+#include <iostream>
 
 namespace misaxx {
 

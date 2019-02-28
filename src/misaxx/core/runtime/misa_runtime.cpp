@@ -9,6 +9,9 @@
 #include <misaxx/core/workers/misa_work_node.h>
 #include <misaxx/core/filesystem/misa_filesystem_empty_importer.h>
 #include <misaxx/core/utils/string.h>
+#include <misaxx/core/misa_json_schema_property.h>
+#include <iomanip>
+#include <iostream>
 #include "misa_runtime.h"
 
 
@@ -273,7 +276,7 @@ void misa_runtime::run() {
         m_nodes_todo.clear();
         m_nodes_todo_lookup.clear();
         m_known_nodes_count = 0;
-        m_parameter_schema_builder = std::make_shared<misa_json_schema_builder>();
+        m_parameter_schema_builder = std::make_shared<misa_json_schema_property>();
         m_finished_nodes_count = 0;
         m_tree_complete = false;
 
@@ -295,8 +298,15 @@ void misa_runtime::run() {
 
         postprocess_parameter_schema();
 
-        std::cout << "<#> <#> Writing parameter schema to " << output_path.string() << "\n";
-        get_schema_builder()->write(output_path);
+        {
+            std::cout << "<#> <#> Writing parameter schema to " << output_path.string() << "\n";
+            nlohmann::json j;
+            get_schema_builder()->to_json(j);
+            std::ofstream out;
+            out.open(output_path.string());
+            out << std::setw(4) << j;
+            out.close();
+        }
 
         m_is_simulating = false;
 
@@ -363,10 +373,14 @@ nlohmann::json &misa_runtime::get_parameter_json() {
 }
 
 nlohmann::json misa_runtime::get_json_raw(const std::vector<std::string> &t_path) {
-    return misaxx::json_helper::access_json_path(m_parameters, t_path);
+    nlohmann::json *result = &m_parameters;
+    for(const auto &key : t_path) {
+        result = &((*result)[key]);
+    }
+    return *result;
 }
 
-std::shared_ptr<misa_json_schema_builder> misa_runtime::get_schema_builder() {
+std::shared_ptr<misa_json_schema_property> misa_runtime::get_schema_builder() {
     return m_parameter_schema_builder;
 }
 
@@ -496,10 +510,9 @@ void misa_runtime::postprocess_cache_attachments() {
                     // Export attachment JSON schema
                     if (attachment_schemata.find(attachment_ptr->get_serialization_id().get_id()) ==
                         attachment_schemata.end()) {
-                        auto builder = std::make_shared<misa_json_schema_builder>();
-                        misa_json_schema schema{builder, {"schema"}};
-                        attachment_ptr->to_json_schema(schema);
-                        attachment_schemata[attachment_ptr->get_serialization_id().get_id()] = schema.get_builder()->data["properties"]["schema"];
+                        auto schema = std::make_shared<misa_json_schema_property>();
+                        attachment_ptr->to_json_schema(*schema);
+                        schema->to_json(attachment_schemata[attachment_ptr->get_serialization_id().get_id()]);
                     }
                 }
             }
@@ -540,61 +553,37 @@ void misa_runtime::postprocess_cache_attachments() {
 }
 
 void misa_runtime::postprocess_parameter_schema() {
-    std::shared_ptr<misa_json_schema_builder> schema = get_schema_builder();
+    std::shared_ptr<misa_json_schema_property> schema = get_schema_builder();
 
     // Save filesystem to parameter schema
-    get_filesystem().to_json_schema(misa_json_schema(schema, {"filesystem", "json-data"}));
-    schema->insert<std::string>({"filesystem", "source"},
-                                misa_json_property<std::string>().with_default_value("json").make_required());
+    get_filesystem().to_json_schema(*(schema->resolve("filesystem")->resolve("json-data")));
+    (*schema)["filesystem"]["source"].define<std::string>("json");
 
     // Workaround: Due to inflexibility with schema generation, manually put "__OBJECT__" nodes into list builders
     // /properties/algorithm -> nothing to do
     // /properties/objects/properties/__OBJECT__ -> /properties/objects/additionalProperties
-    {
-        auto &base = schema->data["properties"]["samples"];
-        base["type"] = "object";
-        base["additionalProperties"] = std::move(base["properties"]["__OBJECT__"]);
-        base["properties"].erase(base["properties"].find("__OBJECT__"));
-    }
+    (*schema)["samples"]["__OBJECT__"]; // Needed if there are no sample parameters
+    (*schema)["samples"].make_template();
 
     // /properties/runtime::filesystem/properties/json-data/properties/imported/properties/children/properties/__OBJECT__ -> /properties/runtime::filesystem/properties/json-data/properties/imported/properties/children/additionalProperties
-    {
-        auto &base = schema->data["properties"]["filesystem"]["properties"]["json-data"]["properties"]["imported"]["properties"]["children"];
-        base["additionalProperties"] = std::move(base["properties"]["__OBJECT__"]);
-        base["properties"].erase(base["properties"].find("__OBJECT__"));
-    }
-    {
-        auto &base = schema->data["properties"]["filesystem"]["properties"]["json-data"]["properties"]["exported"]["properties"]["children"];
-        base["additionalProperties"] = std::move(base["properties"]["__OBJECT__"]);
-        base["properties"].erase(base["properties"].find("__OBJECT__"));
-    }
+    (*schema)["filesystem"]["json-data"]["imported"]["children"]["__OBJECT__"];
+    (*schema)["filesystem"]["json-data"]["imported"]["children"].make_template();
+    (*schema)["filesystem"]["json-data"]["exported"]["children"]["__OBJECT__"];
+    (*schema)["filesystem"]["json-data"]["exported"]["children"].make_template();
 
     // Write runtime parameters
-    schema->insert<int>({"runtime", "num-threads"},
-                        misa_json_property<int>()
-                                .with_title("Number of threads")
-                                .with_description("Changes the number of threads")
-                                .with_default_value(1)
-                                .make_optional());
-    schema->insert<bool>({"runtime", "full-runtime-log"},
-                         misa_json_property<bool>()
-                                 .with_title("Full runtime log")
-                                 .with_description("If enabled, the runtime log will contain all individual workers")
-                                 .with_default_value(false)
-                                 .make_optional());
-    schema->insert<bool>({"runtime", "postprocessing", "write-attachments"},
-                         misa_json_property<bool>()
-                                 .with_title("Write attachments")
-                                 .with_description("If enabled, write data attached to caches after the work is done")
-                                 .with_default_value(true)
-                                 .make_optional());
-    schema->insert<bool>({"runtime", "postprocessing", "lazy-write-attachments"},
-                         misa_json_property<bool>()
-                                 .with_title("Only write attachments with actual data")
-                                 .with_description("If enabled, only non-empty attachment files will be written")
-                                 .with_default_value(true)
-                                 .make_optional());
-
+    (*schema)["runtime"]["num-threads"].document_title("Number of threads")
+            .document_description("Changes the number of threads")
+            .declare_optional<int>(1);
+    (*schema)["runtime"]["full-runtime-log"].document_title("Full runtime log")
+            .document_description("If enabled, the runtime log will contain all individual workers")
+            .declare_optional(false);
+    (*schema)["runtime"]["postprocessing"]["write-attachments"].document_title("Write attachments")
+            .document_description("If enabled, write data attached to caches after the work is done")
+            .declare_optional(true);
+    (*schema)["runtime"]["postprocessing"]["lazy-write-attachments"].document_title("Only write attachments with actual data")
+            .document_description("If enabled, only non-empty attachment files will be written")
+            .declare_optional(true);
 }
 
 misa_runtime::misa_runtime(misa_module_info info, std::shared_ptr<misa_module_interface> interface,
@@ -603,7 +592,7 @@ misa_runtime::misa_runtime(misa_module_info info, std::shared_ptr<misa_module_in
         : m_module_info(std::move(info)),
           m_module_interface(std::move(interface)),
           m_module_instantiator(std::move(root_instantiator)),
-          m_parameter_schema_builder(std::make_shared<misa_json_schema_builder>()) {
+          m_parameter_schema_builder(std::make_shared<misa_json_schema_property>()) {
 
 }
 

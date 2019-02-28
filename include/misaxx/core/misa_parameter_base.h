@@ -6,7 +6,7 @@
 #pragma once
 
 #include <string>
-#include <misaxx/core/json/misa_json_property_base.h>
+#include <misaxx/core/misa_json_schema_property.h>
 
 namespace misaxx {
     /**
@@ -20,6 +20,20 @@ namespace misaxx {
         using path = std::vector<std::string>;
 
         /**
+        * Location of the parameter within the parameter JSON
+        */
+        path location;
+
+        /**
+         * Parameter schema that belongs to the parameter
+         */
+        std::shared_ptr<misa_json_schema_property> schema;
+
+        misa_parameter_base() = default;
+
+        explicit misa_parameter_base(path t_location, std::shared_ptr<misa_json_schema_property> t_schema);
+
+        /**
          * Returns the name of this parameter
          * @return
          */
@@ -30,11 +44,5 @@ namespace misaxx {
          * @return
          */
         virtual const path &get_location() const = 0;
-
-        /**
-         * Returns the properties of this parameter, describing its contents
-         * @return
-         */
-        virtual const misa_json_property_base &get_description() const = 0;
     };
 }

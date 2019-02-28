@@ -34,6 +34,12 @@ namespace misaxx {
         std::string get_name() const;
 
         /**
+         * A description of the module
+         * @return
+         */
+        std::string get_description() const;
+
+        /**
          * The list of dependency modules
          * @return
          */
@@ -43,7 +49,7 @@ namespace misaxx {
 
         void to_json(nlohmann::json &t_json) const override;
 
-        void to_json_schema(const misa_json_schema &t_schema) const override;
+        void to_json_schema(misa_json_schema_property &t_schema) const override;
 
     protected:
 
@@ -51,6 +57,7 @@ namespace misaxx {
 
         std::string m_id;
         std::string m_version;
+        std::string m_name;
         std::string m_description;
         std::vector<misa_module_info> m_dependencies;
     };

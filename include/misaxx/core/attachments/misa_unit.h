@@ -38,6 +38,14 @@ namespace misaxx {
          * @return
          */
         virtual std::string get_literal() const = 0;
+
+        std::string get_documentation_name() const override {
+            return "Unit";
+        }
+
+        std::string get_documentation_description() const override {
+            return "Unit of a quantity";
+        }
     };
 
     /**

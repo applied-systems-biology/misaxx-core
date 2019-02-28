@@ -13,7 +13,7 @@ void misa_unit_numeric::to_json(nlohmann::json &t_json) const {
     misa_serializable::to_json(t_json);
 }
 
-void misa_unit_numeric::to_json_schema(const misa_json_schema &t_schema) const {
+void misa_unit_numeric::to_json_schema(misa_json_schema_property &t_schema) const {
     misa_unit<1>::to_json_schema(t_schema);
 }
 
@@ -32,4 +32,12 @@ bool misa_unit_numeric::operator!=(const misa_unit_numeric &) const {
 void misa_unit_numeric::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {
     misa_serializable::build_serialization_id_hierarchy(result);
     result.emplace_back(misa_serialization_id("misa", "attachments/quantities/numeric"));
+}
+
+std::string misa_unit_numeric::get_documentation_name() const {
+    return "Numeric unit";
+}
+
+std::string misa_unit_numeric::get_documentation_description() const {
+    return "Unit of order 0";
 }

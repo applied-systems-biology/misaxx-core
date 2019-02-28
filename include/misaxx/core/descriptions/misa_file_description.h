@@ -28,7 +28,11 @@ namespace misaxx {
 
         void to_json(nlohmann::json &t_json) const override;
 
-        void to_json_schema(const misa_json_schema &t_schema) const override;
+        void to_json_schema(misa_json_schema_property &t_schema) const override;
+
+        std::string get_documentation_name() const override;
+
+        std::string get_documentation_description() const override;
 
     protected:
 

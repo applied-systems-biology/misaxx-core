@@ -22,6 +22,8 @@ namespace misaxx {
 
         misa_description_storage() = default;
 
+        explicit misa_description_storage(std::shared_ptr<misa_data_pattern> t_pattern, std::shared_ptr<misa_data_description> t_description);
+
         misa_description_storage(const misa_description_storage &t_source);
 
         misa_description_storage(misa_description_storage && t_source) = default;
@@ -47,7 +49,7 @@ namespace misaxx {
 
         void to_json(nlohmann::json &t_json) const override;
 
-        void to_json_schema(const misa_json_schema &t_schema) const override;
+        void to_json_schema(misa_json_schema_property &t_schema) const override;
 
     protected:
 

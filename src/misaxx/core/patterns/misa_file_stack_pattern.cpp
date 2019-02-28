@@ -22,13 +22,13 @@ void misa_file_stack_pattern::to_json(nlohmann::json &t_json) const {
     t_json["extensions"] = extensions_;
 }
 
-void misa_file_stack_pattern::to_json_schema(const misa_json_schema &t_schema) const {
+void misa_file_stack_pattern::to_json_schema(misa_json_schema_property &t_schema) const {
     misa_data_pattern::to_json_schema(t_schema);
     std::vector<std::string> extensions_;
     for(const auto &extension : extensions) {
         extensions_.emplace_back(extension.string());
     }
-    t_schema.resolve("extensions").declare_optional<std::vector<std::string>>(extensions_);
+    t_schema["extensions"].declare<std::vector<std::string>>().make_optional(extensions_);
 }
 
 void misa_file_stack_pattern::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {
@@ -51,4 +51,12 @@ misa_file_stack_pattern::apply(misa_file_stack_description &target, const boost:
             }
         }
     }
+}
+
+std::string misa_file_stack_pattern::get_documentation_name() const {
+    return "File stack pattern";
+}
+
+std::string misa_file_stack_pattern::get_documentation_description() const {
+    return "A pattern that looks for a list of files with a specific extension";
 }

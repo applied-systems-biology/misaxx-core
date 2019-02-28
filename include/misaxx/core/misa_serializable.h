@@ -6,7 +6,6 @@
 #pragma once
 
 #include <nlohmann/json.hpp>
-#include <misaxx/core/json/misa_json_schema.h>
 #include <misaxx/core/misa_serialization_id.h>
 
 namespace misaxx {
@@ -32,13 +31,6 @@ namespace misaxx {
         /**
          * Describes the structure of the data as JSON schema
          * Must be consistent with the JSON structure expected by from_json and to_json
-         * @param t_schema
-         */
-        virtual void to_json_schema(const misa_json_schema &t_schema) const;
-
-        /**
-         * Describes the structure of the data as JSON schema
-         * Must be consistent with the JSON structure expected by from_json and to_json
          * @param schema
          */
         virtual void to_json_schema(misa_json_schema_property &schema) const;
@@ -56,6 +48,20 @@ namespace misaxx {
          * @return
          */
         std::vector<misa_serialization_id> get_serialization_id_hierarchy() const;
+
+        /**
+         * Override this method to change the automatically generated documentation name of this object
+         * It is used during to_json_schema()
+         * @return
+         */
+        virtual std::string get_documentation_name() const;
+
+        /**
+         * Override this method to change the automatically generatated documentation name of this object
+         * It is used during to_json_schema()
+         * @return
+         */
+        virtual std::string get_documentation_description() const;
 
         /**
          * Deserializes a wrapped value from the JSON
@@ -147,3 +153,6 @@ namespace misaxx {
         }
     };
 }
+
+// For convenience
+#include <misaxx/core/misa_json_schema_property.h>

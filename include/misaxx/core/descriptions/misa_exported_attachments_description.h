@@ -13,6 +13,10 @@ namespace misaxx {
     struct misa_exported_attachments_description : public misa_file_description {
         using misa_file_description::misa_file_description;
 
+        std::string get_documentation_name() const override;
+
+        std::string get_documentation_description() const override;
+
     protected:
         void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;
     };

@@ -70,6 +70,16 @@ namespace misaxx {
 
         /**
          * Links this cache to a filesystem location.
+         * This calls the internal linkage method of the cached data.
+         * If linking with filesystem entries, you can use the other methods
+         * @param t_location
+         * @param t_description
+         */
+        void force_link(const boost::filesystem::path &t_location,
+                        std::shared_ptr<misa_data_description> t_description);
+
+        /**
+         * Links this cache to a filesystem location.
          * The data is assumed to already exist. Necessary metadata should be contained within the filesystem.
          * Metadata is not copied during this operation.
          * @param t_location
@@ -85,6 +95,16 @@ namespace misaxx {
          */
         void suggest_link(const boost::filesystem::path &t_location,
                           const std::shared_ptr<misa_description_storage> &t_description);
+
+        /**
+         * Links this cache to a filesystem location if not already set.
+         * This calls the internal linkage method of the cached data.
+         * If linking with filesystem entries, you can use the other methods
+         * @param t_location
+         * @param t_description
+         */
+        void suggest_link(const boost::filesystem::path &t_location,
+                          std::shared_ptr<misa_data_description> t_description);
 
         /**
          * Links this cache to a filesystem location if not already set.
@@ -104,6 +124,15 @@ namespace misaxx {
                             const std::shared_ptr<misa_description_storage> &t_description);
 
         /**
+         * Links this cache to a filesystem location if not already set.
+         * The data is assumed to not exist. Necessary metadata must be obtained from linked caches or manually set in code.
+         * Metadata is copied if it is not unique
+         * @param t_location
+         * @param t_description
+         */
+        void suggest_create(const filesystem::entry &t_location, std::shared_ptr<misa_data_description> t_description);
+
+        /**
          * Links this cache to an imported filesystem path.
          * This path must exist. Otherwise, an exception is thrown.
          * @param t_filesystem
@@ -121,6 +150,17 @@ namespace misaxx {
         void suggest_export_location(const misa_filesystem &t_filesystem,
                                      const boost::filesystem::path &t_path,
                                      const std::shared_ptr<misa_description_storage> &t_description);
+
+        /**
+         * Links this cache to an exported filesystem path.
+         * This path must not exist. Otherwise, an exception is thrown.
+         * @param t_filesystem
+         * @param t_path
+         * @param t_description
+         */
+        void suggest_export_location(const misa_filesystem &t_filesystem,
+                                     const boost::filesystem::path &t_path,
+                                     std::shared_ptr<misa_data_description> t_description);
 
         /**
          * Returns a description of the current cache

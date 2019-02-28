@@ -35,7 +35,7 @@ namespace misaxx {
 
         void to_json(nlohmann::json &t_json) const override;
 
-        void to_json_schema(const misa_json_schema &t_schema) const override;
+        void to_json_schema(misa_json_schema_property &t_schema) const override;
 
         std::string get_literal() const override;
 
@@ -55,6 +55,10 @@ namespace misaxx {
         template<typename T> static T convert(T t_value, const misa_unit_numeric &t_src, const misa_unit_numeric &t_dst) {
             return t_value;
         }
+
+        std::string get_documentation_name() const override;
+
+        std::string get_documentation_description() const override;
 
     protected:
         void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;

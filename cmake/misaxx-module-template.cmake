@@ -107,9 +107,10 @@ function(misaxx_with_default_module_info)
 namespace ${MISAXX_API_NAMESPACE} {\n\
     inline misaxx::misa_module_info module_info() {\n\
         misaxx::misa_mutable_module_info info;\n\
-        info.set_name(\"@PROJECT_NAME@\");\n\
+        info.set_id(\"@PROJECT_NAME@\");\n\
         info.set_version(\"@PROJECT_VERSION@\");\n\
-        info.set_description(\"@PROJECT_DESCRIPTION@\");\n\
+        info.set_name(\"@PROJECT_DESCRIPTION@\");\n\
+        info.set_description(\"A MISA++ module\");\n\
         \n\
         info.add_dependency(misaxx::module_info());\n\
         // TODO: Add dependencies via info.add_dependency()\n\

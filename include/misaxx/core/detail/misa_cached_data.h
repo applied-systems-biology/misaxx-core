@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <iostream>
+
 namespace misaxx {
     template<class Cache>
     misa_cached_data<Cache>::misa_cached_data(Cache t_cache) : data(std::make_shared<Cache>(std::move(t_cache))) {
@@ -151,5 +153,30 @@ namespace misaxx {
     template<class Cache>
     std::shared_ptr<const misa_location> misa_cached_data<Cache>::get_location_interface() const {
         return data->get_location_interface();
+    }
+
+    template<class Cache>
+    void
+    misa_cached_data<Cache>::force_link(const boost::filesystem::path &t_location, std::shared_ptr<misa_data_description> t_description) {
+        force_link(t_location, std::make_shared<misa_description_storage>(std::shared_ptr<misa_data_pattern>(), std::move(t_description)));
+    }
+
+    template<class Cache>
+    void misa_cached_data<Cache>::suggest_link(const boost::filesystem::path &t_location,
+                                               std::shared_ptr<misa_data_description> t_description) {
+        suggest_link(t_location, std::make_shared<misa_description_storage>(std::shared_ptr<misa_data_pattern>(), std::move(t_description)));
+    }
+
+    template<class Cache>
+    void
+    misa_cached_data<Cache>::suggest_create(const filesystem::entry &t_location, std::shared_ptr<misa_data_description> t_description) {
+        suggest_create(t_location, std::make_shared<misa_description_storage>(std::shared_ptr<misa_data_pattern>(), std::move(t_description)));
+    }
+
+    template<class Cache>
+    void misa_cached_data<Cache>::suggest_export_location(const misa_filesystem &t_filesystem,
+                                                          const boost::filesystem::path &t_path,
+                                                          std::shared_ptr<misa_data_description> t_description) {
+        suggest_export_location(t_filesystem, t_path, std::make_shared<misa_description_storage>(std::shared_ptr<misa_data_pattern>(), std::move(t_description)));
     }
 }

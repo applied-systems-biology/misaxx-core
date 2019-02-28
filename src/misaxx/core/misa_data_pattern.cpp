@@ -12,7 +12,7 @@ void misa_data_pattern::build_serialization_id_hierarchy(
     result.emplace_back(misa_serialization_id("misa", "patterns/base"));
 }
 
-void misa_data_pattern::to_json_schema(const misa_json_schema &t_schema) const {
+void misa_data_pattern::to_json_schema(misa_json_schema_property &t_schema) const {
     misa_serializable::to_json_schema(t_schema);
 }
 

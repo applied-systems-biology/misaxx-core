@@ -3,6 +3,7 @@
 //
 
 #include <misaxx/core/misa_module_info.h>
+#include <misaxx/core/misa_json_schema_property.h>
 
 using namespace misaxx;
 
@@ -15,10 +16,10 @@ std::string misa_module_info::get_version() const {
 }
 
 std::string misa_module_info::get_name() const {
-    if(m_description.empty())
+    if(m_name.empty())
         return get_id();
     else
-        return m_description;
+        return m_name;
 }
 
 std::vector<misa_module_info> misa_module_info::get_dependencies() const {
@@ -26,8 +27,10 @@ std::vector<misa_module_info> misa_module_info::get_dependencies() const {
 }
 
 void misa_module_info::from_json(const nlohmann::json &t_json) {
-    m_id = t_json["name"];
+    m_id = t_json["id"];
     m_version = t_json["version"];
+    if(t_json.find("name") != t_json.end())
+        m_name = t_json["name"];
     if(t_json.find("description") != t_json.end())
         m_description = t_json["description"];
     if(t_json.find("dependencies") != t_json.end())
@@ -36,23 +39,29 @@ void misa_module_info::from_json(const nlohmann::json &t_json) {
 
 void misa_module_info::to_json(nlohmann::json &t_json) const {
     misa_serializable::to_json(t_json);
-    t_json["name"] = m_id;
+    t_json["id"] = m_id;
     t_json["version"] = m_version;
-    t_json["description"] = get_name();
+    t_json["name"] = get_name();
+    t_json["description"] = m_description;
     t_json["dependencies"] = m_dependencies;
 }
 
-void misa_module_info::to_json_schema(const misa_json_schema &t_schema) const {
+void misa_module_info::to_json_schema(misa_json_schema_property &t_schema) const {
     misa_serializable::to_json_schema(t_schema);
-    t_schema.resolve("name").declare_required<std::string>();
-    t_schema.resolve("version").declare_required<std::string>();
-    t_schema.resolve("description").declare_optional<std::string>();
-    t_schema.resolve("dependencies").declare_optional<std::vector<misa_module_info>>();
+    t_schema.resolve("id")->declare_required<std::string>();
+    t_schema.resolve("version")->declare_required<std::string>();
+    t_schema.resolve("name")->declare_optional<std::string>();
+    t_schema.resolve("description")->declare_optional<std::string>();
+    t_schema.resolve("dependencies")->declare_optional<std::vector<misa_module_info>>();
 }
 
 void misa_module_info::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {
     misa_serializable::build_serialization_id_hierarchy(result);
     result.emplace_back(misa_serialization_id("misa", "module-info"));
+}
+
+std::string misa_module_info::get_description() const {
+    return m_description;
 }
 
 

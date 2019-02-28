@@ -26,13 +26,17 @@ namespace misaxx {
 
         explicit misa_file_stack_pattern(std::vector<boost::filesystem::path> t_extensions);
 
-        void apply(misa_file_stack_description &target, const boost::filesystem::path &t_directory) const;
+        virtual void apply(misa_file_stack_description &target, const boost::filesystem::path &t_directory) const;
 
         void from_json(const nlohmann::json &t_json) override;
 
         void to_json(nlohmann::json &t_json) const override;
 
-        void to_json_schema(const misa_json_schema &t_schema) const override;
+        void to_json_schema(misa_json_schema_property &t_schema) const override;
+
+        std::string get_documentation_name() const override;
+
+        std::string get_documentation_description() const override;
 
     protected:
 

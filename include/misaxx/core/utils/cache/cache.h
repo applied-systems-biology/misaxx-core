@@ -55,7 +55,7 @@ namespace misaxx::utils {
          * The lock is deferred.
          * @return
          */
-        std::unique_lock<std::shared_mutex> exclusive_access() {
+        std::unique_lock<std::shared_mutex> exclusive_lock() {
             return std::unique_lock<std::shared_mutex>(m_mutex, std::defer_lock);
         }
 
@@ -64,7 +64,7 @@ namespace misaxx::utils {
          * The lock is deferred.
          * @return
          */
-        std::shared_lock<std::shared_mutex> readonly_access() {
+        std::shared_lock<std::shared_mutex> shared_lock() {
             return std::shared_lock<std::shared_mutex>(m_mutex, std::defer_lock);
         }
 
@@ -139,7 +139,7 @@ namespace misaxx::utils {
          * Can be safely used from multiple threads.
          */
         void try_stash() {
-            auto lock = exclusive_access();
+            auto lock = exclusive_lock();
             if(lock.try_lock()) {
                 stash();
             }

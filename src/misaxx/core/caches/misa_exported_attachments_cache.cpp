@@ -1,4 +1,5 @@
 #include <misaxx/core/caches/misa_exported_attachments_cache.h>
+#include <iomanip>
 
 using namespace misaxx;
 
