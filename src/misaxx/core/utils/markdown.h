@@ -83,6 +83,8 @@ namespace markdown::impl {
         using wrapper<text, span>::wrapper;
 
         std::string to_string() const override {
+            if(content->to_string().empty())
+                return "";
             return "*" + content->to_string() + "*";
         }
     };
@@ -95,6 +97,8 @@ namespace markdown::impl {
         using wrapper<text, span>::wrapper;
 
         std::string to_string() const override {
+            if(content->to_string().empty())
+                return "";
             return "**" + content->to_string() + "**";
         }
     };
@@ -107,7 +111,9 @@ namespace markdown::impl {
         using wrapper<text, span>::wrapper;
 
         std::string to_string() const override {
-            return "`" + content->to_string() + "`";
+            if(content->content.empty())
+                return "";
+            return "`" + content->content + "`";
         }
     };
 
@@ -213,7 +219,7 @@ namespace markdown::impl {
         }
 
         std::string to_string() const override {
-            return "```" + language + "\n" + content->to_string() + "\n```";
+            return "```" + language + "\n" + content->content + "\n```";
         }
     };
 

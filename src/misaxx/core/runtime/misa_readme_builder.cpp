@@ -39,6 +39,51 @@ namespace {
         }
     };
 
+    struct parameter_info {
+        std::string path;
+        nlohmann::json property;
+
+        std::string get_name() const {
+            if(property.find("misa:documentation-title") != property.end()) {
+                return property.at("misa:documentation-title").get<std::string>();
+            }
+            return "";
+        }
+
+        std::string get_description() const {
+            if(property.find("misa:documentation-description") != property.end()) {
+                return property.at("misa:documentation-description").get<std::string>();
+            }
+            return "";
+        }
+
+        std::string get_type() const {
+            return property.at("type").get<std::string>();
+        }
+
+        std::string get_default() const {
+            if(property.find("default") != property.end()) {
+                std::stringstream w;
+                w << property.at("default");
+                return w.str();
+            }
+            return "";
+        }
+
+        std::string get_allowed_values() const {
+            if(property.find("enum") != property.end()) {
+                std::stringstream w;
+                w << property.at("enum");
+                return w.str();
+            }
+            return "";
+        }
+
+        bool is_interesting() const {
+            return !(get_name().empty() && get_description().empty() && get_default().empty() && get_allowed_values().empty());
+        }
+    };
+
     inline std::string readme_basic_parameter_file() {
         nlohmann::json json;
         json["filesystem"]["input-directory"] = "<Input directory>";
@@ -200,6 +245,104 @@ namespace {
         }
     }
 
+    inline nlohmann::json schema_to_json(const nlohmann::json &schema) {
+        if(schema.at("type") == "object") {
+            nlohmann::json result = nlohmann::json::object({ });
+            if(schema.find("properties") != schema.end()) {
+                for(auto it = schema.at("properties").begin(); it != schema.at("properties").end(); ++it) {
+                    result[it.key()] = schema_to_json(it.value());
+                }
+            }
+            return result;
+        }
+        else if(schema.find("default") != schema.end()) {
+            return schema.at("default");
+        }
+        else {
+            return nlohmann::json("<TODO: " + schema.at("type").get<std::string>() + " value>");
+        }
+    }
+
+    inline void extract_parameters(const nlohmann::json &schema, const std::string &path, std::vector<parameter_info> &result) {
+        parameter_info info;
+        info.path = path;
+        info.property = schema;
+        result.emplace_back(std::move(info));
+
+        if(schema.at("type") == "object") {
+            if(schema.find("properties") != schema.end()) {
+                for(auto it = schema.at("properties").begin(); it != schema.at("properties").end(); ++it) {
+                    extract_parameters(it.value(), path + "/" + it.key(), result);
+                }
+            }
+        }
+    }
+
+    inline std::string full_example_json(const nlohmann::json &schema) {
+        nlohmann::json json {};
+        json["filesystem"]["input-directory"] = "<Input directory>";
+        json["filesystem"]["output-directory"] = "<Output directory>";
+        json["filesystem"]["source"] = "directories";
+
+        auto algorithm_schema = extract_property(schema, { "properties", "algorithm" });
+        if(algorithm_schema.has_value()) {
+            json["algorithm"] = schema_to_json(algorithm_schema.value());
+        }
+
+        auto sample_schema = extract_property(schema, {"properties", "samples", "additionalProperties" });
+        if(sample_schema.has_value()) {
+            json["samples"]["<Sample>"] = schema_to_json(sample_schema.value());
+        }
+
+        auto runtime_schema = extract_property(schema, {"properties", "runtime" });
+        if(runtime_schema.has_value()) {
+            json["runtime"] = schema_to_json(runtime_schema.value());
+        }
+
+        std::stringstream w;
+        w << std::setw(4) << json;
+        return w.str();
+    }
+
+    inline void write_parameters_readme(markdown::document &doc, const nlohmann::json &schema) {
+        using namespace markdown;
+        doc += heading2("Full parameters");
+        doc += paragraph(text("The parameter file contains additional parameters that can change the behaviour of algorithms, "
+                              "provide them with additional sample parameters and change internal runtime settings. "
+                              "Following example parameter file contains all available settings and their default values:"));
+        doc += code(full_example_json(schema), "json");
+
+
+        doc += paragraph(text("Following list provides a documentation for each parameter:"));
+
+        std::vector<parameter_info> all_parameters;
+        auto algorithm_schema = extract_property(schema, { "properties", "algorithm" });
+        if(algorithm_schema.has_value()) {
+            extract_parameters(algorithm_schema.value(), "/algorithm", all_parameters);
+        }
+
+        auto sample_schema = extract_property(schema, {"properties", "samples", "additionalProperties" });
+        if(sample_schema.has_value()) {
+            extract_parameters(sample_schema.value(), "/samples/<Sample>", all_parameters);
+        }
+
+        auto runtime_schema = extract_property(schema, {"properties", "runtime" });
+        if(runtime_schema.has_value()) {
+            extract_parameters(runtime_schema.value(), "/runtime", all_parameters);
+        }
+
+
+        table<6> tbl;
+        tbl += row(text("Parameter"), text("Name"), text("Description"), text("Type"), text("Default"), text("Allowed values"));
+        for(const auto &info : all_parameters) {
+            if(info.is_interesting())
+                tbl += row(inline_code(info.path), text(info.get_name()), text(info.get_description()), text(info.get_type()),
+                        inline_code(info.get_default()), inline_code(info.get_allowed_values()));
+        }
+
+        doc += cut(tbl);
+    }
+
 }
 
 void misaxx::build_readme(const nlohmann::json &schema, const boost::filesystem::path &t_output_path) {
@@ -235,6 +378,9 @@ void misaxx::build_readme(const nlohmann::json &schema, const boost::filesystem:
 
     // Cache docs
     write_cache_readme(doc, schema);
+
+    // Parameters
+    write_parameters_readme(doc, schema);
 
     // Write the README
     {
