@@ -32,7 +32,7 @@ void misa_module_info::from_json(const nlohmann::json &t_json) {
     if(t_json.find("name") != t_json.end())
         m_name = t_json["name"];
     if(t_json.find("description") != t_json.end())
-        m_name = t_json["description"];
+        m_description = t_json["description"];
     if(t_json.find("dependencies") != t_json.end())
         m_dependencies = t_json["dependencies"].get<std::vector<misa_module_info>>();
 }
@@ -42,7 +42,7 @@ void misa_module_info::to_json(nlohmann::json &t_json) const {
     t_json["id"] = m_id;
     t_json["version"] = m_version;
     t_json["name"] = get_name();
-    t_json["descriptio"] = m_description;
+    t_json["description"] = m_description;
     t_json["dependencies"] = m_dependencies;
 }
 
