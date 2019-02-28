@@ -34,6 +34,12 @@ namespace misaxx {
         std::string get_name() const;
 
         /**
+         * A description of the module
+         * @return
+         */
+        std::string get_description() const;
+
+        /**
          * The list of dependency modules
          * @return
          */

@@ -60,5 +60,9 @@ void misa_module_info::build_serialization_id_hierarchy(std::vector<misa_seriali
     result.emplace_back(misa_serialization_id("misa", "module-info"));
 }
 
+std::string misa_module_info::get_description() const {
+    return m_description;
+}
+
 
 

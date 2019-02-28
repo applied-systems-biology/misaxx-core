@@ -12,28 +12,32 @@ namespace misaxx {
     struct misa_runtime;
 
     /**
+     * Internal implementation of the CLI
+     */
+    struct misa_cli_base_impl;
+
+    /**
      * Base class for a CLI
      */
     struct misa_cli_base {
     private:
 
-        std::shared_ptr<misa_runtime> m_runtime;
-        boost::filesystem::path m_parameter_schema_path;
+        misa_cli_base_impl *m_pimpl;
 
     public:
 
         /**
-       * Return states of prepare()
-       */
+        * Return states of prepare()
+        */
         enum class cli_result {
             continue_with_workload,
             no_workload,
             error
         };
 
-        explicit misa_cli_base(std::shared_ptr<misa_runtime> t_runtime) : m_runtime(std::move(t_runtime)) {
+        explicit misa_cli_base(std::shared_ptr<misa_runtime> t_runtime);
 
-        }
+        virtual ~misa_cli_base();
 
         /**
          * Loads the parameters into the runtime.
