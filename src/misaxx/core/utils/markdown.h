@@ -11,6 +11,7 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/trim.hpp>
+#include <boost/algorithm/string.hpp>
 
 namespace markdown::impl {
 
@@ -66,7 +67,11 @@ namespace markdown::impl {
         }
 
         std::string to_string() const override {
-            return content;
+            std::string result = content;
+            for(const std::string &escape : { "\\", "`", "*", "_", "#" }) {
+                boost::replace_all(result, escape, "\\" + escape);
+            }
+            return result;
         }
     };
 
@@ -322,20 +327,15 @@ namespace markdown::impl {
                 return "";
 
             // First detect the row and column lengths
-            size_t length = 0;
             std::array<size_t, Columns> column_lengths;
             for(size_t i = 0; i < column_lengths.size(); ++i) {
                 column_lengths.at(i) = 0;
             }
             for(const row &r : content) {
-                size_t row_length = 0;
                 for(size_t i = 0; i < r.size(); ++i) {
                     std::string as_string =  r.at(i)->to_string();
-                    row_length += as_string.length() + 2;
                     column_lengths.at(i) = std::max(column_lengths.at(i), as_string.length() + 2);
                 }
-                row_length += Columns + 1; // Pipes between columns and outer space
-                length = std::max(row_length, length);
             }
 
             // At which position that pipes must be set
@@ -374,7 +374,7 @@ namespace markdown::impl {
                 if(first_row) {
                     // Write the separator
                     result << "|";
-                    for(size_t i = 0; i < length; ++i) {
+                    for(size_t i = 1; i < column_guards.at(column_guards.size() - 1) + 1; ++i) {
                         bool is_column = std::find(column_guards.begin(), column_guards.end(), i) != column_guards.end();
                         if(is_column)
                             result << "|";
@@ -467,6 +467,10 @@ namespace markdown {
 
     inline std::unique_ptr<markdown::impl::code> code(std::string content, std::string language = "") {
         return std::make_unique<markdown::impl::code>(text(std::move(content)), std::move(language));
+    }
+
+    inline std::unique_ptr<markdown::impl::inline_code> inline_code(std::string content) {
+        return std::make_unique<markdown::impl::inline_code>(text(content));
     }
 
     template<typename ...Args>

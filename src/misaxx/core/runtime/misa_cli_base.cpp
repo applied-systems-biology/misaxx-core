@@ -194,7 +194,7 @@ void misa_cli_base::run() {
         }
 
         if(!m_pimpl->m_readme_path.empty()) {
-            std::cout << "<#> <#> Writing README to " << m_pimpl->m_parameter_schema_path.string() << "\n";
+            std::cout << "<#> <#> Writing README to " << m_pimpl->m_readme_path.string() << "\n";
             nlohmann::json j;
             m_pimpl->m_runtime->get_schema_builder()->to_json(j);
             build_readme(j, m_pimpl->m_readme_path);

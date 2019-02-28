@@ -18,6 +18,25 @@ namespace {
     struct cache_info {
         std::string path;
         nlohmann::json description;
+        nlohmann::json pattern;
+
+        std::string get_name() const {
+            if(description.find("misa:documentation-title") != description.end()) {
+                return description.at("misa:documentation-title").get<std::string>();
+            }
+            else {
+                return description.at("misa:serialization-id").get<std::string>();
+            }
+        }
+
+        std::string get_description() const {
+            if(description.find("misa:documentation-description") != description.end()) {
+                return description.at("misa:documentation-description").get<std::string>();
+            }
+            else {
+                return "No description provided";
+            }
+        }
     };
 
     inline std::string readme_basic_parameter_file() {
@@ -52,15 +71,31 @@ namespace {
         if(!entry.is_object())
             return;
         if(entry.find("misa:serialization-id") != entry.end() && entry.at("misa:serialization-id").get<std::string>() == "misa:filesystem/entry") {
-            std::optional<nlohmann::json> fs_opt = extract_property(entry, { "metadata", "properties", "description" });
+            std::optional<nlohmann::json> fs_opt = extract_property(entry, { "properties", "metadata", "properties", "description" });
             if(fs_opt.has_value()) {
+                std::optional<nlohmann::json> fs_pattern = extract_property(entry, { "properties", "metadata", "properties", "pattern" });
+
                 cache_info info;
                 info.description = fs_opt.value();
                 info.path = path;
+
+                if(fs_pattern.has_value())
+                    info.pattern = fs_pattern.value();
+
+                result.emplace_back(std::move(info));
             }
         }
         for(auto it = entry.begin(); it != entry.end(); ++it) {
-            extract_caches(it.value(), path + "/" + it.key(), result);
+            if(it.value().is_object()) {
+
+                std::string sub_path = path;
+                if(it.value().find("misa:serialization-id") != it.value().end() &&
+                        it.value().at("misa:serialization-id").get<std::string>() == "misa:filesystem/entry") {
+                    sub_path += it.key() + "/";
+                }
+
+                extract_caches(it.value(), sub_path, result);
+            }
         }
     }
 
@@ -68,7 +103,7 @@ namespace {
         using namespace markdown;
 
         std::optional<nlohmann::json> fs_opt = extract_property(schema, { "properties", "filesystem", "properties", "json-data", "properties",
-                                                                          "exported", "properties", "children", "additionalProperties" });
+                                                                          "imported", "properties", "children", "additionalProperties" });
         if(fs_opt.has_value()) {
             doc += heading2("Input files");
             doc += paragraph(text("The application expects that the input folder follows a specific structure. "),
@@ -77,16 +112,91 @@ namespace {
                              text("Specific folders are used as input data. See the following table for the full filesystem structure and which kind of data is expected within those folders:"));
 
             std::vector<cache_info> caches;
-            extract_caches(fs_opt.value(), "", caches);
+            extract_caches(fs_opt.value(), "<Input folder>/<Sample>/", caches);
 
             table<2> tbl;
             tbl += row(text("Path"), text("Data type"));
+
+            for(const auto &cache : caches) {
+                tbl += row(inline_code(cache.path), text(cache.get_name()));
+            }
 
             doc += cut(tbl);
         }
         else {
             doc += heading2("Input files");
             doc += paragraph(text("This module has no input files. Please provide an input directory that only contains empty directories corresponding to the samples."));
+        }
+    }
+
+    inline void write_output_filesystem_readme(markdown::document &doc, const nlohmann::json &schema) {
+        using namespace markdown;
+
+        std::optional<nlohmann::json> fs_opt = extract_property(schema, { "properties", "filesystem", "properties", "json-data", "properties",
+                                                                          "exported", "properties", "children", "additionalProperties" });
+        if(fs_opt.has_value()) {
+            doc += heading2("Output files");
+            doc += paragraph(text("Following files and directories are generated into the output folder:"));
+
+            std::vector<cache_info> caches;
+            extract_caches(fs_opt.value(), "<Output folder>/<Sample>/", caches);
+
+            table<2> cache_tbl;
+            cache_tbl += row(text("Path"), text("Data type"));
+
+            for(const auto &cache : caches) {
+                cache_tbl += row(inline_code(cache.path), text(cache.get_name()));
+            }
+
+            table<2> tbl;
+            tbl += row(text("Path"), text("Description"));
+            tbl += row(inline_code("<Output folder>/parameters.json"), text("A copy of the parameter file"));
+            tbl += row(inline_code("<Output folder>/parameter-schema.json"), text("Human- and machine-readable schema that describes the parameter file, input and output files"));
+            tbl += row(inline_code("<Output folder>/runtime-log.json"), text("Contains information about the performance"));
+            tbl += row(inline_code("<Output folder>/attachments/"), text("Additional info attached to data during calculation. The folder structure follows the structure of input and output files"));
+            tbl += row(inline_code("<Output folder>/attachments/serialization-schemas.json"), text("Description of attached object types"));
+
+            doc += cut(cache_tbl);
+            doc += paragraph(text("The application will also generate following output files:"));
+            doc += cut(tbl);
+        }
+        else {
+            doc += heading2("Output files");
+            doc += paragraph(text("This module has no input files. Please provide an input directory that only contains empty directories corresponding to the samples."));
+        }
+    }
+
+    inline void write_cache_readme(markdown::document &doc, const nlohmann::json &schema) {
+        std::vector<cache_info> caches;
+        std::optional<nlohmann::json> fs_opt_imported = extract_property(schema, { "properties", "filesystem", "properties", "json-data", "properties",
+                                                                          "imported", "properties", "children", "additionalProperties" });
+        std::optional<nlohmann::json> fs_opt_exported = extract_property(schema, { "properties", "filesystem", "properties", "json-data", "properties",
+                                                                          "exported", "properties", "children", "additionalProperties" });
+        if(fs_opt_imported.has_value()) {
+            extract_caches(fs_opt_imported.value(), "/", caches);
+        }
+        if(fs_opt_imported.has_value()) {
+            extract_caches(fs_opt_exported.value(), "/", caches);
+        }
+        if(!caches.empty()) {
+            using namespace markdown;
+            doc += heading2("Data types");
+            doc += paragraph(text("Input and output data have a "), bold("data type"), text(" that determines which kind of files should be put into the folder or "),
+                    text("which files are generated as output."));
+
+            std::unordered_map<std::string, cache_info> infos;
+            for(const auto &info : caches) {
+                infos[info.get_name()] = info;
+            }
+
+            table<2> tbl;
+            tbl += row(text("Data type"), text("Description"));
+
+            for(const auto &kv : infos) {
+                tbl += row(text(kv.first), text(kv.second.get_description()));
+            }
+
+            doc += cut(tbl);
         }
     }
 
@@ -119,6 +229,12 @@ void misaxx::build_readme(const nlohmann::json &schema, const boost::filesystem:
 
     // Filesystem structure
     write_filesystem_readme(doc, schema);
+
+    // Output files
+    write_output_filesystem_readme(doc, schema);
+
+    // Cache docs
+    write_cache_readme(doc, schema);
 
     // Write the README
     {
