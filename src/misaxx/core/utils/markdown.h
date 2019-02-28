@@ -34,7 +34,9 @@ namespace markdown::impl {
     template<typename Element, typename Base>
     struct wrapper : public Base {
         std::unique_ptr<Element> content;
+
         wrapper() = default;
+
         explicit wrapper(std::unique_ptr<Element> t_content) : content(std::move(t_content)) {
 
         }
@@ -57,6 +59,7 @@ namespace markdown::impl {
      */
     struct text : public span {
         std::string content;
+
         text() = default;
 
         explicit text(std::string t_content) : content(std::move(t_content)) {
@@ -113,7 +116,7 @@ namespace markdown::impl {
         link() = default;
 
         explicit link(std::string t_content, std::string t_target) :
-        content(std::move(t_content)), target(std::move(t_target)) {
+                content(std::move(t_content)), target(std::move(t_target)) {
 
         }
 
@@ -132,7 +135,7 @@ namespace markdown::impl {
         image() = default;
 
         explicit image(std::string t_target, std::string t_alt = "") :
-        alt(std::move(t_alt)), target(std::move(t_target)) {
+                alt(std::move(t_alt)), target(std::move(t_target)) {
 
         }
 
@@ -148,12 +151,13 @@ namespace markdown::impl {
         std::vector<std::unique_ptr<span>> content;
 
         itemize() = default;
+
         explicit itemize(std::vector<std::unique_ptr<span>> t_content) : content(std::move(t_content)) {
         }
 
         std::string to_string() const override {
             std::string output = "";
-            for(const auto &item : content) {
+            for (const auto &item : content) {
                 output += "* " + item->to_string() + "\n";
             }
             return output;
@@ -167,13 +171,14 @@ namespace markdown::impl {
         std::vector<std::unique_ptr<span>> content;
 
         enumerate() = default;
+
         explicit enumerate(std::vector<std::unique_ptr<span>> t_content) : content(std::move(t_content)) {
 
         }
 
         std::string to_string() const override {
             std::string output = "";
-            for(size_t i = 0; i < content.size(); ++i) {
+            for (size_t i = 0; i < content.size(); ++i) {
                 output += std::to_string(i + 1) + ". " + content.at(i)->to_string() + "";
             }
             return output;
@@ -194,9 +199,11 @@ namespace markdown::impl {
      */
     struct code : public wrapper<text, paragraph> {
         std::string language;
+
         code() = default;
+
         code(std::unique_ptr<text> t_content, std::string t_language) :
-        wrapper<text, paragraph>(std::move(t_content)), language(std::move(t_language)) {
+                wrapper<text, paragraph>(std::move(t_content)), language(std::move(t_language)) {
 
         }
 
@@ -213,19 +220,18 @@ namespace markdown::impl {
         int depth = 0;
 
         heading() = default;
+
         explicit heading(std::unique_ptr<text> t_content, int t_depth = 0) :
-        wrapper<text, paragraph>::wrapper(std::move(t_content)), depth(t_depth) {
+                wrapper<text, paragraph>::wrapper(std::move(t_content)), depth(t_depth) {
 
         }
 
         std::string to_string() const override {
-            if(depth == 0) {
+            if (depth == 0) {
                 return content->to_string() + "\n" + std::string(content->to_string().length(), '=');
-            }
-            else if (depth == 1) {
+            } else if (depth == 1) {
                 return content->to_string() + "\n" + std::string(content->to_string().length(), '-');
-            }
-            else {
+            } else {
                 return std::string(depth + 1, '#') + " " + content->to_string();
             }
         }
@@ -239,18 +245,18 @@ namespace markdown::impl {
         std::vector<std::unique_ptr<span>> content;
 
         template<typename Span>
-        void operator += (Span entry) {
+        void operator+=(Span entry) {
             content.emplace_back(std::move(entry));
         }
 
         template<typename Span>
-        span_paragraph& operator +(Span entry) {
+        span_paragraph &operator+(Span entry) {
             *this += std::move(entry);
             return *this;
         }
 
-        template <typename Span, typename ...Args>
-        void addAll(Span &&entry, Args&&... args) {
+        template<typename Span, typename ...Args>
+        void addAll(Span &&entry, Args &&... args) {
             *this += std::forward<Span>(entry);
             if constexpr (sizeof...(Args) > 0) {
                 addAll(std::forward<Args>(args)...);
@@ -259,13 +265,13 @@ namespace markdown::impl {
 
         std::string to_string() const override {
             std::string output;
-            for(const auto &s : content) {
+            for (const auto &s : content) {
                 output += s->to_string();
             }
 
             constexpr int line_width = 80;
 
-            if(output.length() <= line_width)
+            if (output.length() <= line_width)
                 return output;
 
             // Apply word wrapping
@@ -274,17 +280,15 @@ namespace markdown::impl {
             output = "";
             std::string current_line;
 
-            for(const auto &word : words) {
-                if(word.length() > line_width) {
+            for (const auto &word : words) {
+                if (word.length() > line_width) {
                     output += current_line + "\n";
                     output += word;
                     current_line = "";
-                }
-                else if(current_line.length() + word.length() > line_width) {
+                } else if (current_line.length() + word.length() > line_width) {
                     output += current_line + "\n";
                     current_line = word + " ";
-                }
-                else {
+                } else {
                     current_line += word + " ";
                 }
             }
@@ -297,6 +301,98 @@ namespace markdown::impl {
     };
 
     /**
+     * A markdown table
+     */
+    template<size_t Columns>
+    struct table : public paragraph {
+        using row = std::array<std::unique_ptr<span>, Columns>;
+        std::vector<row> content;
+
+        void operator+=(row entry) {
+            content.emplace_back(std::move(entry));
+        }
+
+        table<Columns> &operator+(row entry) {
+            *this += std::move(entry);
+            return *this;
+        }
+
+        std::string to_string() const override {
+            if(content.empty())
+                return "";
+
+            // First detect the row and column lengths
+            size_t length = 0;
+            std::array<size_t, Columns> column_lengths;
+            for(size_t i = 0; i < column_lengths.size(); ++i) {
+                column_lengths.at(i) = 0;
+            }
+            for(const row &r : content) {
+                size_t row_length = 0;
+                for(size_t i = 0; i < r.size(); ++i) {
+                    std::string as_string =  r.at(i)->to_string();
+                    row_length += as_string.length() + 2;
+                    column_lengths.at(i) = std::max(column_lengths.at(i), as_string.length() + 2);
+                }
+                row_length += Columns + 1; // Pipes between columns and outer space
+                length = std::max(row_length, length);
+            }
+
+            // At which position that pipes must be set
+            std::array<size_t, Columns> column_guards;
+            for(size_t i = 0; i < column_lengths.size(); ++i) {
+                if(i == 0) {
+                    column_guards.at(i) = 1 + column_lengths.at(i);
+                }
+                else {
+                    column_guards.at(i) = 1 + column_lengths.at(i) + column_guards.at(i - 1);
+                }
+            }
+
+            std::stringstream result;
+
+            bool first_row = true;
+            for(const auto r : content) {
+
+                result << "|";
+                size_t line_counter = 1;
+
+                for(size_t col = 0; col < r.size(); ++col) {
+                    std::string written = r.at(col)->to_string();
+                    result << " " << written << " ";
+                    line_counter += 2 + written.length();
+                    while(line_counter < column_guards.at(col)) {
+                        result << " ";
+                        ++line_counter;
+                    }
+                    result << "|";
+                    ++line_counter;
+                }
+
+                result << "\n";
+
+                if(first_row) {
+                    // Write the separator
+                    result << "|";
+                    for(size_t i = 0; i < length; ++i) {
+                        bool is_column = std::find(column_guards.begin(), column_guards.end(), i) != column_guards.end();
+                        if(is_column)
+                            result << "|";
+                        else
+                            result << "-";
+                    }
+                    result << "\n";
+                    first_row = false;
+                }
+            }
+
+
+
+            return result.str();
+        }
+    };
+
+    /**
      *  A markdown document builder
      */
     struct document : public element {
@@ -304,20 +400,20 @@ namespace markdown::impl {
         std::vector<std::unique_ptr<paragraph>> content;
 
         template<typename Paragraph>
-        void operator += (std::unique_ptr<Paragraph> entry) {
+        void operator+=(std::unique_ptr<Paragraph> entry) {
             static_assert(std::is_base_of<paragraph, Paragraph>::value, "You can only add paragraphs");
             content.emplace_back(std::move(entry));
         }
 
         template<typename Paragraph>
-        document& operator +(std::unique_ptr<Paragraph> entry) {
+        document &operator+(std::unique_ptr<Paragraph> entry) {
             *this += std::move(entry);
             return *this;
         }
 
         std::string to_string() const override {
             std::string output;
-            for(const auto &paragraph : content) {
+            for (const auto &paragraph : content) {
                 output += paragraph->to_string() + "\n\n";
             }
             return output;
@@ -329,8 +425,11 @@ namespace markdown::impl {
 namespace markdown {
     using document = markdown::impl::document;
 
-    template <typename Span, typename ...Args>
-    inline std::unique_ptr<markdown::impl::span_paragraph> paragraph(Span &&span, Args&&... args) {
+    template<size_t Columns>
+    using table = markdown::impl::table<Columns>;
+
+    template<typename Span, typename ...Args>
+    inline std::unique_ptr<markdown::impl::span_paragraph> paragraph(Span &&span, Args &&... args) {
         auto result = std::make_unique<markdown::impl::span_paragraph>();
         result->addAll(std::forward<Span>(span), std::forward<Args>(args)...);
         return result;
@@ -368,6 +467,17 @@ namespace markdown {
 
     inline std::unique_ptr<markdown::impl::code> code(std::string content, std::string language = "") {
         return std::make_unique<markdown::impl::code>(text(std::move(content)), std::move(language));
+    }
+
+    template<typename ...Args>
+    inline typename markdown::impl::table<sizeof...(Args)>::row row(Args... args) {
+        typename markdown::impl::table<sizeof...(Args)>::row result = { std::move(args)... };
+        return result;
+    }
+
+    template<typename ValueType>
+    inline std::unique_ptr<ValueType> cut(ValueType &target) {
+        return std::make_unique<ValueType>(std::move(target));
     }
 }
 
