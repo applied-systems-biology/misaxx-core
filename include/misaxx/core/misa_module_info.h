@@ -51,6 +51,7 @@ namespace misaxx {
 
         std::string m_id;
         std::string m_version;
+        std::string m_name;
         std::string m_description;
         std::vector<misa_module_info> m_dependencies;
     };

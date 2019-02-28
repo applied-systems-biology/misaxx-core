@@ -11,7 +11,7 @@ void misa_mutable_module_info::set_id(std::string t_id) {
 }
 
 void misa_mutable_module_info::set_name(std::string t_description) {
-    m_description = std::move(t_description);
+    m_name = std::move(t_description);
 }
 
 void misa_mutable_module_info::set_version(std::string t_version) {
@@ -24,4 +24,8 @@ void misa_mutable_module_info::add_dependency(misa_module_info t_dependency) {
 
 misa_mutable_module_info::operator misa_module_info() {
     return static_cast<misa_module_info>(*this);
+}
+
+void misa_mutable_module_info::set_description(std::string t_description) {
+    m_description = std::move(t_description);
 }

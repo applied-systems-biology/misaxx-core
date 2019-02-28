@@ -7,6 +7,7 @@ namespace misaxx {
         info.set_id("@PROJECT_NAME@");
         info.set_version("@PROJECT_VERSION@");
         info.set_name("@PROJECT_DESCRIPTION@");
+        info.set_description("A MISA++ module");
         return info;
     }
 }
