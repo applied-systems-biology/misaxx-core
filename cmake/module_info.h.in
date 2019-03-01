@@ -30,7 +30,7 @@ namespace misaxx {
         openmp_info.set_name("OpenMP");
         openmp_info.set_url("https://www.openmp.org/");
         openmp_info.set_organization("OpenMP ARB");
-        openmp_info.set_citation("Dagum, Leonardo, and Ramesh Menon. \"OpenMP: An industry-standard API for shared-memory programming.\" Computing in Science & Engineering 1 (1998): 46-55.")
+        openmp_info.set_citation("Dagum, Leonardo, and Ramesh Menon. \"OpenMP: An industry-standard API for shared-memory programming.\" Computing in Science & Engineering 1 (1998): 46-55.");
         openmp_info.set_is_external(true);
         info.add_dependency(std::move(openmp_info));
         
