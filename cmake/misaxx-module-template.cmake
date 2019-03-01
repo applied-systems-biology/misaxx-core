@@ -101,27 +101,44 @@ function(misaxx_with_default_module_info)
 
         file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/cmake/)
         file(WRITE ${CMAKE_SOURCE_DIR}/cmake/module_info.h.in "#pragma once\n\
-#include <misaxx/core/misa_mutable_module_info.h>\n\
 #include <misaxx/core/module_info.h>\n\
 \n\
 namespace ${MISAXX_API_NAMESPACE} {\n\
-    inline misaxx::misa_module_info module_info() {\n\
-        misaxx::misa_mutable_module_info info;\n\
-        info.set_id(\"@PROJECT_NAME@\");\n\
-        info.set_version(\"@PROJECT_VERSION@\");\n\
-        info.set_name(\"@PROJECT_DESCRIPTION@\");\n\
-        info.set_description(\"A MISA++ module\");\n\
-        \n\
-        info.add_dependency(misaxx::module_info());\n\
-        // TODO: Add dependencies via info.add_dependency()\n\
-        return info;
-    }\n\
+    extern misaxx::misa_module_info module_info();\n\
+}")
+    endif()
+
+    if(EXISTS ${CMAKE_SOURCE_DIR}/cmake/module_info.cpp.in)
+        message("--   Module info CPP template already exists at ${CMAKE_SOURCE_DIR}/cmake/module_info.cpp.in")
+    else()
+        message("--   Creating module info CPP ${CMAKE_SOURCE_DIR}/cmake/module_info.cpp.in")
+        message(WARNING "Please make sure that you include the dependencies in ${CMAKE_SOURCE_DIR}/cmake/module_info.cpp.in")
+
+        file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/cmake/)
+        file(WRITE ${CMAKE_SOURCE_DIR}/cmake/module_info.cpp.in "#include <misaxx/core/misa_mutable_module_info.h>\n\
+#include <misaxx/core/module_info.h>\n\
+#include <${MISAXX_API_INCLUDE_PATH}/module_info.h>\n\
+\n\
+misaxx::misa_module_info ${MISAXX_API_NAMESPACE}::module_info() {\n\
+    misaxx::misa_mutable_module_info info;\n\
+    info.set_id(\"@PROJECT_NAME@\");\n\
+    info.set_version(\"@PROJECT_VERSION@\");\n\
+    info.set_name(\"@PROJECT_DESCRIPTION@\");\n\
+    info.set_description(\"A MISA++ module\");\n\
+    \n\
+    info.add_dependency(misaxx::module_info());\n\
+    // TODO: Add dependencies via info.add_dependency()\n\
+    return info;
 }")
     endif()
 
     configure_file(${CMAKE_SOURCE_DIR}/cmake/module_info.h.in
             ${CMAKE_BINARY_DIR}/include/${MISAXX_API_INCLUDE_PATH}/module_info.h)
+    configure_file(${CMAKE_SOURCE_DIR}/cmake/module_info.cpp.in
+            ${CMAKE_BINARY_DIR}/src/module_info.cpp)
     target_sources(${MISAXX_LIBRARY} PRIVATE ${CMAKE_BINARY_DIR}/include/${MISAXX_API_INCLUDE_PATH}/module_info.h)
+    target_sources(${MISAXX_LIBRARY} PRIVATE ${CMAKE_BINARY_DIR}/src/module_info.cpp)
+
 endfunction()
 
 # Configures the current library target as shared library,
