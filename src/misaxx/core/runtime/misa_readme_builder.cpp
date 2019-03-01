@@ -160,6 +160,17 @@ namespace {
                                                                  "imported", "properties", "children",
                                                                  "additionalProperties"});
         if (fs_opt.has_value()) {
+
+            std::vector<cache_info> caches;
+            extract_caches(fs_opt.value(), "<Input folder>/<Sample>/", caches);
+
+            if(caches.empty()) {
+                doc += heading2("Input files");
+                doc += paragraph(
+                        text("This module has no input files. Please provide an input directory that only contains empty directories corresponding to the samples."));
+                return;
+            }
+
             doc += heading2("Input files");
             doc += paragraph(text("The application expects that the input folder follows a specific structure. "),
                              text("Please put the input data into their respective folders or create symbolic links if you want to avoid copying already existing data."));
@@ -167,8 +178,6 @@ namespace {
                     text("The input folder should contain sub-folders that match the sample names provided in the parameter file. "),
                     text("Specific folders are used as input data. See the following table for the full filesystem structure and which kind of data is expected within those folders:"));
 
-            std::vector<cache_info> caches;
-            extract_caches(fs_opt.value(), "<Input folder>/<Sample>/", caches);
 
             table<2> tbl;
             tbl += row(text("Path"), text("Data type"));
@@ -194,11 +203,19 @@ namespace {
                                                                  "exported", "properties", "children",
                                                                  "additionalProperties"});
         if (fs_opt.has_value()) {
-            doc += heading2("Output files");
-            doc += paragraph(text("Following files and directories are generated into the output folder:"));
 
             std::vector<cache_info> caches;
             extract_caches(fs_opt.value(), "<Output folder>/<Sample>/", caches);
+
+            if(caches.empty()) {
+                doc += heading2("Output files");
+                doc += paragraph(
+                        text("This module has no output files."));
+                return;
+            }
+
+            doc += heading2("Output files");
+            doc += paragraph(text("Following files and directories are generated into the output folder:"));
 
             table<2> cache_tbl;
             cache_tbl += row(text("Path"), text("Data type"));
@@ -225,7 +242,7 @@ namespace {
         } else {
             doc += heading2("Output files");
             doc += paragraph(
-                    text("This module has no input files. Please provide an input directory that only contains empty directories corresponding to the samples."));
+                    text("This module has no output files."));
         }
     }
 
