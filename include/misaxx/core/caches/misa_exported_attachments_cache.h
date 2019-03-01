@@ -10,6 +10,7 @@
 #include <misaxx/core/patterns/misa_file_pattern.h>
 #include <misaxx/core/utils/cache.h>
 #include <misaxx/core/descriptions/misa_exported_attachments_description.h>
+#include <misaxx/core/patterns/misa_json_pattern.h>
 
 namespace misaxx {
 
@@ -18,7 +19,7 @@ namespace misaxx {
      * The unique location contains the absolute path of this file
      */
     struct misa_exported_attachments_cache : public misa_default_cache<misaxx::utils::cache<nlohmann::json>,
-            misa_file_pattern, misa_exported_attachments_description> {
+            misa_json_pattern, misa_exported_attachments_description> {
 
         nlohmann::json &get() override;
 
@@ -50,7 +51,7 @@ namespace misaxx {
     protected:
 
         misa_exported_attachments_description
-        produce_description(const boost::filesystem::path &, const misa_file_pattern &) override;
+        produce_description(const boost::filesystem::path &, const misa_json_pattern &) override;
 
     private:
 

@@ -35,6 +35,14 @@ namespace {
                 return "No description provided";
             }
         }
+
+        std::string get_pattern_description() const {
+            if (!pattern.empty() && pattern.find("misa:documentation-description") != pattern.end()) {
+                return pattern.at("misa:documentation-description").get<std::string>();
+            } else {
+                return "No description provided";
+            }
+        }
     };
 
     struct parameter_info {
@@ -284,6 +292,17 @@ namespace {
             }
 
             doc += cut(tbl);
+
+            doc += paragraph(text("The application will look for input data by applying a pattern matching. "),
+                    text("An example is a file extension pattern. Please make sure that the input folder contains the files expected by the application. "),
+                    text("Following table describes the patterns: "));
+            table<2> tbl2;
+            tbl2 += row(text("Data type"), text("Pattern"));
+            for (const auto &kv : infos) {
+                tbl2 += row(text(kv.first), text(kv.second.get_pattern_description()));
+            }
+
+            doc += cut(tbl2);
         }
     }
 

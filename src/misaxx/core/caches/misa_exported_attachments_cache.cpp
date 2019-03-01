@@ -65,6 +65,6 @@ void misa_exported_attachments_cache::simulate_link() {
 }
 
 misa_exported_attachments_description
-misa_exported_attachments_cache::produce_description(const boost::filesystem::path &, const misa_file_pattern &) {
+misa_exported_attachments_cache::produce_description(const boost::filesystem::path &, const misa_json_pattern &) {
     return misa_exported_attachments_description();
 }
