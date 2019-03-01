@@ -443,6 +443,9 @@ namespace {
                     doc += std::move(p);
                 }
 
+                if(!info.get_organization().empty())
+                    doc += paragraph(text(info.get_organization()));
+
                 // Desciption
                 if(!info.get_description().empty())
                     doc += paragraph(text(info.get_description()));
