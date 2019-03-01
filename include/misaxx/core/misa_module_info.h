@@ -45,6 +45,42 @@ namespace misaxx {
          */
         std::vector<misa_module_info> get_dependencies() const;
 
+        /**
+         * Website of this module
+         * @return
+         */
+        std::string get_url() const;
+
+        /**
+         * List of authors
+         * @return
+         */
+        std::vector<std::string> get_authors() const;
+
+        /**
+         * Organization that developed this module
+         * @return
+         */
+        std::string get_organization() const;
+
+        /**
+         * License of the module
+         * @return
+         */
+        std::string get_license() const;
+
+        /**
+         * Information about how to cite the module
+         * @return
+         */
+        std::string get_citation() const;
+
+        /**
+         * If true, an external non-MISA++ dependency is described
+         * @return
+         */
+        bool is_external() const;
+
         void from_json(const nlohmann::json &t_json) override;
 
         void to_json(nlohmann::json &t_json) const override;
@@ -60,6 +96,16 @@ namespace misaxx {
         std::string m_name;
         std::string m_description;
         std::vector<misa_module_info> m_dependencies;
+
+        // Additional metadata
+        std::string m_url;
+        std::vector<std::string> m_authors;
+        std::string m_organization;
+        std::string m_license;
+        std::string m_citation;
+
+        // External (non-MISA++) dependencies
+        bool m_is_external = false;
     };
 
     inline void to_json(nlohmann::json& j, const misa_module_info& p) {

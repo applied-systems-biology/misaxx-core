@@ -22,6 +22,20 @@ namespace misaxx {
         void set_version(std::string t_version);
 
         void add_dependency(misa_module_info t_dependency);
+      
+        void set_url(std::string t_url);
+        
+        void add_author(std::string t_author);
+
+        void set_authors(std::vector<std::string> t_authors);
+        
+        void set_organization(std::string t_organization);
+
+        void set_license(std::string t_license);
+
+        void set_citation(std::string t_citation);
+
+        void set_is_external(bool t_flag);
 
         operator misa_module_info();
 

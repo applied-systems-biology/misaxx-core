@@ -132,7 +132,10 @@ namespace markdown::impl {
         }
 
         std::string to_string() const override {
-            return "[" + content + "](" + target + ")";
+            if(content != target)
+                return "[" + content + "](" + target + ")";
+            else
+                return target;
         }
     };
 
@@ -551,7 +554,19 @@ namespace markdown {
     }
 
     inline std::unique_ptr<markdown::impl::inline_code> inline_code(std::string content) {
-        return std::make_unique<markdown::impl::inline_code>(text(content));
+        return std::make_unique<markdown::impl::inline_code>(text(std::move(content)));
+    }
+
+    inline std::unique_ptr<markdown::impl::link> link(std::string content, std::string url) {
+        return std::make_unique<markdown::impl::link>(std::move(content), std::move(url));
+    }
+
+    inline std::unique_ptr<markdown::impl::link> link(const std::string &url) {
+        return link(url, url);
+    }
+
+    inline std::unique_ptr<markdown::impl::hruler> hruler() {
+        return std::make_unique<markdown::impl::hruler>();
     }
 
     template<typename ...Args>

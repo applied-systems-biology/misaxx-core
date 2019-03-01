@@ -387,6 +387,62 @@ namespace {
         }
     }
 
+    inline void write_acknowledgement_readme(markdown::document &doc) {
+        std::unordered_map<std::string, misa_module_info> infos;
+        std::stack<misa_module_info> stack;
+        stack.push(runtime_properties::get_module_info());
+        while(!stack.empty()) {
+            misa_module_info info = stack.top();
+            stack.pop();
+            infos[info.get_id()] = info;
+            for(const misa_module_info &i :info.get_dependencies()) {
+                stack.push(i);
+            }
+        }
+
+        if(!infos.empty()) {
+            using namespace markdown;
+            doc += heading2("Dependencies");
+            doc += paragraph(text("This application used following external libraries and tools:"));
+
+            for(const auto &kv : infos) {
+                const auto &info = kv.second;
+                if(info.get_name().empty())
+                    doc += heading(info.get_id(), 2);
+                else
+                    doc += heading(info.get_name(), 2);
+
+                // Add author
+                if(!info.get_authors().empty()) {
+                    auto p = paragraph(text("By "));
+                    bool first = true;
+                    for(const auto &author : info.get_authors()) {
+                        if(!first) {
+                            *p += text(", ");
+                        }
+                        *p += italic(author);
+                        first = false;
+                    }
+                    doc += std::move(p);
+                }
+
+                // Desciption
+                if(!info.get_description().empty())
+                    doc += paragraph(text(info.get_description()));
+                if(!info.get_version().empty())
+                    doc += paragraph(italic("Version " + info.get_version()));
+                if(!info.get_license().empty()) {
+                    doc += paragraph(text("Licensed under "), bold(info.get_license()));
+                }
+                if(!info.get_url().empty())
+                    doc += paragraph(link(info.get_url()));
+                if(!info.get_citation().empty()) {
+                    doc += paragraph(inline_code(info.get_citation()));
+                }
+            }
+        }
+    }
+
 }
 
 void misaxx::build_readme(const nlohmann::json &schema, const boost::filesystem::path &t_output_path) {
@@ -396,8 +452,40 @@ void misaxx::build_readme(const nlohmann::json &schema, const boost::filesystem:
     using namespace markdown;
     document doc;
     doc += heading(info.get_name());
+
+    if(!info.get_authors().empty()) {
+        auto p = paragraph(text("By "));
+        bool first = true;
+        for(const auto &author : info.get_authors()) {
+            if(!first) {
+                *p += text(", ");
+            }
+            *p += italic(author);
+            first = false;
+        }
+        doc += std::move(p);
+    }
+
+    if(!info.get_organization().empty()) {
+        doc += paragraph(text(info.get_organization()));
+    }
+
     doc += paragraph(text(info.get_description()));
+    doc += hruler();
     doc += paragraph(italic(info.get_id() + ", version " + info.get_version()));
+
+    if(!info.get_license().empty()) {
+        doc += paragraph(text("Licensed under "), bold(info.get_license()));
+    }
+
+    if(!info.get_url().empty())
+        doc += paragraph(link(info.get_url()));
+
+    if(!info.get_citation().empty()) {
+        doc += heading("Citing this application", 2);
+        doc += paragraph(text("Please cite following publication(s):"));
+        doc += paragraph(inline_code(info.get_citation()));
+    }
 
     // General usage
     doc += heading2("Usage");
@@ -426,6 +514,9 @@ void misaxx::build_readme(const nlohmann::json &schema, const boost::filesystem:
 
     // Parameters
     write_parameters_readme(doc, schema);
+
+    // Dependencies, acknowledgements
+    write_acknowledgement_readme(doc);
 
     // Write the README
     {

@@ -29,3 +29,31 @@ misa_mutable_module_info::operator misa_module_info() {
 void misa_mutable_module_info::set_description(std::string t_description) {
     m_description = std::move(t_description);
 }
+
+void misa_mutable_module_info::set_url(std::string t_url) {
+    m_url = std::move(t_url);
+}
+
+void misa_mutable_module_info::add_author(std::string t_author) {
+    m_authors.emplace_back(std::move(t_author));
+}
+
+void misa_mutable_module_info::set_authors(std::vector<std::string> t_authors) {
+    m_authors = std::move(t_authors);
+}
+
+void misa_mutable_module_info::set_organization(std::string t_organization) {
+    m_organization = std::move(t_organization);
+}
+
+void misa_mutable_module_info::set_license(std::string t_license) {
+    m_license = std::move(t_license);
+}
+
+void misa_mutable_module_info::set_citation(std::string t_citation) {
+    m_citation = std::move(t_citation);
+}
+
+void misa_mutable_module_info::set_is_external(bool t_flag) {
+    m_is_external = t_flag;
+}
