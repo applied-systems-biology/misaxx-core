@@ -37,7 +37,7 @@ void misa_json_schema_property::to_json(nlohmann::json &json) const {
     if(serialization_id)
         json["misa:serialization-id"] = serialization_id.value();
     if(serialization_hierarchy)
-        json["serialization_hierarchy"] = serialization_hierarchy.value();
+        json["misa:serialization-hierarchy"] = serialization_hierarchy.value();
     switch(value_type) {
         case nlohmann::json::value_t::string:
             json["type"] = "string";
