@@ -90,3 +90,11 @@ misa_description_storage &misa_description_storage::operator=(const misa_descrip
     return *this;
 }
 
+std::string misa_description_storage::get_documentation_name() const {
+    return "Data description";
+}
+
+std::string misa_description_storage::get_documentation_description() const {
+    return "Description of a data cache, including an optional pattern used to detect input files";
+}
+
