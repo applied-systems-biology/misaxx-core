@@ -520,11 +520,27 @@ void misa_runtime::postprocess_cache_attachments() {
             // Attach the location
             ptr->get_location_interface()->to_json(exported_json["location"]);
 
+            // Add schema for location type if needed
+            if(attachment_schemata.find( ptr->get_location_interface()->get_serialization_id().get_id()) ==
+               attachment_schemata.end()) {
+                auto schema = std::make_shared<misa_json_schema_property>();
+                ptr->get_location_interface()->to_json_schema(*schema);
+                schema->to_json(attachment_schemata[ptr->get_location_interface()->get_serialization_id().get_id()]);
+            }
+
             // Attach the description storage if needed
             if (!access.get().has<misa_description_storage>()) {
                 misa_location link(filesystem_generic_link_path, filesystem_unique_link_path);
                 ptr->describe()->set_location(ptr->get_location_interface());
                 ptr->describe()->to_json(exported_json[ptr->describe()->get_serialization_id().get_id()]);
+
+                // Add schema for description storage if needed
+                if(attachment_schemata.find( ptr->describe()->get_serialization_id().get_id()) ==
+                   attachment_schemata.end()) {
+                    auto schema = std::make_shared<misa_json_schema_property>();
+                    ptr->describe()->to_json_schema(*schema);
+                    schema->to_json(attachment_schemata[ptr->describe()->get_serialization_id().get_id()]);
+                }
             }
 
             if (!is_simulating()) {
