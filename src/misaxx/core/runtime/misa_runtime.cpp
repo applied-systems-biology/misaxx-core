@@ -543,6 +543,26 @@ void misa_runtime::postprocess_cache_attachments() {
                 }
             }
 
+            // Add schemata for pattern & description
+            if(ptr->describe()->has_pattern()) {
+                const misa_data_pattern &descr = ptr->describe()->get<misa_data_pattern>();
+                if(attachment_schemata.find( descr.get_serialization_id().get_id()) ==
+                   attachment_schemata.end()) {
+                    auto schema = std::make_shared<misa_json_schema_property>();
+                    descr.to_json_schema(*schema);
+                    schema->to_json(attachment_schemata[descr.get_serialization_id().get_id()]);
+                }
+            }
+            if(ptr->describe()->has_description()) {
+                const misa_data_description &descr = ptr->describe()->get<misa_data_description>();
+                if(attachment_schemata.find( descr.get_serialization_id().get_id()) ==
+                   attachment_schemata.end()) {
+                    auto schema = std::make_shared<misa_json_schema_property>();
+                    descr.to_json_schema(*schema);
+                    schema->to_json(attachment_schemata[descr.get_serialization_id().get_id()]);
+                }
+            }
+
             if (!is_simulating()) {
                 std::ofstream sw;
                 sw.open(cache_attachment_path.string());
