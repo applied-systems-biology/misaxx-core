@@ -16,7 +16,7 @@ namespace misaxx {
 
         misa_quantity_range() = default;
 
-        explicit misa_quantity_range(value_type t_from, value_type t_to, unit_type t_unit) : m_from(t_from), m_to(t_to), m_unit(t_unit) {
+        explicit misa_quantity_range(value_type t_from, value_type t_to, unit_type t_unit = unit_type()) : m_from(t_from), m_to(t_to), m_unit(t_unit) {
 
         }
 
@@ -45,12 +45,18 @@ namespace misaxx {
                 quantity_type converted = t_value.cast_unit(m_unit);
                 m_from = converted.get_value();
             }
+            else {
+                m_from = t_value.get_value();
+            }
         }
 
         void set_to(const quantity_type &t_value) {
             if(t_value.get_unit() != m_unit) {
                 quantity_type converted = t_value.cast_unit(m_unit);
                 m_to = converted.get_value();
+            }
+            else {
+                m_to = t_value.get_value();
             }
         }
 
@@ -81,6 +87,25 @@ namespace misaxx {
 
         std::string get_documentation_description() const override {
             return "Range of values";
+        }
+
+        /**
+         * Includes the quanity into this range
+         * @param t_value
+         */
+        void include(const quantity_type &t_value) {
+            Value conv_value = t_value.get_value();
+            if(t_value.get_unit() != m_unit) {
+                quantity_type converted = t_value.cast_unit(m_unit);
+                conv_value = converted.get_value();
+            }
+
+            if(conv_value < m_from) {
+               m_from = conv_value;
+            }
+            if(conv_value >= m_to) {
+                m_to = conv_value;
+            }
         }
 
     protected:
