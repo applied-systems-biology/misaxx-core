@@ -174,7 +174,7 @@ add_library(misaxx-core
         include/misaxx/core/accessors/misa_json.h
         src/misaxx/core/utils/markdown.h
         src/misaxx/core/runtime/misa_readme_builder.h
-        src/misaxx/core/runtime/misa_readme_builder.cpp)
+        src/misaxx/core/runtime/misa_readme_builder.cpp include/misaxx/core/attachments/misa_quantity_range.h)
 
 # Module info header
 configure_file(${CMAKE_SOURCE_DIR}/cmake/module_info.h.in
