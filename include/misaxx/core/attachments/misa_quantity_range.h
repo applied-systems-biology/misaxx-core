@@ -28,6 +28,10 @@ namespace misaxx {
             return misa_quantity<Value, Unit> { m_from, m_unit };
         }
 
+        quantity_type get_length() const {
+            return quantity_type { m_to - m_from, m_unit };
+        }
+
         void set_from(value_type value) {
             m_from = value;
         }
