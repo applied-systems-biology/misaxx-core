@@ -262,6 +262,16 @@ namespace misaxx {
         Value m_value{};
         Unit m_unit{};
     };
+
+    template<typename Value, class Unit>
+    inline std::vector<misa_quantity<Value, Unit>> misa_quantities_to_same_unit(std::vector<misa_quantity<Value, Unit>> quantities) {
+        if(quantities.size() > 1) {
+            for(size_t i = 1; i < quantities.size(); ++i) {
+                quantities[i] = quantities[i].cast_unit(quantities[0].get_unit());
+            }
+        }
+        return quantities;
+    }
 }
 
 namespace nlohmann {
