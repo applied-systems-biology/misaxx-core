@@ -60,6 +60,17 @@ namespace misaxx {
             }
         }
 
+        misa_quantity_range<Value, Unit> cast_unit(const Unit &t_unit) const {
+            if(t_unit == m_unit) {
+                return *this;
+            }
+            else {                
+                auto from = get_from().cast_unit(t_unit);
+                auto to = get_to().cast_unit(t_unit);
+                return misa_quantity_range<Value, Unit> { from.get_value(), to.get_value(), t_unit };
+            }
+        }
+
         void from_json(const nlohmann::json &t_json) override {
             misa_serializable::from_json(t_json);
             m_from = t_json["from"].get<Value>();
