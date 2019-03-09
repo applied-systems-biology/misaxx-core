@@ -92,7 +92,7 @@ namespace misaxx {
          * @param t_json
          * @param t_value_names
          */
-        void values_from_json(const nlohmann::json &t_json, const std::array<std::string, size()> &t_value_names) {
+        void values_from_json(const nlohmann::json &t_json, const std::array<std::string, Rows * Cols> &t_value_names) {
             for(size_t i = 0; i < size(); ++i) {
                 m_values[i] = t_json[t_value_names[i]].template get<Value>();
             }
@@ -109,7 +109,7 @@ namespace misaxx {
          * Writes matrix values to variable names instead of the value array and ther unit to a "unit" property
          * @param t_json
          */
-        void values_to_json(nlohmann::json &t_json, const std::array<std::string, size()> &t_value_names) const {
+        void values_to_json(nlohmann::json &t_json, const std::array<std::string, Rows * Cols> &t_value_names) const {
             for(size_t i = 0; i < size(); ++i) {
                 t_json[t_value_names[i]] = m_values[i];
             }
@@ -123,7 +123,7 @@ namespace misaxx {
         }
 
         void values_to_json_schema(misa_json_schema_property &t_schema,
-                const std::array<std::string, size()> &t_value_names) const {
+                const std::array<std::string, Rows * Cols> &t_value_names) const {
             for(size_t i = 0; i < size(); ++i) {
                 t_schema.resolve(t_value_names[i])->template declare_required<Value>();
             }
