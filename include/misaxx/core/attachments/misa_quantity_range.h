@@ -25,7 +25,7 @@ namespace misaxx {
         }
 
         quantity_type get_to() const {
-            return misa_quantity<Value, Unit> { m_from, m_unit };
+            return misa_quantity<Value, Unit> { m_to, m_unit };
         }
 
         quantity_type get_length() const {
