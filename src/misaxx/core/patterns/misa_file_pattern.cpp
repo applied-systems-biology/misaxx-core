@@ -8,9 +8,9 @@ misa_file_pattern::misa_file_pattern(std::vector<boost::filesystem::path> t_exte
 }
 
 void misa_file_pattern::from_json(const nlohmann::json &t_json) {
-    if(t_json.find("filename") != t_json.end())
+    if (t_json.find("filename") != t_json.end())
         filename = t_json["filename"].get<std::string>();
-    if(t_json.find("extensions")  != t_json.end()) {
+    if (t_json.find("extensions") != t_json.end()) {
         extensions.clear();
         for (const auto &i : t_json["extensions"]) {
             extensions.emplace_back(i.get<std::string>());
@@ -23,7 +23,7 @@ void misa_file_pattern::to_json(nlohmann::json &t_json) const {
     t_json["filename"] = filename.string();
     {
         std::vector<std::string> extensions_;
-        for(const auto &extension : extensions) {
+        for (const auto &extension : extensions) {
             extensions_.emplace_back(extension.string());
         }
         t_json["extensions"] = extensions_;
@@ -32,12 +32,18 @@ void misa_file_pattern::to_json(nlohmann::json &t_json) const {
 
 void misa_file_pattern::to_json_schema(misa_json_schema_property &t_schema) const {
     misa_data_pattern::to_json_schema(t_schema);
-    t_schema["filename"].declare<std::string>().make_optional(filename.string());
+    t_schema["filename"].declare<std::string>()
+            .make_optional(filename.string())
+            .document_title("Filename")
+            .document_description("Predefined filename");
     std::vector<std::string> extensions_;
-    for(const auto &extension : extensions) {
+    for (const auto &extension : extensions) {
         extensions_.emplace_back(extension.string());
     }
-    t_schema["extensions"].declare<std::vector<std::string>>().make_optional(extensions_);
+    t_schema["extensions"].declare<std::vector<std::string>>()
+            .make_optional(extensions_)
+            .document_title("Extensions")
+            .document_description("List of extensions (including dot) that this pattern will match");
 }
 
 bool misa_file_pattern::has_filename() const {
@@ -49,12 +55,12 @@ bool misa_file_pattern::has_extensions() const {
 }
 
 bool misa_file_pattern::matches(const boost::filesystem::path &t_path) const {
-    if(has_filename() && t_path.filename() == filename)
+    if (has_filename() && t_path.filename() == filename)
         return true;
-    if(extensions.empty())
+    if (extensions.empty())
         return true;
-    for(const auto &extension : extensions) {
-        if(t_path.extension() == extension)
+    for (const auto &extension : extensions) {
+        if (t_path.extension() == extension)
             return true;
     }
     return false;
@@ -70,12 +76,11 @@ void misa_file_pattern::apply(misa_file_description &target) const {
 }
 
 void misa_file_pattern::apply(misa_file_description &target, const boost::filesystem::path &t_directory) const {
-    if(has_filename()) {
+    if (has_filename()) {
         target.filename = filename;
-    }
-    else {
-        for(const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_directory))) {
-            if(matches(entry.path())) {
+    } else {
+        for (const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_directory))) {
+            if (matches(entry.path())) {
                 target.filename = entry.path().filename();
                 break;
             }

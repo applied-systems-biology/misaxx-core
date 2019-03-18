@@ -144,8 +144,8 @@ namespace misaxx {
 
         void to_json_schema(misa_json_schema_property &t_schema) const override {
             misa_locatable::to_json_schema(t_schema);
-            t_schema.resolve("value")->declare_required<Value>();
-            m_unit.to_json_schema(t_schema["unit"]);
+            t_schema.resolve("value")->declare_required<Value>().document_title("Value");
+            t_schema.resolve("unit")->declare_required<Unit>().document_title("Unit").document_description("Unit of this quantity");
         }
 
         std::string get_documentation_name() const override {

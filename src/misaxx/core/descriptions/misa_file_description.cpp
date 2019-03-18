@@ -18,7 +18,9 @@ void misa_file_description::to_json(nlohmann::json &t_json) const {
 
 void misa_file_description::to_json_schema(misa_json_schema_property &t_schema) const {
     misa_data_description::to_json_schema(t_schema);
-    t_schema["filename"] = std::string();
+    t_schema.resolve("filename")->declare_required<std::string>()
+            .document_title("Filename")
+            .document_description("The filename");
 }
 
 void misa_file_description::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {

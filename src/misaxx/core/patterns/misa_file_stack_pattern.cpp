@@ -2,7 +2,8 @@
 
 using namespace misaxx;
 
-misa_file_stack_pattern::misa_file_stack_pattern(std::vector<boost::filesystem::path> t_extensions) : extensions(std::move(t_extensions)) {
+misa_file_stack_pattern::misa_file_stack_pattern(std::vector<boost::filesystem::path> t_extensions) : extensions(
+        std::move(t_extensions)) {
 
 }
 
@@ -16,7 +17,7 @@ void misa_file_stack_pattern::from_json(const nlohmann::json &t_json) {
 void misa_file_stack_pattern::to_json(nlohmann::json &t_json) const {
     misa_data_pattern::to_json(t_json);
     std::vector<std::string> extensions_;
-    for(const auto &extension : extensions) {
+    for (const auto &extension : extensions) {
         extensions_.emplace_back(extension.string());
     }
     t_json["extensions"] = extensions_;
@@ -25,10 +26,12 @@ void misa_file_stack_pattern::to_json(nlohmann::json &t_json) const {
 void misa_file_stack_pattern::to_json_schema(misa_json_schema_property &t_schema) const {
     misa_data_pattern::to_json_schema(t_schema);
     std::vector<std::string> extensions_;
-    for(const auto &extension : extensions) {
+    for (const auto &extension : extensions) {
         extensions_.emplace_back(extension.string());
     }
-    t_schema["extensions"].declare<std::vector<std::string>>().make_optional(extensions_);
+    t_schema["extensions"].declare<std::vector<std::string>>().make_optional(extensions_)
+            .document_title("Extensions")
+            .document_description("List of extensions (including dot) that this pattern will match");
 }
 
 void misa_file_stack_pattern::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {
@@ -38,14 +41,13 @@ void misa_file_stack_pattern::build_serialization_id_hierarchy(std::vector<misa_
 
 void
 misa_file_stack_pattern::apply(misa_file_stack_description &target, const boost::filesystem::path &t_directory) const {
-    for(const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_directory))) {
-        if(extensions.empty()) {
-            target.files.insert({ entry.path().filename().string(), misa_file_description(entry.path()) });
-        }
-        else {
-            for(const auto &extension : extensions) {
-                if(boost::iequals(entry.path().extension().string(), extension.string())) {
-                    target.files.insert({ entry.path().filename().string(), misa_file_description(entry.path()) });
+    for (const auto &entry : boost::make_iterator_range(boost::filesystem::directory_iterator(t_directory))) {
+        if (extensions.empty()) {
+            target.files.insert({entry.path().filename().string(), misa_file_description(entry.path())});
+        } else {
+            for (const auto &extension : extensions) {
+                if (boost::iequals(entry.path().extension().string(), extension.string())) {
+                    target.files.insert({entry.path().filename().string(), misa_file_description(entry.path())});
                     break;
                 }
             }

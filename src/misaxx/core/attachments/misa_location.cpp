@@ -32,8 +32,12 @@ void misa_location::to_json(nlohmann::json &t_json) const {
 
 void misa_location::to_json_schema(misa_json_schema_property &t_schema) const {
     misa_serializable::to_json_schema(t_schema);
-    t_schema["filesystem-location"] = std::string();
-    t_schema["filesystem-unique-location"] = std::string();
+    t_schema.resolve("filesystem-location")->declare_required<std::string>()
+            .document_title("Filesystem Location")
+            .document_description("Location of the folder that contains the data");
+    t_schema.resolve("filesystem-unique-location")->declare_required<std::string>()
+            .document_title("Unique Filesystem Location")
+            .document_description("File or folder within the data folder");
 }
 
 void misa_location::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {

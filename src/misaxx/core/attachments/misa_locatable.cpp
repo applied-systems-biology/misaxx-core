@@ -25,7 +25,9 @@ void misa_locatable::to_json(nlohmann::json &t_json) const {
 
 void misa_locatable::to_json_schema(misa_json_schema_property &t_schema) const {
     misa_serializable::to_json_schema(t_schema);
-    t_schema["location"] = misa_location();
+    t_schema.resolve("location")->declare_required<misa_location>()
+            .document_title("Location")
+            .document_description("Location of this object");
 }
 
 void misa_locatable::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {

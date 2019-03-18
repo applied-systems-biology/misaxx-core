@@ -118,8 +118,8 @@ namespace misaxx {
 
         void to_json_schema(misa_json_schema_property &t_schema) const override {
             misa_serializable::to_json_schema(t_schema);
-            t_schema.resolve("values")->declare_required<std::vector<Value>>();
-            m_unit.to_json_schema(t_schema["unit"]);
+            t_schema.resolve("values")->declare_required<std::vector<Value>>().document_title("Values").document_description("List of matrix values row-major indexed");
+            t_schema.resolve("unit")->declare_required<Unit>().document_title("Unit");
         }
 
         void values_to_json_schema(misa_json_schema_property &t_schema,
@@ -127,7 +127,7 @@ namespace misaxx {
             for(size_t i = 0; i < size(); ++i) {
                 t_schema.resolve(t_value_names[i])->template declare_required<Value>();
             }
-            m_unit.to_json_schema(t_schema["unit"]);
+            t_schema.resolve("unit")->declare_required<Unit>().document_title("Unit");
         }
 
         std::string get_documentation_name() const override {

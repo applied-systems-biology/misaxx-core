@@ -87,8 +87,8 @@ namespace misaxx {
 
         void to_json_schema(misa_json_schema_property &schema) const override {
             misa_serializable::to_json_schema(schema);
-            schema.resolve("from")->declare_required<Value>();
-            schema.resolve("to")->declare_required<Value>();
+            schema.resolve("from")->declare_required<Value>().document_title("From").document_description("Inclusive start value of this range");
+            schema.resolve("to")->declare_required<Value>().document_title("To").document_description("Exclusive end value of this range");
             m_unit.to_json_schema(*schema.resolve("unit"));
         }
 
