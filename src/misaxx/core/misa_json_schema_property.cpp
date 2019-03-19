@@ -34,6 +34,10 @@ void misa_json_schema_property::to_json(nlohmann::json &json) const {
         json["misa:documentation-title"] = title;
     if(!description.empty())
         json["misa:documentation-description"] = description;
+    if(!type_title.empty())
+        json["misa:documentation-type-title"] = type_title;
+    if(!type_description.empty())
+        json["misa:documentation-type-description"] = type_description;
     if(serialization_id)
         json["misa:serialization-id"] = serialization_id.value();
     if(serialization_hierarchy)

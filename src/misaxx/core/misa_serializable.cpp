@@ -13,10 +13,14 @@ void misa_serializable::to_json_schema(misa_json_schema_property &schema) const 
     schema.serialization_hierarchy = get_serialization_id_hierarchy();
     std::string doc_name = get_documentation_name();
     std::string doc_description = get_documentation_description();
-    if(!doc_name.empty())
-        schema.document_title(std::move(doc_name));
-    if(!doc_description.empty())
-        schema.document_description(std::move(doc_description));
+    if(!doc_name.empty()) {
+        schema.document_title(doc_name);
+        schema.document_type_title(std::move(doc_name));
+    }
+    if(!doc_description.empty()) {
+        schema.document_description(doc_description);
+        schema.document_type_description(std::move(doc_description));
+    }
 }
 
 misa_serialization_id misa_serializable::get_serialization_id() const {

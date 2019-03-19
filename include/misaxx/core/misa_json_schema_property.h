@@ -53,14 +53,24 @@ namespace misaxx {
         nlohmann::json::value_t value_type = nlohmann::json::value_t::object;
 
         /**
-        * A short descriptive title
+        * A short descriptive title of the property
         */
         std::string title = "";
 
         /**
-         * A short explanation what the schema/object does
+         * A short explanation what the property represents
          */
         std::string description = "";
+
+        /**
+         * A short descriptive name of the property type
+         */
+        std::string type_title = "";
+
+        /**
+         * A short explanation what the type does
+         */
+        std::string type_description = "";
 
         /**
          * True if the value of this schema object must be set by the user
@@ -173,6 +183,26 @@ namespace misaxx {
         }
 
         /**
+          * Adds a name to this property type
+          * @param title
+          * @return
+          */
+        misa_json_schema_property &document_type_title(std::string title) {
+            this->type_title = std::move(title);
+            return *this;
+        }
+
+        /**
+         * Adds a description to this property type
+         * @param title
+         * @return
+         */
+        misa_json_schema_property &document_type_description(std::string description) {
+            this->type_description = std::move(description);
+            return *this;
+        }
+
+        /**
          * Indicates that this property is required
          * @return
          */
@@ -200,10 +230,11 @@ namespace misaxx {
          * @return
          */
         misa_json_schema_property &make_template() {
-            if(property_type == property_type::leaf)
+            if (property_type == property_type::leaf)
                 return *this;
-            if(properties.size() != 1)
-                throw std::runtime_error("Exactly 1 child property is needed to make this subtree property a leaf property");
+            if (properties.size() != 1)
+                throw std::runtime_error(
+                        "Exactly 1 child property is needed to make this subtree property a leaf property");
             children_template = properties.begin()->second;
             properties.clear();
             property_type = property_type::leaf;
@@ -218,7 +249,7 @@ namespace misaxx {
          */
         template<typename V>
         misa_json_schema_property &make_enum(const std::vector<V> &values) {
-            for(const auto &v : values) {
+            for (const auto &v : values) {
                 allowed_values.emplace_back(nlohmann::json(v));
             }
             return *this;
