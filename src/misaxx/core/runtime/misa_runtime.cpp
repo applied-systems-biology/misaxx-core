@@ -673,3 +673,11 @@ misa_runtime_log &misa_runtime::get_runtime_log() {
     return m_runtime_log;
 }
 
+bool misa_runtime::requests_skipping() const {
+    return m_requests_skipping;
+}
+
+void misa_runtime::set_request_skipping(bool value) {
+    m_requests_skipping = value;
+}
+

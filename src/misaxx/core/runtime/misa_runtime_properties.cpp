@@ -15,6 +15,10 @@ bool misaxx::runtime_properties::is_simulating() {
     return misa_runtime::instance().is_simulating();
 }
 
+bool misaxx::runtime_properties::requested_skipping() {
+    return misa_runtime::instance().requests_skipping();
+}
+
 bool misaxx::runtime_properties::is_running() {
     return misa_runtime::instance().is_running();
 }

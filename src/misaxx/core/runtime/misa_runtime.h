@@ -70,6 +70,11 @@ namespace misaxx {
         bool m_is_simulating = false;
 
         /**
+         * If true, tasks are requested to skip if the results already exist
+         */
+        bool m_requests_skipping = false;
+
+        /**
        * Number of threads used by the runtime.
        * If the number is 1, the application will run in the current thread.
        */
@@ -132,6 +137,10 @@ namespace misaxx {
         void set_lazy_write_attachments(bool value);
 
         void set_enable_runtime_log(bool value);
+
+        bool requests_skipping() const;
+
+        void set_request_skipping(bool value);
 
         /**
          * Returns the number of threads

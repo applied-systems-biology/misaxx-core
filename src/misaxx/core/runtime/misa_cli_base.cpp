@@ -75,6 +75,7 @@ misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **ar
             ("module-info", "Prints the module module information as serialized JSON")
             ("parameters,p", po::value<std::string>(), "Provides the list of parameters")
             ("threads,t", po::value<int>(), "Sets the number of threads")
+            ("skip", "Requests that already existing results should be used instead of re-calculating them")
             ("write-parameter-schema", po::value<std::string>(), "Writes a parameter schema to the target file")
             ("write-readme", po::value<std::string>(), "Writes a README file to the target file")
             ("full-runtime-log", "Writes a comprehensive log containing the runtimes of each tasks into the output directory");
@@ -117,6 +118,11 @@ misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **ar
         if(!m_pimpl->m_readme_path.parent_path().empty())
             boost::filesystem::create_directories(m_pimpl->m_readme_path.parent_path());
     }
+    if(vm.count("skip")) {
+        if(!m_pimpl->m_runtime->is_simulating()) {
+            m_pimpl->m_runtime->set_request_skipping(true);
+        }
+    }
     if(vm.count("threads")) {
         if(!m_pimpl->m_runtime->is_simulating()) {
             m_pimpl->m_runtime->set_num_threads(vm["threads"].as<int>());
@@ -147,6 +153,11 @@ misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **ar
         auto schema = misaxx::parameter_registry::register_parameter({ "runtime", "num-threads" });
         schema->declare_optional<int>(1);
         m_pimpl->m_runtime->set_num_threads(misaxx::parameter_registry:: template get_json<int>({ "runtime", "num-threads" }));
+    }
+    if(!vm.count("skip") && !m_pimpl->m_runtime->requests_skipping()) {
+        auto schema = misaxx::parameter_registry::register_parameter({ "runtime", "request-skipping" });
+        schema->declare_optional<bool>(false);
+        m_pimpl->m_runtime->set_request_skipping(misaxx::parameter_registry:: template get_json<bool>({ "runtime", "request-skipping" }));
     }
     if(!m_pimpl->m_runtime->is_simulating()) {
         if(vm.count("full-runtime-log")) {

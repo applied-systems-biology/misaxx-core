@@ -23,6 +23,12 @@ namespace misaxx {
 namespace misaxx::runtime_properties {
 
     /**
+     * Returns true if the runtime is set to request skipping as much work as possible
+     * @return
+     */
+    extern bool requested_skipping();
+
+    /**
      * Returns the number of threads
      * @return
      */
