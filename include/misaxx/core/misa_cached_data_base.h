@@ -138,6 +138,18 @@ namespace misaxx {
          * @return
          */
         virtual std::shared_ptr<const misa_location> get_location_interface() const = 0;
+
+        /**
+         * Documents this cache with a title
+         * @param title
+         */
+        void suggest_document_title(std::string title);
+
+        /**
+         * Documents this cache with a description
+         * @param description
+         */
+        void suggest_document_description(std::string description);
     };
 
 }

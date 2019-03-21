@@ -39,12 +39,28 @@ void misa_description_storage::from_json(const nlohmann::json &t_json) {
             m_raw_description_json = it.value();
         }
     }
+    {
+        auto it = t_json.find("misa:documentation-title");
+        if (it != t_json.end()) {
+            documentation_title = it.value();
+        }
+    }
+    {
+        auto it = t_json.find("misa:documentation-description");
+        if (it != t_json.end()) {
+            documentation_description = it.value();
+        }
+    }
 }
 
 void misa_description_storage::to_json(nlohmann::json &t_json) const {
     misa_locatable::to_json(t_json);
     t_json["pattern"] = m_raw_pattern_json; // Pass along the raw metadata. This is very important!
     t_json["description"] = m_raw_description_json;
+    if(!documentation_title.empty())
+        t_json["misa:documentation-title"] = documentation_title;
+    if(!documentation_description.empty())
+        t_json["misa:documentation-description"] = documentation_description;
 
     if (static_cast<bool>(m_pattern)) {
         auto &j = t_json["pattern"];
@@ -66,6 +82,10 @@ void misa_description_storage::to_json_schema(misa_json_schema_property &t_schem
 //        t_schema["description"]["description-type"].define(get<misa_data_description>().get_serialization_id());
         get<misa_data_description>().to_json_schema(t_schema["description"]);
     }
+    if(!documentation_title.empty())
+        t_schema.document_title(documentation_title);
+    if(!documentation_description.empty())
+        t_schema.document_description(documentation_description);
 }
 
 void misa_description_storage::build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const {
