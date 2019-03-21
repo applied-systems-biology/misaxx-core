@@ -8,14 +8,21 @@
 
 using namespace misaxx;
 
-misa_location::misa_location(boost::filesystem::path t_filesystem_location,
+misa_location::misa_location(boost::filesystem::path t_internal_location,
+                             boost::filesystem::path t_filesystem_location,
                              boost::filesystem::path t_filesystem_unique_location) :
-        filesystem_location(std::move(t_filesystem_location)), filesystem_unique_location(std::move(t_filesystem_unique_location)) {
+        internal_location(std::move(t_internal_location)),
+        filesystem_location(std::move(t_filesystem_location)),
+        filesystem_unique_location(std::move(t_filesystem_unique_location)) {
 
 }
 
-misa_location::misa_location(const misa_cached_data_base &t_cache) : filesystem_location(t_cache.get_cache_base()->get_location_in_filesystem()),
-                                                                     filesystem_unique_location(t_cache.get_cache_base()->get_unique_location_in_filesystem()) {
+misa_location::misa_location(const misa_cached_data_base &t_cache) : internal_location(
+        t_cache.get_cache_base()->get_internal_location()),
+                                                                     filesystem_location(
+                                                                             t_cache.get_cache_base()->get_location()),
+                                                                     filesystem_unique_location(
+                                                                             t_cache.get_cache_base()->get_unique_location()) {
 
 }
 

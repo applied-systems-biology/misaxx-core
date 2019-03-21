@@ -15,6 +15,9 @@ namespace misaxx {
      */
     struct misa_location : public misa_serializable {
 
+        /**
+         * Internal path of the data
+         */
         boost::filesystem::path internal_location;
 
         /**
@@ -29,7 +32,7 @@ namespace misaxx {
 
         misa_location() = default;
 
-        explicit misa_location(boost::filesystem::path t_filesystem_location, boost::filesystem::path t_filesystem_unique_location);
+        explicit misa_location(boost::filesystem::path t_internal_location, boost::filesystem::path t_filesystem_location, boost::filesystem::path t_filesystem_unique_location);
 
         /**
          * Initializes the location from cached data

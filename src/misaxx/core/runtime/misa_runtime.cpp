@@ -489,8 +489,8 @@ void misa_runtime::postprocess_cache_attachments() {
             std::cout << "[Attachments] Post-processing attachment " << ptr->get_location() << " ("
                       << ptr->get_unique_location() << ")" << "\n";
 
-            boost::filesystem::path filesystem_unique_link_path = ptr->get_unique_location_in_filesystem();
-            boost::filesystem::path filesystem_generic_link_path = ptr->get_location_in_filesystem();
+            boost::filesystem::path filesystem_unique_link_path = ptr->get_internal_unique_location();
+            boost::filesystem::path filesystem_generic_link_path = ptr->get_internal_location();
 
             // Replace extension with JSON
             const boost::filesystem::path filesystem_export_base_path = get_filesystem().exported->external_path();
@@ -530,7 +530,7 @@ void misa_runtime::postprocess_cache_attachments() {
 
             // Attach the description storage if needed
             if (!access.get().has<misa_description_storage>()) {
-                misa_location link(filesystem_generic_link_path, filesystem_unique_link_path);
+                misa_location link(ptr->get_internal_location(), filesystem_generic_link_path, filesystem_unique_link_path);
                 ptr->describe()->set_location(ptr->get_location_interface());
                 ptr->describe()->to_json(exported_json[ptr->describe()->get_serialization_id().get_id()]);
 
