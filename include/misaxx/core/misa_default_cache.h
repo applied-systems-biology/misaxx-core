@@ -64,7 +64,7 @@ namespace misaxx {
             return m_description;
         }
 
-        boost::filesystem::path get_internal_location() override {
+        boost::filesystem::path get_internal_location() const override {
             return m_internal_location;
         }
 
@@ -107,9 +107,7 @@ namespace misaxx {
          * @return
          */
         virtual std::shared_ptr<misa_location> create_location_interface() const {
-            auto interface = std::make_shared<misa_location>();
-            interface->filesystem_location = get_location();
-            interface->filesystem_unique_location = get_unique_location();
+            auto interface = std::make_shared<misa_location>(get_internal_location(), get_location(), get_unique_location());
             return interface;
         }
 

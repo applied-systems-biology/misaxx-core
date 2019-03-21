@@ -43,14 +43,14 @@ namespace misaxx {
          * The first segment of the path is "imported" or "exported"
          * @return
          */
-        virtual boost::filesystem::path get_internal_location() = 0;
+        virtual boost::filesystem::path get_internal_location() const = 0;
 
         /**
          * Assumes that get_unique_location() is a child of get_location() and
          * returns get_internal_location() plus the realtive location
          * @return
          */
-        boost::filesystem::path get_internal_unique_location();
+        boost::filesystem::path get_internal_unique_location() const;
 
         /**
          * Returns the location of this cache in the filesystem
