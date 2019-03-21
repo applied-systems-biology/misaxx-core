@@ -77,13 +77,6 @@ namespace misaxx {
         path internal_path() const;
 
         /**
-         *  Returns the internal path inside this filesystem
-         *  Starts with "imported" or "exported"
-         * @return
-         */
-        path full_internal_path() const;
-
-        /**
          * Returns true if this entry is associated to an external path
          * @return
          */

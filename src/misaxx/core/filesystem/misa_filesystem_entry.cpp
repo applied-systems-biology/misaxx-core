@@ -221,15 +221,3 @@ size_t misa_filesystem_entry::get_depth() const {
         return 0;
     }
 }
-
-misa_filesystem_entry::path misa_filesystem_entry::full_internal_path() const {
-    switch(type) {
-        case misa_filesystem_entry_type ::imported:
-            return "imported" / internal_path();
-        case misa_filesystem_entry_type ::exported:
-            return "exported" / internal_path();
-        case misa_filesystem_entry_type ::unknown:
-        default:
-            throw std::runtime_error("Unsupported filesystem entry type!");
-    }
-}

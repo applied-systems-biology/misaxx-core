@@ -47,15 +47,15 @@ namespace misaxx {
 
         // Special case simulation mode
         if (misaxx::runtime_properties::is_simulating()) {
-            std::cout << "[Cache] Linking " << t_location->full_internal_path() << " into cache of type "
+            std::cout << "[Cache] Linking " << t_location->internal_path() << " into cache of type "
                       << typeid(Cache).name() << "\n";
-            data->link(t_location->full_internal_path() ,"", t_location->metadata);
+            data->link(t_location->internal_path() ,"", t_location->metadata);
             return;
         }
 
         std::cout << "[Cache] Linking " << t_location->internal_path() << " [" << t_location->external_path()
                   << "] into cache of type " << typeid(Cache).name() << "\n";
-        data->link(t_location->full_internal_path(), t_location->external_path(), t_location->metadata);
+        data->link(t_location->internal_path(), t_location->external_path(), t_location->metadata);
     }
 
     template<class Cache>
@@ -84,7 +84,7 @@ namespace misaxx {
             misaxx::cache_registry::register_cache(data);
 
             if (misaxx::runtime_properties::is_simulating()) {
-                std::cout << "[Cache] Creating " << t_location->full_internal_path() << " as cache of type "
+                std::cout << "[Cache] Creating " << t_location->internal_path() << " as cache of type "
                           << typeid(Cache).name() << "\n";
                 // Metadata is copied into the export location
                 if (t_description.unique()) {
@@ -93,11 +93,11 @@ namespace misaxx {
                     t_location->metadata = std::make_shared<misa_description_storage>(*t_description);
                 }
 
-                data->link(t_location->full_internal_path(), "", t_location->metadata);
+                data->link(t_location->internal_path(), "", t_location->metadata);
                 return;
             }
 
-            std::cout << "[Cache] Creating " << t_location->full_internal_path() << " [" << t_location->external_path()
+            std::cout << "[Cache] Creating " << t_location->internal_path() << " [" << t_location->external_path()
                       << "] as cache of type " << typeid(Cache).name() << "\n";
 
             // Create the directory if necessary
@@ -113,7 +113,7 @@ namespace misaxx {
                 t_location->metadata = std::make_shared<misa_description_storage>(*t_description);
             }
 
-            data->link(t_location->full_internal_path(), t_location->external_path(), t_location->metadata);
+            data->link(t_location->internal_path(), t_location->external_path(), t_location->metadata);
         }
     }
 
