@@ -20,18 +20,23 @@ misa_location::misa_location(const misa_cached_data_base &t_cache) : filesystem_
 }
 
 void misa_location::from_json(const nlohmann::json &t_json) {
+    internal_location = t_json["internal-location"].get<std::string>();
     filesystem_location = t_json["filesystem-location"].get<std::string>();
     filesystem_unique_location = t_json["filesystem-unique-location"].get<std::string>();
 }
 
 void misa_location::to_json(nlohmann::json &t_json) const {
     misa_serializable::to_json(t_json);
+    t_json["internal-location"] = internal_location.string();
     t_json["filesystem-location"] = filesystem_location.string();
     t_json["filesystem-unique-location"] = filesystem_unique_location.string();
 }
 
 void misa_location::to_json_schema(misa_json_schema_property &t_schema) const {
     misa_serializable::to_json_schema(t_schema);
+    t_schema.resolve("internal-location")->declare_required<std::string>()
+            .document_title("Internal Location")
+            .document_description("Location within the MISA++ filesystem");
     t_schema.resolve("filesystem-location")->declare_required<std::string>()
             .document_title("Filesystem Location")
             .document_description("Location of the folder that contains the data");

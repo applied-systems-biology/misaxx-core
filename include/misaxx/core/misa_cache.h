@@ -25,15 +25,25 @@ namespace misaxx {
         /**
          * Links the cache to a filesystem location.
          * Assumes that data already exists within the location.
-         * @param t_location
+         * @param t_internal_location Internal cache location
+         * @param t_location Absolute file path
          */
-        virtual void link(const boost::filesystem::path &t_location, const std::shared_ptr<misa_description_storage> &t_description) = 0;
+        virtual void link(const boost::filesystem::path &t_internal_location,
+                const boost::filesystem::path &t_location,
+                const std::shared_ptr<misa_description_storage> &t_description) = 0;
 
         /**
          * Describes the contents of this cache using filesystem metadata
          * @return
          */
         virtual std::shared_ptr<misa_description_storage> describe() const = 0;
+
+        /**
+         * Returns the path of this cache within the MISA++ filesystem.
+         * The first segment of the path is "imported" or "exported"
+         * @return
+         */
+        virtual boost::filesystem::path get_internal_location() = 0;
 
         /**
          * Returns the location of this cache in the filesystem

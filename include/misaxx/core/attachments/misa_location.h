@@ -15,14 +15,15 @@ namespace misaxx {
      */
     struct misa_location : public misa_serializable {
 
+        boost::filesystem::path internal_location;
+
         /**
-         * Internal path within the filesystem that contains the referenced data
-         * a valid path begins with either "imported" or "exported"
+         * Path to the folder that contains the data
          */
         boost::filesystem::path filesystem_location;
 
         /**
-         * An optional additional internal path that uniquely identifies sub-caches within the same location
+         * An optional additional sub-path within the filesystem location
          */
         boost::filesystem::path filesystem_unique_location;
 

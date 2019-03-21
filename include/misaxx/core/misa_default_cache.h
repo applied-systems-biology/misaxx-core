@@ -42,8 +42,9 @@ namespace misaxx {
          */
         virtual void do_link(const Description &t_description) = 0;
 
-        void link(const boost::filesystem::path &t_location, const std::shared_ptr<misa_description_storage> &t_description) final {
+        void link(const boost::filesystem::path &t_internal_location, const boost::filesystem::path &t_location, const std::shared_ptr<misa_description_storage> &t_description) final {
             m_description = t_description;
+            m_internal_location = t_internal_location;
             m_location = t_location;
 
             if(misaxx::runtime_properties::is_simulating()) {
@@ -61,6 +62,10 @@ namespace misaxx {
 
         std::shared_ptr<misa_description_storage> describe() const override {
             return m_description;
+        }
+
+        boost::filesystem::path get_internal_location() override {
+            return m_internal_location;
         }
 
         boost::filesystem::path get_location() const override {
@@ -111,6 +116,7 @@ namespace misaxx {
     private:
         std::shared_ptr<misa_description_storage> m_description;
         boost::filesystem::path m_location;
+        boost::filesystem::path m_internal_location;
         boost::filesystem::path m_unique_location;
         mutable std::shared_ptr<misa_location> m_location_interface;
     };

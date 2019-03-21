@@ -65,7 +65,8 @@ namespace misaxx {
         * @param t_location
         * @param t_description
         */
-        void force_link(const boost::filesystem::path &t_location,
+        void force_link(const boost::filesystem::path &t_internal_location,
+                        const boost::filesystem::path &t_location,
                         const std::shared_ptr<misa_description_storage> &t_description);
 
         /**
@@ -75,7 +76,8 @@ namespace misaxx {
          * @param t_location
          * @param t_description
          */
-        void force_link(const boost::filesystem::path &t_location,
+        void force_link(const boost::filesystem::path &t_internal_location,
+                        const boost::filesystem::path &t_location,
                         std::shared_ptr<misa_data_description> t_description);
 
         /**
@@ -93,7 +95,8 @@ namespace misaxx {
          * @param t_location
          * @param t_description
          */
-        void suggest_link(const boost::filesystem::path &t_location,
+        void suggest_link(const boost::filesystem::path &t_internal_location,
+                          const boost::filesystem::path &t_location,
                           const std::shared_ptr<misa_description_storage> &t_description);
 
         /**
@@ -103,7 +106,8 @@ namespace misaxx {
          * @param t_location
          * @param t_description
          */
-        void suggest_link(const boost::filesystem::path &t_location,
+        void suggest_link(const boost::filesystem::path &t_internal_location,
+                          const boost::filesystem::path &t_location,
                           std::shared_ptr<misa_data_description> t_description);
 
         /**
@@ -210,6 +214,16 @@ namespace misaxx {
          * @return
          */
         boost::filesystem::path get_unique_location() const override;
+
+        /**
+        * Returns the location of the cache within the internal file system
+        * This is the folder that contains the data. Please note that
+        * this location might not be unique for different caches, as multiple caches might be created
+        * on the same location.
+        * Use get_unique_location() to find the actual file instead.
+        * @return
+        */
+        boost::filesystem::path get_internal_location() const override;
 
         /**
          * Gets the location interface of this cache. This location interface is compatible with
