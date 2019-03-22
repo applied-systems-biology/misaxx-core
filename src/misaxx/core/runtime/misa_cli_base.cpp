@@ -145,7 +145,10 @@ misa_cli_base::cli_result misa_cli_base::prepare(const int argc, const char **ar
         m_pimpl->m_runtime->set_parameter_json(std::move(j));
     }
     else if(!m_pimpl->m_runtime->is_simulating()) {
-        throw std::runtime_error("You have to provide a parameter file!");
+        auto info = misaxx::runtime_properties::get_module_info();
+        std::cout << info.get_id() << " " << info.get_version() << "\n";
+        std::cout << general_options << "\n";
+        return misa_cli_base::cli_result::error;
     }
 
     // Load runtime parameters that are not from CLI
