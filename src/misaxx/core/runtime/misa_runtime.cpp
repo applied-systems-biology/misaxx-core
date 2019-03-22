@@ -611,6 +611,9 @@ void misa_runtime::postprocess_parameter_schema() {
     (*schema)["runtime"]["num-threads"].document_title("Number of threads")
             .document_description("Changes the number of threads")
             .declare_optional<int>(1);
+    (*schema)["runtime"]["request-skipping"].document_title("Skip existing results")
+            .document_description("Informs algorithms that existing results should not be overwritten")
+            .declare_optional<bool>(false);
     (*schema)["runtime"]["full-runtime-log"].document_title("Full runtime log")
             .document_description("If enabled, the runtime log will contain all individual workers")
             .declare_optional(false);
