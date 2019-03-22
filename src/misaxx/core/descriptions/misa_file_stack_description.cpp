@@ -23,7 +23,7 @@ void misa_file_stack_description::to_json(nlohmann::json &t_json) const {
 
 void misa_file_stack_description::to_json_schema(misa_json_schema_property &t_schema) const {
     misa_data_description::to_json_schema(t_schema);
-    t_schema.resolve("files")->declare_required<std::unordered_map<std::string, misa_file_stack_description>>()
+    t_schema.resolve("files")->declare_required<std::unordered_map<std::string, misa_file_description>>()
             .document_title("Files")
             .document_description("Map of filename to file description");
 }
