@@ -96,7 +96,7 @@ namespace misaxx {
          */
         template<class Instance> misa_work_dependency_group &operator >> (Instance &t_instance) {
             static_assert(std::is_base_of<misa_worker, Instance>::value, "Only workers can be inserted!");
-            t_instance.get_node().get_dependencies() = to_dependencies();
+            t_instance.get_node()->get_dependencies() = to_dependencies();
             return *this;
         }
 
