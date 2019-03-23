@@ -215,17 +215,12 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
             -Wredundant-decls)
 endif()
 
-# Include dependencies
-if(CAN_USE_CONAN)
-    target_link_libraries(misaxx-core PUBLIC OpenMP::OpenMP_CXX CONAN_PKG::boost CONAN_PKG::jsonformoderncpp CONAN_PKG::misaxx-coixx CONAN_PKG::misaxx-helpers)
-else()
-    target_link_libraries(misaxx-core PUBLIC
-        Boost::filesystem
-        Boost::regex
-        Boost::program_options
-        OpenMP::OpenMP_CXX
-        nlohmann_json)
-endif()
+target_link_libraries(misaxx-core PUBLIC
+    Boost::filesystem
+    Boost::regex
+    Boost::program_options
+    OpenMP::OpenMP_CXX
+    nlohmann_json)
 
 # Installation
 set_target_properties(misaxx-core PROPERTIES
