@@ -39,11 +39,13 @@ namespace misaxx {
 
         using module_type = Module;
         using root_module_type = misa_multiobject_root<module_type>;
+        using root_module_interface_type = typename root_module_type::module_interface_type;
 
         explicit misa_cli(misa_module_info t_module_info) :
             misa_cli_base(create_runtime(std::move(t_module_info),
-                                         std::make_shared<typename root_module_type::module_interface_type>(), [](const std::shared_ptr<misa_work_node>& nd, std::shared_ptr<misa_module_interface> interface) {
-                return std::make_shared<root_module_type>(nd, std::move(*std::dynamic_pointer_cast<typename root_module_type::module_interface_type>(interface)));
+                                         std::shared_ptr<root_module_interface_type>(new root_module_interface_type()),
+                                                 [](const std::shared_ptr<misa_work_node>& nd, std::shared_ptr<misa_module_interface> interface) {
+                return std::shared_ptr<root_module_type>(new root_module_type(nd, std::move(*std::dynamic_pointer_cast<root_module_interface_type>(interface))));
             })) {
 
         }
