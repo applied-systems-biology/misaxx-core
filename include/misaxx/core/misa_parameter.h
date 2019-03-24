@@ -51,5 +51,25 @@ namespace misaxx {
         T query() const {
             return misaxx::parameter_registry::get_json<T>(get_location());
         }
+
+        /**
+         * Documents this parameter with a description
+         * @param title
+         * @return
+         */
+        misa_parameter<T> &document_title(std::string title) {
+            schema->document_title(std::move(title));
+            return *this;
+        }
+
+        /**
+        * Documents this parameter with a name
+        * @param title
+        * @return
+        */
+        misa_parameter<T> &document_description(std::string description) {
+            schema->document_description(std::move(description));
+            return *this;
+        }
     };
 }

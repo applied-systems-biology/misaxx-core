@@ -44,5 +44,6 @@ namespace misaxx {
          * @return
          */
         virtual const path &get_location() const = 0;
+
     };
 }
