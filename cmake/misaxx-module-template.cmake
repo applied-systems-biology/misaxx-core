@@ -98,6 +98,7 @@ function(misaxx_with_default_module_info)
     else()
         message("--   Creating module info header ${CMAKE_SOURCE_DIR}/include/${MISAXX_API_INCLUDE_PATH}/module_info.h")
         message(WARNING "Please make sure that you include the dependencies in ${CMAKE_SOURCE_DIR}/include/${MISAXX_API_INCLUDE_PATH}/module_info.h")
+        message(WARNING "Please add include/${MISAXX_API_INCLUDE_PATH}/module_info.h to your library's sources")
 
         file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/include/${MISAXX_API_INCLUDE_PATH}/)
         file(WRITE ${CMAKE_SOURCE_DIR}/include/${MISAXX_API_INCLUDE_PATH}/module_info.h "#pragma once\n\
@@ -113,6 +114,7 @@ namespace ${MISAXX_API_NAMESPACE} {\n\
     else()
         message("--   Creating module info CPP ${CMAKE_SOURCE_DIR}/src/${MISAXX_API_INCLUDE_PATH}/module_info.cpp")
         message(WARNING "Please make sure that you include the dependencies in ${CMAKE_SOURCE_DIR}/src/${MISAXX_API_INCLUDE_PATH}/module_info.cpp")
+        message(WARNING "Please add src/${MISAXX_API_INCLUDE_PATH}/module_info.cpp to your library's sources")
 
         file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/src/${MISAXX_API_INCLUDE_PATH}/)
         file(WRITE ${CMAKE_SOURCE_DIR}/src/${MISAXX_API_INCLUDE_PATH}/module_info.cpp "#include <misaxx/core/misa_mutable_module_info.h>\n\
@@ -131,9 +133,6 @@ misaxx::misa_module_info ${MISAXX_API_NAMESPACE}::module_info() {\n\
     return info;
 }")
     endif()
-
-    target_sources(${MISAXX_LIBRARY} PUBLIC ${CMAKE_SOURCE_DIR}/include/${MISAXX_API_INCLUDE_PATH}/module_info.h)
-    target_sources(${MISAXX_LIBRARY} PUBLIC ${CMAKE_SOURCE_DIR}/src/${MISAXX_API_INCLUDE_PATH}/module_info.cpp)
 
 endfunction()
 

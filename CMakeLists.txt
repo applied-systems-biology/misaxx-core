@@ -174,15 +174,11 @@ add_library(misaxx-core
         include/misaxx/core/accessors/misa_json.h
         src/misaxx/core/utils/markdown.h
         src/misaxx/core/runtime/misa_readme_builder.h
-        src/misaxx/core/runtime/misa_readme_builder.cpp include/misaxx/core/attachments/misa_quantity_range.h)
+        src/misaxx/core/runtime/misa_readme_builder.cpp
+        include/misaxx/core/attachments/misa_quantity_range.h
+        include/misaxx/core/module_info.h
+        src/misaxx/core/module_info.cpp)
 
-# Module info header
-configure_file(${CMAKE_SOURCE_DIR}/cmake/module_info.h.in
-        ${CMAKE_BINARY_DIR}/include/misaxx/core/module_info.h)
-configure_file(${CMAKE_SOURCE_DIR}/cmake/module_info.cpp.in
-        ${CMAKE_BINARY_DIR}/src/module_info.cpp)
-target_sources(misaxx-core PRIVATE ${CMAKE_BINARY_DIR}/include/misaxx/core/module_info.h)
-target_sources(misaxx-core PRIVATE ${CMAKE_BINARY_DIR}/src/module_info.cpp)
 
 # For installation
 target_compile_features(misaxx-core PUBLIC cxx_std_17)
