@@ -93,14 +93,14 @@ endfunction()
 function(misaxx_with_default_module_info)
     misaxx_ensure_configuration()
     # If necessary, create a header that contains the module info
-    if(EXISTS ${CMAKE_SOURCE_DIR}/cmake/module_info.h.in)
-        message("--   Module info header template already exists at ${CMAKE_SOURCE_DIR}/cmake/module_info.h.in")
+    if(EXISTS ${CMAKE_SOURCE_DIR}/include/${MISAXX_API_INCLUDE_PATH}/module_info.h)
+        message("--   Module info header already exists at ${CMAKE_SOURCE_DIR}/include/${MISAXX_API_INCLUDE_PATH}/module_info.h")
     else()
-        message("--   Creating module info header ${CMAKE_SOURCE_DIR}/cmake/module_info.h.in")
-        message(WARNING "Please make sure that you include the dependencies in ${CMAKE_SOURCE_DIR}/cmake/module_info.h.in")
+        message("--   Creating module info header ${CMAKE_SOURCE_DIR}/include/${MISAXX_API_INCLUDE_PATH}/module_info.h")
+        message(WARNING "Please make sure that you include the dependencies in ${CMAKE_SOURCE_DIR}/include/${MISAXX_API_INCLUDE_PATH}/module_info.h")
 
-        file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/cmake/)
-        file(WRITE ${CMAKE_SOURCE_DIR}/cmake/module_info.h.in "#pragma once\n\
+        file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/include/${MISAXX_API_INCLUDE_PATH}/)
+        file(WRITE ${CMAKE_SOURCE_DIR}/include/${MISAXX_API_INCLUDE_PATH}/module_info.h "#pragma once\n\
 #include <misaxx/core/module_info.h>\n\
 \n\
 namespace ${MISAXX_API_NAMESPACE} {\n\
@@ -108,22 +108,22 @@ namespace ${MISAXX_API_NAMESPACE} {\n\
 }")
     endif()
 
-    if(EXISTS ${CMAKE_SOURCE_DIR}/cmake/module_info.cpp.in)
-        message("--   Module info CPP template already exists at ${CMAKE_SOURCE_DIR}/cmake/module_info.cpp.in")
+    if(EXISTS ${CMAKE_SOURCE_DIR}/src/${MISAXX_API_INCLUDE_PATH}/module_info.cpp)
+        message("--   Module info CPP already exists at ${CMAKE_SOURCE_DIR}/src/${MISAXX_API_INCLUDE_PATH}/module_info.cpp")
     else()
-        message("--   Creating module info CPP ${CMAKE_SOURCE_DIR}/cmake/module_info.cpp.in")
-        message(WARNING "Please make sure that you include the dependencies in ${CMAKE_SOURCE_DIR}/cmake/module_info.cpp.in")
+        message("--   Creating module info CPP ${CMAKE_SOURCE_DIR}/src/${MISAXX_API_INCLUDE_PATH}/module_info.cpp")
+        message(WARNING "Please make sure that you include the dependencies in ${CMAKE_SOURCE_DIR}/src/${MISAXX_API_INCLUDE_PATH}/module_info.cpp")
 
-        file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/cmake/)
-        file(WRITE ${CMAKE_SOURCE_DIR}/cmake/module_info.cpp.in "#include <misaxx/core/misa_mutable_module_info.h>\n\
+        file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/src/${MISAXX_API_INCLUDE_PATH}/)
+        file(WRITE ${CMAKE_SOURCE_DIR}/src/${MISAXX_API_INCLUDE_PATH}/module_info.cpp "#include <misaxx/core/misa_mutable_module_info.h>\n\
 #include <misaxx/core/module_info.h>\n\
 #include <${MISAXX_API_INCLUDE_PATH}/module_info.h>\n\
 \n\
 misaxx::misa_module_info ${MISAXX_API_NAMESPACE}::module_info() {\n\
     misaxx::misa_mutable_module_info info;\n\
-    info.set_id(\"@PROJECT_NAME@\");\n\
-    info.set_version(\"@PROJECT_VERSION@\");\n\
-    info.set_name(\"@PROJECT_DESCRIPTION@\");\n\
+    info.set_id(\"${PROJECT_NAME}\");\n\
+    info.set_version(\"${PROJECT_VERSION}\");\n\
+    info.set_name(\"${PROJECT_DESCRIPTION}\");\n\
     info.set_description(\"A MISA++ module\");\n\
     \n\
     info.add_dependency(misaxx::module_info());\n\
@@ -132,12 +132,8 @@ misaxx::misa_module_info ${MISAXX_API_NAMESPACE}::module_info() {\n\
 }")
     endif()
 
-    configure_file(${CMAKE_SOURCE_DIR}/cmake/module_info.h.in
-            ${CMAKE_BINARY_DIR}/include/${MISAXX_API_INCLUDE_PATH}/module_info.h)
-    configure_file(${CMAKE_SOURCE_DIR}/cmake/module_info.cpp.in
-            ${CMAKE_BINARY_DIR}/src/module_info.cpp)
-    target_sources(${MISAXX_LIBRARY} PRIVATE ${CMAKE_BINARY_DIR}/include/${MISAXX_API_INCLUDE_PATH}/module_info.h)
-    target_sources(${MISAXX_LIBRARY} PRIVATE ${CMAKE_BINARY_DIR}/src/module_info.cpp)
+    target_sources(${MISAXX_LIBRARY} PUBLIC ${CMAKE_SOURCE_DIR}/include/${MISAXX_API_INCLUDE_PATH}/module_info.h)
+    target_sources(${MISAXX_LIBRARY} PUBLIC ${CMAKE_SOURCE_DIR}/src/${MISAXX_API_INCLUDE_PATH}/module_info.cpp)
 
 endfunction()
 
