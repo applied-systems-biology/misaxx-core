@@ -122,7 +122,7 @@ namespace ${MISAXX_API_NAMESPACE} {\n\
 #include <${MISAXX_API_INCLUDE_PATH}/module_info.h>\n\
 \n\
 misaxx::misa_module_info ${MISAXX_API_NAMESPACE}::module_info() {\n\
-    misaxx::module_info info;\n\
+    misaxx::misa_module_info info;\n\
     info.set_id(\"${PROJECT_NAME}\");\n\
     info.set_version(\"${PROJECT_VERSION}\");\n\
     info.set_name(\"${PROJECT_DESCRIPTION}\");\n\
