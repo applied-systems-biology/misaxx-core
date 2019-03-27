@@ -1,8 +1,8 @@
-#include <misaxx/core/misa_mutable_module_info.h>
+#include <misaxx/core/misa_module_info.h>
 #include <misaxx/core/module_info.h>
 
 misaxx::misa_module_info misaxx::module_info() {
-    misaxx::misa_mutable_module_info info;
+    misaxx::misa_module_info info;
     info.set_id("misaxx");
     info.set_version("1.0.0");
     info.set_name("MISA++ core module");
@@ -13,7 +13,7 @@ misaxx::misa_module_info misaxx::module_info() {
     info.set_url("https://asb-git.hki-jena.de/RGerst/misaxx-core/");
 
     // External dependency: Boost
-    misaxx::misa_mutable_module_info boost_info;
+    misaxx::misa_module_info boost_info;
     boost_info.set_id("boost");
     boost_info.set_version("1.67");
     boost_info.set_name("Boost Libraries");
@@ -25,7 +25,7 @@ misaxx::misa_module_info misaxx::module_info() {
     info.add_dependency(std::move(boost_info));
 
     // External dependency: OpenMP
-    misaxx::misa_mutable_module_info openmp_info;
+    misaxx::misa_module_info openmp_info;
     openmp_info.set_id("openmp");
     openmp_info.set_version("4.5");
     openmp_info.set_name("OpenMP");
@@ -36,7 +36,7 @@ misaxx::misa_module_info misaxx::module_info() {
     info.add_dependency(std::move(openmp_info));
 
     // External dependency: JSON for modern C++
-    misaxx::misa_mutable_module_info nlohmann_json_info;
+    misaxx::misa_module_info nlohmann_json_info;
     nlohmann_json_info.set_id("nlohmann-json");
     nlohmann_json_info.set_name("JSON for Modern C++");
     nlohmann_json_info.set_version("3.5.0");

@@ -117,12 +117,12 @@ namespace ${MISAXX_API_NAMESPACE} {\n\
         message(WARNING "Please add src/${MISAXX_API_INCLUDE_PATH}/module_info.cpp to your library's sources")
 
         file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/src/${MISAXX_API_INCLUDE_PATH}/)
-        file(WRITE ${CMAKE_SOURCE_DIR}/src/${MISAXX_API_INCLUDE_PATH}/module_info.cpp "#include <misaxx/core/misa_mutable_module_info.h>\n\
+        file(WRITE ${CMAKE_SOURCE_DIR}/src/${MISAXX_API_INCLUDE_PATH}/module_info.cpp "#include <misaxx/core/module_info.h>\n\
 #include <misaxx/core/module_info.h>\n\
 #include <${MISAXX_API_INCLUDE_PATH}/module_info.h>\n\
 \n\
 misaxx::misa_module_info ${MISAXX_API_NAMESPACE}::module_info() {\n\
-    misaxx::misa_mutable_module_info info;\n\
+    misaxx::module_info info;\n\
     info.set_id(\"${PROJECT_NAME}\");\n\
     info.set_version(\"${PROJECT_VERSION}\");\n\
     info.set_name(\"${PROJECT_DESCRIPTION}\");\n\

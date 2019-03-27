@@ -137,8 +137,6 @@ add_library(misaxx-core
         src/misaxx/core/runtime/misa_cache_registry.cpp
         src/misaxx/core/runtime/misa_parameter_registry.cpp
         src/misaxx/core/misa_module_info.cpp include/misaxx/core/misa_module_info.h
-        src/misaxx/core/misa_mutable_module_info.cpp
-        include/misaxx/core/misa_mutable_module_info.h
         include/misaxx/core/utils/cache.h
         include/misaxx/core/utils/ref.h
         include/misaxx/core/utils/string.h
