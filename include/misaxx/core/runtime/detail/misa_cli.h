@@ -12,7 +12,7 @@ namespace misaxx {
     void misa_cli::set_root_module(const std::string &t_name) {
         
         using root_module_type = misaxx::misa_root_module<Module>;
-        
+
         auto instantiator = [](const std::shared_ptr<misaxx::misa_work_node> &node) {
             return misaxx::misa_work_node::instance_ptr_type(
                     new root_module_type(node));
@@ -20,6 +20,11 @@ namespace misaxx {
         std::shared_ptr<misa_work_node> root_node = misa_work_node::create_instance(t_name,
                                                                                     std::shared_ptr<misa_work_node>(),
                                                                                     instantiator);
+        std::shared_ptr<misa_work_node> schema_root_node = misa_work_node::create_instance(t_name,
+                                                                                    std::shared_ptr<misa_work_node>(),
+                                                                                    instantiator);
+
         this->set_root_node(std::move(root_node));
+        this->set_schema_root_node(std::move(schema_root_node));
     }
 }

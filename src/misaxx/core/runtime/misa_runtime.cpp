@@ -29,6 +29,8 @@ namespace misaxx {
 
         std::shared_ptr<misa_work_node> m_root;
 
+        std::shared_ptr<misa_work_node> m_schema_root;
+
         std::unordered_set<std::shared_ptr<misa_cache>> m_registered_caches;
 
         /**
@@ -137,10 +139,20 @@ namespace misaxx {
 
         if(!static_cast<bool>(m_root)) {
             throw std::runtime_error("Runtime has no root node!");
-        }            
+        }
+        if(!static_cast<bool>(m_schema_root)) {
+            throw std::runtime_error("Runtime has no schema root node!");
+        }
 
-        m_nodes_todo.push_back(m_root.get());
-        m_nodes_todo_lookup.insert(m_root.get());
+        if(!m_is_simulating) {
+            m_nodes_todo.push_back(m_root.get());
+            m_nodes_todo_lookup.insert(m_root.get());
+        }
+        else {
+            m_nodes_todo.push_back(m_schema_root.get());
+            m_nodes_todo_lookup.insert(m_schema_root.get());
+        }
+
         ++m_known_nodes_count;
 
         const bool enable_threading = m_num_threads > 1 && !m_is_simulating;
@@ -191,6 +203,8 @@ namespace misaxx {
             writer.close();
         }
         if (!m_is_simulating) {
+            std::cout << "<#> <#> Building parameter schema for results folder ... " << "\n";
+
             // Write the parameter schema
             m_is_simulating = true;
 
@@ -208,8 +222,9 @@ namespace misaxx {
             misa_filesystem_empty_importer importer;
             get_filesystem() = importer.import();
 
-            m_nodes_todo.push_back(m_root.get());
-            m_nodes_todo_lookup.insert(m_root.get());
+            // Push the schema root into the tree
+            m_nodes_todo.push_back(m_schema_root.get());
+            m_nodes_todo_lookup.insert(m_schema_root.get());
             ++m_known_nodes_count;
 
             // Run the parameter schema workload
@@ -316,10 +331,6 @@ namespace misaxx {
                             m_nodes_todo_lookup.insert(child.get());
                             m_nodes_todo.push_back(child.get());
                             ++m_known_nodes_count;
-
-//                                if(build_schema) {
-//                                    parameter_schema.insert_node(child->get_path(), child->get_metadata());
-//                                }
                         }
                     }
                 }
@@ -407,10 +418,6 @@ namespace misaxx {
                             }
                         }
                     }
-//                        } else {
-//                            progress(*nd, "Skipping");
-//                            nd->skip_work();
-//                        }
                 }
                 if (nd->get_worker_status() == misa_worker_status::queued_repeat) {
                     // If the work was rejected, don't do any additional steps afterwards
@@ -425,10 +432,6 @@ namespace misaxx {
                             m_nodes_todo_lookup.insert(child.get());
                             m_nodes_todo.push_back(child.get());
                             ++m_known_nodes_count;
-
-//                                if(build_schema) {
-//                                    parameter_schema.insert_node(child->get_path(), child->get_metadata());
-//                                }
                         }
                     }
                 }
@@ -746,6 +749,10 @@ std::shared_ptr<misa_work_node> misa_runtime::get_root_node() const {
     return m_pimpl->m_root;
 }
 
+std::shared_ptr<misa_work_node> misa_runtime::get_schema_root_node() const {
+    return m_pimpl->m_schema_root;
+}
+
 misa_filesystem misa_runtime::get_filesystem() {
     return m_pimpl->get_filesystem();
 }
@@ -856,6 +863,14 @@ void misa_runtime::set_root_node(std::shared_ptr<misa_work_node> root) {
     }
 }
 
+void misa_runtime::set_schema_root_node(std::shared_ptr<misa_work_node> schema_root) {
+    if (is_running())
+        throw std::runtime_error("Cannot change runtime properties while the runtime is working!");
+    // Import an empty filesystem into the schema node
+    schema_root->get_or_create_instance()->get_module()->filesystem = misa_filesystem_empty_importer {}.import();
+    m_pimpl->m_schema_root = std::move(schema_root);
+}
+
 void misaxx::misa_runtime::prepare_and_run() {
     load_filesystem(*m_pimpl);
     m_pimpl->run();
@@ -864,6 +879,8 @@ void misaxx::misa_runtime::prepare_and_run() {
 misa_runtime &misa_runtime::instance() {
     return *m_singleton;
 }
+
+
 
 
 

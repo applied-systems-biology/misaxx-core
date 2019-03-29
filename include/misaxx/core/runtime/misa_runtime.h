@@ -125,6 +125,12 @@ namespace misaxx {
         std::shared_ptr<misa_work_node> get_root_node() const;
 
         /**
+         * Returns the root node that is used if a schema is generated
+         * @return
+         */
+        std::shared_ptr<misa_work_node> get_schema_root_node() const;
+
+        /**
          * Returns the current filesystem
          * @return
          */
@@ -197,6 +203,12 @@ namespace misaxx {
          * @param root
          */
         void set_root_node(std::shared_ptr<misa_work_node> root);
+
+        /**
+         * Sets the root node used for schema generation
+         * @param schema_root
+         */
+        void set_schema_root_node(std::shared_ptr<misa_work_node> schema_root);
 
         /**
          * Prepares the runtime and runs the workload
