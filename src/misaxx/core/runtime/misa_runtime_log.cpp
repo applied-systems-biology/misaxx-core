@@ -2,7 +2,7 @@
 // Created by rgerst on 01.02.19.
 //
 
-#include "misa_runtime_log.h"
+#include "misaxx/core/runtime/misa_runtime_log.h"
 #include <chrono>
 #include <misaxx/core/misa_json_schema_property.h>
 

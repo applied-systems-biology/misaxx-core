@@ -1,58 +1,86 @@
 //
-// Created by rgerst on 17.08.18.
+// Created by rgerst on 14.12.18.
 //
 
-
 #pragma once
-
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <boost/filesystem.hpp>
-#include <misaxx/core/misa_multiobject_root.h>
-#include <misaxx/core/misa_cached_data_base.h>
-#include <misaxx/core/attachments/misa_location.h>
-#include <misaxx/core/misa_module_info.h>
-#include <misaxx/core/runtime/misa_cli_base.h>
+#include <misaxx/core/runtime/misa_runtime.h>
 
 namespace misaxx {
 
     /**
-     * Creates a new runtime
-     * @param t_module_info The module information of the current worker module
-     * @param t_module_interface_builder A function that constructs a module interface for the worker module
-     * @param t_module_dispatcher_builder A function that creates the module dispatcher from the interface
-     * @return
+     * Internal implementation of the runtime that runs the tasks
      */
-    extern std::shared_ptr<misa_runtime> create_runtime(misa_module_info t_module_info,
-                                                        std::shared_ptr<misaxx::misa_module_interface>t_module_interface_builder,
-                                                        std::function<std::shared_ptr<misa_dispatcher>(const std::shared_ptr<misa_work_node>&, std::shared_ptr<misa_module_interface>)> t_module_dispatcher_builder);
+    struct misa_runtime;
+
+    struct misa_cli_impl;
 
     /**
-     * Command line interface of a worker module
-     * @tparam Module The module that should be executed
-     * @tparam Runtime
+     * Base class for a CLI
      */
-    template<class Module> class misa_cli : public misa_cli_base {
-
-    public:
-
-        using module_type = Module;
-        using root_module_type = misa_multiobject_root<module_type>;
-        using root_module_interface_type = typename root_module_type::module_interface_type;
-
-        explicit misa_cli(misa_module_info t_module_info) :
-            misa_cli_base(create_runtime(std::move(t_module_info),
-                                         std::shared_ptr<root_module_interface_type>(new root_module_interface_type()),
-                                                 [](const std::shared_ptr<misa_work_node>& nd, std::shared_ptr<misa_module_interface> interface) {
-                return std::shared_ptr<root_module_type>(new root_module_type(nd, std::move(*std::dynamic_pointer_cast<root_module_interface_type>(interface))));
-            })) {
-
-        }
+    struct misa_cli : public misa_runtime {
 
     private:
 
-        boost::filesystem::path m_parameter_schema_path;
+        misa_cli_impl *m_pimpl;
 
+    public:
+
+        /**
+        * Return states of prepare()
+        */
+        enum class cli_result {
+            continue_with_workload,
+            no_workload,
+            error,
+            ok
+        };
+
+        misa_cli();
+
+        virtual ~misa_cli();
+
+    public:
+
+        /**
+         * Sets the module info
+         * Must be done by the main() method
+         */
+        using misa_runtime::set_module_info;
+
+        /**
+         * Sets the root module
+         * @tparam Module
+         */
+        template<class Module>
+        void set_root_module(const std::string &t_name);
+
+        /**
+         * Runs the CLI
+         * @param argc
+         * @param argv
+         */
+        int prepare_and_run(int argc, const char** argv);
+
+    private:
+
+        /**
+         * Loads parameters from CLI
+         * @param argc
+         * @param argv
+         * @return
+         */
+        cli_result load_from_cli(int argc, const char** argv);
+
+        /**
+         * Runs the internal runtime
+         * @return
+         */
+        cli_result run();
     };
 }
+
+#include <misaxx/core/runtime/detail/misa_cli.h>
+
+
+
+

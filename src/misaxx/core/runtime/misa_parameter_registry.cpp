@@ -3,16 +3,16 @@
 //
 
 #include <misaxx/core/runtime/misa_parameter_registry.h>
-#include <src/misaxx/core/runtime/misa_runtime.h>
+#include <misaxx/core/runtime/misa_runtime.h>
 
 using namespace misaxx;
 
 nlohmann::json &misaxx::parameter_registry::get_parameter_json() {
-    return misa_runtime::instance().get_parameter_json();
+    return misa_runtime::instance().get_parameters();
 }
 
 nlohmann::json misaxx::parameter_registry::get_json_raw(const std::vector<std::string> &t_path) {
-    return misa_runtime::instance().get_json_raw(t_path);
+    return misa_runtime::instance().get_parameter_value(t_path);
 }
 
 std::shared_ptr<misa_json_schema_property> misaxx::parameter_registry::get_schema_builder() {

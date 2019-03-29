@@ -37,8 +37,6 @@ add_library(misaxx-core
         include/misaxx/core/filesystem/misa_filesystem_empty_importer.h
         include/misaxx/core/filesystem/misa_filesystem.h
         include/misaxx/core/misa_dispatch_blueprint.h
-        src/misaxx/core/runtime/misa_runtime.h
-        include/misaxx/core/runtime/misa_cli.h
         include/misaxx/core/misa_serializable.h
         include/misaxx/core/misa_description_storage.h
         include/misaxx/core/workers/misa_work_node.h
@@ -75,8 +73,6 @@ add_library(misaxx-core
         src/misaxx/core/filesystem/misa_filesystem_empty_importer.cpp
         src/misaxx/core/filesystem/misa_filesystem.cpp
         src/misaxx/core/misa_dispatch_blueprint.cpp
-        src/misaxx/core/runtime/misa_runtime.cpp
-        src/misaxx/core/runtime/misa_cli.cpp
         src/misaxx/core/misa_serializable.cpp
         src/misaxx/core/misa_description_storage.cpp
         src/misaxx/core/workers/misa_work_node.cpp
@@ -111,8 +107,8 @@ add_library(misaxx-core
         src/misaxx/core/misa_serialization_id.cpp
         src/misaxx/core/attachments/misa_matrix.cpp
         include/misaxx/core/attachments/misa_matrix.h
-        src/misaxx/core/runtime/misa_cli_base.cpp
-        include/misaxx/core/runtime/misa_cli_base.h
+        src/misaxx/core/runtime/misa_cli.cpp
+        include/misaxx/core/runtime/misa_cli.h
         include/misaxx/core/attachments/misa_locatable.h
         src/misaxx/core/misa_dispatcher_blueprint_list.cpp
         include/misaxx/core/misa_dispatcher_blueprint_list.h
@@ -152,7 +148,7 @@ add_library(misaxx-core
         src/misaxx/core/workers/misa_work_node_impl.cpp
         src/misaxx/core/workers/misa_work_node_impl.h
         src/misaxx/core/runtime/misa_runtime_log.cpp
-        src/misaxx/core/runtime/misa_runtime_log.h
+        include/misaxx/core/runtime/misa_runtime_log.h
         src/misaxx/core/descriptions/misa_exported_attachments_description.cpp
         include/misaxx/core/descriptions/misa_exported_attachments_description.h
         src/misaxx/core/misa_json_schema_property.cpp
@@ -175,7 +171,9 @@ add_library(misaxx-core
         src/misaxx/core/runtime/misa_readme_builder.cpp
         include/misaxx/core/attachments/misa_quantity_range.h
         include/misaxx/core/module_info.h
-        src/misaxx/core/module_info.cpp)
+        src/misaxx/core/module_info.cpp
+        src/misaxx/core/runtime/misa_runtime.cpp
+        include/misaxx/core/runtime/misa_runtime.h include/misaxx/core/misa_module_base.h include/misaxx/core/runtime/detail/misa_cli.h)
 
 
 # For installation

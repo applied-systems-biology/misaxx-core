@@ -8,6 +8,7 @@
 #include <misaxx/core/misa_worker.h>
 #include <misaxx/core/misa_dispatch_blueprint.h>
 #include <misaxx/core/misa_dispatcher.h>
+#include <misaxx/core/misa_module_base.h>
 
 namespace misaxx {
 
@@ -19,7 +20,7 @@ namespace misaxx {
      * @tparam ModuleDeclaration The module interface
      */
     template<class ModuleDeclaration>
-    struct misa_module : public misa_dispatcher,
+    struct misa_module : public misa_module_base,
                          public ModuleDeclaration,
                          public std::enable_shared_from_this<ModuleDeclaration> {
 
@@ -29,8 +30,12 @@ namespace misaxx {
 
         static_assert(std::is_base_of<misa_module_interface, ModuleDeclaration>::value, "misa_module only accepts module interfaces as template parameter!");
 
+        explicit misa_module(const std::shared_ptr<misa_work_node> &t_node) :
+                misa_module_base(t_node, std::shared_ptr<ModuleDeclaration>()) {
+        }
+
         explicit misa_module(const std::shared_ptr<misa_work_node> &t_node, ModuleDeclaration definition) :
-                misa_dispatcher(t_node, std::shared_ptr<ModuleDeclaration>()),
+                misa_module_base(t_node, std::shared_ptr<ModuleDeclaration>()),
                 ModuleDeclaration(std::move(definition)) {
         }
 
