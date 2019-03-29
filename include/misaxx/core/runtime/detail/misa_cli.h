@@ -16,5 +16,6 @@ namespace misaxx {
         std::shared_ptr<misa_work_node> root_node = misa_work_node::create_instance(t_name,
                                                                                     std::shared_ptr<misa_work_node>(),
                                                                                     instantiator);
+        this->set_root_node(std::move(root_node));
     }
 }
