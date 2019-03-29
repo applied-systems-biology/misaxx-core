@@ -95,6 +95,8 @@ namespace misaxx {
         }
         
         misa_filesystem &get_filesystem() {
+            if(!static_cast<bool>(m_root))
+                throw std::runtime_error("No root module set!");
             return m_root->get_or_create_instance()->get_module()->filesystem;
         }
         

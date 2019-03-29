@@ -28,7 +28,7 @@ namespace misaxx {
      * @tparam SubModule
      */
     template<class SubModule>
-    struct misa_multiobject_root : public misa_module<misa_multiobject_root_interface>,
+    struct misa_root_module : public misa_module<misa_multiobject_root_interface>,
                                    public misa_root_module_base {
 
         using misa_module<misa_multiobject_root_interface>::misa_module;

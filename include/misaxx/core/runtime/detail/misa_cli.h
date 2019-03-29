@@ -5,13 +5,17 @@
 #pragma once
 
 #include <misaxx/core/workers/misa_work_node.h>
+#include <misaxx/core/misa_root_module.h>
 
 namespace misaxx {
     template<class Module>
     void misa_cli::set_root_module(const std::string &t_name) {
+        
+        using root_module_type = misaxx::misa_root_module<Module>;
+        
         auto instantiator = [](const std::shared_ptr<misaxx::misa_work_node> &node) {
             return misaxx::misa_work_node::instance_ptr_type(
-                    new Module(node));
+                    new root_module_type(node));
         };
         std::shared_ptr<misa_work_node> root_node = misa_work_node::create_instance(t_name,
                                                                                     std::shared_ptr<misa_work_node>(),
