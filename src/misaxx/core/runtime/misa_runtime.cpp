@@ -86,6 +86,8 @@ namespace misaxx {
          */
         std::shared_ptr<misa_json_schema_property> m_parameter_schema_builder;
 
+        misa_runtime_impl();
+
         void run();
 
         bool is_running() {
@@ -122,6 +124,10 @@ namespace misaxx {
 
         void postprocess_parameter_schema();
     };
+
+    misa_runtime_impl::misa_runtime_impl() : m_parameter_schema_builder(std::make_shared<misa_json_schema_property>()) {
+
+    }
 
     void misa_runtime_impl::run() {
         misaxx::utils::manual_stopwatch stopwatch("Runtime");
@@ -645,6 +651,8 @@ namespace misaxx {
                 .document_description("If enabled, only non-empty attachment files will be written")
                 .declare_optional(true);
     }
+
+
 }
 
 namespace {
@@ -683,6 +691,8 @@ namespace {
 ///////////////////////////////////////////////////////////////////////
 // Runtime interface
 ///////////////////////////////////////////////////////////////////////
+
+misa_runtime * misaxx::misa_runtime::m_singleton = nullptr;
 
 misaxx::misa_runtime::misa_runtime() : m_pimpl(new misa_runtime_impl()) {
     // The current runtime is now
@@ -847,6 +857,10 @@ void misa_runtime::set_root_node(std::shared_ptr<misa_work_node> root) {
 void misaxx::misa_runtime::prepare_and_run() {
     load_filesystem(*m_pimpl);
     m_pimpl->run();
+}
+
+misa_runtime &misa_runtime::instance() {
+    return *m_singleton;
 }
 
 

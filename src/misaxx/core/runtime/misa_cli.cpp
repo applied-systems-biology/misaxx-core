@@ -105,8 +105,11 @@ misa_cli::cli_result misa_cli::load_from_cli(const int argc, const char **argv) 
 //        }
 //    }
     if(vm.count("parameters")) {
-        std::cout << "<#> <#> Loading parameters from " << vm["parameters"].as<std::string>() << "\n";
-        std::ifstream in(vm["parameters"].as<std::string>());
+        std::string filename = vm["parameters"].as<std::string>();
+        std::cout << "<#> <#> Loading parameters from " << filename << "\n";
+        if(!boost::filesystem::exists(filename))
+            throw std::runtime_error("The file " + filename + " does not exist!");
+        std::ifstream in { filename };
         nlohmann::json j;
         in >> j;
         this->set_parameter_json(std::move(j));
