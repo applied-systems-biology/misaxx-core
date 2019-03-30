@@ -221,3 +221,21 @@ size_t misa_filesystem_entry::get_depth() const {
         return 0;
     }
 }
+
+std::vector<filesystem::entry> misa_filesystem_entry::traverse() {
+    std::vector<filesystem::entry> result;
+    std::stack<filesystem::entry> stack;
+    stack.push(self());
+
+    while(!stack.empty()) {
+        auto top = stack.top();
+        stack.pop();
+        result.push_back(top);
+
+        for(const auto &kv : *top) {
+            stack.push(kv.second);
+        }
+    }
+
+    return result;
+}

@@ -627,6 +627,15 @@ namespace misaxx {
     }
 
     void misa_runtime_impl::postprocess_parameter_schema() {
+
+//        // DEBUG: Filesystem structure
+//        for(const auto &entry : get_filesystem().imported->traverse()) {
+//            std::cout << "IMPORTED: " << entry->internal_path() << std::endl;
+//        }
+//        for(const auto &entry : get_filesystem().exported->traverse()) {
+//            std::cout << "EXPORTED: " << entry->internal_path() << std::endl;
+//        }
+
         // Save filesystem to parameter schema
         get_filesystem().to_json_schema(*(m_parameter_schema_builder->resolve("filesystem")->resolve("json-data")));
         (*m_parameter_schema_builder)["filesystem"]["source"].define<std::string>("json");

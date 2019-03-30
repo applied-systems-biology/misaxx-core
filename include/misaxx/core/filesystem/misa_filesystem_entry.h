@@ -182,6 +182,12 @@ namespace misaxx {
          */
         size_t get_depth() const;
 
+        /**
+         * Traverses the entry
+         * @return
+         */
+        std::vector<filesystem::entry> traverse();
+
     protected:
 
         void build_serialization_id_hierarchy(std::vector<misa_serialization_id> &result) const override;

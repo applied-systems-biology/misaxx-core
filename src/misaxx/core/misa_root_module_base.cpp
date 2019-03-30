@@ -17,6 +17,11 @@ void misaxx::misa_root_module_base::create_blueprints(misaxx::misa_dispatcher::b
         const nlohmann::json &object_json = misaxx::parameter_registry::get_parameter_json()["samples"];
         for (nlohmann::json::const_iterator it = object_json.begin(); it != object_json.end(); ++it) {
             const std::string &name = it.key();
+
+            if(name == "__OBJECT__") {
+                throw std::runtime_error("The sample name '__OBJECT__' is reserved for internal usage.");
+            }
+
             filesystem::entry e = filesystem.imported->access(name);
             if (e->has_external_path()) {
                 if (boost::filesystem::is_directory(e->external_path())) {
