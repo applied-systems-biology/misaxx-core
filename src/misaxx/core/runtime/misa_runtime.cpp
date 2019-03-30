@@ -222,11 +222,9 @@ namespace misaxx {
             m_finished_nodes_count = 0;
             m_tree_complete = false;
 
-            // To be safe, set the filesystem to something empty
+            // Set output paths
             const auto runtime_log_output_path =  get_filesystem().exported->external_path() / "runtime-log.json";
             const auto output_path =  get_filesystem().exported->external_path() / "parameter-schema.json";
-            misa_filesystem_empty_importer importer;
-            get_filesystem() = importer.import();
 
             // Push the schema root into the tree
             m_nodes_todo.push_back(m_schema_root.get());
