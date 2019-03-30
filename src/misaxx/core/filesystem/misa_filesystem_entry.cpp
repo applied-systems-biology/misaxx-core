@@ -82,7 +82,7 @@ void misa_filesystem_entry::ensure_external_path_exists() const {
         boost::filesystem::create_directories(external_path());
 }
 
-filesystem::entry misa_filesystem_entry::access(boost::filesystem::path t_segment) {
+filesystem::entry misa_filesystem_entry::resolve(boost::filesystem::path t_segment) {
     t_segment.remove_trailing_separator();
     if (t_segment.empty())
         return self();
@@ -238,4 +238,13 @@ std::vector<filesystem::entry> misa_filesystem_entry::traverse() {
     }
 
     return result;
+}
+
+bool misa_filesystem_entry::remove(const std::string &t_name) {
+    auto it = children.find(t_name);
+    if(it != children.end()) {
+        children.erase(it);
+        return true;
+    }
+    return false;
 }

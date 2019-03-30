@@ -10,8 +10,8 @@ misa_filesystem misa_filesystem::create_subsystem(const std::string &t_name) {
     if(!is_valid())
         throw std::runtime_error("Cannot create sub-filesystem from invalid filesystem!");
     misa_filesystem result;
-    result.imported = imported->access(t_name);
-    result.exported = exported->access(t_name);
+    result.imported = imported->resolve(t_name);
+    result.exported = exported->resolve(t_name);
     return result;
 }
 

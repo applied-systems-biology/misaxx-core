@@ -22,7 +22,7 @@ void misaxx::misa_root_module_base::create_blueprints(misaxx::misa_dispatcher::b
                 throw std::runtime_error("The sample name '__OBJECT__' is reserved for internal usage.");
             }
 
-            filesystem::entry e = filesystem.imported->access(name);
+            filesystem::entry e = filesystem.imported->resolve(name);
             if (e->has_external_path()) {
                 if (boost::filesystem::is_directory(e->external_path())) {
                     std::cout << "[multiobject_root] Found object " << name << ". External path "

@@ -115,6 +115,13 @@ namespace misaxx {
          */
         filesystem::entry insert(filesystem::entry ptr);
 
+        /**
+         * Removes an entry with given name
+         * @param name
+         * @return
+         */
+        bool remove(const std::string &t_name);
+
         iterator begin();
 
         const_iterator begin() const;
@@ -145,7 +152,7 @@ namespace misaxx {
          * @param t_segment
          * @return
          */
-        filesystem::entry access(boost::filesystem::path t_segment);
+        filesystem::entry resolve(boost::filesystem::path t_segment);
 
         /**
          * Accesses (which includes creating an entry if necessary)

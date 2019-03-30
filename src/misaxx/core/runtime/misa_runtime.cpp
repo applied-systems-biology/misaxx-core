@@ -21,6 +21,38 @@ using namespace misaxx;
 // Runtime PIMPL
 ///////////////////////////////////////////////////////////////////////
 
+namespace {
+    /**
+     * Removes all children that are not "__OBJECT__" and ensures that "__OBJECT__" is present
+     * @param entry
+     */
+    void prepare_make_filesystem_template(misaxx::filesystem::entry &entry) {
+        std::vector<std::string> names;
+        for(const auto &kv : *entry) {
+            names.push_back(kv.first);
+        }
+        for(const auto &name : names) {
+            if(name != "__OBJECT__") {
+                entry->remove(name);
+            }
+        }
+        entry->resolve({"__OBJECT__"});
+    }
+
+    void prepare_make_schema_template(misa_json_schema_property &property) {
+        std::vector<std::string> names;
+        for(const auto &kv : property.properties) {
+            names.push_back(kv.first);
+        }
+        for(const auto &name : names) {
+            if (name != "__OBJECT__") {
+                property.properties.erase(name);
+            }
+        }
+        property.resolve("__OBJECT__");
+    }
+}
+
 namespace misaxx {
     struct misa_runtime_impl {
     public:
@@ -637,19 +669,21 @@ namespace misaxx {
 //        }
 
         // Save filesystem to parameter schema
+        prepare_make_filesystem_template(get_filesystem().imported);
+        prepare_make_filesystem_template(get_filesystem().exported);
         get_filesystem().to_json_schema(*(m_parameter_schema_builder->resolve("filesystem")->resolve("json-data")));
         (*m_parameter_schema_builder)["filesystem"]["source"].define<std::string>("json");
 
         // Workaround: Due to inflexibility with schema generation, manually put "__OBJECT__" nodes into list builders
         // /properties/algorithm -> nothing to do
         // /properties/objects/properties/__OBJECT__ -> /properties/objects/additionalProperties
-        (*m_parameter_schema_builder)["samples"]["__OBJECT__"]; // Needed if there are no sample parameters
+        prepare_make_schema_template( (*m_parameter_schema_builder)["samples"]);
         (*m_parameter_schema_builder)["samples"].make_template();
 
         // /properties/runtime::filesystem/properties/json-data/properties/imported/properties/children/properties/__OBJECT__ -> /properties/runtime::filesystem/properties/json-data/properties/imported/properties/children/additionalProperties
-        (*m_parameter_schema_builder)["filesystem"]["json-data"]["imported"]["children"]["__OBJECT__"];
+        prepare_make_schema_template((*m_parameter_schema_builder)["filesystem"]["json-data"]["imported"]["children"]);
         (*m_parameter_schema_builder)["filesystem"]["json-data"]["imported"]["children"].make_template();
-        (*m_parameter_schema_builder)["filesystem"]["json-data"]["exported"]["children"]["__OBJECT__"];
+        prepare_make_schema_template((*m_parameter_schema_builder)["filesystem"]["json-data"]["exported"]["children"]);
         (*m_parameter_schema_builder)["filesystem"]["json-data"]["exported"]["children"].make_template();
 
         // Write runtime parameters

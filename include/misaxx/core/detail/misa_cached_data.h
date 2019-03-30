@@ -133,7 +133,7 @@ namespace misaxx {
 //                if (t_filesystem.exported->has_subpath(t_path))
 //                    throw std::runtime_error(
 //                            "Suggested export location exported/" + t_path.string() + " is already used!");
-            suggest_create(t_filesystem.exported->access(t_path), t_description);
+            suggest_create(t_filesystem.exported->resolve(t_path), t_description);
         }
     }
 
