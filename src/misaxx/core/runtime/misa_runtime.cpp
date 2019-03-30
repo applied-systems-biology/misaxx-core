@@ -137,6 +137,7 @@ namespace misaxx {
         misaxx::utils::manual_stopwatch stopwatch("Runtime");
         stopwatch.start();
 
+        // Check if both schema- and main-root are existing
         if(!static_cast<bool>(m_root)) {
             throw std::runtime_error("Runtime has no root node!");
         }
@@ -144,6 +145,11 @@ namespace misaxx {
             throw std::runtime_error("Runtime has no schema root node!");
         }
 
+        // The schema root works on the same filesystem as the main root
+        // Note: misa_filesystem is a shared_ptr-like object
+        m_schema_root->get_or_create_instance()->get_module()->filesystem = get_filesystem();
+
+        // Clear separation between schema space and main space
         if(!m_is_simulating) {
             m_nodes_todo.push_back(m_root.get());
             m_nodes_todo_lookup.insert(m_root.get());
@@ -866,8 +872,8 @@ void misa_runtime::set_root_node(std::shared_ptr<misa_work_node> root) {
 void misa_runtime::set_schema_root_node(std::shared_ptr<misa_work_node> schema_root) {
     if (is_running())
         throw std::runtime_error("Cannot change runtime properties while the runtime is working!");
-    // Import an empty filesystem into the schema node
-    schema_root->get_or_create_instance()->get_module()->filesystem = misa_filesystem_empty_importer {}.import();
+    // Reset the filesystem. It will be shared with the main filesystem
+    schema_root->get_or_create_instance()->get_module()->filesystem = misa_filesystem {};
     m_pimpl->m_schema_root = std::move(schema_root);
 }
 
