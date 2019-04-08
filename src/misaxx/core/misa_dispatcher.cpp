@@ -27,7 +27,7 @@ void misa_dispatcher::build_simulation(const misa_dispatcher::blueprint_builder 
     }
 }
 
-void misa_dispatcher::execute_work() {
+void misa_dispatcher::prepare_work() {
     // We need to create the builder here when we have an already determined adress
     if(!static_cast<bool>(m_parameter_builder)) {
         this->m_parameter_builder = std::make_unique<misa_parameter_builder>(*this);
@@ -37,7 +37,9 @@ void misa_dispatcher::execute_work() {
         this->m_builder = std::make_unique<misa_dispatcher_builder>(*this);
         this->create_blueprints(*m_builder, *m_parameter_builder);
     }
+}
 
+void misa_dispatcher::execute_work() {
     if (misaxx::runtime_properties::is_simulating())
         this->build_simulation(*m_builder);
     else
@@ -72,5 +74,6 @@ const misa_parameter_builder &misa_dispatcher::get_parameters() const {
 void misa_dispatcher::create_parameters(misa_parameter_builder &) {
 
 }
+
 
 

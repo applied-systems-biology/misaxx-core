@@ -41,7 +41,14 @@ namespace misaxx {
         virtual void work() = 0;
 
         /**
-         * Called instead of work() if the runtime is in simulation modue
+         * Called by the runtime to prepare parameters
+         * Executed in main thread
+         */
+        void prepare_work() override;
+
+        /**
+         * Called instead of work() if the runtime is in simulation mode
+         * Always executed in main thread (unlike work()) due to the nature of simulation mode
          */
         virtual void simulate_work();
 

@@ -75,7 +75,12 @@ namespace misaxx {
         virtual void create_parameters(misa_parameter_builder &t_parameters) = 0;
 
         /**
-        * Runs the workload
+         * Executes preparation methods. Always run in the main thread.
+         */
+        virtual void prepare_work() = 0;
+
+        /**
+        * Runs the workload. Can be run in parallel environment.
         */
         virtual void execute_work() = 0;
 

@@ -157,7 +157,14 @@ namespace misaxx {
         virtual void build_simulation(const blueprint_builder &t_builder);
 
         /**
+         * Called by the runtime
+         * Always runs in the main thread
+         */
+        void prepare_work() override;
+
+        /**
          * Called by the runtime to execute the workload
+         * Always runs in the main thread
          */
         void execute_work() override;
 
