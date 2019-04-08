@@ -84,7 +84,7 @@ void misa_work_node_impl::skip_work() {
 void misa_work_node_impl::prepare_work() {
     if(m_status == misa_worker_status::undone || m_status == misa_worker_status::queued_repeat) {
         m_status = misa_worker_status ::working;
-        get_or_create_instance();
+        get_or_create_instance()->prepare_work();
     }
 }
 
