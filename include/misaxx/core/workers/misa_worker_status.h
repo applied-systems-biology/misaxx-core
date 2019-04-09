@@ -22,6 +22,10 @@ namespace misaxx {
          */
         undone,
         /**
+         * Worker is ready and waiting for a thread
+         */
+        ready,
+        /**
          * The task is currently working.
          */
         working,

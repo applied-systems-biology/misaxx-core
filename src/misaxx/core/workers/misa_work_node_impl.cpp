@@ -83,14 +83,15 @@ void misa_work_node_impl::skip_work() {
 
 void misa_work_node_impl::prepare_work() {
     if(m_status == misa_worker_status::undone || m_status == misa_worker_status::queued_repeat) {
-        m_status = misa_worker_status ::working;
+        m_status = misa_worker_status ::ready;
         get_or_create_instance()->prepare_work();
     }
 }
 
 void misa_work_node_impl::work() {
-    if(m_status != misa_worker_status::working)
+    if(m_status != misa_worker_status::ready)
         throw std::runtime_error("Run prepare_work() before work()!");
+    m_status = misa_worker_status ::working;
     auto instance = get_instance();
     instance->execute_work();
     if(m_status != misa_worker_status::queued_repeat) {

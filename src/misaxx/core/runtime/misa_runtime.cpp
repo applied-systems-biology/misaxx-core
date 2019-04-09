@@ -481,6 +481,7 @@ namespace misaxx {
         {
             #pragma omp master
             {
+                const int master_thread_id = omp_get_thread_num();
                 while (!m_nodes_todo.empty()) {
 
                     size_t missing_dependency = 0;
@@ -501,8 +502,9 @@ namespace misaxx {
 
                         auto subtree_before = nd->get_subtree_status();
                         if (nd->get_worker_status() == misa_worker_status::undone ||
+                            nd->get_worker_status() == misa_worker_status::ready ||
                             nd->get_worker_status() == misa_worker_status::queued_repeat) {
-//                        if (!enable_skipping || !nd->is_skippable()) {
+
                             if (!nd->is_parallelizeable()) {
                                 if (nd->get_worker_status() == misa_worker_status::queued_repeat) {
                                     progress(*nd, "Retrying single-threaded work on");
@@ -512,7 +514,8 @@ namespace misaxx {
                                 if (m_write_full_runtime_log) {
                                     m_runtime_log.start(0, misaxx::utils::to_string(*nd->get_global_path()));
                                 }
-                                nd->prepare_work();
+                                if(nd->get_worker_status() != misa_worker_status::ready)
+                                    nd->prepare_work();
                                 nd->work();
                                 if (m_write_full_runtime_log) {
                                     m_runtime_log.stop(0);
@@ -524,16 +527,25 @@ namespace misaxx {
                                     progress(*nd, "Starting parallelized work on");
                                 }
 
-                                nd->prepare_work();
-                                #pragma omp task shared(nd)
+                                if(nd->get_worker_status() != misa_worker_status::ready)
+                                    nd->prepare_work();
+                                #pragma omp task shared(nd) firstprivate(master_thread_id)
                                 {
-                                    if (m_write_full_runtime_log) {
-                                        m_runtime_log.start(omp_get_thread_num(),
-                                                            misaxx::utils::to_string(*nd->get_global_path()));
+                                    // It can happen that OpenMP assigns the task to the master thread
+                                    // This is very bad
+                                    // Reject the task and schedule it to some point later on
+                                    if(omp_get_thread_num() == master_thread_id) {
+                                        progress(*nd, "Not executing task scheduled in main thread:");
                                     }
-                                    nd->work();
-                                    if (m_write_full_runtime_log) {
-                                        m_runtime_log.stop(omp_get_thread_num());
+                                    else {
+                                        if (m_write_full_runtime_log) {
+                                            m_runtime_log.start(omp_get_thread_num(),
+                                                                misaxx::utils::to_string(*nd->get_global_path()));
+                                        }
+                                        nd->work();
+                                        if (m_write_full_runtime_log) {
+                                            m_runtime_log.stop(omp_get_thread_num());
+                                        }
                                     }
                                 }
                             }
