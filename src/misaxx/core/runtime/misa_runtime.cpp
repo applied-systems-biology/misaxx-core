@@ -406,7 +406,7 @@ namespace misaxx {
         omp_set_num_threads(this->m_num_threads);
 
         #pragma omp parallel
-        #pragma omp single
+        #pragma omp master
         while (!m_nodes_todo.empty()) {
 
             size_t missing_dependency = 0;
