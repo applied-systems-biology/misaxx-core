@@ -478,99 +478,106 @@ namespace misaxx {
         omp_set_num_threads(this->m_num_threads);
 
         #pragma omp parallel
-        #pragma omp master
-        while (!m_nodes_todo.empty()) {
+        {
+            #pragma omp master
+            {
+                while (!m_nodes_todo.empty()) {
 
-            size_t missing_dependency = 0;
-            size_t rejected = 0;
-            bool tree_complete = true;
+                    size_t missing_dependency = 0;
+                    size_t rejected = 0;
+                    bool tree_complete = true;
 
-            for (size_t i = 0; i < m_nodes_todo.size(); ++i) {
-                auto *nd = m_nodes_todo[i];
+                    for (size_t i = 0; i < m_nodes_todo.size(); ++i) {
+                        auto *nd = m_nodes_todo[i];
 
-                if (nd->get_subtree_status() != misa_work_subtree_status::complete)
-                    tree_complete = false;
+                        if (nd->get_subtree_status() != misa_work_subtree_status::complete)
+                            tree_complete = false;
 
-                // First check if we even can do work
-                if (!nd->dependencies_satisfied()) {
-                    ++missing_dependency;
-                    continue;
-                }
+                        // First check if we even can do work
+                        if (!nd->dependencies_satisfied()) {
+                            ++missing_dependency;
+                            continue;
+                        }
 
-                auto subtree_before = nd->get_subtree_status();
-                if (nd->get_worker_status() == misa_worker_status::undone ||
-                    nd->get_worker_status() == misa_worker_status::queued_repeat) {
+                        auto subtree_before = nd->get_subtree_status();
+                        if (nd->get_worker_status() == misa_worker_status::undone ||
+                            nd->get_worker_status() == misa_worker_status::queued_repeat) {
 //                        if (!enable_skipping || !nd->is_skippable()) {
-                    if (!nd->is_parallelizeable()) {
-                        if (nd->get_worker_status() == misa_worker_status::queued_repeat) {
-                            progress(*nd, "Retrying single-threaded work on");
-                        } else {
-                            progress(*nd, "Starting single-threaded work on");
-                        }
-                        if (m_write_full_runtime_log) {
-                            m_runtime_log.start(0, misaxx::utils::to_string(*nd->get_global_path()));
-                        }
-                        nd->prepare_work();
-                        nd->work();
-                        if (m_write_full_runtime_log) {
-                            m_runtime_log.stop(0);
-                        }
-                    } else {
-                        if (nd->get_worker_status() == misa_worker_status::queued_repeat) {
-                            progress(*nd, "Retrying parallelized work on");
-                        } else {
-                            progress(*nd, "Starting parallelized work on");
-                        }
+                            if (!nd->is_parallelizeable()) {
+                                if (nd->get_worker_status() == misa_worker_status::queued_repeat) {
+                                    progress(*nd, "Retrying single-threaded work on");
+                                } else {
+                                    progress(*nd, "Starting single-threaded work on");
+                                }
+                                if (m_write_full_runtime_log) {
+                                    m_runtime_log.start(0, misaxx::utils::to_string(*nd->get_global_path()));
+                                }
+                                nd->prepare_work();
+                                nd->work();
+                                if (m_write_full_runtime_log) {
+                                    m_runtime_log.stop(0);
+                                }
+                            } else {
+                                if (nd->get_worker_status() == misa_worker_status::queued_repeat) {
+                                    progress(*nd, "Retrying parallelized work on");
+                                } else {
+                                    progress(*nd, "Starting parallelized work on");
+                                }
 
-                        nd->prepare_work();
-                        #pragma omp task shared(nd)
-                        {
-                            if (m_write_full_runtime_log) {
-                                m_runtime_log.start(omp_get_thread_num(), misaxx::utils::to_string(*nd->get_global_path()));
+                                nd->prepare_work();
+                                #pragma omp task shared(nd)
+                                {
+                                    if (m_write_full_runtime_log) {
+                                        m_runtime_log.start(omp_get_thread_num(),
+                                                            misaxx::utils::to_string(*nd->get_global_path()));
+                                    }
+                                    nd->work();
+                                    if (m_write_full_runtime_log) {
+                                        m_runtime_log.stop(omp_get_thread_num());
+                                    }
+                                }
                             }
-                            nd->work();
-                            if (m_write_full_runtime_log) {
-                                m_runtime_log.stop(omp_get_thread_num());
+                        }
+                        if (nd->get_worker_status() == misa_worker_status::queued_repeat) {
+                            // If the work was rejected, don't do any additional steps afterwards
+                            ++rejected;
+                            continue;
+                        }
+                        if (subtree_before == misa_work_subtree_status::incomplete) {
+                            // Look for new nodes to visit
+                            for (auto &child : nd->get_children()) {
+                                if (child->get_worker_status() == misa_worker_status::undone &&
+                                    m_nodes_todo_lookup.find(child.get()) == m_nodes_todo_lookup.end()) {
+                                    m_nodes_todo_lookup.insert(child.get());
+                                    m_nodes_todo.push_back(child.get());
+                                    ++m_known_nodes_count;
+                                }
                             }
+                        }
+                        if (nd->get_worker_status() == misa_worker_status::done &&
+                            nd->get_subtree_status() == misa_work_subtree_status::complete) {
+                            // Use quick-delete to remove the completed node
+                            std::swap(m_nodes_todo[i], m_nodes_todo[m_nodes_todo.size() - 1]);
+                            m_nodes_todo.resize(m_nodes_todo.size() - 1);
+                            --i;
+                            ++m_finished_nodes_count;
+                            progress(*nd, "Work finished on");
                         }
                     }
-                }
-                if (nd->get_worker_status() == misa_worker_status::queued_repeat) {
-                    // If the work was rejected, don't do any additional steps afterwards
-                    ++rejected;
-                    continue;
-                }
-                if (subtree_before == misa_work_subtree_status::incomplete) {
-                    // Look for new nodes to visit
-                    for (auto &child : nd->get_children()) {
-                        if (child->get_worker_status() == misa_worker_status::undone &&
-                            m_nodes_todo_lookup.find(child.get()) == m_nodes_todo_lookup.end()) {
-                            m_nodes_todo_lookup.insert(child.get());
-                            m_nodes_todo.push_back(child.get());
-                            ++m_known_nodes_count;
-                        }
+
+                    m_tree_complete |= tree_complete;
+
+                    if (missing_dependency > 0 && missing_dependency != m_last_waiting_announcement) {
+                        progress("Info: " + std::to_string(missing_dependency) +
+                                 " workers are waiting for dependencies");
+                        m_last_waiting_announcement = missing_dependency;
+                    }
+                    if (rejected > 0 && rejected != m_last_rejecting_announcement) {
+                        progress("Info: " + std::to_string(rejected) + " workers are rejecting to work");
+                        m_last_rejecting_announcement = rejected;
                     }
                 }
-                if (nd->get_worker_status() == misa_worker_status::done &&
-                    nd->get_subtree_status() == misa_work_subtree_status::complete) {
-                    // Use quick-delete to remove the completed node
-                    std::swap(m_nodes_todo[i], m_nodes_todo[m_nodes_todo.size() - 1]);
-                    m_nodes_todo.resize(m_nodes_todo.size() - 1);
-                    --i;
-                    ++m_finished_nodes_count;
-                    progress(*nd, "Work finished on");
-                }
-            }
-
-            m_tree_complete |= tree_complete;
-
-            if (missing_dependency > 0 && missing_dependency != m_last_waiting_announcement) {
-                progress("Info: " + std::to_string(missing_dependency) + " workers are waiting for dependencies");
-                m_last_waiting_announcement = missing_dependency;
-            }
-            if (rejected > 0 && rejected != m_last_rejecting_announcement) {
-                progress("Info: " + std::to_string(rejected) + " workers are rejecting to work");
-                m_last_rejecting_announcement = rejected;
+                progress("Runtime dispatcher thread ended");
             }
         }
     }
