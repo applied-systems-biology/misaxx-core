@@ -322,7 +322,7 @@ namespace misaxx {
             std::cout << "<#>";
         }
         std::cout << " " << "<" << m_finished_nodes_count << " / " << m_known_nodes_count << ">";
-        std::cout << "\t" << t_text << " " << *t_node.get_global_path();
+        std::cout << "\t" << t_text << " " << *t_node.get_global_path() << " @ " << static_cast<const void*>(&t_node);
         std::cout << "\n";
     }
 
