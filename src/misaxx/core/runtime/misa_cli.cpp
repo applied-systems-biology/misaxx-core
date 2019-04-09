@@ -53,7 +53,8 @@ misa_cli::cli_result misa_cli::load_from_cli(const int argc, const char **argv) 
             ("skip", "Requests that already existing results should be used instead of re-calculating them")
             ("write-parameter-schema", po::value<std::string>(), "Writes a parameter schema to the target file")
             ("write-readme", po::value<std::string>(), "Writes a README file to the target file")
-            ("full-runtime-log", "Writes a comprehensive log containing the runtimes of each tasks into the output directory");
+            ("full-runtime-log", "Writes a comprehensive log containing the runtimes of each tasks into the output directory")
+            ("write-worker-graph", "Writes the DAG of workers a misa-workers.dot into the output directory");
 
     po::command_line_parser parser(argc, argv);
     parser.options(general_options);
@@ -92,6 +93,9 @@ misa_cli::cli_result misa_cli::load_from_cli(const int argc, const char **argv) 
         m_pimpl->m_readme_path = vm["write-readme"].as<std::string>();
         if(!m_pimpl->m_readme_path.parent_path().empty())
             boost::filesystem::create_directories(m_pimpl->m_readme_path.parent_path());
+    }
+    if(vm.count("write-worker-graph")) {
+        this->set_create_worker_graph(true);
     }
     if(vm.count("skip")) {
         if(!this->is_simulating()) {
@@ -139,6 +143,11 @@ misa_cli::cli_result misa_cli::load_from_cli(const int argc, const char **argv) 
         auto schema = misaxx::parameter_registry::register_parameter({ "runtime", "request-skipping" });
         schema->declare_optional<bool>(false);
         this->set_request_skipping(misaxx::parameter_registry:: template get_json<bool>({ "runtime", "request-skipping" }));
+    }
+    if(!vm.count("write-worker-graph") && !this->is_creating_worker_graph()) {
+        auto schema = misaxx::parameter_registry::register_parameter({ "runtime", "write-worker-graph" });
+        schema->declare_optional<bool>(false);
+        this->set_create_worker_graph(misaxx::parameter_registry:: template get_json<bool>({ "runtime", "write-worker-graph" }));
     }
     if(!this->is_simulating()) {
         if(vm.count("full-runtime-log")) {

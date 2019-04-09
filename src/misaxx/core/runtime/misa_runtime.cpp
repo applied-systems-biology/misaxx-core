@@ -22,6 +22,7 @@
 #include <misaxx/core/utils/string.h>
 #include <misaxx/core/misa_cached_data.h>
 #include <misaxx/core/misa_worker.h>
+#include <misaxx/core/misa_dispatcher.h>
 
 using namespace misaxx;
 
@@ -58,6 +59,68 @@ namespace {
             }
         }
         property.resolve("__OBJECT__");
+    }
+
+    void write_workers_as_graph(const std::shared_ptr<const misa_work_node> &root, const boost::filesystem::path &path) {
+        std::unordered_map<const misa_work_node*, std::string> labels;
+        std::stack<const misa_work_node*> stack;
+        stack.push(root.get());
+
+        std::ofstream sw;
+        sw.open(path.string());
+        sw << "digraph workers {\n";
+
+        // Declare all nodes
+        while(!stack.empty()) {
+            const misa_work_node* top = stack.top();
+            stack.pop();
+
+            auto it = labels.find(top);
+            if(it == labels.end()) {
+                if(dynamic_cast<const misaxx::misa_dispatcher*>(top->get_instance().get()) != nullptr) {
+                    std::string name = top->get_name();
+                    boost::replace_all(name, "\"", "\\\"");
+                    std::string label = "D" + std::to_string(labels.size());
+
+                    // Write full description
+                    sw << label <<  "[label=\"" << name << "\", shape=folder];" << "\n";
+
+                    labels[top] = label;
+                }
+                else {
+                    std::string name = top->get_name();
+                    boost::replace_all(name, "\"", "\\\"");
+                    std::string label = "T" + std::to_string(labels.size());
+
+                    // Write full description
+                    sw << label <<  "[label=\"" << name << "\", shape=box];" << "\n";
+
+                    labels[top] = label;
+                }
+            }
+
+            for(const auto &ptr : top->get_children()) {
+                stack.push(ptr.get());
+            }
+        }
+
+        // Add dependencies
+        stack.push(root.get());
+        while(!stack.empty()) {
+            const misa_work_node *top = stack.top();
+            stack.pop();
+
+            for(const auto &ptr : top->get_dependencies()) {
+                sw << labels.at(ptr.get()) << " -> " << labels.at(top) << " [style=dashed]" << ";\n";
+            }
+
+            for(const auto &ptr : top->get_children()) {
+                stack.push(ptr.get());
+                sw << labels.at(ptr.get()) << " -> " << labels.at(top) << ";\n";
+            }
+        }
+
+        sw << "}\n";
     }
 }
 
@@ -112,6 +175,11 @@ namespace misaxx {
          * If true, log the start and stop times of each worker
          */
         bool m_write_full_runtime_log = false;
+
+        /**
+         * If true, create a *.dot graph of the workers
+         */
+        bool m_create_worker_graph = false;
 
         /**
          * Runtime log
@@ -247,6 +315,10 @@ namespace misaxx {
             writer.open(module_info_path.string());
             writer << std::setw(4) << nlohmann::json(m_module_info);
             writer.close();
+        }
+        if(m_create_worker_graph) {
+            std::cout << "<#> <#> Writing worker graph as DOT file ... " << "\n";
+            write_workers_as_graph(m_root, get_filesystem().exported->external_path() / "misa-workers.dot");
         }
         if (!m_is_simulating) {
             std::cout << "<#> <#> Building parameter schema for results folder ... " << "\n";
@@ -701,6 +773,9 @@ namespace misaxx {
         (*m_parameter_schema_builder)["runtime"]["request-skipping"].document_title("Skip existing results")
                 .document_description("Informs algorithms that existing results should not be overwritten")
                 .declare_optional<bool>(false);
+        (*m_parameter_schema_builder)["runtime"]["write-worker-graph"].document_title("Export workers as graph")
+                .document_description("Creates a file 'misa-workers.dot' that shows the DAG of workers")
+                .declare_optional<bool>(false);
         (*m_parameter_schema_builder)["runtime"]["full-runtime-log"].document_title("Full runtime log")
                 .document_description("If enabled, the runtime log will contain all individual workers")
                 .declare_optional(false);
@@ -790,6 +865,10 @@ bool misaxx::misa_runtime::is_lazily_writing_attachments() const {
 
 bool misa_runtime::is_creating_full_runtime_log() const {
     return m_pimpl->m_write_full_runtime_log;
+}
+
+bool misa_runtime::is_creating_worker_graph() const {
+    return m_pimpl->m_create_worker_graph;
 }
 
 std::shared_ptr<misa_json_schema_property> misa_runtime::get_schema_builder() {
@@ -886,6 +965,12 @@ void misa_runtime::set_request_skipping(bool value) {
     m_pimpl->m_requests_skipping = value;
 }
 
+void misa_runtime::set_create_worker_graph(bool value) {
+    if (is_running())
+        throw std::runtime_error("Cannot change runtime properties while the runtime is working!");
+    m_pimpl->m_create_worker_graph = value;
+}
+
 void misa_runtime::set_parameter_json(nlohmann::json t_json) {
     if (is_running())
         throw std::runtime_error("Cannot change runtime properties while the runtime is working!");
@@ -934,6 +1019,12 @@ void misaxx::misa_runtime::prepare_and_run() {
 misa_runtime &misa_runtime::instance() {
     return *m_singleton;
 }
+
+
+
+
+
+
 
 
 

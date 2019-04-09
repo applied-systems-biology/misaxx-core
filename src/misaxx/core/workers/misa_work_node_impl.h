@@ -132,6 +132,12 @@ namespace misaxx {
         std::unordered_set<std::shared_ptr<misa_work_node>> &get_dependencies() override;
 
         /**
+        * Returns the list of dependencies this node has
+        * @return
+        */
+        const std::unordered_set<std::shared_ptr<misa_work_node>> &get_dependencies() const override;
+
+        /**
          * Returns true if all dependencies are satisfied
          * @return
          */

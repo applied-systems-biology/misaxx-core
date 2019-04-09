@@ -83,6 +83,12 @@ namespace misaxx {
         bool requests_skipping() const;
 
         /**
+         * Returns true if the runtime will create a worker graph
+         * @return
+         */
+        bool is_creating_worker_graph() const;
+
+        /**
          * Registers a cache into this runtime (e.g. used for attachment export)
          * @param t_cache
          */
@@ -187,6 +193,12 @@ namespace misaxx {
          * @param value
          */
         void set_request_skipping(bool value);
+
+        /**
+         * Enables/disables creation of a worker graph
+         * @param value
+         */
+        void set_create_worker_graph(bool value);
 
         /**
          * Sets the parameter JSON

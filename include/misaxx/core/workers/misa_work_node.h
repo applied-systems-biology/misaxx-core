@@ -158,6 +158,12 @@ namespace misaxx {
         virtual std::unordered_set<std::shared_ptr<misa_work_node>> &get_dependencies() = 0;
 
         /**
+        * Returns the list of dependencies this node has
+        * @return
+        */
+        virtual const std::unordered_set<std::shared_ptr<misa_work_node>> &get_dependencies() const = 0;
+
+        /**
          * Returns true if all dependencies are satisfied
          * @return
          */

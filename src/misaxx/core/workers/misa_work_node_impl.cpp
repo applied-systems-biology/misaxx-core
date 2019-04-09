@@ -169,4 +169,8 @@ std::shared_ptr<misa_worker> misa_work_node_impl::get_instance() const {
     return m_instance;
 }
 
+const std::unordered_set<std::shared_ptr<misa_work_node>> &misa_work_node_impl::get_dependencies() const {
+    return m_dependencies;
+}
+
 
