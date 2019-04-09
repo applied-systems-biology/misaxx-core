@@ -481,6 +481,7 @@ namespace misaxx {
         {
             #pragma omp master
             {
+                progress("Runtime dispatcher started in thread " + std::to_string(omp_get_thread_num()));
                 const int master_thread_id = omp_get_thread_num();
                 while (!m_nodes_todo.empty()) {
 
@@ -502,7 +503,6 @@ namespace misaxx {
 
                         auto subtree_before = nd->get_subtree_status();
                         if (nd->get_worker_status() == misa_worker_status::undone ||
-                            nd->get_worker_status() == misa_worker_status::ready ||
                             nd->get_worker_status() == misa_worker_status::queued_repeat) {
 
                             if (!nd->is_parallelizeable()) {
@@ -529,13 +529,11 @@ namespace misaxx {
 
                                 if(nd->get_worker_status() != misa_worker_status::ready)
                                     nd->prepare_work();
-                                #pragma omp task shared(nd) firstprivate(master_thread_id)
+                                #pragma omp task firstprivate(nd) firstprivate(master_thread_id)
                                 {
-                                    // It can happen that OpenMP assigns the task to the master thread
-                                    // This is very bad
-                                    // Reject the task and schedule it to some point later on
                                     if(omp_get_thread_num() == master_thread_id) {
-                                        progress(*nd, "Not executing task scheduled in main thread:");
+                                        progress(*nd, "Rejecting task due to allocation in master thread: ");
+                                        nd->repeat_work();
                                     }
                                     else {
                                         if (m_write_full_runtime_log) {

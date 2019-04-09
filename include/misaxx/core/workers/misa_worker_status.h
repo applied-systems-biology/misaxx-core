@@ -20,28 +20,28 @@ namespace misaxx {
         /**
          * Work is not done
          */
-        undone,
+        undone = 0,
         /**
          * Worker is ready and waiting for a thread
          */
-        ready,
+        ready = 1,
         /**
          * The task is currently working.
          */
-        working,
+        working = 2,
         /**
          * The work is done
          */
-        done,
+        done = 3,
         /**
          * The worker rejected the work (e.g. via worker::input<>::exists).
          * Work must be retried later
          */
-        queued_repeat,
+        queued_repeat = 4,
         /**
          * The worker is waiting for sub-workers
          */
-        waiting
+        waiting = 5
     };
 
 }

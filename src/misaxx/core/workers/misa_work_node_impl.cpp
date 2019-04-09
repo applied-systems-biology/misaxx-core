@@ -86,11 +86,14 @@ void misa_work_node_impl::prepare_work() {
         m_status = misa_worker_status ::ready;
         get_or_create_instance()->prepare_work();
     }
+    else {
+        throw std::logic_error("Called prepare_work on invalid work node!");
+    }
 }
 
 void misa_work_node_impl::work() {
     if(m_status != misa_worker_status::ready)
-        throw std::runtime_error("Run prepare_work() before work()!");
+        throw std::runtime_error("Run prepare_work() before work()! Current status is " + std::to_string(static_cast<int>(m_status.load())));
     m_status = misa_worker_status ::working;
     auto instance = get_instance();
     instance->execute_work();
