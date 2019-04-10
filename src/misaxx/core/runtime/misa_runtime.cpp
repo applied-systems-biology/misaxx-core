@@ -531,15 +531,14 @@ namespace misaxx {
                                     progress(*nd, "Starting parallelized work on");
                                 }
 
-                                // Prepare work if not ready or in nothread mode
-                                if(nd->get_worker_status() != misa_worker_status::ready &&
-                                   nd->get_worker_status() != misa_worker_status::nothread) {
-                                    nd->prepare_work();
-                                }
-
                                 // Wake the worker up
                                 if(nd->get_worker_status() == misa_worker_status::nothread) {
                                     nd->set_nothread(false);
+                                }
+
+                                // Prepare work if not ready or in nothread mode
+                                if(nd->get_worker_status() != misa_worker_status::ready) {
+                                    nd->prepare_work();
                                 }
 
                                 #pragma omp task firstprivate(nd) firstprivate(master_thread_id)

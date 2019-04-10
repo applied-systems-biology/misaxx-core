@@ -186,7 +186,7 @@ void misa_work_node_impl::set_nothread(bool value) {
     else {
         if(m_status != misa_worker_status::nothread)
             throw std::logic_error("set_nothread(false) called on work node that is not nothread");
-        m_status = misa_worker_status ::nothread;
+        m_status = misa_worker_status ::ready;
     }
 }
 
