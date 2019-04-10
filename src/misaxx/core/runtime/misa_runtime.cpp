@@ -531,6 +531,11 @@ namespace misaxx {
                                     case misa_worker_status::queued_repeat:
                                         progress(*nd, "Retrying parallelized work on");
                                         break;
+                                    case misa_worker_status::undone:
+                                    case misa_worker_status::ready:
+                                    case misa_worker_status::working:
+                                    case misa_worker_status::done:
+                                    case misa_worker_status::waiting:
                                     default:
                                         progress(*nd, "Starting parallelized work on");
                                 }
