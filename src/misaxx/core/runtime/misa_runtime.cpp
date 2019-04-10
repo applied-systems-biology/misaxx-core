@@ -525,10 +525,14 @@ namespace misaxx {
                                     m_runtime_log.stop(0);
                                 }
                             } else {
-                                if (nd->get_worker_status() == misa_worker_status::queued_repeat) {
-                                    progress(*nd, "Retrying parallelized work on");
-                                } else {
-                                    progress(*nd, "Starting parallelized work on");
+                                switch(nd->get_worker_status()) {
+                                    case misa_worker_status ::nothread:
+                                        break;
+                                    case misa_worker_status::queued_repeat:
+                                        progress(*nd, "Retrying parallelized work on");
+                                        break;
+                                    default:
+                                        progress(*nd, "Starting parallelized work on");
                                 }
 
                                 // Wake the worker up
