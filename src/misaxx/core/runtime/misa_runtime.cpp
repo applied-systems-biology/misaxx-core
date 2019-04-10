@@ -503,6 +503,7 @@ namespace misaxx {
 
                         auto subtree_before = nd->get_subtree_status();
                         if (nd->get_worker_status() == misa_worker_status::undone ||
+                            nd->get_worker_status() == misa_worker_status ::nothread ||
                             nd->get_worker_status() == misa_worker_status::queued_repeat) {
 
                             if (!nd->is_parallelizeable()) {
@@ -514,8 +515,11 @@ namespace misaxx {
                                 if (m_write_full_runtime_log) {
                                     m_runtime_log.start(0, misaxx::utils::to_string(*nd->get_global_path()));
                                 }
-                                if(nd->get_worker_status() != misa_worker_status::ready)
+                                if(nd->get_worker_status() != misa_worker_status::ready &&
+                                    nd->get_worker_status() != misa_worker_status::nothread) {
                                     nd->prepare_work();
+                                }
+
                                 nd->work();
                                 if (m_write_full_runtime_log) {
                                     m_runtime_log.stop(0);
@@ -527,13 +531,21 @@ namespace misaxx {
                                     progress(*nd, "Starting parallelized work on");
                                 }
 
-                                if(nd->get_worker_status() != misa_worker_status::ready)
+                                // Prepare work if not ready or in nothread mode
+                                if(nd->get_worker_status() != misa_worker_status::ready &&
+                                   nd->get_worker_status() != misa_worker_status::nothread) {
                                     nd->prepare_work();
+                                }
+
+                                // Wake the worker up
+                                if(nd->get_worker_status() == misa_worker_status::nothread) {
+                                    nd->set_nothread(false);
+                                }
+
                                 #pragma omp task firstprivate(nd) firstprivate(master_thread_id)
                                 {
                                     if(omp_get_thread_num() == master_thread_id) {
-                                        progress(*nd, "Rejecting task due to allocation in master thread: ");
-                                        nd->repeat_work();
+                                        nd->set_nothread(true);
                                     }
                                     else {
                                         if (m_write_full_runtime_log) {

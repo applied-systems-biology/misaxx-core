@@ -101,6 +101,11 @@ namespace misaxx {
         virtual void repeat_work() = 0;
 
         /**
+         * Moves a ready work node into the status "nothread"
+         */
+        virtual void set_nothread(bool value) = 0;
+
+        /**
          * Allows the runtime to skip the work (will be set to done)
          */
         virtual void skip_work() = 0;

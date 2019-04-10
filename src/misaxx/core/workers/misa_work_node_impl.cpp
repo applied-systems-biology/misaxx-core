@@ -177,4 +177,17 @@ const std::unordered_set<std::shared_ptr<misa_work_node>> &misa_work_node_impl::
     return m_dependencies;
 }
 
+void misa_work_node_impl::set_nothread(bool value) {
+    if(value) {
+        if(m_status != misa_worker_status::ready)
+            throw std::logic_error("set_nothread(true) called on work node that is not ready");
+        m_status = misa_worker_status ::nothread;
+    }
+    else {
+        if(m_status != misa_worker_status::nothread)
+            throw std::logic_error("set_nothread(false) called on work node that is not nothread");
+        m_status = misa_worker_status ::nothread;
+    }
+}
+
 

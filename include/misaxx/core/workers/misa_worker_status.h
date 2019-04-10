@@ -26,22 +26,26 @@ namespace misaxx {
          */
         ready = 1,
         /**
+         * Worker is ready, but does not find a thread
+         */
+        nothread = 3,
+        /**
          * The task is currently working.
          */
-        working = 2,
+        working = 4,
         /**
          * The work is done
          */
-        done = 3,
+        done = 5,
         /**
          * The worker rejected the work (e.g. via worker::input<>::exists).
          * Work must be retried later
          */
-        queued_repeat = 4,
+        queued_repeat = 6,
         /**
          * The worker is waiting for sub-workers
          */
-        waiting = 5
+        waiting = 7
     };
 
 }

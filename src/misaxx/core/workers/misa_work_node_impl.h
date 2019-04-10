@@ -93,6 +93,8 @@ namespace misaxx {
          */
         void work() override;
 
+        void set_nothread(bool value) override;
+
         /**
          * Returns a pointer to the instance. If necessary, create the instance
          * @return
