@@ -40,6 +40,32 @@ namespace misaxx {
         virtual std::shared_ptr<misa_cache> get_cache_base() const = 0;
 
         /**
+        * Thread-safe read-only access to the attachments.
+        * @return
+        */
+        readonly_access <attachment_type> access_attachments_readonly() const {
+            return readonly_access<attachment_type>(get_cache_base()->attachments);
+        }
+
+        /**
+        * Thread-safe read & write access to the attachments.
+        * Other threads are blocked from access.
+        * @return
+        */
+        readwrite_access <attachment_type> access_attachments_readwrite() {
+            return readwrite_access<attachment_type>(get_cache_base()->attachments);
+        }
+
+        /**
+         * Thread-safe write-only access to the attachments.
+         * Other threads are blocked from access.
+         * @return
+         */
+        write_access <attachment_type> access_attachments_write() {
+            return write_access<attachment_type>(get_cache_base()->attachments);
+        }
+
+        /**
         * Attaches data to this cache
         * @tparam Attachment
         * @param attachment
