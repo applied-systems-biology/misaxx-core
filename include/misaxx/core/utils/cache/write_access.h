@@ -31,7 +31,7 @@ namespace misaxx::utils {
 
         ~write_access() {
             m_cache->push(); // Push into the cache
-            m_cache->try_stash(std::move(m_lock));
+            m_cache->stash(std::move(m_lock));
         }
 
         write_access(const write_access<Value> &src) = delete;

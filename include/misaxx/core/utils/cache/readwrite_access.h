@@ -33,7 +33,7 @@ namespace misaxx::utils {
 
         ~readwrite_access() {
             m_cache->push(); // Push back into the cache
-            m_cache->try_stash(std::move(m_lock));
+            m_cache->stash(std::move(m_lock)); // We have exclusive access
         }
 
         readwrite_access(const readwrite_access<Value> &src) = delete;
