@@ -16,7 +16,7 @@
 misaxx::misa_module_info misaxx::module_info() {
     misaxx::misa_module_info info;
     info.set_id("misaxx");
-    info.set_version("1.0.0");
+    info.set_version("1.0.1");
     info.set_name("MISA++ core module");
     info.set_description("Base for all MISA++ modules");
     info.add_author("Ruman Gerst");

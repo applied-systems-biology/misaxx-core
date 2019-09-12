@@ -129,7 +129,7 @@ namespace misaxx {
     void misa_cached_data<Cache>::suggest_import_location(const misa_filesystem &t_filesystem,
                                                           const boost::filesystem::path &t_path) {
         if (!data) {
-            suggest_link(t_filesystem.imported->at(t_path));
+            suggest_link(t_filesystem.imported->resolve(t_path));
         }
     }
 
