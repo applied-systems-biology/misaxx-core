@@ -11,7 +11,7 @@
 # */
 
 cmake_minimum_required(VERSION 3.11)
-project(misaxx-core LANGUAGES CXX VERSION 1.0.0 DESCRIPTION "MISA++ Core")
+project(misaxx-core LANGUAGES CXX VERSION 1.0.0.1 DESCRIPTION "MISA++ Core")
 
 include(FetchContent)
 include(FeatureSummary)
