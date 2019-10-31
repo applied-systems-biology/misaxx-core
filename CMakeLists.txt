@@ -267,3 +267,14 @@ install(
         ${CMAKE_SOURCE_DIR}/cmake/misaxx-module-template.cmake
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/misaxx-core
 )
+
+# Debian package creation
+SET(CPACK_GENERATOR "DEB")
+SET(CPACK_DEBIAN_PACKAGE_NAME "misaxx-core")
+SET(CPACK_DEBIAN_PACKAGE_VERSION "1.0.0.1")
+SET(CPACK_DEBIAN_PACKAGE_RELEASE "1")
+SET(CPACK_DEBIAN_PACKAGE_DESCRIPTION "MISA++ framework core library")
+SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Ruman Gerst")
+SET(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://applied-systems-biology.github.io/misa-framework/")
+SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libboost-filesystem1.67.0, libboost-regex1.67.0, libboost-program-options1.67.0, libgomp1")
+INCLUDE(CPack)
