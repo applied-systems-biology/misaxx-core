@@ -26,6 +26,15 @@ namespace misaxx::utils {
     */
     extern boost::filesystem::path relativize_to_direct_parent(boost::filesystem::path t_parent, boost::filesystem::path t_path);
 
+    /**
+     * Converts the input path into a preferred representation.
+     * For example, Windows paths are converted into Cygwin paths if Cygwin is detected
+     * Returns the input path if no conversion is needed
+     * @param path
+     * @return
+     */
+    extern boost::filesystem::path make_preferred(boost::filesystem::path path);
+
 }
 
 

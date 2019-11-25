@@ -12,6 +12,8 @@
 
 #include <boost/filesystem.hpp>
 #include <misaxx/core/utils/filesystem.h>
+#include <boost/regex.hpp>
+#include <boost/algorithm/string.hpp>
 
 boost::filesystem::path
 misaxx::utils::relativize_to_direct_parent(boost::filesystem::path t_parent, boost::filesystem::path t_path) {
@@ -37,4 +39,24 @@ misaxx::utils::relativize_to_direct_parent(boost::filesystem::path t_parent, boo
 //    std::cout << "RESULT: " << result << "\n";
 
     return result;
+}
+
+boost::filesystem::path misaxx::utils::make_preferred(boost::filesystem::path path) {
+#ifdef BOOST_OS_CYGWIN
+    boost::regex expr {"[A-Z]:[\\\\/].*"};
+    std::string path_s = path.string();
+    if(boost::regex_match(path_s, expr)) {
+        char drive_letter = std::tolower(path_s[0]);
+        std::string sub = path_s.substr(2);
+        boost::ireplace_all(sub, "\\", "/");
+        std::stringstream ss {};
+        ss <<  "/cygdrive/" << drive_letter << sub;
+        return ss.str();
+    }
+    else {
+        return path;
+    }
+#else
+    return path;
+#endif
 }

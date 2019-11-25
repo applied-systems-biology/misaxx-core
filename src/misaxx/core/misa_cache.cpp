@@ -11,8 +11,10 @@
  */
 
 #include <misaxx/core/misa_cache.h>
+#include <misaxx/core/utils/filesystem.h>
 
 boost::filesystem::path misaxx::misa_cache::get_internal_unique_location() const {
-    boost::filesystem::path relative = boost::filesystem::relative(get_unique_location(), get_location());
-    return get_internal_location() / relative;
+    boost::filesystem::path relative = boost::filesystem::relative(misaxx::utils::make_preferred(get_unique_location()),
+            misaxx::utils::make_preferred(get_location()));
+    return misaxx::utils::make_preferred(get_internal_location()) / relative;
 }
